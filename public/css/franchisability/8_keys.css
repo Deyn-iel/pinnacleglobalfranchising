@@ -1,0 +1,86 @@
+/* IMAGE SECTION */
+.image {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0;
+    width: 100%;
+    margin-top: 40px;
+    flex-wrap: nowrap;
+}
+
+.logo-item {
+    width: 65%;
+    height: 400px;
+    background-color: #042a47;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.logo-item img {
+    width: 80%;
+    height: 80%;
+    object-fit: contain;
+}
+
+
+/* =========================
+   FRANCHISE SECTION
+=========================*/
+
+.franchise-title, .inquire-title {
+    margin-top: 40px;
+    font-size: 35px;
+    font-weight: 700;
+    letter-spacing: 1px;
+}
+
+.underline {
+    width: 120px;
+    height: 2px;
+    background-color: #ffffff;
+    margin: 20px auto;
+}
+
+.keys {
+    width: 40%;
+    margin: 20px auto;
+    padding: 20px 10px;
+    text-align: left;
+}
+
+.keys p {
+    font-weight: bold;
+    font-size: 20px;
+    color: #a8a8a8;
+    margin-bottom: 50px;
+    line-height: 1.6;
+}
+
+/* ✅ Tablets */
+@media (max-width: 768px) {
+    .keys {
+        width: 70%;
+        padding: 18px;
+    }
+
+    .keys p {
+        font-size: 18px;
+        margin-bottom: 35px;
+    }
+}
+
+/* ✅ Mobile phones */
+@media (max-width: 576px) {
+    .keys {
+        width: 90%;
+        padding: 15px;
+    }
+
+    .keys p {
+        font-size: 17px;
+        margin-bottom: 28px;
+        line-height: 1.5;
+    }
+}
