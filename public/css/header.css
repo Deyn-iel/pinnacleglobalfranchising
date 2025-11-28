@@ -1,54 +1,113 @@
 html, body {
-        height: 100%;
-        overflow-x: hidden; /* prevent shifting */
-        -webkit-overflow-scrolling: auto !important;
-    }
-        /* GLOBAL */
-        body {
-            background-color: #0d3553;
-            color: #ffffff;
-            font-family: 'Helvitica', sans-serif;
-            margin: 0;
-            padding: 0;
-            transform: none !important; /* Prevents parent transform bug */
-        }
+    height: 100%;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: auto !important;
+}
+
+/* GLOBAL */
+body {
+    background-color: #0d3553;
+    color: #ffffff;
+    font-family: 'Helvetica', sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
 /* NAVBAR */
-        .navbar {
-            background-color: #0d3553;
-            padding: 10px 0;
-            font-size: 17px;
-            padding-top: 20px;
-        }
+.navbar {
+    background-color: #0d3553;
+    padding: 20px 0;
+    font-size: 17px;
 
-        .navbar-nav .nav-link {
-            color: #ffffff !important;
-            margin: 0 12px;
-            font-weight: 500;
-            letter-spacing: 0.5px;
-        }
+    position: fixed;
+    width: 100%;
+    top: 0;
+    z-index: 9999;
 
-        .dropdown-menu {
-            background-color: #ffffff;
-        }
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
 
-        .dropdown-item {
-            color: #797979 !important;
-        }
+/* Desktop center alignment */
+.navbar .container {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+}
 
-        /* SIMPLE TOGGLE */
-        .navbar-toggler {
-            border: none;
-        }
-        .navbar-toggler-icon {
-            filter: brightness(0) invert(1); /* makes icon white */
-        }
-        /* ACTIVE NAV-LINK LINE ON TOP */
-        .nav-link.active {
-            border-top: 2px solid #ffffff;
-            padding-top: 7px;
-            font-weight: bold;
-        }
-        .nav-link {
-            border-top: 3px solid transparent;
-            transition: 0.2s ease-in-out;
-        }
+/* NAV LINKS */
+.navbar-nav .nav-link {
+    color: #ffffff !important;
+    margin: 0 12px;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+}
+
+/* DROPDOWN */
+.dropdown-menu {
+    background-color: #ffffff;
+}
+.dropdown-item {
+    color: #797979 !important;
+}
+
+/* TOGGLE BUTTON */
+.navbar-toggler {
+    border: none;
+    outline: none !important;
+    box-shadow: none !important;
+}
+.navbar-toggler-icon {
+    filter: brightness(0) invert(1);
+}
+
+/* Active link line */
+.nav-link.active {
+    border-top: 2px solid #ffffff;
+    padding-top: 7px;
+    font-weight: bold;
+}
+.nav-link {
+    border-top: 3px solid transparent;
+    transition: 0.2s ease-in-out;
+}
+
+/* ============================================
+   MOBILE & TABLET: Make navbar NOT fixed
+============================================ */
+@media (max-width: 992px) {
+
+    .navbar {
+        position: relative !important; /* removes fixed */
+        top: 0 !important;
+    }
+
+    /* Fix container so toggle appears left */
+    .navbar .container {
+        justify-content: space-between !important;
+        padding: 0 20px;
+    }
+
+    /* Align items inside collapsed menu */
+    .navbar-collapse {
+        background-color: #0d3553;
+        padding: 15px 10px;
+        border-radius: 5px;
+    }
+
+    .navbar-nav {
+        text-align: center;
+    }
+
+    .navbar-nav .nav-item {
+        margin: 10px 0;
+    }
+
+    /* Remove top border on mobile for simplicity */
+    .nav-link.active {
+        border-top: none;
+        font-weight: bold;
+    }
+}
+
