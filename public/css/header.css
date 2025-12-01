@@ -19,10 +19,10 @@ body {
     padding: 20px 0;
     font-size: 17px;
 
-    position: fixed;
+    /* REMOVE fixed position completely */
+    position: relative;
     width: 100%;
     top: 0;
-    z-index: 9999;
 
     display: flex;
     justify-content: center;
@@ -33,7 +33,6 @@ body {
 .navbar .container {
     display: flex;
     justify-content: center;
-    margin-bottom: 20px;
 }
 
 /* NAV LINKS */
@@ -74,22 +73,20 @@ body {
 }
 
 /* ============================================
-   MOBILE & TABLET: Make navbar NOT fixed
+   MOBILE & TABLET (No fixed navbar too)
 ============================================ */
 @media (max-width: 992px) {
 
     .navbar {
-        position: relative !important; /* removes fixed */
+        position: relative !important; /* Ensure not fixed */
         top: 0 !important;
     }
 
-    /* Fix container so toggle appears left */
     .navbar .container {
         justify-content: space-between !important;
         padding: 0 20px;
     }
 
-    /* Align items inside collapsed menu */
     .navbar-collapse {
         background-color: #0d3553;
         padding: 15px 10px;
@@ -104,10 +101,8 @@ body {
         margin: 10px 0;
     }
 
-    /* Remove top border on mobile for simplicity */
     .nav-link.active {
         border-top: none;
         font-weight: bold;
     }
 }
-

@@ -1,75 +1,171 @@
-{{-- @extends('layouts.app') --}}
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pinnacle Global</title>
 
-    <title>{{ config('app.name', 'Laravel') }}</title>
+    <!-- ✅ BOOTSTRAP -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 
-    <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.bunny.net">
-    <link href="https://fonts.bunny.net/css?family=instrument-sans:400,500,600" rel="stylesheet" />
+    <!-- ✅ CSS FILES (ORDER MATTERS) -->
+    <link rel="stylesheet" href="{{ asset('css/app.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/header.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/footer.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/main.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/chatbot.css') }}">
 
-    <!-- Assets -->
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    <!-- ✅ EXTRA PAGE-SPECIFIC STYLES -->
+    @stack('styles')
 </head>
 
-<body class="bg-[#FDFDFC] dark:bg-[#0a0a0a] text-[#1b1b18] flex flex-col items-center justify-center min-h-screen p-6 lg:p-8">
+<body>
 
-    <!-- HEADER -->
-    <header class="w-full max-w-[335px] lg:max-w-4xl mb-10">
-        @if (Route::has('login'))
-            <nav class="flex items-center justify-end gap-4 text-sm">
+    {{-- ✅ HEADER --}}
+    @include('partials.header')
 
-                @auth
-                    <!-- Dashboard Button -->
-                    <a href="{{ url('/dashboard') }}"
-                       class="px-5 py-1.5 rounded-md border
-                              text-[#1b1b18] dark:text-[#EDEDEC]
-                              border-[#d6d6d6] dark:border-[#3E3E3A]
-                              bg-white dark:bg-[#161615]
-                              shadow-sm hover:shadow-md
-                              hover:border-[#a8a8a8] dark:hover:border-[#62605b]
-                              transition-all duration-200">
-                       Dashboard
-                    </a>
-                @else
-                    <!-- Login Button -->
-                    <a href="{{ route('login') }}"
-                       class="px-5 py-1.5 rounded-md
-                              text-[#1b1b18] dark:text-[#EDEDEC]
-                              bg-white dark:bg-[#161615]
-                              border border-transparent
-                              shadow-sm hover:shadow-md
-                              hover:border-[#c6c6c6] dark:hover:border-[#3E3E3A]
-                              transition-all duration-200">
-                       Log in
-                    </a>
+    {{-- ✅ PAGE CONTENT --}}
+    <main>
+        <!-- IMAGE + VIDEO SECTION -->
+    <div class="image">
 
-                    @if (Route::has('register'))
-                        <!-- Register Button -->
-                        <a href="{{ route('register') }}"
-                           class="px-5 py-1.5 rounded-md border
-                                  text-[#1b1b18] dark:text-[#EDEDEC]
-                                  bg-white dark:bg-[#161615]
-                                  border-[#d6d6d6] dark:border-[#3E3E3A]
-                                  shadow-sm hover:shadow-md
-                                  hover:border-[#a6a6a6] dark:hover:border-[#62605b]
-                                  transition-all duration-200">
-                           Register
-                        </a>
-                    @endif
-                @endauth
+        <div class="image-item logo-item">
+            <img src="{{ asset('img/logo.webp') }}" alt="Logo">
+        </div>
 
-            </nav>
-        @endif
-    </header>
+        <div class="image-item video-item">
+            <iframe
+                src="https://player.vimeo.com/video/1101086567?h=fada1a13bc&autoplay=1&loop=1&autopause=0&muted=1&title=0&byline=0&portrait=0&controls=0"
+                frameborder="0"
+                allow="autoplay; fullscreen"
+                allowfullscreen>
+            </iframe>
+        </div>
 
-    <!-- SPACING BELOW HEADER (DESKTOP ONLY) -->
-    @if (Route::has('login'))
-        <div class="hidden lg:block h-10"></div>
-    @endif
+    </div>
+
+
+
+
+<!-- ============================
+     FRANCHISE NOW SECTION
+============================= -->
+<section class="franchise-section text-center mt-5">
+
+    <h2 class="franchise-title">FRANCHISE NOW!</h2>
+    <div class="underline"></div>
+
+    <div class="container mt-5">
+        <div class="row justify-content-center g-5">
+
+            <!-- KAPE ILOKANO -->
+            <div class="col-md-5 col-lg-4 text-center">
+                <div class="circle-box">
+                    <img src="{{ asset('img/kape.webp') }}" alt="Kape Ilokano">
+                </div>
+                <h3 class="brand-name mt-3">Kape Ilokano</h3>
+                <p class="brand-desc">Serving Naimas Nga Kape</p>
+            </div>
+
+            <!-- PATATAS PROJECT -->
+            <div class="col-md-5 col-lg-4 text-center">
+                <div class="circle-box">
+                    <img src="{{ asset('img/patatas.webp') }}" alt="Patatas Project">
+                </div>
+                <h3 class="brand-name mt-3">Patatas Project</h3>
+                <p class="brand-desc">Fries that Fuel Dreams</p>
+            </div>
+
+        </div>
+
+        <!-- ROW 2 -->
+        <div class="row justify-content-center mt-5 g-5">
+
+            <!-- MARIA COFFEE -->
+            <div class="col-md-5 col-lg-4 text-center">
+                <div class="circle-box">
+                    <img src="{{ asset('img/maria_cofee.webp') }}" alt="Maria Coffee">
+                </div>
+                <h3 class="brand-name mt-3">Maria Coffee</h3>
+                <p class="brand-desc">
+                    Something good<br>is going to happen
+                </p>
+            </div>
+
+            <!-- WINGS 2 GO -->
+            <div class="col-md-5 col-lg-4 text-center">
+                <div class="circle-box">
+                    <img src="{{ asset('img/wings.webp') }}" alt="Wings 2 Go">
+                </div>
+                <h3 class="brand-name mt-3">Wings 2 Go</h3>
+                <p class="brand-desc">Best Chicken Wings of All Time</p>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+
+<!-- ============================
+      INQUIRE NOW FORM
+============================= -->
+
+<section class="inquire mt-5 text-center">
+
+    <h2 class="inquire-title">INQUIRE NOW!</h2>
+    <div class="underline"></div>
+
+    <p class="inquire-sub">Feel free to inquire. Thank you!</p>
+
+    <div class="container mt-4">
+        <form>
+
+            <div class="field-group">
+                <input type="text" class="form-field" placeholder="" required>
+                <label>Full Name*</label>
+            </div>
+
+            <div class="field-group">
+                <input type="email" class="form-field" placeholder="" required>
+                <label>Email*</label>
+            </div>
+
+            <div class="field-group">
+                <textarea class="form-field" placeholder="" rows="5" required></textarea>
+                <label class="label-message">Message*</label>
+            </div>
+
+
+
+            <button type="submit" class="btn-submit mt-2">SUBMIT</button>
+
+        </form>
+
+        <p class="recaptcha">
+            This site is protected by reCAPTCHA and the <a href="https://policies.google.com/privacy">Google Privacy</a> Policy and <a href="https://policies.google.com/terms">Terms of Service</a> apply.
+        </p>
+    </div>
+    <!-- LOGIN BUTTON RIGHT SIDE -->
+            <a href="{{ url('/login') }}" class="login-btn ms-lg-3 mt-3 mt-lg-0">
+                LOGIN
+            </a>
+</section>
+{{-- ✅ chatbot --}}
+    @include('partials.chatbot')
+    </main>
+
+    {{-- ✅ FOOTER --}}
+    @include('partials.footer')
+
+    <!-- ✅ SCRIPTS -->
+    <script src="{{ asset('js/app.js') }}"></script>
+
+    <script src="{{ asset('js/main.js') }}"></script>
+
 
 </body>
 </html>
+            {{-- </main>
+        </div>
+    </body>
+</html> --}}

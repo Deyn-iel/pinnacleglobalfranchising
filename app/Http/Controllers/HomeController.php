@@ -9,20 +9,21 @@ use Illuminate\Support\Facades\Auth;
 class HomeController extends Controller
 {
     public function index()
-    {
-        if (Auth::id()) {
-
-            $usertype = Auth::user()->usertype;
-
-            if ($usertype == 'admin') {
-                return redirect()->route('admin.admin');
-            }
-
-            if ($usertype == 'user') {
-                return redirect()->route('dashboard');
-            }
-        }
-
+{
+    if (!Auth::check()) {
         return redirect()->route('login');
     }
+
+    $usertype = Auth::user()->usertype;
+
+    if ($usertype === 'admin') {
+        return redirect()->route('admin.admin');
+    }
+
+    return redirect()->route('dashboard'); 
+}
+
+
+
+
 }

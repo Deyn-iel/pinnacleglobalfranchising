@@ -14,6 +14,7 @@
     <link rel="stylesheet" href="{{ asset('css/footer.css') }}">
     <link rel="stylesheet" href="{{ asset('css/main.css') }}">
     <link rel="stylesheet" href="{{ asset('css/franchisability/franchising_checklist.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/chatbot.css') }}">
 
     <!-- ✅ EXTRA PAGE-SPECIFIC STYLES -->
     @stack('styles')
@@ -160,6 +161,10 @@
             </li>
         </ul>
     </div>
+
+    {{-- ✅ chatbot --}}
+    @include('partials.chatbot')
+    
     </main>
 
     {{-- ✅ FOOTER --}}

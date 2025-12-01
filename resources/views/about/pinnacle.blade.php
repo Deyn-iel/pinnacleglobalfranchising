@@ -14,6 +14,7 @@
     <link rel="stylesheet" href="{{ asset('css/footer.css') }}">
     <link rel="stylesheet" href="{{ asset('css/main.css') }}">
     <link rel="stylesheet" href="{{ asset('css/about/pinnacle.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/chatbot.css') }}">
 
     <!-- ✅ EXTRA PAGE-SPECIFIC STYLES -->
     @stack('styles')
@@ -69,6 +70,9 @@
     </div>
     </div>
 </section>
+
+{{-- ✅ chatbot --}}
+    @include('partials.chatbot')
     </main>
 
     {{-- ✅ FOOTER --}}

@@ -14,6 +14,7 @@
     <link rel="stylesheet" href="{{ asset('css/footer.css') }}">
     <link rel="stylesheet" href="{{ asset('css/main.css') }}">
     <link rel="stylesheet" href="{{ asset('css/about/why.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/chatbot.css') }}">
 
     <!-- ✅ EXTRA PAGE-SPECIFIC STYLES -->
     @stack('styles')
@@ -32,6 +33,9 @@
             <img src="{{ asset('img/logo.webp') }}" alt="Logo">
         </div>
     </div>
+
+    {{-- ✅ chatbot --}}
+    @include('partials.chatbot')
     </main>
 
     {{-- ✅ FOOTER --}}

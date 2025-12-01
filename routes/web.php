@@ -7,19 +7,95 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
+Route::get('/login2', function () {
+    return view('login2');
+});
+
+//about 
+Route::get('/about/pinnacle', function () {
+    return view('about.pinnacle');
+});
+
+Route::get('/about/why', function () {
+    return view('about.why');
+});
+
+Route::get('/about/franchise', function () {
+    return view('about.franchise');
+});
+
+Route::get('/about/clients', function () {
+    return view('about.clients');
+});
+
+//our services
+Route::get('/about', function () {
+    return view('about.pinnacle');
+});
+
+Route::get('/about', function () {
+    return view('about.why');
+});
+
+Route::get('/about', function () {
+    return view('about.franchise');
+});
+
+Route::get('/about', function () {
+    return view('about.clients');
+});
+
+//our services
+Route::get('/our_service', function () {
+    return view('our_service.our_service');
+});
+//contuct us
+Route::get('/contact', function () {
+    return view('contact.contact');
+});
+
+//franchissability 
+Route::get('/franchisability/8_keys', function () {
+    return view('franchisability.8_keys');
+});
+Route::get('/franchisability/franchise_test', function () {
+    return view('franchisability.franchise_test');
+});
+Route::get('/franchisability/franchising_checklist', function () {
+    return view('franchisability.franchising_checklist');
+});
+
+//franchise application
+Route::get('/user-dashboard/franchise-application-process', function () {
+    return view('user-dashboard.franchise-application-process.franchise-application-process');
+})->name('franchise.process');
+//ordering supplies
+Route::get('/user-dashboard/ordering-supplies', function () {
+    return view('user-dashboard.ordering-supplies.ordering-supplies');
+})->name('ordering.supplies');
+
+Route::get('/user-dashboard/uploading-requirements', function () {
+    return view('user-dashboard.uploading-requirements.uploading-requirements');
+})->name('uploading.requirements');
+
 
 // Dashboard for normal users
-// Route::get('/dashboard', function () {
-//     return view('dashboard');
-// })->middleware(['auth', 'verified'])->name('dashboard');
+Route::get('/user-dashboard', function () {
+    return view('user-dashboard.dashboard');
+})->middleware(['auth', 'verified'])->name('dashboard');
+
+//admin
+Route::view('/admin/admin', 'admin.admin')
+    ->middleware(['auth', 'admin'])
+    ->name('admin.admin');
+
+
+
+
 
 // Redirect users based on usertype
-Route::get('/home', [HomeController::class, 'index']);
+Route::get('/home', [HomeController::class, 'index'])->name('home');
 
-// Admin dashboard
-Route::get('/admin', function () {
-    return view('admin.admin');
-})->middleware(['auth', 'verified'])->name('admin.admin');
 
 // Profile routes (only once)
 Route::middleware('auth')->group(function () {
@@ -29,3 +105,5 @@ Route::middleware('auth')->group(function () {
 });
 
 require __DIR__.'/auth.php';
+
+

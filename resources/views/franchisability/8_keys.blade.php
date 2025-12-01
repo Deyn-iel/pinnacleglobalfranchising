@@ -14,6 +14,7 @@
     <link rel="stylesheet" href="{{ asset('css/footer.css') }}">
     <link rel="stylesheet" href="{{ asset('css/main.css') }}">
     <link rel="stylesheet" href="{{ asset('css/franchisability/8_keys.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/chatbot.css') }}">
 
     <!-- ✅ EXTRA PAGE-SPECIFIC STYLES -->
     @stack('styles')
@@ -67,6 +68,9 @@
         <h2>Affordability</h2>
         <p>After all franchise-related costs, will the franchisee still earn a fair and motivating profit? </p>
     </div>
+
+    {{-- ✅ chatbot --}}
+    @include('partials.chatbot')
     </main>
 
     {{-- ✅ FOOTER --}}

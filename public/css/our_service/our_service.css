@@ -1,0 +1,182 @@
+html, body {
+    height: 100%;
+}
+
+/* BODY AS FLEX TO PUSH FOOTER DOWN */
+body {
+    background-color: #0d3553;
+    color: #ffffff;
+    font-family: 'Helvitica', sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+/* wrapper for content above footer */
+.main-wrapper {
+    flex: 1;
+}
+
+/* IMAGE SECTION */
+.image {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0;
+    width: 100%;
+    margin-top: 40px;
+    flex-wrap: nowrap;
+}
+
+.logo-item {
+    width: 65%;
+    height: 400px;
+    background-color: #042a47;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.logo-item img {
+    width: 80%;
+    height: 80%;
+    object-fit: contain;
+}
+
+
+/* =========================
+   FRANCHISE SECTION
+=========================*/
+
+.first-services {
+    margin-top: 60px;
+    width: 65%;
+    margin-left: auto;
+    margin-right: auto; /* ✅ centers the whole block */
+    letter-spacing: 1px;
+    text-align: center; /* ✅ centers inner content */
+}
+
+.first-services h2 {
+    font-size: 35px;
+    font-weight: 700;
+    text-align: center;
+}
+.first-services p {
+    font-weight: bold;
+    font-size: 18px;
+    color: #a8a8a8;
+    margin-bottom: 50px;
+    text-align: left;
+}
+
+.second-services {
+    margin-top: 60px;
+    width: 43%;
+    margin-left: auto;
+    margin-right: auto; /* ✅ centers the whole block */
+    letter-spacing: 1px;
+    text-align: center;
+}
+.second-services h2 {
+    font-size: 35px;
+    font-weight: 700;
+    text-align: center;
+}
+.second-services p {
+    font-weight: bold;
+    font-size: 18px;
+    color: #a8a8a8;
+    margin-bottom: 50px;
+    text-align: left;
+}
+.second-services ul li {
+    font-weight: bold;
+    font-size: 18px;
+    color: #a8a8a8;
+    text-align: left;
+}
+ul {
+    margin-bottom: 70px;
+}
+/* ✅ LARGE TABLETS */
+@media (max-width: 992px) {
+    .first-services {
+        width: 75%;
+    }
+    .second-services {
+        width: 60%;
+    }
+}
+
+
+/* ✅ TABLETS */
+@media (max-width: 768px) {
+    .first-services {
+        width: 85%;
+    }
+    .second-services {
+        width: 75%;
+    }
+
+    .first-services h2,
+    .second-services h2 {
+        font-size: 30px;
+    }
+
+    .first-services p,
+    .second-services p,
+    .second-services ul li {
+        font-size: 17px;
+    }
+}
+
+
+/* ✅ MOBILE */
+@media (max-width: 576px) {
+    .first-services,
+    .second-services {
+        width: 100%;
+        padding: 0 20px; /* adds side spacing */
+    }
+
+    .first-services h2,
+    .second-services h2 {
+        font-size: 26px;
+    }
+
+    .first-services p,
+    .second-services p,
+    .second-services ul li {
+        font-size: 16px;
+        line-height: 1.6;
+    }
+}
+
+
+
+/* RESPONSIVE FIXES */
+@media (max-width: 1200px) {
+    .image {
+        flex-wrap: wrap;
+        margin-top: 20px;
+    }
+
+    .logo-item {
+        width: 95%;
+        height: 300px;
+    }
+}
+
+@media (max-width: 768px) {
+    .logo-item {
+        height: 250px;
+    }
+}
+
+@media (max-width: 576px) {
+    .logo-item {
+        height: 200px;
+    }
+}
