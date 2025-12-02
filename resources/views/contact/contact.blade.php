@@ -68,7 +68,7 @@
 
             </form>
             <p class="recaptcha">
-            This site is protected by reCAPTCHA and the <a href="https://policies.google.com/privacy">Google Privacy</a> Policy and <a href="https://policies.google.com/terms">Terms of Service</a> apply.
+            This site is protected by reCAPTCHA and the <a href="https://policies.google.com/privacy" target="_blank">Google Privacy</a> Policy and <a href="https://policies.google.com/terms" target="_blank">Terms of Service</a> apply.
         </p>
         </div>
 

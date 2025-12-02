@@ -1,0 +1,194 @@
+* {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f7fbff 0%, #eef5ff 100%);
+            background-image: 
+                radial-gradient(circle, rgba(255,255,255,0.7) 0%, rgba(255,255,255,0) 40%),
+                radial-gradient(circle at bottom right, rgba(190,220,255,0.25), transparent 60%);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            animation: fadeBody 1.2s ease-in-out;
+        }
+
+
+
+        @keyframes fadeBody {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .container-login {
+            width: 100%;
+            max-width: 1100px;
+            display: flex;
+            min-height: 600px;
+            background: #fff;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+            transform: translateY(30px);
+            animation: slideUp 1s ease forwards;
+            opacity: 0;
+        }
+
+        @keyframes slideUp {
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        /* LEFT PANEL */
+        .left {
+            flex: 1;
+            background: linear-gradient(130deg, #17598b, #0d3553);
+            color: white;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .wave {
+            position: absolute;
+            width: 180%;
+            height: 180%;
+            background: rgba(255, 255, 255, 0.12);
+            border-radius: 40%;
+            animation: waveMove 6s infinite linear;
+        }
+
+        .wave:nth-child(1) {
+            top: -20%;
+            left: -20%;
+        }
+
+        .wave:nth-child(2) {
+            top: 10%;
+            left: -10%;
+            animation-duration: 8s;
+            opacity: .2;
+        }
+
+        .wave:nth-child(3) {
+            top: -10%;
+            left: -15%;
+            animation-duration: 10s;
+            opacity: .15;
+        }
+
+        @keyframes waveMove {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .welcome-box h1 {
+            font-size: 40px;
+            margin-bottom: 10px;
+        }
+
+        .welcome-box p {
+            max-width: 350px;
+            font-size: 15px;
+            line-height: 1.6;
+        }
+
+        .footer-text {
+            font-size: 14px;
+        }
+
+        /* RIGHT PANEL */
+        .right {
+            flex: 1;
+            background: #fff;
+            padding: 60px;
+            animation: fadeIn 1.5s ease forwards;
+            opacity: 0;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateX(20px); }
+            to   { opacity: 1; transform: translateX(0); }
+        }
+
+        .login-title {
+            font-size: 32px;
+            color: #0d3553;
+        }
+
+        .login-sub {
+            font-size: 14px;
+            margin: 10px 0 30px;
+            color: #555;
+        }
+
+        .btn-back {
+            background: #0d3553 !important;
+            color: white !important;
+        }
+
+        /* Responsive */
+        @media (max-width: 850px) {
+            .container-login {
+                flex-direction: column;
+                max-width: 100%;
+                min-height: auto;
+            }
+
+            .right {
+                padding: 30px;
+            }
+
+            .welcome-box h1 {
+                font-size: 28px;
+            }
+        }
+/* Container for the extra links */
+.extra-links {
+    margin-top: 18px;
+    display: flex;
+    justify-content: flex-end;
+    gap: 18px;
+    flex-wrap: wrap;
+}
+
+/* Link style similar to 'Forgot your password?' */
+.link-small {
+    font-size: 14px;
+    color: #0d3553;
+    text-decoration: underline;
+    font-weight: 500;
+    cursor: pointer;
+    transition: 0.2s ease-in-out;
+}
+
+.link-small:hover {
+    color: #093048;
+    text-decoration: none;
+}
+
+/* Mobile responsive */
+@media (max-width: 480px) {
+    .extra-links {
+        justify-content: center;
+        gap: 12px;
+    }
+
+    .link-small {
+        font-size: 15px;
+        display: inline-block;
+        padding: 4px 0;
+    }
+}
+
+        

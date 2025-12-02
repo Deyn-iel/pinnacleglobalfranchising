@@ -17,25 +17,11 @@
         <!-- BUTTON SECTION -->
 <div class="max-w-4xl mx-auto mt-8 px-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
 
-    <a href="{{ route('franchise.process') }}"
-        class="block w-full px-6 py-4 bg-blue-600 text-white font-semibold rounded-lg shadow-md
-                hover:bg-blue-700 hover:shadow-lg transition-all duration-200 text-center">
-            Franchise Application Process
-        </a>
-
-
     <a href="{{ route('ordering.supplies') }}"
         class="block w-full px-6 py-4 bg-blue-600 text-white font-semibold rounded-lg shadow-md
                hover:bg-green-700 hover:shadow-lg transition-all duration-200 text-center">
         Ordering of Supplies to Registered Partners
     </a>
-
-    <a href="{{ route('uploading.requirements') }}"
-        class="block w-full px-6 py-4 bg-blue-600 text-white font-semibold rounded-lg shadow-md
-               hover:bg-purple-700 hover:shadow-lg transition-all duration-200 text-center">
-        Uploading of Requirements
-    </a>
-
 </div>
 <!-- END BUTTON SECTION -->
 

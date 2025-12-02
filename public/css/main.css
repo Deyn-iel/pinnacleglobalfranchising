@@ -2,116 +2,97 @@
    IMAGE + VIDEO SECTION
 ==========================*/
 
+/* Outer wrapper */
+/* Outer wrapper */
 .image {
     display: flex;
     justify-content: center;
-    align-items: center;
-    gap: 0;
+    align-items: stretch;
     width: 100%;
     margin-top: 40px;
+    padding: 0 40px; /* ⬅️ PADDING ON BOTH SIDES */
     flex-wrap: nowrap;
 }
 
-/* Desktop sizes */
-.logo-item {
-    width: 450px;
-    height: 510px;
-    background-color: #042a47;
+/* Match sizes using aspect ratio */
+.logo-item,
+.video-item {
+    aspect-ratio: 16 / 9;
+    width: 35%;
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
+/* Logo background */
+.logo-item {
+    background-color: #042a47;
+    padding: 20px;
+}
+
+/* Smaller Logo Image */
 .logo-item img {
-    width: 80%;
+    width: 45%;
     height: auto;
     object-fit: contain;
 }
 
-.video-item {
-    width: 900px;
-    height: 510px;
-    overflow: hidden;
-}
-
+/* Video */
 .video-item iframe {
     width: 100%;
     height: 100%;
     border: none;
-    display: block;
 }
 
-
 /* =========================
-   RESPONSIVE FIXES
+   Responsive Breakpoints
 ==========================*/
 
-/* Large Tablets (wrap layout) */
+/* Large Tablets */
 @media (max-width: 1200px) {
     .image {
         flex-wrap: wrap;
-        margin-top: 20px;
+        padding: 0 20px; /* reduce side spacing */
     }
 
     .logo-item,
     .video-item {
-        width: 100%;
-        height: auto;
+        width: 50%;
+        aspect-ratio: 16 / 9;
     }
 
-    .video-item iframe {
-        height: 350px;
+    .logo-item img {
+        width: 40%;
     }
 }
 
 /* Tablets */
 @media (max-width: 768px) {
-    .logo-item {
-        width: 100%;
-        height: auto;
-        padding: 20px;
+    .image {
+        padding: 0 15px;
     }
 
     .logo-item img {
-        width: 60%;
-    }
-
-    .video-item {
-        width: 100%;
-        height: auto;
-    }
-
-    .video-item iframe {
-        width: 100%;
-        height: 300px;
+        width: 35%;
     }
 }
 
 /* Mobile */
 @media (max-width: 576px) {
-
-    .logo-item {
-        width: 95%;
-        height: auto;
-        padding: 10px;
+    .image {
+        padding: 0 10px; /* smallest side padding */
     }
 
     .logo-item img {
-        width: 70%;
+        width: 30%;
     }
 
+    .logo-item,
     .video-item {
         width: 100%;
-        height: auto;
-        margin: 0;
-        padding: 0;
-    }
-
-    .video-item iframe {
-        width: 100%;
-        height: 220px;
     }
 }
+
 
 
 

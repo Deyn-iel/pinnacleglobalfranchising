@@ -14,6 +14,8 @@
     <link rel="stylesheet" href="{{ asset('css/footer.css') }}">
     <link rel="stylesheet" href="{{ asset('css/main.css') }}">
     <link rel="stylesheet" href="{{ asset('css/chatbot.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/scroll-top.css') }}">
+    
 
     <!-- ✅ EXTRA PAGE-SPECIFIC STYLES -->
     @stack('styles')
@@ -142,7 +144,7 @@
         </form>
 
         <p class="recaptcha">
-            This site is protected by reCAPTCHA and the <a href="https://policies.google.com/privacy">Google Privacy</a> Policy and <a href="https://policies.google.com/terms">Terms of Service</a> apply.
+            This site is protected by reCAPTCHA and the <a href="https://policies.google.com/privacy" target="_blank">Google Privacy</a> Policy and <a href="https://policies.google.com/terms" target="_blank">Terms of Service</a> apply.
         </p>
     </div>
     <!-- LOGIN BUTTON RIGHT SIDE -->
@@ -152,6 +154,7 @@
 </section>
 {{-- ✅ chatbot --}}
     @include('partials.chatbot')
+    @include('partials.scroll-top')
     </main>
 
     {{-- ✅ FOOTER --}}
@@ -165,7 +168,3 @@
 
 </body>
 </html>
-            {{-- </main>
-        </div>
-    </body>
-</html> --}}

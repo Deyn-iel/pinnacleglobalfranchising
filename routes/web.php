@@ -3,6 +3,7 @@
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Auth;
 
 Route::get('/', function () {
     return view('welcome');
@@ -90,7 +91,11 @@ Route::view('/admin/admin', 'admin.admin')
     ->name('admin.admin');
 
 
-
+//logout
+Route::post('/user/logout', function () {
+    Auth::logout();
+    return redirect('/login');
+})->name('custom.logout');
 
 
 // Redirect users based on usertype

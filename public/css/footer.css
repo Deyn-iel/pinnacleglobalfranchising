@@ -24,7 +24,9 @@ footer.footer {
 .footer-copy {
     margin-top: 20px;
 }
-
+hr {
+    border: gray 1px solid;
+}
 /* =========================
    RESPONSIVE FOOTER
 ========================= */

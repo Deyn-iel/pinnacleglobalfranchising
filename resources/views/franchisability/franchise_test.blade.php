@@ -40,7 +40,7 @@
 <div class="franchiseable">
     <h2>Are you Franchiseable?</h2>
     <p>Get a FREE FRANCHISABILITY TEST service from us.</p>
-    <a href="https://docs.google.com/forms/d/e/1FAIpQLScyBRgBfjLhO53D4LSuAREDmFD4-Rj4_Bm18SlwIzknXdrfsQ/viewform?pli=1">TAKE FREE FRANCHISABILITY TEST</a>
+    <a href="https://docs.google.com/forms/d/e/1FAIpQLScyBRgBfjLhO53D4LSuAREDmFD4-Rj4_Bm18SlwIzknXdrfsQ/viewform?pli=1" target="_blank">TAKE FREE FRANCHISABILITY TEST</a>
 </div>
 
 <!-- ============================

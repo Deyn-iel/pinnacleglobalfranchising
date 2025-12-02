@@ -1,30 +1,61 @@
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <meta name="csrf-token" content="{{ csrf_token() }}">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 
-        <title>{{ config('app.name', 'Laravel') }}</title>
+    <title>{{ config('app.name', 'Laravel') }}</title>
 
-        <!-- Fonts -->
-        <link rel="preconnect" href="https://fonts.bunny.net">
-        <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @vite(['resources/css/guest.css'])
+</head>
 
-        <!-- Scripts -->
-        @vite(['resources/css/app.css', 'resources/js/app.js'])
-    </head>
-    <body class="font-sans text-gray-900 antialiased">
-        <div class="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0 bg-gray-100">
-            <div>
-                <a href="/">
-                    <x-application-logo class="w-20 h-20 fill-current text-gray-500" />
-                </a>
-            </div>
+<body>
 
-            <div class="w-full sm:max-w-md mt-6 px-6 py-4 bg-white shadow-md overflow-hidden sm:rounded-lg">
-                {{ $slot }}
-            </div>
+<div class="container-login">
+
+    <!-- LEFT SIDE -->
+    <div class="left">
+        <div class="wave"></div>
+        <div class="wave"></div>
+        <div class="wave"></div>
+
+        <h2 class="logo">Pinnacle Global</h2>
+
+        <div class="welcome-box">
+            <h1>Welcome Back!</h1>
+            <p>Login to access your account and manage your dashboard.</p>
         </div>
-    </body>
+
+        <p class="footer-text">© 2025 Pinnacle Global</p>
+    </div>
+
+    <!-- RIGHT SIDE (Laravel Breeze Slot) -->
+    <div class="right">
+        {{ $slot }}
+    </div>
+
+</div>
+<script>
+function togglePassword() {
+    let pass = document.getElementById("password");
+    let eye = document.getElementById("eyeIcon");
+
+    if (pass.type === "password") {
+        pass.type = "text";
+        eye.innerHTML = `
+            <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-4.478 0-8.268-2.943-9.542-7a9.97 9.97 0 0 1 1.562-3.033M6.1 6.1A9.99 9.99 0 0 1 12 4c4.478 0 8.268 2.943 9.542 7a10.05 10.05 0 0 1-4.245 5.318"/>
+            <line x1="1" y1="1" x2="23" y2="23"></line>
+        `;
+    } else {
+        pass.type = "password";
+        eye.innerHTML = `
+            <path d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/>
+            <path d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+        `;
+    }
+}
+</script>
+</body>
 </html>
