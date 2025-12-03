@@ -3,12 +3,15 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Kape-Ilokano Franchise Application</title>
+  <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+
+  <title>Kape-Ilokano Cafe Franchise Application</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 
   <style>
     :root {
-    --accent: #0ea5e9;
-    --accent-dark: #0284c7;
+    --accent: #0d3553;
+    --accent-dark: #165c80;
     --muted: #6b7280;
     --bg: #f8fafc;
     --heading: #0f172a;
@@ -31,7 +34,7 @@ body {
 
 .container {
     max-width: 1100px;
-    margin: 32px auto;
+    margin: auto;
     padding: 20px;
 }
 
@@ -184,7 +187,7 @@ textarea {
 
 .btn:hover {
     background: var(--accent-dark);
-    box-shadow: 0 6px 16px rgba(14, 165, 233, 0.35);
+    box-shadow: 0 6px 16px rgba(2, 66, 95, 0.35);
 }
 
 /* DIVIDER */
@@ -216,6 +219,197 @@ hr {
         width: 100%;
     }
 }
+/* ============================
+   Reference Row Styling
+============================ */
+.ref-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr auto;
+    gap: 14px;
+    margin-bottom: 14px;
+    padding: 12px;
+    background: #ffffff;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+    align-items: center;
+}
+
+.ref-row input {
+    background: #ffffff;
+    border: 1px solid var(--border);
+    padding: 12px;
+    border-radius: var(--radius);
+    font-size: 15px;
+    transition: 0.2s ease;
+}
+
+.ref-row input:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 6px rgba(14,165,233,0.25);
+}
+
+/* ============================
+   Buttons
+============================ */
+.btn.ghost {
+    background: #ffffff;
+    border: 1px solid var(--border);
+    color: var(--muted);
+    padding: 10px 14px;
+    border-radius: var(--radius);
+    cursor: pointer;
+    font-size: 14px;
+    transition: 0.25s ease;
+}
+
+.btn.ghost:hover {
+    background: #f0f9ff;
+    border-color: var(--accent);
+    color: var(--accent);
+    box-shadow: 0 3px 10px rgba(14,165,233,0.15);
+}
+
+#addRef {
+    margin-top: 8px;
+    width: 100%;
+    max-width: 250px;
+}
+
+/* ============================
+   Preview Card
+============================ */
+#previewCard {
+    animation: fadeIn 0.35s ease;
+    border-left: 5px solid var(--accent);
+}
+
+#previewCard h3 {
+    font-size: 20px;
+    margin-bottom: 12px;
+}
+
+#previewContent {
+    font-size: 14px;
+    color: #374151;
+    line-height: 1.7;
+}
+
+#previewContent strong {
+    font-size: 16px;
+    color: var(--heading);
+}
+
+#previewContent .small {
+    font-size: 13px;
+    color: var(--muted);
+}
+
+/* Preview list */
+#previewContent ul {
+    margin-top: 8px;
+    padding-left: 18px;
+}
+
+#previewContent li {
+    margin-bottom: 4px;
+    color: #111827;
+}
+
+/* Fade-in animation */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* ============================
+   Mobile Responsive
+============================ */
+@media (max-width: 700px) {
+    .ref-row {
+        grid-template-columns: 1fr;
+        padding: 14px;
+    }
+
+    .btn.ghost {
+        width: 100%;
+    }
+}
+/* ============================
+   MODAL OVERLAY
+============================ */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.55);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    z-index: 99999;
+    animation: fadeIn 0.25s ease;
+}
+
+/* ============================
+   MODAL CARD
+============================ */
+.modal-card {
+    background: #ffffff;
+    width: 100%;
+    max-width: 600px;
+    max-height: 85vh;
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: 0 12px 35px rgba(0,0,0,0.25);
+    animation: slideUp 0.3s ease;
+    display: flex;
+    flex-direction: column;
+}
+
+/* HEADER */
+.modal-header {
+    background: var(--accent);
+    color: white;
+    padding: 14px 18px;
+    font-size: 18px;
+    font-weight: 700;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.modal-close {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 26px;
+    cursor: pointer;
+    padding: 0 6px;
+}
+
+.modal-close:hover {
+    opacity: 0.7;
+}
+
+/* BODY */
+.modal-body {
+    padding: 20px;
+    overflow-y: auto;
+    max-height: 70vh;
+    color: #374151;
+    font-size: 15px;
+    line-height: 1.7;
+}
+
+/* ANIMATIONS */
+@keyframes slideUp {
+    from { transform: translateY(20px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
 
   </style>
 </head>
@@ -267,7 +461,7 @@ hr {
     <p class="tick-title">Tick all that apply.</p>
 
     <label class="checkbox-row">
-        <input type="checkbox" required>
+        <input type="checkbox" id="agree" required>
         <span>I fully consent and agree.</span>
     </label>
 
@@ -275,7 +469,7 @@ hr {
 
 
       <label>Email Address *</label>
-      <input type="email" required>
+      <input type="email" id="email" required>
 
       <label>Lead Source *</label>
       <select required>
@@ -296,10 +490,11 @@ hr {
       <p> We'd like to know you better.</p>
 
       <label>Complete Name (Surname, Given Name, Middle Name) *</label>
-      <input type="text" required>
+      <input type="text" id="company" required>
 
       <label> Please Attach Latest 2x2 Colored Picture or Selfie in White Background *</label>
-      <input type="file" required>
+      <input type="file" id="docs" multiple>
+
 
       <label>Gender *</label>
       <select required>
@@ -328,10 +523,10 @@ hr {
       <input type="text">
 
       <label>Primary Home Address *</label>
-      <input type="text" required>
+      <input type="text" id="location" required>
 
       <label>Mobile or Residence Number (Please include + area code) *</label>
-      <input type="text" required>
+      <input type="text" id="phone" required>
 
       <label>TIN No. *</label>
       <input type="text" required>
@@ -346,7 +541,7 @@ hr {
       <input type="text">
 
       <label>Dependents (Name & Age) *</label>
-      <textarea></textarea>
+      <textarea id="description" required></textarea>
     </div>
 
     <!-- PROFESSIONAL BACKGROUND -->
@@ -394,13 +589,14 @@ hr {
       <input type="text" required>
 
       <label>Responsibilities *</label>
-      <textarea></textarea>
+      <textarea id="description" required></textarea>
+
 
       <label>Nature of Business *</label>
       <input type="text">
 
       <label>Company Contact Number *</label>
-      <input type="text">
+      <input type="text" id="phone" required>
     </div>
 
     <!-- BUSINESS BACKGROUND -->
@@ -436,12 +632,14 @@ hr {
       <label>If yes, we’d appreciate it if you could share the reasons behind the closure. This
       helps us understand your entrepreneurial journey and how we can better support
       you in your Kape-Ilokano Cafe franchise. *</label>
-      <textarea></textarea>
+      <textarea id="description" required></textarea>
+
 
       <label> Kindly share details about your past or current ventures, your role in managing
       them, and how your experience can contribute to the success of your Kape
       Ilokano Cafe franchise. *</label>
-      <textarea></textarea>
+      <textarea id="description" required></textarea>
+
     </div>
 
     <!-- KAPE-ILOKANO BACKGROUND -->
@@ -494,24 +692,27 @@ hr {
       <input type="text">
 
       <label>What is your main reason for considering a Kape-Ilokano Cafe Franchise? *</label>
-      <textarea></textarea>
+      <textarea id="description" required></textarea>
+
 
       <label> What are your expectations in having a Kape-Ilokano Cafe Franchise? *</label>
-      <textarea></textarea>
+      <textarea id="description" required></textarea>
+
 
       <label> To what extent will you be involved in the day-to-day operations of the franchised
       branch? *</label>
-      <textarea></textarea>
+      <textarea id="description" required></textarea>
+
 
       <label>What is your management Philosophy *</label>
-      <textarea></textarea>
+      <textarea id="description" required></textarea>
 
       <label>Other business interests *</label>
-      <textarea></textarea>
+      <textarea id="description" required></textarea>
 
       <label><b>Socio-civic Affiliations</b> (E.g. Rotary, Lions, Freemason, Others, Etc.) Name 
       Years in Membership *</label>
-      <textarea></textarea>
+      <textarea id="description" required></textarea>
     </div>
 
     <!-- FINANCIAL -->
@@ -574,11 +775,11 @@ hr {
     </p>
 
       <div class="checkbox-row">
-        <input type="checkbox" required> I hereby acknowledge and agree.
+        <input type="checkbox" id="agree" required> I hereby acknowledge and agree.
       </div>
 
       <label>Picture of Government Issued Valid ID with 3 Specimen Signature *</label>
-      <input type="file" required>
+      <input type="file" id="docs" multiple>
 
       <p><b>I consent to the processing of my personal and sensitive information
         provided in this application form and in any supporting documents
@@ -594,269 +795,150 @@ hr {
         accordance with applicable data privacy laws and company policies.
               </p>
       <div class="checkbox-row">
-        <input type="checkbox" required>  I Hereby Acknowledge and Agree.
+        <input type="checkbox" id="agree" required>  I Hereby Acknowledge and Agree.
       </div>
     </div>
 
-    <button class="btn">Submit Application</button>
+        <div style="display:flex; gap:10px; justify-content:flex-end; margin-top:20px;">
+        <button type="button" id="previewBtn" class="btn ghost">Preview Application</button>
+        <button type="submit" class="btn">Submit Application</button>
+    </div>
+
+
+
 
   </form>
 
 </div>
-</body>
-</html>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
 
-{{-- <!doctype html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Franchise Application Process</title>
-  <style>
-    :root{--accent:#0ea5e9;--muted:#6b7280;--bg:#f8fafc}
-    *{box-sizing:border-box}
-    body{font-family:Inter,system-ui,Segoe UI,Arial,sans-serif;margin:0;background:var(--bg);color:#0f172a}
-    .container{max-width:1000px;margin:32px auto;padding:20px}
-    header{display:flex;align-items:center;justify-content:space-between}
-    h1{font-size:20px;margin:0}
-    .lead{color:var(--muted);font-size:14px}
-
-    .card{background:#fff;border-radius:12px;padding:18px;margin-top:18px;box-shadow:0 8px 22px rgba(2,6,23,0.06)}
-    .grid{display:grid;grid-template-columns:1fr 360px;gap:18px}
-    label{display:block;font-size:13px;color:var(--muted);margin-bottom:6px}
-    input[type=text],input[type=email],input[type=tel],select,textarea{width:100%;padding:10px;border-radius:8px;border:1px solid #e6e9ef}
-    textarea{min-height:110px;resize:vertical}
-    .small{font-size:12px;color:var(--muted)}
-    .btn{background:var(--accent);color:#fff;border:0;padding:10px 14px;border-radius:8px;cursor:pointer}
-    .btn.ghost{background:#fff;color:var(--accent);border:1px solid #e6e9ef}
-
-    .steps{display:flex;flex-direction:column;gap:8px}
-    .step{display:flex;gap:12px;align-items:flex-start}
-    .step .num{width:28px;height:28px;border-radius:8px;background:#eef9ff;color:var(--accent);display:flex;align-items:center;justify-content:center;font-weight:700}
-    .step h4{margin:0;font-size:14px}
-    .step p{margin:4px 0 0 0;font-size:13px;color:var(--muted)}
-
-    .files{display:flex;flex-direction:column;gap:8px}
-    .refs{display:flex;flex-direction:column;gap:8px;margin-top:8px}
-    .ref-row{display:flex;gap:8px}
-    .ref-row input{flex:1}
-
-    .summary{background:#fafbff;padding:12px;border-radius:8px;border:1px solid #eef2ff}
-    .summary h3{margin:0 0 8px 0;font-size:16px}
-
-    @media (max-width:920px){.grid{grid-template-columns:1fr}}
-    @media (max-width:520px){header{flex-direction:column;align-items:flex-start;gap:8px}}
-  </style>
-</head>
-<body>
-  <div class="container">
-    <header>
-      <h1>Franchise Application Process</h1>
-      <div class="lead">Apply to become an authorized franchise partner — simple, step-by-step</div>
-    </header>
-
-    <div class="grid">
-      <main class="card">
-        <h2 style="margin:0 0 12px 0;font-size:16px">Application Form</h2>
-        <form id="franchiseForm">
-          <fieldset style="border:0;padding:0;margin:0">
-            <label for="company">Company / Applicant Name</label>
-            <input id="company" type="text" placeholder="e.g. ABC Trading, Juan Dela Cruz" required />
-
-            <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px">
-              <div>
-                <label for="contactName">Contact Person</label>
-                <input id="contactName" type="text" placeholder="Full name" required />
-              </div>
-              <div>
-                <label for="phone">Phone / Mobile</label>
-                <input id="phone" type="tel" placeholder="0917xxxxxxx" required />
-              </div>
-            </div>
-
-            <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px">
-              <div>
-                <label for="email">Email</label>
-                <input id="email" type="email" placeholder="name@company.com" required />
-              </div>
-              <div>
-                <label for="location">Proposed Location</label>
-                <input id="location" type="text" placeholder="City / Barangay / Address" required />
-              </div>
-            </div>
-
-            <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px">
-              <div>
-                <label for="model">Franchise Model</label>
-                <select id="model" required>
-                  <option value="">-- choose model --</option>
-                  <option>Single Branch</option>
-                  <option>Area Development</option>
-                  <option>Master Franchise</option>
-                </select>
-              </div>
-              <div>
-                <label for="investment">Estimated Investment</label>
-                <select id="investment" required>
-                  <option value="">-- estimate --</option>
-                  <option>&lt; ₱500,000</option>
-                  <option>₱500,000 - ₱2,000,000</option>
-                  <option>&gt; ₱2,000,000</option>
-                </select>
-              </div>
-            </div>
-
-            <label style="margin-top:12px">Business Plan / Supporting Documents</label>
-            <div class="files">
-              <input id="docs" type="file" multiple />
-              <div class="small">Allowed: pdf, docx, images. (This is a mock upload — in production the files would be uploaded.)</div>
-            </div>
-
-            <label style="margin-top:12px">Brief Business Description</label>
-            <textarea id="description" placeholder="Short description of your plan, market, and operations" required></textarea>
-
-            <label style="margin-top:12px">References</label>
-            <div class="refs" id="refs">
-              <div class="ref-row">
-                <input placeholder="Reference name (e.g. supplier or partner)" class="ref-name" />
-                <input placeholder="Contact info" class="ref-contact" />
-                <button type="button" class="btn ghost removeRef">Remove</button>
-              </div>
-            </div>
-            <div style="margin-top:8px;display:flex;gap:8px">
-              <button type="button" id="addRef" class="btn ghost">+ Add reference</button>
-            </div>
-
-            <div style="margin-top:12px">
-              <label><input type="checkbox" id="agree" /> I confirm that the information provided is accurate and I agree to the franchise terms.</label>
-            </div>
-
-            <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:14px">
-              <button type="button" id="previewBtn" class="btn ghost">Preview</button>
-              <button type="submit" class="btn">Submit Application</button>
-            </div>
-          </fieldset>
-        </form>
-      </main>
-
-      <aside class="card">
-        <section class="summary">
-          <h3>Process Steps</h3>
-          <div class="steps">
-            <div class="step"><div class="num">1</div><div><h4>Submit Application</h4><p>Fill out the form and attach required documents.</p></div></div>
-            <div class="step"><div class="num">2</div><div><h4>Initial Review</h4><p>Our team reviews eligibility and market fit.</p></div></div>
-            <div class="step"><div class="num">3</div><div><h4>Interview / Site Visit</h4><p>We may schedule a call or visit the proposed site.</p></div></div>
-            <div class="step"><div class="num">4</div><div><h4>Agreement &amp; Training</h4><p>Sign franchise agreement and complete onboarding.</p></div></div>
-            <div class="step"><div class="num">5</div><div><h4>Launch Support</h4><p>We provide support during setup and launch.</p></div></div>
-          </div>
-        </section>
-
-        <section style="margin-top:12px">
-          <h3 style="margin:0 0 8px 0">Quick Tips</h3>
-          <ul style="margin:0;padding-left:18px;color:var(--muted)">
-            <li>Prepare a 1–2 page business summary.</li>
-            <li>Attach proof of funds if available.</li>
-            <li>Provide clear contact details for references.</li>
-          </ul>
-        </section>
-
-        <section style="margin-top:12px">
-          <h3 style="margin:0 0 8px 0">Estimated Timeline</h3>
-          <div class="small">Initial review: 5–7 business days • Complete process: 4–8 weeks (subject to evaluation)</div>
-        </section>
-      </aside>
-    </div>
-
-    <section id="previewCard" class="card" style="display:none;margin-top:18px">
-      <h3 style="margin:0 0 12px 0">Application Preview</h3>
-      <div id="previewContent"></div>
-    </section>
-  </div>
-
-  <script>
     const refsContainer = document.getElementById('refs');
     const addRefBtn = document.getElementById('addRef');
     const previewBtn = document.getElementById('previewBtn');
-    const previewCard = document.getElementById('previewCard');
     const previewContent = document.getElementById('previewContent');
     const form = document.getElementById('franchiseForm');
 
-    function addRefRow(name='',contact=''){
-      const row = document.createElement('div');
-      row.className = 'ref-row';
-      row.innerHTML = `
-        <input placeholder="Reference name (e.g. supplier or partner)" class="ref-name" value="${escapeHtml(name)}" />
-        <input placeholder="Contact info" class="ref-contact" value="${escapeHtml(contact)}" />
-        <button type="button" class="btn ghost removeRef">Remove</button>
-      `;
-      row.querySelector('.removeRef').addEventListener('click',()=>row.remove());
-      refsContainer.appendChild(row);
+    // Bootstrap modal instance
+    const previewModal = new bootstrap.Modal(document.getElementById('previewModal'));
+
+    function addRefRow(name = '', contact = '') {
+        const row = document.createElement('div');
+        row.className = 'ref-row';
+        row.innerHTML = `
+            <input placeholder="Reference name" class="ref-name" value="${escapeHtml(name)}" />
+            <input placeholder="Contact info" class="ref-contact" value="${escapeHtml(contact)}" />
+            <button type="button" class="btn ghost removeRef">Remove</button>
+        `;
+        row.querySelector('.removeRef').addEventListener('click', () => row.remove());
+        refsContainer.appendChild(row);
     }
 
-    addRefBtn.addEventListener('click',()=>addRefRow());
-    // remove existing remove buttons (first one)
-    refsContainer.querySelectorAll('.removeRef').forEach(b=>b.addEventListener('click',e=>e.target.closest('.ref-row').remove()));
+    addRefBtn?.addEventListener('click', () => addRefRow());
 
-    previewBtn.addEventListener('click',()=>{
-      const data = collectForm();
-      if(!data) return; // validation handled
-      previewContent.innerHTML = `<strong>${escapeHtml(data.company)}</strong><br>`+
-        `<div class="small">Contact: ${escapeHtml(data.contactName)} • ${escapeHtml(data.phone)} • ${escapeHtml(data.email)}</div><br>`+
-        `<div>Location: ${escapeHtml(data.location)}</div>`+
-        `<div>Model: ${escapeHtml(data.model)} • Investment: ${escapeHtml(data.investment)}</div><br>`+
-        `<div><strong>Description</strong><div>${escapeHtml(data.description)}</div></div><br>`+
-        `<div><strong>References</strong><ul>${data.references.map(r=>`<li>${escapeHtml(r.name)} — ${escapeHtml(r.contact)}</li>`).join('')}</ul></div>`+
-        `<div class="small">Attached files: ${data.files.length} (mock)</div>`;
-      previewCard.style.display = 'block';
-      previewCard.scrollIntoView({behavior:'smooth'});
+    previewBtn?.addEventListener('click', () => {
+        const data = collectForm();
+        if (!data) return;
+
+        previewContent.innerHTML =
+            `<strong style='font-size:18px;'>${escapeHtml(data.company)}</strong><br>` +
+            `<div class="small text-muted mt-1">Contact: ${escapeHtml(data.contactName)} • ${escapeHtml(data.phone)} • ${escapeHtml(data.email)}</div><hr>` +
+            `<div><b>Location:</b> ${escapeHtml(data.location)}</div>` +
+            `<div><b>Model:</b> ${escapeHtml(data.model)}</div>` +
+            `<div><b>Investment:</b> ${escapeHtml(data.investment)}</div><hr>` +
+            `<div><strong>Description</strong><p>${escapeHtml(data.description)}</p></div>` +
+            `<div><strong>References</strong><ul>${data.references.map(r =>
+                `<li>${escapeHtml(r.name)} — ${escapeHtml(r.contact)}</li>`
+            ).join('')}</ul></div>` +
+            `<div class="small text-muted"><b>Files uploaded:</b> ${data.files.length}</div>`;
+
+        previewModal.show();
     });
 
-    form.addEventListener('submit',e=>{
-      e.preventDefault();
-      const data = collectForm();
-      if(!data) return;
-      // mock submit
-      console.log('Franchise application payload',data);
-      alert('Application submitted (mock). Check console for payload.');
-      form.reset();
-      refsContainer.innerHTML = '';
-      addRefRow();
-      previewCard.style.display='none';
+    form?.addEventListener('submit', e => {
+        e.preventDefault();
+        const data = collectForm();
+        if (!data) return;
+
+        alert("Application submitted! (Mock)");
+        console.log("SUBMITTED DATA:", data);
+
+        form.reset();
+        refsContainer.innerHTML = '';
+        addRefRow();
+        previewModal.hide();
     });
 
-    function collectForm(){
-      const company = document.getElementById('company').value.trim();
-      const contactName = document.getElementById('contactName').value.trim();
-      const phone = document.getElementById('phone').value.trim();
-      const email = document.getElementById('email').value.trim();
-      const location = document.getElementById('location').value.trim();
-      const model = document.getElementById('model').value;
-      const investment = document.getElementById('investment').value;
-      const description = document.getElementById('description').value.trim();
-      const agree = document.getElementById('agree').checked;
+    function collectForm() {
+        const company = document.getElementById('company')?.value.trim();
+        const contactName = document.getElementById('contactName')?.value.trim();
+        const phone = document.getElementById('phone')?.value.trim();
+        const email = document.getElementById('email')?.value.trim();
+        const location = document.getElementById('location')?.value.trim();
+        const model = document.getElementById('model')?.value;
+        const investment = document.getElementById('investment')?.value;
+        const description = document.getElementById('description')?.value.trim();
+        const agree = document.getElementById('agree')?.checked;
 
-      if(!company||!contactName||!phone||!email||!location||!model||!investment||!description){
-        alert('Please complete all required fields.');
-        return null;
-      }
-      if(!agree){alert('Please confirm agreement to terms.');return null}
+        if (!company || !contactName || !phone || !email || !location || !model || !investment || !description) {
+            alert("Please complete all required fields.");
+            return null;
+        }
+        if (!agree) {
+            alert("Please confirm agreement to terms.");
+            return null;
+        }
 
-      const files = Array.from(document.getElementById('docs').files).map(f=>({name:f.name,size:f.size,type:f.type}));
-      const references = Array.from(refsContainer.querySelectorAll('.ref-row')).map(r=>({
-        name: r.querySelector('.ref-name').value.trim(),
-        contact: r.querySelector('.ref-contact').value.trim()
-      })).filter(r=>r.name||r.contact);
+        const files = Array.from(document.getElementById('docs')?.files || [])
+            .map(f => ({ name: f.name, size: f.size, type: f.type }));
 
-      return {company,contactName,phone,email,location,model,investment,description,files,references};
+        const references = Array.from(refsContainer.querySelectorAll('.ref-row')).map(r => ({
+            name: r.querySelector('.ref-name')?.value.trim(),
+            contact: r.querySelector('.ref-contact')?.value.trim()
+        })).filter(r => r.name || r.contact);
+
+        return { company, contactName, phone, email, location, model, investment, description, files, references };
     }
 
-    function escapeHtml(str){
-      return String(str||'').replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":"&#39;"})[m]);
+    function escapeHtml(str) {
+        return String(str || '').replace(/[&<>"']/g, m => ({
+            '&': '&amp;',
+            '<': '&lt;',
+            '>': '&gt;',
+            '"': '&quot;',
+            "'": '&#39;'
+        }[m]));
     }
 
-    // initial ref row
-    refsContainer.innerHTML = '';
+    refsContainer.innerHTML = "";
     addRefRow();
-  </script>
+
+});
+</script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- PREVIEW MODAL -->
+<div class="modal fade" id="previewModal" tabindex="-1">
+  <div class="modal-dialog modal-lg modal-dialog-centered modal-scrollable">
+    <div class="modal-content" style="border-radius:12px;">
+      
+      <div class="modal-header" style="background:#0d3553; color:white;">
+        <h5 class="modal-title">Application Preview</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+
+      <div class="modal-body" id="previewContent" style="font-size:15px; line-height:1.6;">
+        <!-- Preview content inserts here -->
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button class="btn btn-primary">Submit Application</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
 </body>
-</html> --}}
+</html>

@@ -1,3 +1,6 @@
+@import './guest.css';
+@import './franchise-app.css';
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;

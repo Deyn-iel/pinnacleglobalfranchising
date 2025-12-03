@@ -57,6 +57,38 @@ p {
     line-height: 1.6;
     margin-bottom: 10px;
 }
+.open-hours {
+    width: max-content;
+    position: relative;
+}
+
+.hours-btn {
+    background: none;
+    border: none;
+    font-size: 16px;
+    cursor: pointer;
+    color: #ffffff;
+}
+
+.hours-menu {
+    display: none;
+    margin-top: 6px;
+    padding: 12px;
+    background: transparent;
+}
+
+.open-hours.show .hours-menu {
+    display: block;
+}
+
+.arrow {
+    margin-left: 6px;
+    transition: transform 0.3s;
+}
+
+.open-hours.show .arrow {
+    transform: rotate(180deg);
+}
 
 /* Tablets */
 @media (max-width: 768px) {

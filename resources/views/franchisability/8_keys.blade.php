@@ -15,6 +15,7 @@
     <link rel="stylesheet" href="{{ asset('css/main.css') }}">
     <link rel="stylesheet" href="{{ asset('css/franchisability/8_keys.css') }}">
     <link rel="stylesheet" href="{{ asset('css/chatbot.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/scroll-top.css') }}">
 
     <!-- ✅ EXTRA PAGE-SPECIFIC STYLES -->
     @stack('styles')
@@ -71,6 +72,7 @@
 
     {{-- ✅ chatbot --}}
     @include('partials.chatbot')
+    @include('partials.scroll-top')
     </main>
 
     {{-- ✅ FOOTER --}}

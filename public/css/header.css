@@ -1,8 +1,9 @@
-html, body {
+/* @layer components {
+    html, body {
     height: 100%;
     overflow-x: hidden;
     -webkit-overflow-scrolling: auto !important;
-}
+} */
 
 body {
     background-color: #0d3553;
@@ -189,3 +190,5 @@ body {
         background: #fff;
     }
 }
+
+

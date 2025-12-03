@@ -17,8 +17,6 @@
     <link rel="stylesheet" href="{{ asset('css/scroll-top.css') }}">
     
 
-    <!-- ✅ EXTRA PAGE-SPECIFIC STYLES -->
-    @stack('styles')
 </head>
 
 <body>
@@ -28,6 +26,11 @@
 
     {{-- ✅ PAGE CONTENT --}}
     <main>
+        
+        {{-- <div class="promo-image-container">
+    <img src="{{ asset('img/1fj.jpg') }}" alt="Be a KI Owner">
+    </div> --}}
+
         <!-- IMAGE + VIDEO SECTION -->
     <div class="image">
 
@@ -45,8 +48,6 @@
         </div>
 
     </div>
-
-
 
 
 <!-- ============================
@@ -150,8 +151,12 @@
     <!-- LOGIN BUTTON RIGHT SIDE -->
             <a href="{{ url('/login') }}" class="login-btn ms-lg-3 mt-3 mt-lg-0">
                 LOGIN
+            </a> <br>
+            <a href="{{ route('franchise.process') }}">
+                Franchise Now
             </a>
 </section>
+
 {{-- ✅ chatbot --}}
     @include('partials.chatbot')
     @include('partials.scroll-top')

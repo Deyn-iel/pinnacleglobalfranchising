@@ -8,9 +8,6 @@ use Illuminate\Support\Facades\Auth;
 Route::get('/', function () {
     return view('welcome');
 });
-Route::get('/login2', function () {
-    return view('login2');
-});
 
 //about 
 Route::get('/about/pinnacle', function () {
@@ -66,10 +63,6 @@ Route::get('/franchisability/franchising_checklist', function () {
     return view('franchisability.franchising_checklist');
 });
 
-//franchise application
-Route::get('/user-dashboard/franchise-application-process', function () {
-    return view('user-dashboard.franchise-application-process.franchise-application-process');
-})->name('franchise.process');
 //ordering supplies
 Route::get('/user-dashboard/ordering-supplies', function () {
     return view('user-dashboard.ordering-supplies.ordering-supplies');
@@ -78,6 +71,10 @@ Route::get('/user-dashboard/ordering-supplies', function () {
 Route::get('/user-dashboard/uploading-requirements', function () {
     return view('user-dashboard.uploading-requirements.uploading-requirements');
 })->name('uploading.requirements');
+
+Route::get('/franchise-application-process', function () {
+    return view('/franchise-application-process/franchise-application-process');
+})->name('franchise.process');
 
 
 // Dashboard for normal users

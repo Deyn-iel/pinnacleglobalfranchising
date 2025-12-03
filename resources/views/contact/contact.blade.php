@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pinnacle Global</title>
+    <title>@yield('title', 'Contact') | Pinnacle Global</title>
 
     <!-- ✅ BOOTSTRAP -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -15,6 +15,7 @@
     <link rel="stylesheet" href="{{ asset('css/main.css') }}">
     <link rel="stylesheet" href="{{ asset('css/contact/contact.css') }}">
     <link rel="stylesheet" href="{{ asset('css/chatbot.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/scroll-top.css') }}">
 
     <!-- ✅ EXTRA PAGE-SPECIFIC STYLES -->
     @stack('styles')
@@ -81,8 +82,24 @@
             <p>(078) 2582529 | 0916 169 7513</p>
 
             <h4 class="section-title mt-4">Office Hours</h4>
-            <p>Open today <strong>08:30 – 17:30</strong></p>
+            <div class="open-hours">
+            <button class="hours-btn">
+                Open today <strong>08:30AM – 5:30PM</strong>
+                <span class="arrow">▼</span>
+            </button>
+
+            <div class="hours-menu">
+                <p>Monday: 08:30AM – 5:30PM</p>
+                <p>Tuesday: 08:30AM – 5:30PM</p>
+                <p>Wednesday: 08:30AM – 5:30PM</p>
+                <p>Thursday: 08:30AM – 5:30PM</p>
+                <p>Friday: 08:30AM – 5:30PM</p>
+                <p>Saturday: 08:30AM – 5:30PM</p>
+                <p>Sunday: Closed</p>
+            </div>
         </div>
+
+                </div>
 
     </div>
 
@@ -105,6 +122,7 @@
 
 {{-- ✅ chatbot --}}
     @include('partials.chatbot')
+    @include('partials.scroll-top')
     </main>
 
 
@@ -118,6 +136,10 @@
 
     <!-- ✅ SCRIPTS -->
     <script src="{{ asset('js/app.js') }}"></script>
+<script>document.querySelector('.hours-btn').addEventListener('click', function () {
+    document.querySelector('.open-hours').classList.toggle('show');
+});
 
+</script>
 </body>
 </html>

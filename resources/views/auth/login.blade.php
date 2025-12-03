@@ -1,4 +1,11 @@
 <x-guest-layout>
+@section('title', 'Login')
+@if (Route::has('register'))
+            <div class="extra-links">
+                <a href="{{ route('register') }}" class="link-small">Register</a>
+                <a href="{{ url('/') }}" class="link-small">Home</a>
+            </div>
+            @endif
 
     <h2 class="login-title">Login</h2>
         <p class="login-sub">Welcome! Login to get amazing discounts and offers only for you.</p>
@@ -51,23 +58,23 @@
             </label>
         </div>
 
-        <div class="flex items-center justify-end mt-4">
-            @if (Route::has('password.request'))
-                <a class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" href="{{ route('password.request') }}">
-                    {{ __('Forgot your password?') }}
-                </a>
-            @endif
-            @if (Route::has('register'))
-            <div class="extra-links">
-                <a href="{{ route('register') }}" class="link-small">Register</a>
-                <a href="{{ url('/') }}" class="link-small">Home</a>
-            </div>
-            @endif
-  
+        <div class="flex items-center justify-between mt-4 w-full">
 
-            <x-primary-button class="ms-3">
+            @if (Route::has('password.request'))
+    <a  href="{{ route('password.request') }}"
+        class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md 
+               focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+        style="text-decoration: none;">
+        {{ __('Forgot your password?') }}
+    </a>
+@endif
+
+
+            <x-primary-button>
                 {{ __('Log in') }}
             </x-primary-button>
+
         </div>
+
     </form>
 </x-guest-layout>

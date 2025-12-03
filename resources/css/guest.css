@@ -1,3 +1,4 @@
+
 * {
             margin: 0;
             padding: 0;
@@ -141,8 +142,8 @@
         @media (max-width: 850px) {
             .container-login {
                 flex-direction: column;
-                max-width: 100%;
-                min-height: auto;
+                width: 100%;
+                min-height: 100%;
             }
 
             .right {
@@ -170,19 +171,16 @@
     font-weight: 500;
     cursor: pointer;
     transition: 0.2s ease-in-out;
+    text-decoration: none;
 }
 
 .link-small:hover {
     color: #093048;
-    text-decoration: none;
 }
 
 /* Mobile responsive */
 @media (max-width: 480px) {
-    .extra-links {
-        justify-content: center;
-        gap: 12px;
-    }
+
 
     .link-small {
         font-size: 15px;
@@ -190,5 +188,3 @@
         padding: 4px 0;
     }
 }
-
-        

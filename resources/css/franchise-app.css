@@ -1,0 +1,210 @@
+:root {
+    --accent: #0ea5e9;
+    --accent-dark: #0284c7;
+    --muted: #6b7280;
+    --bg: #f8fafc;
+    --heading: #0f172a;
+    --card-bg: #ffffff;
+    --border: #d1d5db;
+}
+
+/* GLOBAL */
+* {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Inter, Arial, sans-serif;
+    margin: 0;
+    background: var(--bg);
+    color: var(--heading);
+    line-height: 1.6;
+}
+
+.container {
+    max-width: 1100px;
+    margin: 32px auto;
+    padding: 20px;
+}
+
+/* TITLES */
+h1 {
+    font-size: 30px;
+    margin-bottom: 10px;
+    font-weight: 700;
+}
+
+.lead {
+    color: var(--muted);
+    font-size: 15px;
+    margin-bottom: 20px;
+}
+
+/* CARD */
+.card {
+    background: var(--card-bg);
+    border-radius: 16px;
+    padding: 26px;
+    margin-top: 22px;
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.06);
+    transition: 0.3s ease;
+}
+
+.card:hover {
+    box-shadow: 0 16px 34px rgba(0, 0, 0, 0.1);
+}
+
+/* SECTION TITLE */
+.section-title {
+    font-size: 20px;
+    font-weight: 700;
+    margin-top: 10px;
+    margin-bottom: 14px;
+    color: var(--heading);
+    border-left: 5px solid var(--accent);
+    padding-left: 12px;
+}
+
+/* INPUTS */
+label {
+    display: block;
+    margin-top: 15px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #374151;
+}
+
+input,
+select,
+textarea {
+    width: 100%;
+    padding: 12px 14px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    margin-top: 6px;
+    font-size: 15px;
+    background: #ffffff;
+    transition: 0.2s;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 6px rgba(14, 165, 233, 0.3);
+    background: #f8feff;
+}
+
+textarea {
+    min-height: 120px;
+    resize: vertical;
+}
+
+/* SECTION WRAPPER */
+.checkbox-section {
+    margin-top: 20px;
+}
+
+/* BLOCK TEXT */
+.text-block {
+    font-size: 14px;
+    line-height: 1.6;
+    color: #374151;
+    margin-bottom: 12px;
+    text-align: justify;
+}
+
+/* TITLE */
+.tick-title {
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+/* CHECKBOX + LABEL */
+.checkbox-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    font-size: 15px;
+    color: #0d3553;
+    cursor: pointer;
+    width: 100%;
+}
+
+.checkbox-row input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    margin-top: 2px; /* aligns with text */
+}
+
+/* RESPONSIVE */
+@media (max-width: 600px) {
+    .text-block {
+        font-size: 13px;
+    }
+
+    .checkbox-row {
+        font-size: 14px;
+        gap: 12px;
+    }
+
+    .checkbox-row input[type="checkbox"] {
+        width: 20px;
+        height: 20px;
+    }
+}
+
+
+/* BUTTON */
+.btn {
+    background: var(--accent);
+    color: white;
+    border: none;
+    padding: 14px 20px;
+    border-radius: 10px;
+    margin-top: 22px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+    transition: 0.3s ease;
+    width: 100%;
+    max-width: 240px;
+}
+
+.btn:hover {
+    background: var(--accent-dark);
+    box-shadow: 0 6px 16px rgba(14, 165, 233, 0.35);
+}
+
+/* DIVIDER */
+hr {
+    margin: 30px 0;
+    border: 0;
+    border-top: 1px solid #e5e7eb;
+}
+
+/* GRID FIX */
+@media (max-width: 700px) {
+    .grid2 {
+        display: block !important;
+    }
+
+    .container {
+        padding: 15px;
+    }
+
+    .card {
+        padding: 22px;
+    }
+
+    h1 {
+        font-size: 24px;
+    }
+
+    .btn {
+        width: 100%;
+    }
+}

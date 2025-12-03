@@ -14,6 +14,7 @@
     <link rel="stylesheet" href="{{ asset('css/footer.css') }}">
     <link rel="stylesheet" href="{{ asset('css/about/franchise.css') }}">
     <link rel="stylesheet" href="{{ asset('css/chatbot.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/scroll-top.css') }}">
 
     <!-- ✅ EXTRA PAGE-SPECIFIC STYLES -->
     @stack('styles')
@@ -98,6 +99,7 @@
 
     {{-- ✅ chatbot --}}
     @include('partials.chatbot')
+    @include('partials.scroll-top')
 
     </main>
 

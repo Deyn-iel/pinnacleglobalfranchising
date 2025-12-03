@@ -2,7 +2,31 @@
    IMAGE + VIDEO SECTION
 ==========================*/
 
-/* Outer wrapper */
+/* Centering Wrapper */
+.promo-image-container {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    padding: 30px 20px;
+}
+
+/* Responsive Image Styling */
+.promo-image-container img {
+    width: 100%;
+    max-width: 900px;          /* Adjust max width here */
+    height: auto;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+    transition: transform 0.4s ease, box-shadow 0.3s ease;
+}
+
+/* Mobile Optimization */
+@media (max-width: 480px) {
+    .promo-image-container {
+        padding: 20px 10px;
+    }
+}
+
+
 /* Outer wrapper */
 .image {
     display: flex;
