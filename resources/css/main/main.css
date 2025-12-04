@@ -316,3 +316,211 @@ form {
     font-size: 14px;
     opacity: 0.7;
 }
+
+/* ===============================
+   FRANCHISE NOW PAGE SECTION
+   PROFESSIONAL + ANIMATION
+================================*/
+.franchise-now-container {
+    margin-top: 20px;
+    padding: 100px 30px;
+    background: #0d3553;
+    text-align: center;
+    overflow: hidden;
+}
+
+/* Title */
+.franchise-now-title {
+    font-family: 'Times New Roman', serif;
+    font-size: 2.8rem;
+    font-weight: 800;
+    color: #ffffff;
+    letter-spacing: 1px;
+    animation: fadeDown 0.8s ease-out;
+}
+
+.franchise-now-underline {
+    width: 90px;
+    height: 4px;
+    background: #ffffff;
+    margin: 12px auto 30px;
+    border-radius: 3px;
+    animation: fadeDown 1s ease-out;
+}
+
+.franchise-now-subtext {
+    max-width: 720px;
+    margin: 0 auto 60px;
+    font-size: 1.2rem;
+    font-weight: 400;
+    color: #ffffff;
+    line-height: 1.7;
+    animation: fadeIn 1.2s ease-out;
+}
+
+/* Steps Grid */
+.franchise-steps {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 40px;
+    margin-top: 40px;
+}
+
+/* Each Step Card */
+.step {
+    background: rgba(255, 255, 255, 0.97);
+    padding: 35px 25px;
+    border-radius: 16px;
+    box-shadow: 0 10px 35px rgba(0, 0, 0, 0.15);
+    transition: 0.35s ease;
+    position: relative;
+    animation: fadeUp 1s ease forwards;
+    opacity: 0;
+}
+
+/* Glow hover effect */
+.step:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 40px rgba(0, 200, 255, 0.25);
+}
+
+/* Step Number */
+.step-icon {
+    width: 65px;
+    height: 65px;
+    background: linear-gradient(135deg, #0a3556, #006b9d);
+    color: white;
+    font-size: 1.4rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    margin: 0 auto 18px;
+    font-weight: 800;
+    box-shadow: 0 4px 10px rgba(0, 153, 255, 0.4);
+}
+
+/* Titles inside card */
+.step h3 {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #0a3556;
+    margin-bottom: 12px;
+}
+
+/* Paragraph */
+.step p {
+    font-size: 1rem;
+    color: #444;
+    line-height: 1.7;
+}
+
+/* CTA BUTTON */
+.franchise-now-button-wrapper {
+    margin-top: 70px;
+}
+
+.franchise-now-btn {
+    background: #ffffff;
+    color: #002635;
+    padding: 16px 42px;
+    font-size: 1.2rem;
+    font-weight: 700;
+    border-radius: 10px;
+    text-decoration: none;
+    transition: 0.35s ease;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+}
+
+.franchise-now-btn:hover {
+    background: #e4e4e4;
+    box-shadow: 0 8px 25px rgba(0, 200, 255, 0.45);
+    transform: translateY(-3px);
+}
+
+/* ===============================
+   ANIMATIONS
+================================*/
+@keyframes fadeUp {
+    0% { opacity: 0; transform: translateY(25px); }
+    100% { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeIn {
+    0% { opacity: 0; }
+    100% { opacity: 1; }
+}
+
+@keyframes fadeDown {
+    0% { opacity: 0; transform: translateY(-20px); }
+    100% { opacity: 1; transform: translateY(0); }
+}
+
+/* ===============================
+   RESPONSIVE
+================================*/
+@media (max-width: 600px) {
+    .franchise-now-title {
+        font-size: 2.2rem;
+    }
+
+    .franchise-now-subtext {
+        font-size: 1.05rem;
+    }
+
+    .step {
+        padding: 28px 20px;
+    }
+
+    .step h3 {
+        font-size: 1.25rem;
+    }
+}
+
+.section-title {
+    font-family: 'Times New Roman', serif;
+    text-align: center;
+    margin: 90px 0 20px;
+    font-size: 2.2rem;
+    font-weight: 700;
+    color: #ffffff;
+}
+
+.drinks-container {
+    max-width: 1100px;
+    margin: auto;
+    padding: 20px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 30px;
+}
+
+.drink-card {
+    padding: 20px;
+    border-radius: 18px;
+    text-align: center;
+    transition: transform 0.3s ease;
+}
+
+.drink-card:hover {
+    transform: translateY(-5px);
+}
+
+.drink-card img {
+    width: 100%;
+    border-radius: 16px;
+}
+
+/* FIX: Ensure AOS elements stay visible */
+[data-aos] {
+    opacity: 0;
+    transform: translateY(40px);
+    transition-property: opacity, transform !important;
+    transition-duration: 1s !important;
+}
+
+[data-aos].aos-animate {
+    opacity: 0;
+    transform: translateY(0);
+}
+

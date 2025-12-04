@@ -15,8 +15,16 @@
 
 <body>
 <div class="container">
+  
+  <div class="container header-flex">
+    <h1>KAPE-ILOKANO CAFE CORPORATION</h1>
+    <a href="{{ url('/') }}" class="link-small"> < Back</a>
+</div>
 
-  <h1>KAPE-ILOKANO CAFE CORPORATION</h1>
+
+  <div class="img-container">
+    <img src="{{ asset('img/KI WALLPAPER 1.jpg') }}" alt="">
+</div>
   <p class="lead">
     Thank you for your interest in franchising Kape-Ilokano Cafe!  
     This form is the complete official franchise application.
@@ -27,9 +35,7 @@
     <!-- INTRO -->
     <div class="card">
       <p>
-        At Kape-Ilokano, we take pride in sharing the rich flavors of Ilokano coffee culture.
-        With over <b>18 partners nationwide</b>, we continue to grow,  bringing the authentic taste of locally sourced 
-      coffee to more communities. <br><br>
+        At Kape-Ilokano, we take pride in sharing the rich flavors of Ilokano coffee culture. With over <b>18 partners nationwide</b>, we continue to grow,  bringing the authentic taste of locally sourced coffee to more communities. <br><br>
        Submitting a franchise application is simply the first step in our process and does not create 
       any obligations for either party. Once received, we will carefully review your application and 
       evaluate your proposal. <br><br>

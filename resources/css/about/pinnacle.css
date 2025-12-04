@@ -1,0 +1,98 @@
+/* ===============================
+   ABOUT US SECTION
+================================*/
+.about-section {
+    background: #0a3556; /* Dark blue background */
+    padding: 70px 20px;
+    color: white;
+}
+
+/* Title */
+.about-title {
+    text-align: center;
+    font-size: 2.1rem;
+    font-weight: 700;
+    margin-bottom: 10px;
+}
+
+.about-underline {
+    width: 70px;
+    height: 3px;
+    background: white;
+    margin: 0 auto 50px;
+}
+
+/* Rows */
+.about-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 70px;
+    margin-bottom: 80px;
+}
+
+.about-row.reverse {
+    flex-direction: row-reverse;
+}
+
+/* Images */
+.about-img img {
+    width: 600px;
+    max-width: 100%;
+    object-fit: cover;
+}
+
+/* Text */
+.about-text {
+    max-width: 550px;
+}
+
+.about-text h3 {
+    font-size: 2rem;
+    margin-bottom: 15px;
+    font-weight: 700;
+}
+
+.about-text p {
+    font-weight: bold;
+    font-size: 1.3rem;
+    line-height: 1.7;
+    margin-bottom: 15px;
+    color: #bdbdbd;
+}
+
+/* ===============================
+   RESPONSIVE — Mobile
+================================*/
+@media (max-width: 900px) {
+
+    .about-row,
+    .about-row.reverse {
+        flex-direction: column;
+        text-align: left;          /* ⬅ keep text LEFT aligned */
+        align-items: flex-start;   /* ⬅ align content to left */
+    }
+
+    /* Images centered in mobile for better UI */
+    .about-img {
+        width: 100%;
+        display: flex;
+        justify-content: center;   /* center only the image */
+    }
+
+    .about-img img {
+        width: 100%;
+        max-width: 450px;
+    }
+
+    .about-text {
+        max-width: 100%;
+        text-align: left;          /* ensure text stays LEFT */
+    }
+
+    .about-text h3,
+    .about-text p {
+        text-align: left;          /* enforce left alignment */
+    }
+}
+

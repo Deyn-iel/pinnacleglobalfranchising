@@ -21,7 +21,8 @@
             'resources/js/scroll/app.js',
             'resources/js/app.js'])
     
-
+<!-- AOS Animation Library -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
 </head>
 
 <body>
@@ -113,7 +114,82 @@
     </div>
 </section>
 
+<div class="franchise-now-container">
 
+    <h2 class="franchise-now-title">Franchise Now</h2>
+    <div class="franchise-now-underline"></div>
+
+    <p class="franchise-now-subtext">
+        Start your franchising journey with Pinnacle Global Franchising Group Inc. and turn your vision into a successful business.
+    </p>
+
+    <!-- STEPS -->
+    <div class="franchise-steps">
+
+        <div class="step">
+            <div class="step-icon">1</div>
+            <h3>Submit Franchise Application</h3>
+            <p>Fill out the application form with your business details and requirements.</p>
+        </div>
+
+        <div class="step">
+            <div class="step-icon">2</div>
+            <h3>Attend Business Orientation</h3>
+            <p>Learn more about the franchise model, packages, and operational guidelines.</p>
+        </div>
+
+        <div class="step">
+            <div class="step-icon">3</div>
+            <h3>Approval & Contract Signing</h3>
+            <p>Once approved, sign the franchise agreement to start your journey.</p>
+        </div>
+
+        <div class="step">
+            <div class="step-icon">4</div>
+            <h3>Store Setup & Training</h3>
+            <p>We assist you with branding, store setup, operations, and crew training.</p>
+        </div>
+
+        <div class="step">
+            <div class="step-icon">5</div>
+            <h3>Grand Opening</h3>
+            <p>Open your franchise store and start serving customers with full support.</p>
+        </div>
+        
+    </div>
+
+    <!-- CTA BUTTON -->
+    <div class="franchise-now-button-wrapper">
+        <a href="{{ route('franchise.process') }}" class="franchise-now-btn">Fill-up Now</a>
+    </div>
+<h1 class="section-title">Kape Ilokano Drinks</h1>
+<div class="drinks-container">
+
+        <!-- SLIDE FROM LEFT -->
+        <div class="drink-card" data-aos="fade-right" data-aos-duration="1000">
+            <img src="{{ asset('img/coco ilokano.png') }}" alt="">
+        </div>
+
+        <!-- ZOOM IN + FLOAT -->
+        <div class="drink-card" data-aos="zoom-in-up" data-aos-duration="1200">
+            <img src="{{ asset('img/GUEST23.png') }}" alt="Drink 2">
+        </div>
+
+        <!-- SLIDE FROM RIGHT -->
+        <div class="drink-card" data-aos="fade-left" data-aos-duration="1000">
+            <img src="{{ asset('img/GUEST2.png') }}" alt="Drink 3">
+        </div>
+
+    </div>
+</div>
+
+{{-- <!-- LOGIN BUTTON RIGHT SIDE -->
+            <a href="{{ url('/login') }}" class="login-btn ms-lg-3 mt-3 mt-lg-0">
+                LOGIN
+            </a> <br>
+            <a href="">
+                Franchise Now
+            </a> --}}
 <!-- INQUIRE NOW FORM -->
 
 <section class="inquire mt-5 text-center">
@@ -151,13 +227,7 @@
             This site is protected by reCAPTCHA and the <a href="https://policies.google.com/privacy" target="_blank">Google Privacy</a> Policy and <a href="https://policies.google.com/terms" target="_blank">Terms of Service</a> apply.
         </p>
     </div>
-    <!-- LOGIN BUTTON RIGHT SIDE -->
-            <a href="{{ url('/login') }}" class="login-btn ms-lg-3 mt-3 mt-lg-0">
-                LOGIN
-            </a> <br>
-            <a href="{{ route('franchise.process') }}">
-                Franchise Now
-            </a>
+    
 </section>
 
 {{-- ✅ chatbot --}}
@@ -173,6 +243,13 @@
 
     <script src="{{ asset('js/main.js') }}"></script>
 
-
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        AOS.init({
+            once: false,   // animation plays every scroll
+            offset: 100,   // trigger earlier
+            easing: 'ease-out-back',
+        });
+    </script>
 </body>
 </html>
