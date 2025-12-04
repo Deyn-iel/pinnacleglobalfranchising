@@ -87,6 +87,27 @@ Route::view('/admin/admin', 'admin.admin')
     ->middleware(['auth', 'admin'])
     ->name('admin.admin');
 
+Route::middleware(['auth', 'admin'])->group(function () {
+
+    Route::get('/admin/admin', function () {
+        return view('admin.admin');
+    })->name('admin.admin');
+
+    Route::get('/admin/franchise', function () {
+        return view('admin.franchise');
+    })->name('admin.franchise');
+
+    Route::get('/admin/supplies', function () {
+        return view('admin.supplies');
+    })->name('admin.supplies');
+
+    Route::get('/admin/requirements', function () {
+        return view('admin.requirements');
+    })->name('admin.requirements');
+
+});
+
+
 
 //logout
 Route::post('/user/logout', function () {

@@ -7,8 +7,8 @@
             </div>
             @endif
 
-    <h2 class="login-title">Login</h2>
-        <p class="login-sub">Welcome! Login to get amazing discounts and offers only for you.</p>
+    <h2 class="login-title"></h2>
+        <p class="login-sub"></p>
     <!-- Session Status -->
     <x-auth-session-status class="mb-4" :status="session('status')" />
 

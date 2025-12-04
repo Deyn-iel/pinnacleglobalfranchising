@@ -9,12 +9,17 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 
     <!-- ✅ CSS FILES (ORDER MATTERS) -->
-    <link rel="stylesheet" href="{{ asset('css/app.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/header.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/footer.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/main.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/chatbot.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/scroll-top.css') }}">
+    @vite(['resources/css/header/app.css', 
+            'resources/css/header/app.css',
+            'resources/css/footer/app.css',
+            'resources/css/main/app.css',
+            'resources/css/chatbot/app.css',
+            'resources/css/scroll/app.css',
+            
+            // js files
+            'resources/js/chatbot/app.js',
+            'resources/js/scroll/app.js',
+            'resources/js/app.js'])
     
 
 </head>
@@ -109,9 +114,7 @@
 </section>
 
 
-<!-- ============================
-      INQUIRE NOW FORM
-============================= -->
+<!-- INQUIRE NOW FORM -->
 
 <section class="inquire mt-5 text-center">
 

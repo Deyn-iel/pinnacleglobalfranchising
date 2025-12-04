@@ -24,7 +24,7 @@
         <h2 class="logo">Pinnacle Global</h2>
 
         <div class="welcome-box">
-            <h1>Welcome Back!</h1>
+            <h1>Welcome!</h1>
             <p>Login to access your account and manage your dashboard.</p>
         </div>
 

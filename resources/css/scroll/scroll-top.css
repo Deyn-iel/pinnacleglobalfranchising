@@ -1,0 +1,64 @@
+/* ===============================
+   SCROLL-TO-TOP — Professional
+================================ */
+.scroll-to-top {
+  position: fixed;
+  bottom: 32px;
+  left: 32px;
+  width: 50px;
+  height: 50px;
+
+  background: #ffffff;
+  color: #0d3553;
+  border: 1px solid rgba(13, 53, 83, 0.18);
+
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  font-size: 22px;
+  font-weight: 700;
+
+  cursor: pointer;
+  opacity: 0;
+  pointer-events: none;
+
+  box-shadow: 
+    0 6px 20px rgba(0, 0, 0, 0.15),
+    inset 0 0 0 0 rgba(13, 53, 83, 0); /* hover inner shadow animation */
+
+  transition: 
+    opacity 0.35s ease,
+    transform 0.25s ease,
+    box-shadow 0.25s ease;
+
+  z-index: 5000;
+}
+
+/* Visible state */
+.scroll-to-top.show {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+
+
+/* Click feedback */
+.scroll-to-top:active {
+  transform: scale(0.92);
+  box-shadow:
+    0 4px 12px rgba(0, 0, 0, 0.2),
+    inset 0 0 12px rgba(13, 53, 83, 0.25);
+}
+
+/* Mobile adjustments */
+@media (max-width: 600px) {
+  .scroll-to-top {
+    width: 45px;
+    height: 45px;
+    right: 20px;
+    bottom: 20px;
+    font-size: 20px;
+  }
+}

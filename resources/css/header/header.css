@@ -40,7 +40,10 @@ body {
     font-weight: 500;
     letter-spacing: 0.5px;
 }
-
+.nav-link:hover {
+    color: #949494 !important;
+    transition: 0.1s ease-in-out;
+}
 /* dropdown */
 .dropdown-menu {
     background-color: #ffffff;
@@ -53,7 +56,6 @@ body {
 /* toggle button */
 .navbar-toggler {
     border: none;
-    
 }
 
 .navbar-toggler-icon {

@@ -10,13 +10,17 @@
 
 
     <!-- ✅ CSS FILES (ORDER MATTERS) -->
-    <link rel="stylesheet" href="{{ asset('css/app.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/header.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/footer.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/main.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/our_service/our_service.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/chatbot.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/scroll-top.css') }}">
+    @vite(['resources/css/header/app.css', 
+            'resources/css/header/app.css',
+            'resources/css/footer/app.css',
+            'resources/css/our_service/app.css',
+            'resources/css/chatbot/app.css',
+            'resources/css/scroll/app.css',
+
+            // js files
+            'resources/js/chatbot/app.js',
+            'resources/js/scroll/app.js',
+            'resources/js/app.js'])
 </head>
 
 <body>
