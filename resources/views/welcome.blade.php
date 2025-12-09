@@ -116,8 +116,6 @@
 
 <div class="franchise-now-container">
 
-    <h2 class="franchise-now-title">Franchise Now</h2>
-    <div class="franchise-now-underline"></div>
 
     <p class="franchise-now-subtext">
         Start your franchising journey with Pinnacle Global Franchising Group Inc. and turn your vision into a successful business.
@@ -127,33 +125,39 @@
     <div class="franchise-steps">
 
         <div class="step">
-            <div class="step-icon">1</div>
-            <h3>Submit Franchise Application</h3>
-            <p>Fill out the application form with your business details and requirements.</p>
+    <div class="step-icon">1</div>
+    <h3>Submit Franchise Application</h3>
+    <p>Complete and submit the official franchise application form together with the required initial documents.</p>
         </div>
 
         <div class="step">
             <div class="step-icon">2</div>
-            <h3>Attend Business Orientation</h3>
-            <p>Learn more about the franchise model, packages, and operational guidelines.</p>
+            <h3>Attend Franchise Orientation</h3>
+            <p>Participate in the orientation to understand the franchise model, investment details, operational guidelines, and brand standards.</p>
         </div>
 
         <div class="step">
             <div class="step-icon">3</div>
-            <h3>Approval & Contract Signing</h3>
-            <p>Once approved, sign the franchise agreement to start your journey.</p>
+            <h3>Evaluation, Approval & Contract Signing</h3>
+            <p>Your application will undergo review and assessment. Once approved, you will proceed with the Franchise Agreement signing.</p>
         </div>
 
         <div class="step">
             <div class="step-icon">4</div>
-            <h3>Store Setup & Training</h3>
-            <p>We assist you with branding, store setup, operations, and crew training.</p>
+            <h3>Site Preparation & Training Program</h3>
+            <p>We coordinate with you on store layout, design requirements, equipment setup, and conduct hands-on training for franchisees and staff.</p>
         </div>
 
         <div class="step">
             <div class="step-icon">5</div>
-            <h3>Grand Opening</h3>
-            <p>Open your franchise store and start serving customers with full support.</p>
+            <h3>Store Installation & Pre-Opening Assistance</h3>
+            <p>Our team provides full support in store setup, branding, product preparation, and pre-opening activities to ensure operational readiness.</p>
+        </div>
+
+        <div class="step">
+            <div class="step-icon">6</div>
+            <h3>Grand Opening & Continuous Support</h3>
+            <p>Launch your franchise store with our on-site assistance. Receive ongoing operational guidance, marketing support, and performance monitoring.</p>
         </div>
         
     </div>
@@ -182,14 +186,7 @@
 
     </div>
 </div>
-
-{{-- <!-- LOGIN BUTTON RIGHT SIDE -->
-            <a href="{{ url('/login') }}" class="login-btn ms-lg-3 mt-3 mt-lg-0">
-                LOGIN
-            </a> <br>
-            <a href="">
-                Franchise Now
-            </a> --}}
+  
 <!-- INQUIRE NOW FORM -->
 
 <section class="inquire mt-5 text-center">
@@ -197,7 +194,7 @@
     <h2 class="inquire-title">INQUIRE NOW!</h2>
     <div class="underline"></div>
 
-    <p class="inquire-sub">Feel free to inquire. Thank you!</p>
+    <p class="inquire-sub">Feel free to inquire or <a href="{{ url('/login') }}" class="login-btn">Login</a> as a user.</p>
 
     <div class="container mt-4">
         <form>

@@ -19,12 +19,12 @@
 
                 <!-- ABOUT -->
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle {{ request()->is('about/*') ? 'active' : '' }}" 
+                    <a class="nav-link dropdown-toggle" 
                         href="#" id="aboutDropdown" data-bs-toggle="dropdown">
                         ABOUT
                     </a>
                     <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="{{ url('/about/pinnacle') }}">Pinnacle Global</a></li>
+                        <li><a class="dropdown-item{{ request()->is('franchisability/*') ? 'active' : '' }}" href="{{ url('/about/pinnacle') }}">Pinnacle Global</a></li>
                         <li><a class="dropdown-item" href="{{ url('/about/why') }}">Why Pinnacle?</a></li>
                         <li><a class="dropdown-item" href="{{ url('/about/franchise') }}">Franchise Consultant</a></li>
                         <li><a class="dropdown-item" href="{{ url('/about/clients') }}">Clients</a></li>
@@ -33,7 +33,7 @@
 
                 <!-- SERVICES -->
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle {{ request()->is('our_service/*') ? 'active' : '' }}" 
+                    <a class="nav-link dropdown-toggle" 
                         href="#" data-bs-toggle="dropdown">
                         OUR SERVICES
                     </a>
@@ -50,7 +50,7 @@
 
                 <!-- FRANCHISABILITY -->
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle {{ request()->is('franchisability/*') ? 'active' : '' }}" 
+                    <a class="nav-link dropdown-toggle" 
                         href="#" id="franchiseDropdown" data-bs-toggle="dropdown">
                         FRANCHISABILITY TEST
                     </a>

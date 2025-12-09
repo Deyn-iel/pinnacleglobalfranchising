@@ -1,28 +1,4 @@
-/* IMAGE SECTION */
-.image {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 0;
-    width: 100%;
-    margin-top: 40px;
-    flex-wrap: nowrap;
-}
 
-.logo-item {
-    width: 65%;
-    height: 400px;
-    background-color: #042a47;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.logo-item img {
-    width: 80%;
-    height: 80%;
-    object-fit: contain;
-}
 
 
 /* =========================

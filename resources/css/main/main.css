@@ -358,85 +358,140 @@ form {
     animation: fadeIn 1.2s ease-out;
 }
 
-/* Steps Grid */
+/* ===========================================
+   MODERN + PROFESSIONAL FRANCHISE STEPS DESIGN
+   GLASS + GRADIENT + DEPTH + RESPONSIVE
+=========================================== */
+
+/* Wrapper Grid */
 .franchise-steps {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 40px;
-    margin-top: 40px;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 45px;
+    margin-top: 50px;
+    max-width: 1200px;
+    margin-inline: auto;
+
+    /* Beautiful smooth layout */
+    padding: 10px;
 }
 
-/* Each Step Card */
+/* Tablet: 2 columns */
+@media (max-width: 992px) {
+    .franchise-steps {
+        grid-template-columns: repeat(2, 1fr);
+        max-width: 850px;
+    }
+}
+
+/* Mobile: 1 column */
+@media (max-width: 600px) {
+    .franchise-steps {
+        grid-template-columns: 1fr;
+        max-width: 500px;
+    }
+}
+
+/* STEP CARD (Glassmorphism + Elevation) */
 .step {
-    background: rgba(255, 255, 255, 0.97);
-    padding: 35px 25px;
-    border-radius: 16px;
-    box-shadow: 0 10px 35px rgba(0, 0, 0, 0.15);
-    transition: 0.35s ease;
+    background: rgba(255, 255, 255, 0.9);
+    padding: 40px 30px;
+    border-radius: 20px;
+
+    /* Realistic shadow */
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.12);
+
+    transition: transform 0.35s ease, box-shadow 0.35s ease;
     position: relative;
-    animation: fadeUp 1s ease forwards;
+
+    /* smooth fade */
     opacity: 0;
+    animation: fadeUp 1s ease forwards;
 }
 
-/* Glow hover effect */
+/* Hover Elevation (Professional subtle) */
 .step:hover {
-    transform: translateY(-10px);
-    box-shadow: 0 15px 40px rgba(0, 200, 255, 0.25);
+    transform: translateY(-8px);
+    box-shadow: 0 20px 45px rgba(0, 150, 255, 0.22);
 }
 
-/* Step Number */
+/* Step Number Circle (New 3D Gradient) */
 .step-icon {
-    width: 65px;
-    height: 65px;
-    background: linear-gradient(135deg, #0a3556, #006b9d);
-    color: white;
-    font-size: 1.4rem;
+    width: 70px;
+    height: 70px;
+    background: linear-gradient(145deg, #0b3b63, #007bb5);
+    color: #fff;
+
     display: flex;
     justify-content: center;
     align-items: center;
+
     border-radius: 50%;
-    margin: 0 auto 18px;
+    font-size: 1.5rem;
     font-weight: 800;
-    box-shadow: 0 4px 10px rgba(0, 153, 255, 0.4);
+
+    box-shadow:
+        0 10px 20px rgba(0, 120, 190, 0.35),
+        inset 0 3px 5px rgba(255, 255, 255, 0.25);
+
+    margin: 0 auto 20px;
 }
 
-/* Titles inside card */
+/* Step Title */
 .step h3 {
-    font-size: 1.4rem;
-    font-weight: 700;
-    color: #0a3556;
+    font-size: 1.45rem;
+    font-weight: 800;
+    color: #08304f;
     margin-bottom: 12px;
+    letter-spacing: 0.3px;
 }
 
-/* Paragraph */
+/* Description Text */
 .step p {
-    font-size: 1rem;
-    color: #444;
-    line-height: 1.7;
+    font-size: 1.05rem;
+    color: #555;
+    line-height: 1.75;
+    font-weight: 400;
 }
 
-/* CTA BUTTON */
+
+/* =============================
+   CTA Button
+============================= */
 .franchise-now-button-wrapper {
-    margin-top: 70px;
+    margin-top: 80px;
+    text-align: center;
 }
 
 .franchise-now-btn {
-    background: #ffffff;
-    color: #002635;
-    padding: 16px 42px;
-    font-size: 1.2rem;
+    background: linear-gradient(135deg, #ffffff, #e9eef4);
+    color: #073047;
+    padding: 15px 45px;
+    font-size: 1.15rem;
     font-weight: 700;
-    border-radius: 10px;
+
+    border-radius: 12px;
     text-decoration: none;
-    transition: 0.35s ease;
-    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.28);
+    transition: 0.1s ease;
 }
 
 .franchise-now-btn:hover {
-    background: #e4e4e4;
-    box-shadow: 0 8px 25px rgba(0, 200, 255, 0.45);
-    transform: translateY(-3px);
+    background: #ffffff;
+    transform: translateY(-4px);
+    box-shadow: 0 14px 35px rgba(0, 150, 255, 0.4);
 }
+
+
+/* =============================
+   Animation
+============================= */
+@keyframes fadeUp {
+    0% { opacity: 0; transform: translateY(25px); }
+    100% { opacity: 1; transform: translateY(0); }
+}
+
 
 /* ===============================
    ANIMATIONS
@@ -476,7 +531,10 @@ form {
         font-size: 1.25rem;
     }
 }
-
+.login-btn {
+    color: #ffffff;
+}
+    
 .section-title {
     font-family: 'Times New Roman', serif;
     text-align: center;

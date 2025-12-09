@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pinnacle Global</title>
+    <title>Franchising Checklist | Pinnacle Global</title>
 
     <!-- ✅ BOOTSTRAP -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -35,11 +35,6 @@
             <img src="{{ asset('img/logo.webp') }}" alt="Logo">
         </div>
     </div>
-
-
-</div><!-- END MAIN WRAPPER -->
-
-
 
 <!-- ============================
      FRANCHISE NOW SECTION

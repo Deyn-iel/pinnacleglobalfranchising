@@ -1,0 +1,203 @@
+/* ==========================================
+   NAVIGATION BAR BASE LAYOUT (Desktop)
+========================================== */
+body {
+  background: red !important;
+}
+
+/* Container */
+.nav-container {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 1.25rem;
+}
+
+/* Flex wrapper */
+.nav-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 70px; /* more premium spacing */
+}
+
+/* Left side: logo + links */
+.nav-left {
+    display: flex;
+    align-items: center;
+    gap: 28px;
+}
+
+.nav-logo-wrapper {
+    display: flex;
+    align-items: center;
+}
+
+.nav-logo-icon {
+    height: 40px;
+    width: auto;
+}
+
+/* Desktop navigation links container */
+.nav-links {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+}
+
+/* Improve spacing for desktop */
+.nav-link {
+    padding: 10px 16px;
+    border-radius: 8px;
+    font-size: 0.95rem;
+}
+
+/* Right side: dropdown trigger */
+.nav-right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+/* ==========================================
+   MOBILE HAMBURGER CONTROLS
+========================================== */
+
+.mobile-hamburger {
+    display: none; /* hidden on desktop */
+}
+
+.mobile-hamburger-btn {
+    padding: 10px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.mobile-hamburger-btn:hover {
+    background: #f3f4f6;
+}
+
+.hamburger-icon {
+    height: 28px;
+    width: 28px;
+}
+
+/* ==========================================
+   MOBILE MENU PANEL
+========================================== */
+
+.mobile-menu {
+    background: #ffffff;
+    border-top: 1px solid #e5e7eb;
+    display: none;
+    padding-bottom: 20px;
+    animation: dropdownFade 0.2s ease-in-out;
+}
+
+/* Smooth dropdown animation */
+@keyframes dropdownFade {
+    from { opacity: 0; transform: translateY(-6px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Mobile link section */
+.mobile-links {
+    padding: 14px 0;
+}
+
+.mobile-link {
+    padding: 14px 20px;
+    display: block;
+    font-weight: 600;
+    color: #4b5563;
+    border-radius: 8px;
+    transition: background 0.2s;
+}
+
+.mobile-link:hover {
+    background: #eef2ff;
+    color: #1d4ed8;
+}
+
+/* Mobile user info panel */
+.mobile-user {
+    padding: 18px;
+    border-top: 1px solid #e5e7eb;
+}
+
+.mobile-user-name {
+    font-weight: 700;
+    color: #111827;
+}
+
+.mobile-user-email {
+    font-size: 14px;
+    color: #6b7280;
+}
+
+/* Mobile menu actions (logout/profile) */
+.mobile-actions {
+    padding: 14px 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+/* ==========================================
+   RESPONSIVENESS FIXED & ENHANCED
+========================================== */
+
+/* --- Tablets & Mobile (max-width: 992px) --- */
+@media (max-width: 992px) {
+
+    .nav-container {
+        padding: 0 1rem;
+    }
+
+    .nav-logo-icon {
+        height: 36px;
+    }
+}
+
+/* --- Mobile (max-width: 768px) --- */
+@media (max-width: 768px) {
+
+    /* Hide desktop nav links */
+    .nav-links {
+        display: none;
+    }
+
+    /* Show hamburger menu */
+    .mobile-hamburger {
+        display: flex;
+    }
+
+    .nav-content {
+        height: 64px;
+    }
+}
+
+/* --- Extra small phones (max-width: 480px) --- */
+@media (max-width: 480px) {
+
+    .nav-logo-icon {
+        height: 32px;
+    }
+
+    .mobile-link {
+        font-size: 14px;
+        padding: 12px 16px;
+    }
+
+    .mobile-user-name {
+        font-size: 14px;
+    }
+
+    .mobile-user-email {
+        font-size: 12px;
+    }
+
+    .mobile-actions {
+        padding: 12px 14px;
+    }
+}
