@@ -1,112 +1,151 @@
-<x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Admin Dashboard') }}
-        </h2>
-    </x-slot>
+<!doctype html>
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin · Dashboard</title>
 
-    <div x-data="{ open: false }" class="flex">
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 
-        <!-- MOBILE MENU BUTTON -->
-        <button 
-            @click="open = !open" 
-            class="md:hidden fixed top-4 left-4 z-50 bg-gray-900 text-white p-2 rounded-lg shadow-lg"
-        >
-            ☰
-        </button>
+    <!-- Alpine.js (Sidebar Toggle) -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 
-        <!-- SIDEBAR -->
-        <aside 
-            :class="open ? 'translate-x-0' : '-translate-x-full'"
-            class="fixed inset-y-0 left-0 w-64 bg-gray-900 text-white transform md:translate-x-0 
-                   transition-transform duration-300 z-40"
-        >
-            <div class="p-6 text-2xl font-bold border-b border-gray-700">
-                Admin Panel
+    <style>
+        body { background: #f5f6fa; }
+        .sidebar-link:hover { background: #1f2937 !important; }
+        .sidebar-link { text-decoration: none; }
+        aside { z-index: 999; }
+        main { transition: margin-left 0.3s; }
+    </style>
+</head>
+
+<body x-data="{ open:false }">
+
+    <!-- TOP NAVBAR -->
+    <nav class="navbar navbar-dark bg-dark">
+        <div class="container-fluid d-flex align-items-center">
+
+            <!-- MENU BUTTON FOR MOBILE -->
+            <button @click="open = !open" class="btn btn-outline-light d-md-none me-3">
+                ☰
+            </button>
+
+            <span class="navbar-brand fw-bold">
+                📊 Admin Dashboard
+            </span>
+
+            <div class="ms-auto text-white me-3">
+                {{ Auth::user()->name }}
             </div>
 
-            <nav class="mt-4">
-                <a href="{{ route('admin.admin') }}" class="block px-6 py-3 hover:bg-gray-800">Dashboard</a>
-                <a href="{{ route('admin.franchise') }}" class="block px-6 py-3 hover:bg-gray-800">Franchise Application</a>
-                <a href="{{ route('admin.supplies') }}" class="block px-6 py-3 hover:bg-gray-800">Ordering of Supplies</a>
-                <a href="{{ route('admin.requirements') }}" class="block px-6 py-3 hover:bg-gray-800">Requirements Upload</a>
-            </nav>
-        </aside>
+            <!-- Logout -->
+            <form method="POST" action="{{ route('custom.logout') }}">
+                @csrf
+                <button class="btn btn-danger btn-sm">Logout</button>
+            </form>
+        </div>
+    </nav>
 
-        <!-- MAIN CONTENT -->
-        <div class="flex-1 md:ml-64 p-6 mt-10 md:mt-0">
+    <!-- SIDEBAR -->
+    <aside 
+        class="bg-dark text-white p-4 position-fixed top-0 start-0 h-100"
+        :class="open ? 'translate-x-0' : '-translate-x-full d-md-block'"
+        style="width:260px; transition:0.3s;"
+    >
+        <h4 class="mb-4">Admin Panel</h4>
 
-            <!-- STAT CARDS -->
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <a href="{{ route('admin.dashboard') }}" class="d-block py-2 px-2 text-white sidebar-link">🏠 Dashboard</a>
+        <a href="{{ route('admin.applications') }}" class="d-block py-2 px-2 text-white sidebar-link">📁 Applications</a>
+        <a href="{{ route('admin.franchise') }}" class="d-block py-2 px-2 text-white sidebar-link">📌 Franchise</a>
+        <a href="{{ route('admin.supplies') }}" class="d-block py-2 px-2 text-white sidebar-link">📦 Supplies</a>
+        <a href="{{ route('admin.requirements') }}" class="d-block py-2 px-2 text-white sidebar-link">📄 Requirements</a>
+    </aside>
 
-                <div class="bg-white p-6 shadow rounded-xl">
-                    <h2 class="text-gray-600 text-sm">Total Users</h2>
-                    <p class="text-3xl font-bold mt-2">1,240</p>
+    <!-- MOBILE OVERLAY -->
+    <div 
+        class="position-fixed top-0 start-0 w-100 h-100 bg-black bg-opacity-50 d-md-none"
+        x-show="open"
+        @click="open = false"
+        style="z-index: 998;"
+    ></div>
+
+    <!-- MAIN CONTENT -->
+    <main class="container mt-4" style="margin-left:260px;">
+
+        <h2 class="mb-4">Admin Dashboard</h2>
+
+        <!-- DASHBOARD STAT CARDS -->
+        <div class="row g-3">
+
+            <div class="col-md-4">
+                <div class="card shadow-sm p-3">
+                    <h5>Total Applications</h5>
+                    <h2>{{ \App\Models\FranchiseApplication::count() }}</h2>
                 </div>
-
-                <div class="bg-white p-6 shadow rounded-xl">
-                    <h2 class="text-gray-600 text-sm">Active Orders</h2>
-                    <p class="text-3xl font-bold mt-2">320</p>
-                </div>
-
-                <div class="bg-white p-6 shadow rounded-xl">
-                    <h2 class="text-gray-600 text-sm">Completed</h2>
-                    <p class="text-3xl font-bold mt-2">980</p>
-                </div>
-
-                <div class="bg-white p-6 shadow rounded-xl">
-                    <h2 class="text-gray-600 text-sm">Revenue</h2>
-                    <p class="text-3xl font-bold mt-2">₱82,450</p>
-                </div>
-
             </div>
 
-            <!-- TABLE CARD -->
-            <div class="mt-10 bg-white shadow rounded-xl p-6">
-                <h2 class="text-xl font-semibold mb-4">Latest Users</h2>
-
-                <div class="overflow-x-auto">
-                    <table class="w-full border-collapse min-w-[600px]">
-                        <thead>
-                            <tr class="bg-gray-100 text-left text-sm">
-                                <th class="p-3">Name</th>
-                                <th class="p-3">Email</th>
-                                <th class="p-3">Role</th>
-                                <th class="p-3">Status</th>
-                                <th class="p-3 text-right">Action</th>
-                            </tr>
-                        </thead>
-
-                        <tbody>
-                            <tr class="border-t">
-                                <td class="p-3">John Doe</td>
-                                <td class="p-3">john@example.com</td>
-                                <td class="p-3">Admin</td>
-                                <td class="p-3 text-green-600 font-semibold">Active</td>
-                                <td class="p-3 text-right">
-                                    <button class="px-3 py-1 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
-                                        View
-                                    </button>
-                                </td>
-                            </tr>
-
-                            <tr class="border-t">
-                                <td class="p-3">Jane Smith</td>
-                                <td class="p-3">jane@example.com</td>
-                                <td class="p-3">User</td>
-                                <td class="p-3 text-yellow-600 font-semibold">Pending</td>
-                                <td class="p-3 text-right">
-                                    <button class="px-3 py-1 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
-                                        View
-                                    </button>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
+            <div class="col-md-4">
+                <div class="card shadow-sm p-3">
+                    <h5>Submitted Today</h5>
+                    <h2>{{ \App\Models\FranchiseApplication::whereDate('created_at', today())->count() }}</h2>
                 </div>
+            </div>
 
+            <div class="col-md-4">
+                <div class="card shadow-sm p-3">
+                    <h5>Latest Applicant</h5>
+                    <p class="fs-5 mb-0">
+                        {{ optional(\App\Models\FranchiseApplication::latest()->first())->personal_full_name ?? 'No Data' }}
+                    </p>
+                </div>
             </div>
 
         </div>
-    </div>
-</x-app-layout>
+
+        <hr class="my-4">
+
+        <!-- RECENT APPLICATIONS TABLE -->
+        <h3 class="mb-3">Recent Applications</h3>
+
+        <table class="table table-striped shadow-sm">
+            <thead class="table-dark">
+                <tr>
+                    <th>#</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Lead Source</th>
+                    <th>Date</th>
+                    <th width="100"></th>
+                </tr>
+            </thead>
+
+            <tbody>
+                @foreach(\App\Models\FranchiseApplication::latest()->take(5)->get() as $app)
+                <tr>
+                    <td>{{ $app->id }}</td>
+                    <td>{{ $app->personal_full_name }}</td>
+                    <td>{{ $app->email }}</td>
+                    <td>{{ $app->lead_source }}</td>
+                    <td>{{ $app->created_at->format('M d, Y') }}</td>
+                    
+                    <td class="d-flex gap-1">
+                    <a href="{{ route('admin.applications.show', $app->id) }}" class="btn btn-primary btn-sm">View</a>
+
+                    <form action="{{ route('admin.applications.destroy', $app->id) }}" method="POST"
+                        onsubmit="return confirm('Are you sure you want to delete this application?');">
+                        @csrf
+                        @method('DELETE')
+                        <button class="btn btn-danger btn-sm">Delete</button>
+                    </form>
+                </td>
+
+                </tr>
+                @endforeach
+            </tbody>
+        </table>
+
+    </main>
+
+</body>
+</html>

@@ -4,6 +4,8 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\FranchiseController;
+use App\Http\Controllers\Admin\FranchiseAdminController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -82,31 +84,47 @@ Route::get('/user-dashboard', function () {
     return view('user-dashboard.dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
-//admin
-Route::view('/admin/admin', 'admin.admin')
-    ->middleware(['auth', 'admin'])
-    ->name('admin.admin');
+// -----------------------------
+// ADMIN ROUTES
+// -----------------------------
 
-Route::middleware(['auth', 'admin'])->group(function () {
+// Everything under /admin requires auth + admin middleware
+Route::middleware(['auth', 'admin'])
+    ->prefix('admin')
+    ->name('admin.')
+    ->group(function () {
 
-    Route::get('/admin/admin', function () {
-        return view('admin.admin');
-    })->name('admin.admin');
+        // ADMIN DASHBOARD HOME
+        Route::get('/', function () {
+            return view('admin.admin'); // admin dashboard view
+        })->name('dashboard');
 
-    Route::get('/admin/franchise', function () {
-        return view('admin.franchise');
-    })->name('admin.franchise');
+        // Franchise static pages
+        Route::view('/franchise', 'admin.franchise')->name('franchise');
+        Route::view('/supplies', 'admin.supplies')->name('supplies');
+        Route::view('/requirements', 'admin.requirements')->name('requirements');
 
-    Route::get('/admin/supplies', function () {
-        return view('admin.supplies');
-    })->name('admin.supplies');
+        // Franchise Applications
+        Route::get('/applications', [App\Http\Controllers\Admin\FranchiseAdminController::class, 'index'])
+            ->name('applications');
 
-    Route::get('/admin/requirements', function () {
-        return view('admin.requirements');
-    })->name('admin.requirements');
+        Route::get('/applications/{id}', [App\Http\Controllers\Admin\FranchiseAdminController::class, 'show'])
+            ->name('applications.show');
+        Route::delete('/applications/{id}', 
+            [App\Http\Controllers\Admin\FranchiseAdminController::class, 'destroy']
+        )->name('applications.destroy');
+    });
 
-});
 
+
+// Show the application form
+Route::get('/franchise/application', function () {
+    return view('franchise-application-process.franchise-application-process');
+})->name('franchise.form');
+
+// Handle the form submit
+Route::post('/franchise/submit', [FranchiseController::class, 'store'])
+    ->name('franchise.submit');
 
 
 //logout

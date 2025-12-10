@@ -3,16 +3,17 @@
 ================================ */
 .scroll-to-top {
   position: fixed;
-  bottom: 32px;
-  left: 32px;
+  top: 0;
+  right: 50px;
   width: 50px;
   height: 50px;
 
-  background: #ffffff;
-  color: #0d3553;
-  border: 1px solid rgba(13, 53, 83, 0.18);
+  background: #d8d8d8;
+  color: rgb(0, 0, 0);
+  border: none;
 
-  border-radius: 50%;
+  border-bottom-right-radius: 10px;
+  border-bottom-left-radius: 10px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -33,7 +34,7 @@
     transform 0.25s ease,
     box-shadow 0.25s ease;
 
-  z-index: 5000;
+  z-index: 1000;
 }
 
 /* Visible state */
@@ -57,7 +58,7 @@
   .scroll-to-top {
     width: 45px;
     height: 45px;
-    right: 20px;
+    right: 30px;
     bottom: 20px;
     font-size: 20px;
   }

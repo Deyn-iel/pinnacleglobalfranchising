@@ -14,8 +14,20 @@
 </head>
 
 <body>
+  
+
 <div class="container">
   
+@if(session('success'))
+<div class="alert alert-success alert-dismissible fade show mt-3" 
+     role="alert"
+     style="background:#4caf50; color:white; border:none; font-size:16px;">
+    <strong>✔ Success!</strong> {{ session('success') }}
+    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert"></button>
+</div>
+@endif
+
+
   <div class="container header-flex">
     <h1>KAPE-ILOKANO CAFE CORPORATION</h1>
     <a href="{{ url('/') }}" class="link-small"> < Back</a>
@@ -30,8 +42,12 @@
     This form is the complete official franchise application.
   </p>
 
-  <form>
-
+<form 
+    action="{{ route('franchise.submit') }}" 
+    method="POST" 
+    enctype="multipart/form-data"
+>
+@csrf
     <!-- INTRO -->
     <div class="card">
       <p>
@@ -66,7 +82,7 @@
     <p class="tick-title">Tick all that apply.</p>
 
     <label class="checkbox-row">
-        <input type="checkbox" id="agree" required>
+        <input type="checkbox" name="consent_intro" required>
         <span>I fully consent and agree.</span>
     </label>
 
@@ -74,10 +90,10 @@
 
 
       <label>Email Address *</label>
-      <input type="email" id="email" required>
+      <input type="email" name="email" required>
 
       <label>Lead Source *</label>
-      <select required>
+      <select name="lead_source" required>
         <option>FACEBOOK</option>
         <option>WEBSITE</option>
         <option>WALK-IN</option>
@@ -95,20 +111,20 @@
       <p> We'd like to know you better.</p>
 
       <label>Complete Name (Surname, Given Name, Middle Name) *</label>
-      <input type="text" id="company" required>
+      <input type="text" name="personal_full_name" required>
 
       <label> Please Attach Latest 2x2 Colored Picture or Selfie in White Background *</label>
-      <input type="file" id="docs" multiple>
+      <input type="file" name="personal_photo" multiple>
 
 
       <label>Gender *</label>
-      <select required>
+      <select name="personal_gender" required>
         <option>MALE</option>
         <option>FEMALE</option>
       </select>
 
       <label>Civil Status *</label>
-      <select required>
+      <select name="personal_civil_status" required>
         <option>SINGLE</option>
         <option>MARRIED</option>
         <option>WIDOWED</option>
@@ -116,37 +132,37 @@
       </select>
 
       <label>Age *</label>
-      <input type="number" required>
+    <input type="number" name="personal_age" required>
 
-      <label>Country of Birth *</label>
-      <input type="text" required>
+    <label>Country of Birth *</label>
+    <input type="text" name="personal_country_birth" required>
 
-      <label>Nationality/Citizenship *</label>
-      <input type="text" required>
+    <label>Nationality *</label>
+    <input type="text" name="personal_nationality" required>
 
-      <label>Country of Current Residence *</label>
-      <input type="text">
+    <label>Country of Residence *</label>
+    <input type="text" name="personal_residence">
 
-      <label>Primary Home Address *</label>
-      <input type="text" id="location" required>
+    <label>Primary Address *</label>
+    <input type="text" name="personal_address" required>
 
       <label>Mobile or Residence Number (Please include + area code) *</label>
-      <input type="text" id="phone" required>
+      <input type="text" name="personal_contact" required>
 
-      <label>TIN No. *</label>
-      <input type="text" required>
+      <label>TIN *</label>
+    <input type="text" name="personal_tin" required>
 
-      <label>Religion *</label>
-      <input type="text" required>
+    <label>Religion *</label>
+    <input type="text" name="personal_religion" required>
 
-      <label>Hobbies *</label>
-      <input type="text">
+    <label>Hobbies *</label>
+    <input type="text" name="personal_hobbies">
 
       <label>Spouse/Partner's Name (Surname, Given Name, Middle Name) *</label>
-      <input type="text">
+      <input type="text" name="personal_spouse">
 
       <label>Dependents (Name & Age) *</label>
-      <textarea id="description" required></textarea>
+      <textarea name="personal_dependents" required></textarea>
     </div>
 
     <!-- PROFESSIONAL BACKGROUND -->
@@ -160,48 +176,48 @@
 
 
       <label>Educational Attainment *</label>
-      <select required>
+      <select name="professional_education"required>
         <option>College</option>
         <option>Post Graduate</option>
       </select>
 
       <label>School Attended & Year *</label>
-      <input type="text" required>
+      <input type="text" name="professional_school"required>
 
       <label>Employment *</label>
-      <select required>
+      <select name="professional_employment"required>
         <option>Employed</option>
         <option>Self Employed</option>
       </select>
 
       <label>Present Occupation & Position *</label>
-      <select required>
+      <select name="professional_occupation"required>
         <option>Proprietor</option>
         <option>Supervisor</option>
         <option>Rank and File Employee</option>
       </select>
 
       <label>Job Title / Description *</label>
-      <input type="text" required>
+      <input type="text" name="professional_job_title" required>
 
       <label>Name of Company / Business *</label>
-      <input type="text" required>
+      <input type="text" name="professional_company" required>
 
       <label>Number of Years in the Company/Business *</label>
-      <input type="text" required>
+      <input type="text" name="professional_years" required>
 
       <label>Company / Business Address *</label>
-      <input type="text" required>
+      <input type="text" name="professional_company_address" required>
 
       <label>Responsibilities *</label>
-      <textarea id="description" required></textarea>
+      <textarea id="description" name="professional_responsibilities" required></textarea>
 
 
       <label>Nature of Business *</label>
-      <input type="text">
+      <input type="text" name="professional_business_nature">
 
       <label>Company Contact Number *</label>
-      <input type="text" id="phone" required>
+      <input type="text" name="professional_company_contact" required>
     </div>
 
     <!-- BUSINESS BACKGROUND -->
@@ -214,22 +230,22 @@
       in building a thriving business with <b>Kape-Ilokano Cafe Corporation.</b></p>
 
       <label>Do you have business experience in the Philippines *</label>
-      <select>
+      <select name="business_experience" required>
         <option>yes</option>
         <option>no</option>
       </select>
 
       <label>Name of Business *</label>
-      <input type="text">
+      <input type="text" name="business_name">
 
       <label>Years of Experience *</label>
-      <input type="text">
+      <input type="text" name="business_years">
 
       <label>Business Industry *</label>
-      <input type="text">
+      <input type="text" name="business_industry">
 
       <label>Have you ever <b>closed or discontinued</b> a business? *</label>
-      <select>
+      <select name="business_closed">
         <option>yes</option>
         <option>no</option>
       </select>
@@ -237,13 +253,13 @@
       <label>If yes, we’d appreciate it if you could share the reasons behind the closure. This
       helps us understand your entrepreneurial journey and how we can better support
       you in your Kape-Ilokano Cafe franchise. *</label>
-      <textarea id="description" required></textarea>
+      <textarea name="business_closure_reason" required></textarea>
 
 
       <label> Kindly share details about your past or current ventures, your role in managing
       them, and how your experience can contribute to the success of your Kape
       Ilokano Cafe franchise. *</label>
-      <textarea id="description" required></textarea>
+      <textarea name="business_venture_description" required></textarea>
 
     </div>
 
@@ -257,32 +273,32 @@
       journey.</p>
 
       <label>Have you been a customer of Kape-Ilokano Cafe? *</label>
-      <select>
+      <select name="ki_customer">
         <option>yes</option>
         <option>no</option>
       </select>
 
       <label>Are you affiliated with any Kape-Ilokano Cafe Branch?  *</label>
-      <select>
+      <select name="ki_affiliated">
         <option>yes</option>
         <option>no</option>
       </select>
 
       <label> If Yes, kindly state which Branch or Person you are connected to. *</label>
-      <input type="text">
+      <input type="text" name="ki_affiliated_details">
 
       <label>Do you have an existing coffee shop business?</label>
-      <select><option>yes</option><option>no</option></select>
+      <select name="ki_has_coffee_shop"><option>yes</option><option>no</option></select>
 
       <label>Do you have knowledge in Coffee Industry?</label>
-      <select><option>yes</option><option>no</option></select>
+      <select name="ki_industry_knowledge"><option>yes</option><option>no</option></select>
 
       <label>Do you have passion for Coffee?</label>
-      <select><option>yes</option><option>no</option></select>
+      <select name="ki_passion"><option>yes</option><option>no</option></select>
 
       <label>How eager are you to have your own cafe business? (Rate it from 1 to 10. 10 is
       the highest, 1 is the lowest.)</label>
-      <input type="number" min="1" max="10">
+      <input type="number" name="ki_eagerness" min="1" max="10">
     </div>
 
     <!-- BUSINESS PROPOSAL -->
@@ -294,30 +310,29 @@
       how we can best support you in building a successful franchise</p>
 
       <label>Target Location (Please indicate the complete address) *</label>
-      <input type="text">
+      <input type="text" name="proposal_location" required>
 
       <label>What is your main reason for considering a Kape-Ilokano Cafe Franchise? *</label>
-      <textarea id="description" required></textarea>
+      <textarea name="proposal_reason" required></textarea>
 
 
       <label> What are your expectations in having a Kape-Ilokano Cafe Franchise? *</label>
-      <textarea id="description" required></textarea>
+      <textarea name="proposal_expectations" required></textarea>
 
 
       <label> To what extent will you be involved in the day-to-day operations of the franchised
       branch? *</label>
-      <textarea id="description" required></textarea>
+      <textarea name="proposal_involvement" required></textarea>
 
 
       <label>What is your management Philosophy *</label>
-      <textarea id="description" required></textarea>
-
+      <textarea name="proposal_philosophy" required></textarea>
       <label>Other business interests *</label>
-      <textarea id="description" required></textarea>
+      <textarea name="proposal_interests" required></textarea>
 
       <label><b>Socio-civic Affiliations</b> (E.g. Rotary, Lions, Freemason, Others, Etc.) Name 
       Years in Membership *</label>
-      <textarea id="description" required></textarea>
+      <textarea name="proposal_affiliations" required></textarea>
     </div>
 
     <!-- FINANCIAL -->
@@ -331,13 +346,13 @@
       possible.</p>
 
       <label>How much are you willing to invest? *</label>
-      <input type="text">
+      <input type="text" name="financial_investment" required>
 
       <label>Expected daily sales *</label>
-      <input type="text">
+      <input type="text" name="financial_expected_sales" required>
 
       <label>Expected ROI timeline *</label>
-      <input type="text">
+      <input type="text" name="financial_roi" required>
     </div>
 
     <!-- CHARACTER REFERENCE -->
@@ -352,7 +367,7 @@
         Contact Person's name (non-family): <br>
         Contact Number: <br>
         E-mail Address: *</label>
-      <textarea placeholder="Name / Contact / Email"></textarea>
+      <textarea name="references" placeholder="Name / Contact / Email"></textarea>
     </div>
 
     <!-- CONSENT -->
@@ -380,11 +395,11 @@
     </p>
 
       <div class="checkbox-row">
-        <input type="checkbox" id="agree" required> I hereby acknowledge and agree.
+        <input type="checkbox" name="consent_final" required> I hereby acknowledge and agree.
       </div>
 
       <label>Picture of Government Issued Valid ID with 3 Specimen Signature *</label>
-      <input type="file" id="docs" multiple>
+      <input type="file" name="government_id" multiple>
 
       <p><b>I consent to the processing of my personal and sensitive information
         provided in this application form and in any supporting documents
@@ -399,9 +414,9 @@
         confidentiality</b> and used solely for the franchise application process in
         accordance with applicable data privacy laws and company policies.
               </p>
-      <div class="checkbox-row">
-        <input type="checkbox" id="agree" required>  I Hereby Acknowledge and Agree.
-      </div>
+      {{-- <div class="checkbox-row">
+        <input type="checkbox" name="consent_final" required>  I Hereby Acknowledge and Agree.
+      </div> --}}
     </div>
 
         <div style="display:flex; gap:10px; justify-content:flex-end; margin-top:20px;">
@@ -433,7 +448,7 @@
 
       <div class="modal-footer">
         <button class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <button class="btn btn-primary">Submit Application</button>
+        <button type="submit" class="btn">Submit Application</button>
       </div>
 
     </div>
