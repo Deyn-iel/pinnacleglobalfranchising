@@ -1,150 +1,145 @@
 <?php
 
-use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\Request;
+
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\FranchiseController;
+
+// Admin Controllers
 use App\Http\Controllers\Admin\FranchiseAdminController;
+use App\Http\Controllers\Admin\UserManagementController;
 
-Route::get('/', function () {
-    return view('welcome');
+/*
+|--------------------------------------------------------------------------
+| PUBLIC PAGES
+|--------------------------------------------------------------------------
+*/
+
+Route::view('/', 'welcome')->name('home');
+
+/* ABOUT */
+Route::prefix('about')->group(function () {
+    Route::view('/pinnacle', 'about.pinnacle')->name('about.pinnacle');
+    Route::view('/why', 'about.why')->name('about.why');
+    Route::view('/franchise', 'about.franchise')->name('about.franchise');
+    Route::view('/clients', 'about.clients')->name('about.clients');
 });
 
-//about 
-Route::get('/about/pinnacle', function () {
-    return view('about.pinnacle');
+/* OUR SERVICES */
+Route::view('/our_service', 'our_service.our_service')->name('our_service');
+
+/* CONTACT */
+Route::view('/contact', 'contact.contact')->name('contact');
+
+/* FRANCHISABILITY */
+Route::prefix('franchisability')->group(function () {
+    Route::view('/8_keys', 'franchisability.8_keys')->name('franchisability.keys');
+    Route::view('/franchise_test', 'franchisability.franchise_test')->name('franchisability.test');
+    Route::view('/franchising_checklist', 'franchisability.franchising_checklist')->name('franchisability.checklist');
 });
 
-Route::get('/about/why', function () {
-    return view('about.why');
+/*
+|--------------------------------------------------------------------------
+| USER DASHBOARD
+|--------------------------------------------------------------------------
+*/
+
+Route::middleware(['auth', 'verified'])->group(function () {
+
+    Route::view('/user-dashboard', 'user-dashboard.dashboard')->name('dashboard');
+
+    Route::view('/user-dashboard/ordering-supplies', 'user-dashboard.ordering-supplies.ordering-supplies')
+        ->name('ordering.supplies');
+
+    Route::view('/user-dashboard/uploading-requirements', 'user-dashboard.uploading-requirements.uploading-requirements')
+        ->name('uploading.requirements');
 });
 
-Route::get('/about/franchise', function () {
-    return view('about.franchise');
-});
+/*
+|--------------------------------------------------------------------------
+| FRANCHISE APPLICATION
+|--------------------------------------------------------------------------
+*/
 
-Route::get('/about/clients', function () {
-    return view('about.clients');
-});
+Route::view('/franchise-application-process', 'franchise-application-process.franchise-application-process')
+    ->name('franchise.process');
 
-//our services
-Route::get('/about', function () {
-    return view('about.pinnacle');
-});
+Route::get('/franchise/application', fn() =>
+    view('franchise-application-process.franchise-application-process')
+)->name('franchise.form');
 
-Route::get('/about', function () {
-    return view('about.why');
-});
-
-Route::get('/about', function () {
-    return view('about.franchise');
-});
-
-Route::get('/about', function () {
-    return view('about.clients');
-});
-
-//our services
-Route::get('/our_service', function () {
-    return view('our_service.our_service');
-});
-//contuct us
-Route::get('/contact', function () {
-    return view('contact.contact');
-});
-
-//franchissability 
-Route::get('/franchisability/8_keys', function () {
-    return view('franchisability.8_keys');
-});
-Route::get('/franchisability/franchise_test', function () {
-    return view('franchisability.franchise_test');
-});
-Route::get('/franchisability/franchising_checklist', function () {
-    return view('franchisability.franchising_checklist');
-});
-
-//ordering supplies
-Route::get('/user-dashboard/ordering-supplies', function () {
-    return view('user-dashboard.ordering-supplies.ordering-supplies');
-})->name('ordering.supplies');
-
-Route::get('/user-dashboard/uploading-requirements', function () {
-    return view('user-dashboard.uploading-requirements.uploading-requirements');
-})->name('uploading.requirements');
-
-Route::get('/franchise-application-process', function () {
-    return view('/franchise-application-process/franchise-application-process');
-})->name('franchise.process');
-
-
-// Dashboard for normal users
-Route::get('/user-dashboard', function () {
-    return view('user-dashboard.dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
-
-// -----------------------------
-// ADMIN ROUTES
-// -----------------------------
-
-// Everything under /admin requires auth + admin middleware
-Route::middleware(['auth', 'admin'])
-    ->prefix('admin')
-    ->name('admin.')
-    ->group(function () {
-
-        // ADMIN DASHBOARD HOME
-        Route::get('/', function () {
-            return view('admin.admin'); // admin dashboard view
-        })->name('dashboard');
-
-        // Franchise static pages
-        Route::view('/franchise', 'admin.franchise')->name('franchise');
-        Route::view('/supplies', 'admin.supplies')->name('supplies');
-        Route::view('/requirements', 'admin.requirements')->name('requirements');
-
-        // Franchise Applications
-        Route::get('/applications', [App\Http\Controllers\Admin\FranchiseAdminController::class, 'index'])
-            ->name('applications');
-
-        Route::get('/applications/{id}', [App\Http\Controllers\Admin\FranchiseAdminController::class, 'show'])
-            ->name('applications.show');
-        Route::delete('/applications/{id}', 
-            [App\Http\Controllers\Admin\FranchiseAdminController::class, 'destroy']
-        )->name('applications.destroy');
-    });
-
-
-
-// Show the application form
-Route::get('/franchise/application', function () {
-    return view('franchise-application-process.franchise-application-process');
-})->name('franchise.form');
-
-// Handle the form submit
 Route::post('/franchise/submit', [FranchiseController::class, 'store'])
     ->name('franchise.submit');
 
+/*
+|--------------------------------------------------------------------------
+| ADMIN PANEL (SINGLE LOGIN SYSTEM)
+|--------------------------------------------------------------------------
+|
+| Admin still logs in using /login (Breeze default)
+| After login: redirect admin users to /admin
+| Normal users → /user-dashboard
+|
+|--------------------------------------------------------------------------
+*/
 
-//logout
-Route::post('/user/logout', function () {
-    Auth::logout();
+Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
+
+    // Admin dashboard
+    Route::view('/', 'admin.admin')->name('dashboard');
+
+    // Static admin pages
+    Route::view('/application', 'admin.application')->name('application');
+    Route::view('/supplies', 'admin.supplies')->name('supplies');
+    Route::view('/requirements', 'admin.requirements')->name('requirements');
+
+    // Franchise Applications
+    Route::get('/applications', [FranchiseAdminController::class, 'index'])->name('applications');
+    Route::get('/applications/{id}', [FranchiseAdminController::class, 'show'])->name('applications.show');
+    Route::delete('/applications/{id}', [FranchiseAdminController::class, 'destroy'])->name('applications.destroy');
+
+    // User accounts management
+    Route::get('/users-account', [UserManagementController::class, 'index'])->name('users-account');
+    Route::delete('/users-account/{id}', [UserManagementController::class, 'destroy'])->name('users-account.destroy');
+});
+
+/*
+|--------------------------------------------------------------------------
+| USER LOGOUT
+|--------------------------------------------------------------------------
+*/
+
+Route::post('/user/logout', function (Request $request) {
+
+    Auth::guard('web')->logout();
+    $request->session()->invalidate();
+    $request->session()->regenerateToken();
+
     return redirect('/login');
+
 })->name('custom.logout');
 
+/*
+|--------------------------------------------------------------------------
+| USER PROFILE SETTINGS
+|--------------------------------------------------------------------------
+*/
 
-// Redirect users based on usertype
-Route::get('/home', [HomeController::class, 'index'])->name('home');
-
-
-// Profile routes (only once)
 Route::middleware('auth')->group(function () {
+
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
 });
 
+/*
+|--------------------------------------------------------------------------
+| AUTH ROUTES (Laravel Breeze)
+|--------------------------------------------------------------------------
+*/
+
 require __DIR__.'/auth.php';
-
-

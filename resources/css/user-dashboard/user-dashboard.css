@@ -1,203 +1,266 @@
 /* ==========================================
-   NAVIGATION BAR BASE LAYOUT (Desktop)
+   GLOBAL
 ========================================== */
 body {
-  background: red !important;
+    background: #f5f7fb;
+    font-family: 'Inter', sans-serif;
+    margin: 0;
+    color: #1f2937;
 }
 
-/* Container */
+/* ==========================================
+   NAVBAR (Premium Glassmorphism)
+========================================== */
+.navbar-glass {
+    backdrop-filter: blur(14px);
+    background: rgba(255, 255, 255, 0.72);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+    border-bottom: 1px solid rgba(255,255,255,0.4);
+    position: sticky;
+    top: 0;
+    z-index: 50;
+}
+
 .nav-container {
-    max-width: 1280px;
+    max-width: 1200px;
     margin: 0 auto;
-    padding: 0 1.25rem;
+    padding: 0 1.2rem;
 }
 
-/* Flex wrapper */
 .nav-content {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    height: 70px; /* more premium spacing */
+    height: 72px;
 }
 
-/* Left side: logo + links */
+/* LEFT SIDE */
 .nav-left {
     display: flex;
     align-items: center;
-    gap: 28px;
-}
-
-.nav-logo-wrapper {
-    display: flex;
-    align-items: center;
+    gap: 22px;
 }
 
 .nav-logo-icon {
-    height: 40px;
-    width: auto;
+    height: 36px;
 }
 
-/* Desktop navigation links container */
 .nav-links {
     display: flex;
-    align-items: center;
     gap: 18px;
 }
 
-/* Improve spacing for desktop */
 .nav-link {
-    padding: 10px 16px;
-    border-radius: 8px;
-    font-size: 0.95rem;
+    padding: 10px 18px;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 15px;
+    transition: 0.25s ease;
+    color: #374151;
 }
 
-/* Right side: dropdown trigger */
-.nav-right {
+.nav-link:hover,
+.active-nav {
+    background: rgba(59, 130, 246, 0.12);
+    color: #2563eb;
+}
+
+/* ==========================================
+   USER DROPDOWN (Modern)
+========================================== */
+.user-btn {
+    border: 1px solid #d1d5db;
+    padding: 8px 16px;
+    border-radius: 12px;
+    background: white;
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+    transition: 0.25s ease;
     display: flex;
     align-items: center;
-    gap: 12px;
 }
 
-/* ==========================================
-   MOBILE HAMBURGER CONTROLS
-========================================== */
-
-.mobile-hamburger {
-    display: none; /* hidden on desktop */
+.user-btn:hover {
+    background: #f9fafb;
+    border-color: #9ca3af;
 }
 
-.mobile-hamburger-btn {
-    padding: 10px;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: 0.2s;
+.dropdown-panel {
+    position: absolute;
+    right: 0;
+    top: 62px;
+    background: white;
+    border-radius: 12px;
+    min-width: 170px;
+    box-shadow: 0 8px 22px rgba(0,0,0,0.10);
+    padding: 8px 0;
+    animation: fadeIn 0.18s ease-in-out;
 }
 
-.mobile-hamburger-btn:hover {
-    background: #f3f4f6;
-}
-
-.hamburger-icon {
-    height: 28px;
-    width: 28px;
-}
-
-/* ==========================================
-   MOBILE MENU PANEL
-========================================== */
-
-.mobile-menu {
-    background: #ffffff;
-    border-top: 1px solid #e5e7eb;
-    display: none;
-    padding-bottom: 20px;
-    animation: dropdownFade 0.2s ease-in-out;
-}
-
-/* Smooth dropdown animation */
-@keyframes dropdownFade {
+@keyframes fadeIn {
     from { opacity: 0; transform: translateY(-6px); }
     to { opacity: 1; transform: translateY(0); }
 }
 
-/* Mobile link section */
-.mobile-links {
-    padding: 14px 0;
+.dropdown-item {
+    padding: 12px 16px;
+    display: block;
+    color: #374151;
+    font-size: 14px;
+    font-weight: 500;
+    transition: 0.2s;
+}
+
+.dropdown-item:hover {
+    background: #f3f4f6;
+}
+
+.logout-btn {
+    background: none;
+    border: none;
+    width: 100%;
+    text-align: left;
+    padding: 12px 16px;
+    color: #b91c1c;
+    font-weight: 600;
+}
+
+.logout-btn:hover {
+    background: #fee2e2;
+}
+
+/* ==========================================
+   MOBILE NAVIGATION
+========================================== */
+.mobile-only { display: none; }
+.desktop-only { display: flex; }
+
+@media (max-width: 768px) {
+    .desktop-only { display: none; }
+    .mobile-only { display: block; }
+
+    .nav-links {
+        display: none;
+    }
+
+    .nav-content {
+        height: 60px;
+    }
+}
+
+.mobile-menu {
+    background: white;
+    padding-bottom: 18px;
+    border-top: 1px solid #e5e7eb;
+    display: none;
 }
 
 .mobile-link {
     padding: 14px 20px;
     display: block;
     font-weight: 600;
-    color: #4b5563;
-    border-radius: 8px;
-    transition: background 0.2s;
+    font-size: 14px;
 }
 
-.mobile-link:hover {
-    background: #eef2ff;
-    color: #1d4ed8;
-}
-
-/* Mobile user info panel */
 .mobile-user {
-    padding: 18px;
+    padding: 16px 20px;
     border-top: 1px solid #e5e7eb;
 }
 
 .mobile-user-name {
     font-weight: 700;
-    color: #111827;
 }
 
 .mobile-user-email {
-    font-size: 14px;
+    font-size: 13px;
     color: #6b7280;
 }
 
-/* Mobile menu actions (logout/profile) */
 .mobile-actions {
-    padding: 14px 18px;
+    padding: 10px 20px;
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 8px;
 }
 
 /* ==========================================
-   RESPONSIVENESS FIXED & ENHANCED
+   PAGE CONTENT
 ========================================== */
-
-/* --- Tablets & Mobile (max-width: 992px) --- */
-@media (max-width: 992px) {
-
-    .nav-container {
-        padding: 0 1rem;
-    }
-
-    .nav-logo-icon {
-        height: 36px;
-    }
+.page-wrapper {
+    max-width: 1200px;
+    margin: 40px auto;
+    padding: 0 1.25rem;
+    text-align: center;
 }
 
-/* --- Mobile (max-width: 768px) --- */
-@media (max-width: 768px) {
-
-    /* Hide desktop nav links */
-    .nav-links {
-        display: none;
-    }
-
-    /* Show hamburger menu */
-    .mobile-hamburger {
-        display: flex;
-    }
-
-    .nav-content {
-        height: 64px;
-    }
+.welcome-title {
+    font-size: 32px;
+    font-weight: 800;
+    margin-bottom: 35px;
 }
 
-/* --- Extra small phones (max-width: 480px) --- */
+/* ==========================================
+   DASHBOARD BUTTONS (Modern Card Style)
+========================================== */
+.dashboard-grid {
+    max-width: 900px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 24px;
+}
+
+.dashboard-button {
+    padding: 26px;
+    border-radius: 16px;
+    color: white;
+    font-size: 18px;
+    font-weight: 700;
+    text-align: center;
+    transition: 0.3s ease;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+    position: relative;
+    overflow: hidden;
+}
+
+/* Soft Glow Hover */
+.dashboard-button::before {
+    content: "";
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 220%;
+    height: 220%;
+    background: radial-gradient(circle, rgba(255,255,255,0.28), transparent 70%);
+    opacity: 0;
+    transition: 0.35s ease;
+}
+
+.dashboard-button:hover::before {
+    opacity: 1;
+}
+
+.dashboard-button:hover {
+    transform: translateY(-4px);
+}
+
+.btn-blue { background: #2563eb; }
+.btn-green { background: #059669; }
+.btn-purple { background: #7c3aed; }
+
+/* Mobile Scaling */
 @media (max-width: 480px) {
-
-    .nav-logo-icon {
-        height: 32px;
+    .welcome-title {
+        font-size: 26px;
     }
-
-    .mobile-link {
-        font-size: 14px;
-        padding: 12px 16px;
-    }
-
-    .mobile-user-name {
-        font-size: 14px;
-    }
-
-    .mobile-user-email {
-        font-size: 12px;
-    }
-
-    .mobile-actions {
-        padding: 12px 14px;
+}
+/* DROPDOWN RESPONSIVE FIX */
+@media (max-width: 768px) {
+    .dropdown-container-responsive {
+        position: static !important;        /* removes absolute issue */
+        width: 100% !important;            /* full width on mobile */
+        margin-top: 10px !important;
+        transform: none !important;
     }
 }

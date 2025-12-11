@@ -38,7 +38,7 @@
     <img src="{{ asset('img/KI WALLPAPER 1.jpg') }}" alt="">
 </div>
   <p class="lead">
-    Thank you for your interest in franchising Kape-Ilokano Cafe!  
+    Thank you for your interest in franchising Kape-Ilokano Cafe! 
     This form is the complete official franchise application.
   </p>
 
@@ -132,7 +132,7 @@
       </select>
 
       <label>Age *</label>
-    <input type="number" name="personal_age" required>
+      <input type="number" name="personal_age" min="1" max="120" required>
 
     <label>Country of Birth *</label>
     <input type="text" name="personal_country_birth" required>

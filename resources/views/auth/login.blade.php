@@ -2,6 +2,7 @@
 @section('title', 'Login')
 @if (Route::has('register'))
             <div class="extra-links">
+                {{-- <a href="{{ url('/') }}" class="link-small">Admin</a> --}}
                 <a href="{{ route('register') }}" class="link-small">Register</a>
                 <a href="{{ url('/') }}" class="link-small">Home</a>
             </div>

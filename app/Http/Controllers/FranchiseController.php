@@ -20,7 +20,7 @@ class FranchiseController extends Controller
             'personal_photo' => 'nullable|file|mimes:jpg,jpeg,png,webp',
             'personal_gender' => 'required|string',
             'personal_civil_status' => 'required|string',
-            'personal_age' => 'required|integer',
+            'personal_age' => 'required|integer|between:1,120',
             'personal_country_birth' => 'required',
             'personal_nationality' => 'required',
             'personal_residence' => 'nullable|string',

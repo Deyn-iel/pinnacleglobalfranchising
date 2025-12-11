@@ -1,30 +1,104 @@
-<x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('User-Dashboard') }}
-        </h2>
-    </x-slot>
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Dashboard</title>
 
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+    @vite(['resources/css/user-dashboard/app.css', 'resources/js/app.js'])
+</head>
 
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6 text-gray-900">
-                    {{ __("Welcome! " . Auth::user()->name) }}
+<body class="bg-gray-100">
+
+<!-- ======================================
+     NAVBAR (Modern Glassmorphism)
+====================================== -->
+<nav x-data="{ open: false }" class="navbar-glass">
+    <div class="nav-container">
+        <div class="nav-content">
+
+                <div class="nav-links">
+                    <a href="{{ route('dashboard') }}" class="nav-link active-nav">Dashboard</a>
                 </div>
-            </div>
-        </div>
-        <!-- BUTTON SECTION -->
-<div class="max-w-4xl mx-auto mt-8 px-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
 
-    <a href="{{ route('ordering.supplies') }}"
-        class="block w-full px-6 py-4 bg-blue-600 text-white font-semibold rounded-lg shadow-md
-               hover:bg-green-700 hover:shadow-lg transition-all duration-200 text-center">
-        Ordering of Supplies to Registered Partners
-    </a>
-</div>
-<!-- END BUTTON SECTION -->
+            </div>
+
+            <!-- RIGHT: USER DROPDOWN -->
+            <div class="nav-right desktop-only">
+            <x-dropdown align="right" width="48">
+                <x-slot name="trigger">
+                    <button class="user-btn">
+                        {{ Auth::user()->name }}
+                    </button>
+                </x-slot>
+
+                <x-slot name="content">
+                    <x-dropdown-link :href="route('profile.edit')">
+                        Profile
+                    </x-dropdown-link>
+
+                    <form method="POST" action="{{ route('custom.logout') }}">
+                        @csrf
+                        <x-dropdown-link href="#" onclick="event.preventDefault(); this.closest('form').submit();">
+                            Log Out
+                        </x-dropdown-link>
+                    </form>
+                </x-slot>
+            </x-dropdown>
+        </div>
+
+
+            <!-- MOBILE MENU BUTTON -->
+            <div class="mobile-hamburger mobile-only">
+                <button @click="open = !open" class="mobile-hamburger-btn">
+                    <img src="/icons/menu.svg" class="hamburger-icon" />
+                </button>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- MOBILE MENU -->
+    <div x-show="open" class="mobile-menu mobile-only">
+        <div class="mobile-links">
+            <a href="{{ route('dashboard') }}" class="mobile-link">Dashboard</a>
+        </div>
+
+        <div class="mobile-user">
+            <div class="mobile-user-name">{{ Auth::user()->name }}</div>
+            <div class="mobile-user-email">{{ Auth::user()->email }}</div>
+        </div>
+
+        <div class="mobile-actions">
+            <a href="{{ route('profile.edit') }}" class="mobile-link">Profile</a>
+
+            <form method="POST" action="{{ route('custom.logout') }}">
+                @csrf
+                <a href="#" onclick="event.preventDefault(); this.closest('form').submit();" class="mobile-link">
+                    Log Out
+                </a>
+            </form>
+        </div>
+    </div>
+
+</nav>
+
+<!-- ======================================
+     PAGE CONTENT
+====================================== -->
+<div class="page-wrapper">
+
+    <h1 class="welcome-title">Welcome, {{ Auth::user()->name }}!</h1>
+
+    <div class="dashboard-grid">
+
+        <a href="{{ route('ordering.supplies') }}" class="dashboard-button btn-blue futuristic-hover">
+            <span>Ordering of Supplies</span>
+        </a>
 
     </div>
 
-</x-app-layout>
+</div>
+
+</body>
+</html>

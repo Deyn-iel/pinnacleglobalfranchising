@@ -164,7 +164,7 @@
 
     <!-- CTA BUTTON -->
     <div class="franchise-now-button-wrapper">
-        <a href="{{ route('franchise.process') }}" class="franchise-now-btn">Fill-up Now</a>
+        <a href="{{ route('franchise.process') }}" class="franchise-now-btn">Fill-up</a>
     </div>
 <h1 class="section-title">Kape Ilokano Drinks</h1>
 <div class="drinks-container">

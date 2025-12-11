@@ -1,6 +1,12 @@
 /* -------------------------------- */
 /* FLOATING CHAT BUTTON (Responsive) */
 /* -------------------------------- */
+.send-disabled {
+    background-color: #ccc !important;
+    cursor: not-allowed !important;
+    pointer-events: none !important;
+}
+
 
 #chat-button {
     position: fixed;
@@ -142,7 +148,7 @@
     background: none;
     border: none;
     color: rgb(200, 200, 200);
-    font-size: 16px;
+    font-size: 13px;
     cursor: pointer;
 }
 

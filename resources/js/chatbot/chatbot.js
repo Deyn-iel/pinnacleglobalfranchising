@@ -38,61 +38,80 @@ document.addEventListener("DOMContentLoaded", function () {
     sendBtn.addEventListener("click", sendMessage);
 
     // ENTER KEY (BLOCKED DURING BOT REPLY)
-    chatText.addEventListener("keypress", function (e) {
-        if (e.key === "Enter" && !isWaitingForBot) {
-            sendMessage();
+        chatText.addEventListener("keypress", function (e) {
+            if (e.key === "Enter" && !isWaitingForBot) {
+                sendMessage();
+            }
+        });
+
+        function sendMessage() {
+            let message = chatText.value.trim();
+            if (message === "") return;
+
+            if (isWaitingForBot) return;
+
+            addMessage(message, "user");
+            chatText.value = "";
+
+            // BLOCK BUTTON + REMOVE HOVER
+            isWaitingForBot = true;
+            sendBtn.disabled = true;
+            sendBtn.classList.add("send-disabled");
+
+            // Show typing bubble
+            typingIndicator.style.display = "block";
+            chatMessages.appendChild(typingIndicator);
+            scrollToBottom();
+
+            setTimeout(() => {
+                typingIndicator.style.display = "none";
+
+                typeBotMessage(
+                    "Thanks for messaging Pinnacle! How can we help you? Our team will get back to you shortly. Have a great day! Thanks for messaging Pinnacle! How can we help you? Our team will get back to you shortly. Have a great day! Thanks for messaging Pinnacle! How can we help you? Our team will get back to you shortly. Have a great day! Thanks for messaging Pinnacle! How can we help you? Our team will get back to you shortly. Have a great day!",
+                    () => {
+                        // ENABLE BUTTON AGAIN AFTER BOT FINISHES
+                        sendBtn.disabled = false;
+                        sendBtn.classList.remove("send-disabled");
+                        isWaitingForBot = false;
+                    }
+                );
+
+            }, 1200);
         }
-    });
 
-    function sendMessage() {
-        let message = chatText.value.trim();
-        if (message === "") return;
-
-        if (isWaitingForBot) return;
-
-        addMessage(message, "user");
-        chatText.value = "";
-
-        // BLOCK ONLY SEND BUTTON
-        isWaitingForBot = true;
-        sendBtn.disabled = true;
-
-        // Show typing bubble
-        typingIndicator.style.display = "block";
-        chatMessages.appendChild(typingIndicator);
-        scrollToBottom();
-
-        setTimeout(() => {
-            typingIndicator.style.display = "none";
-            typeBotMessage("Thanks for messaging Pinnacle! How can we help you? Our team will get back to you shortly. Have a great day!");
-        }, 1200);
-    }
 
     /* BOT TYPEWRITER EFFECT */
-    function typeBotMessage(fullText) {
-        const botMsg = document.createElement("div");
-        botMsg.classList.add("message", "bot");
-        botMsg.innerHTML = "";
-        chatMessages.appendChild(botMsg);
+function typeBotMessage(fullText) {
+    const botMsg = document.createElement("div");
+    botMsg.classList.add("message", "bot");
+    botMsg.innerHTML = "";
+    chatMessages.appendChild(botMsg);
 
-        let index = 0;
+    let index = 0;
 
-        function typeLetter() {
-            if (index < fullText.length) {
-                botMsg.innerHTML += fullText[index];
-                index++;
-                scrollToBottom();
-                setTimeout(typeLetter, 15);
-            } else {
-                // UNBLOCK SEND BUTTON
-                isWaitingForBot = false;
-                sendBtn.disabled = false;
-                chatText.focus();
-            }
+    // BLOCK SEND BUTTON + REMOVE HOVER
+    isWaitingForBot = true;
+    sendBtn.disabled = true;
+    sendBtn.classList.add("send-disabled");
+
+    function typeLetter() {
+        if (index < fullText.length) {
+            botMsg.innerHTML += fullText[index];
+            index++;
+            scrollToBottom();
+            setTimeout(typeLetter, 15);
+        } else {
+            // UNBLOCK SEND BUTTON
+            isWaitingForBot = false;
+            sendBtn.disabled = false;
+            sendBtn.classList.remove("send-disabled");
+            chatText.focus();
         }
-
-        typeLetter();
     }
+
+    typeLetter();
+}
+
 
     function addMessage(text, type) {
         const msg = document.createElement("div");
