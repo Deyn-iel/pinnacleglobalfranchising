@@ -117,9 +117,10 @@
 <div class="franchise-now-container">
 
 
-    <p class="franchise-now-subtext">
-        Start your franchising journey with Pinnacle Global Franchising Group Inc. and turn your vision into a successful business.
-    </p>
+    <h2 class="franchise-title">
+        START FRANCHISING
+    </h2>
+    <div class="underline"></div>
 
     <!-- STEPS -->
     <div class="franchise-steps">
@@ -166,7 +167,7 @@
     <div class="franchise-now-button-wrapper">
         <a href="{{ route('franchise.process') }}" class="franchise-now-btn">Fill-up</a>
     </div>
-<h1 class="section-title">Kape Ilokano Drinks</h1>
+{{-- <h1 class="section-title">Kape Ilokano Drinks</h1>
 <div class="drinks-container">
 
         <!-- SLIDE FROM LEFT -->
@@ -184,12 +185,16 @@
             <img src="{{ asset('img/GUEST2.png') }}" alt="Drink 3">
         </div>
 
-    </div>
+    </div> --}}
+    <p class="recaptcha">
+            This site is protected by reCAPTCHA and the <a href="https://policies.google.com/privacy" target="_blank">Google Privacy</a> Policy and <a href="https://policies.google.com/terms" target="_blank">Terms of Service</a> apply.
+        </p>
 </div>
   
 <!-- INQUIRE NOW FORM -->
 
-<section class="inquire mt-5 text-center">
+{{-- <section class="inquire text-center">
+    
 
     <h2 class="inquire-title">INQUIRE NOW!</h2>
     <div class="underline"></div>
@@ -220,12 +225,10 @@
 
         </form>
 
-        <p class="recaptcha">
-            This site is protected by reCAPTCHA and the <a href="https://policies.google.com/privacy" target="_blank">Google Privacy</a> Policy and <a href="https://policies.google.com/terms" target="_blank">Terms of Service</a> apply.
-        </p>
+        
     </div>
     
-</section>
+</section> --}}
 
 {{-- ✅ chatbot --}}
     @include('partials.chatbot')

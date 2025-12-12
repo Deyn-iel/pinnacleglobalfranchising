@@ -11,7 +11,8 @@ use App\Http\Controllers\FranchiseController;
 // Admin Controllers
 use App\Http\Controllers\Admin\FranchiseAdminController;
 use App\Http\Controllers\Admin\UserManagementController;
-
+use App\Http\Controllers\AdminExamController;
+use App\Http\Controllers\ExamController;
 /*
 |--------------------------------------------------------------------------
 | PUBLIC PAGES
@@ -56,6 +57,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::view('/user-dashboard/uploading-requirements', 'user-dashboard.uploading-requirements.uploading-requirements')
         ->name('uploading.requirements');
+    Route::view('/user-dashboard/exam', 'user-dashboard.exam.exam')
+        ->name('exam');
 });
 
 /*
@@ -85,32 +88,77 @@ Route::post('/franchise/submit', [FranchiseController::class, 'store'])
 |
 |--------------------------------------------------------------------------
 */
+Route::middleware(['auth', 'admin'])
+    ->prefix('admin')
+    ->name('admin.')
+    ->group(function () {
 
-Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
+        /* ===============================
+         * ADMIN DASHBOARD STATIC PAGES
+         * =============================== */
 
-    // Admin dashboard
-    Route::view('/', 'admin.admin')->name('dashboard');
+        Route::view('/', 'admin.admin')->name('dashboard');
+        Route::view('/application', 'admin.application')->name('application');
+        Route::view('/supplies', 'admin.supplies')->name('supplies');
+        Route::view('/requirements', 'admin.requirements')->name('requirements');
 
-    // Static admin pages
-    Route::view('/application', 'admin.application')->name('application');
-    Route::view('/supplies', 'admin.supplies')->name('supplies');
-    Route::view('/requirements', 'admin.requirements')->name('requirements');
+        /* ⚠️ IMPORTANT:
+           Removed the WRONG route:
+           Route::view('/uploading-exams', 'admin.uploading-exams')->name('uploading-exams');
+           (This caused $exams = undefined)
+        */
 
-    // Franchise Applications
-    Route::get('/applications', [FranchiseAdminController::class, 'index'])->name('applications');
-    Route::get('/applications/{id}', [FranchiseAdminController::class, 'show'])->name('applications.show');
-    Route::delete('/applications/{id}', [FranchiseAdminController::class, 'destroy'])->name('applications.destroy');
 
-    // User accounts management
-    Route::get('/users-account', [UserManagementController::class, 'index'])->name('users-account');
-    Route::delete('/users-account/{id}', [UserManagementController::class, 'destroy'])->name('users-account.destroy');
-});
+        /* ===============================
+         * EXAM MANAGEMENT (CONTROLLER)
+         * =============================== */
+
+        // Display Upload Exams Page
+        Route::get('/uploading-exams', [AdminExamController::class, 'index'])
+            ->name('uploading-exams');
+
+        // Save Exam
+        Route::post('/exams/store', [AdminExamController::class, 'store'])
+            ->name('exams.store');
+
+        // Delete Exam
+        Route::delete('/exams/delete/{id}', [AdminExamController::class, 'delete'])
+            ->name('exams.delete');
+
+
+        /* ===============================
+         * FRANCHISE APPLICATIONS
+         * =============================== */
+
+        Route::get('/applications', [FranchiseAdminController::class, 'index'])
+            ->name('applications');
+
+        Route::get('/applications/{id}', [FranchiseAdminController::class, 'show'])
+            ->name('applications.show');
+
+        Route::delete('/applications/{id}', [FranchiseAdminController::class, 'destroy'])
+            ->name('applications.destroy');
+
+
+        /* ===============================
+         * USER ACCOUNT MANAGEMENT
+         * =============================== */
+
+        Route::get('/users-account', [UserManagementController::class, 'index'])
+            ->name('users-account');
+
+        Route::delete('/users-account/{id}', [UserManagementController::class, 'destroy'])
+            ->name('users-account.destroy');
+
+    });
+
 
 /*
 |--------------------------------------------------------------------------
 | USER LOGOUT
 |--------------------------------------------------------------------------
 */
+
 
 Route::post('/user/logout', function (Request $request) {
 

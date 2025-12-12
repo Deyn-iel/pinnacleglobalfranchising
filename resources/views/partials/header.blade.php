@@ -8,7 +8,7 @@
         </button>
 
         <!-- Navigation Items -->
-        <div class="collapse navbar-collapse justify-content-center" id="navbarNav">
+        <div class="collapse navbar-collapse" id="navbarNav">
 
             <ul class="navbar-nav text-center">
 
@@ -67,14 +67,18 @@
                         CONTACT US
                     </a>
                 </li>
-
+                
 
             </ul>
             
         </div>
-
+        <!-- RIGHT SIDE LOGIN BUTTON -->
+                <div class="navbar-right d-none d-lg-flex">
+                    <a href="{{ url('/login') }}" class="login-btn">LOGIN</a>
+                </div>
     </div>
 </nav>
+
 <!-- MOBILE SIDEBAR -->
 <div id="sidebarMenu" class="sidebar">
 

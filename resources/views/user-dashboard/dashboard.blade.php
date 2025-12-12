@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,92 +8,98 @@
     @vite(['resources/css/user-dashboard/app.css', 'resources/js/app.js'])
 </head>
 
-<body class="bg-gray-100">
+<body>
 
 <!-- ======================================
-     NAVBAR (Modern Glassmorphism)
+     NAVBAR — Modern SaaS Style
 ====================================== -->
-<nav x-data="{ open: false }" class="navbar-glass">
+<nav x-data="{ open: false, dropdownOpen: false }" class="navbar-glass">
     <div class="nav-container">
         <div class="nav-content">
+
+            <!-- LEFT: LOGO + LINKS -->
+            <div class="nav-left">
+                <img src="{{ asset('img/logo1.jpg') }}" alt="Logo" class="nav-logo">
 
                 <div class="nav-links">
                     <a href="{{ route('dashboard') }}" class="nav-link active-nav">Dashboard</a>
                 </div>
-
             </div>
 
-            <!-- RIGHT: USER DROPDOWN -->
+            <!-- RIGHT: USER -->
             <div class="nav-right desktop-only">
-            <x-dropdown align="right" width="48">
-                <x-slot name="trigger">
-                    <button class="user-btn">
-                        {{ Auth::user()->name }}
+                <div class="user-dropdown-wrapper">
+
+                    <button @click="dropdownOpen = !dropdownOpen" class="user-btn">
+                        <span class="user-name">{{ Auth::user()->name }}</span>
+                        {{-- <img src="/icons/user.svg" class="user-avatar"> --}}
                     </button>
-                </x-slot>
 
-                <x-slot name="content">
-                    <x-dropdown-link :href="route('profile.edit')">
-                        Profile
-                    </x-dropdown-link>
+                    <div x-show="dropdownOpen" @click.away="dropdownOpen = false" class="dropdown-panel">
+                        <a href="{{ route('profile.edit') }}" class="dropdown-item">Profile</a>
 
-                    <form method="POST" action="{{ route('custom.logout') }}">
-                        @csrf
-                        <x-dropdown-link href="#" onclick="event.preventDefault(); this.closest('form').submit();">
-                            Log Out
-                        </x-dropdown-link>
-                    </form>
-                </x-slot>
-            </x-dropdown>
-        </div>
+                        <form method="POST" action="{{ route('custom.logout') }}">
+                            @csrf
+                            <button class="logout-btn"
+                                    onclick="event.preventDefault(); this.closest('form').submit();">
+                                Log Out
+                            </button>
+                        </form>
+                    </div>
 
+                </div>
+            </div>
 
             <!-- MOBILE MENU BUTTON -->
-            <div class="mobile-hamburger mobile-only">
-                <button @click="open = !open" class="mobile-hamburger-btn">
-                    <img src="/icons/menu.svg" class="hamburger-icon" />
-                </button>
-            </div>
+            <button @click="open = !open" class="mobile-hamburger mobile-only">
+                <img src="/icons/menu.svg" class="hamburger-icon">
+            </button>
 
         </div>
     </div>
 
     <!-- MOBILE MENU -->
     <div x-show="open" class="mobile-menu mobile-only">
-        <div class="mobile-links">
-            <a href="{{ route('dashboard') }}" class="mobile-link">Dashboard</a>
-        </div>
 
         <div class="mobile-user">
             <div class="mobile-user-name">{{ Auth::user()->name }}</div>
             <div class="mobile-user-email">{{ Auth::user()->email }}</div>
         </div>
 
-        <div class="mobile-actions">
-            <a href="{{ route('profile.edit') }}" class="mobile-link">Profile</a>
+        <a href="{{ route('dashboard') }}" class="mobile-link">Dashboard</a>
+        <a href="{{ route('profile.edit') }}" class="mobile-link">Profile</a>
 
-            <form method="POST" action="{{ route('custom.logout') }}">
-                @csrf
-                <a href="#" onclick="event.preventDefault(); this.closest('form').submit();" class="mobile-link">
-                    Log Out
-                </a>
-            </form>
-        </div>
+        <form method="POST" action="{{ route('custom.logout') }}">
+            @csrf
+            <a href="#" onclick="event.preventDefault(); this.closest('form').submit();" class="mobile-link logout-mobile">
+                Log Out
+            </a>
+        </form>
+
     </div>
-
 </nav>
+
 
 <!-- ======================================
      PAGE CONTENT
 ====================================== -->
 <div class="page-wrapper">
 
-    <h1 class="welcome-title">Welcome, {{ Auth::user()->name }}!</h1>
+    <div class="welcome-section">
+        <h1 class="welcome-title">Welcome back, {{ Auth::user()->name }} 👋</h1>
+        <p class="welcome-subtitle">Choose a service to get started.</p>
+    </div>
 
     <div class="dashboard-grid">
 
-        <a href="{{ route('ordering.supplies') }}" class="dashboard-button btn-blue futuristic-hover">
+        <a href="{{ route('ordering.supplies') }}" class="dashboard-card">
+            <img src="/icons/box.svg" class="card-icon">
             <span>Ordering of Supplies</span>
+        </a>
+
+        <a href="{{ route('exam') }}" class="dashboard-card">
+            <img src="/icons/exam.svg" class="card-icon">
+            <span>Take an Exam</span>
         </a>
 
     </div>
