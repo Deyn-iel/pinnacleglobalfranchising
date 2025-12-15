@@ -27,18 +27,20 @@ class AuthenticatedSessionController extends Controller
         $request->authenticate();
         $request->session()->regenerate();
 
+        /** @var \App\Models\User $user */
         $user = Auth::user();
+
+        // Clear temp password after first login
+        if ($user && $user->temp_password) {
+            $user->update(['temp_password' => null]);
+        }
 
         if ($user->usertype === 'admin') {
             return redirect()->route('admin.dashboard');
         }
 
-        return redirect()->route('dashboard'); 
+        return redirect()->route('dashboard');
     }
-
-
-
-
 
     /**
      * Destroy an authenticated session.
@@ -46,9 +48,7 @@ class AuthenticatedSessionController extends Controller
     public function destroy(Request $request): RedirectResponse
     {
         Auth::guard('web')->logout();
-
         $request->session()->invalidate();
-
         $request->session()->regenerateToken();
 
         return redirect('/');

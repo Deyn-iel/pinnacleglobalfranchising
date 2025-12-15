@@ -116,6 +116,26 @@
                     </div>
                 </a>
             </div>
+            <!-- REQUIREMENTS -->
+            <div class="col-md-4">
+                <a href="{{ route('admin.users-account') }}" class="text-decoration-none">
+                    <div class="card shadow-sm p-4 dash-card">
+                        <div class="dash-icon mb-3">👥</div>
+                        <h4 class="mb-1">Users Account</h4>
+                        <p class="text-muted mb-0">Manage uploaded franchise documents.</p>
+                    </div>
+                </a>
+            </div>
+            <!-- REQUIREMENTS -->
+            <div class="col-md-4">
+                <a href="{{ route('admin.uploading-exams') }}" class="text-decoration-none">
+                    <div class="card shadow-sm p-4 dash-card">
+                        <div class="dash-icon mb-3">📝</div>
+                        <h4 class="mb-1">Exams</h4>
+                        <p class="text-muted mb-0">Manage uploaded franchise documents.</p>
+                    </div>
+                </a>
+            </div>
 
         </div>
 

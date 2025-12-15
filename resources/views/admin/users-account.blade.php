@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -17,6 +17,7 @@
 </head>
 
 <body>
+
 <!-- TOP NAVBAR -->
     <nav class="navbar navbar-dark bg-dark">
         <div class="container-fluid d-flex align-items-center">
@@ -42,67 +43,96 @@
     <h2 class="mb-4">👤 User Accounts</h2>
 
     @if(session('success'))
-        <div class="alert alert-success">{{ session('success') }}</div>
-    @endif
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        ✅ {{ session('success') }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+@endif
 
-    @if(session('error'))
-        <div class="alert alert-danger">{{ session('error') }}</div>
-    @endif
+@if(session('error'))
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        ❌ {{ session('error') }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+@endif
 
-    <!-- Search -->
-    <form method="GET" class="mb-3">
-        <input type="text" name="search" class="form-control" placeholder="Search user name or email...">
-    </form>
+
         
 
 
-    <table class="table table-hover table-bordered shadow-sm bg-white">
-        <thead class="table-dark">
-            <tr>
-                <th>#</th>
-                <th>Name</th>
-                <th>Email</th>
-                <th>Role</th>
-                <th>Registered</th>
-                <th width="20%">Remove Accounts</th>
-            </tr>
-        </thead>
+   <table class="table table-hover table-bordered shadow-sm bg-white">
+    <thead class="table-dark">
+        <tr>
+            <th>#</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Role</th>
+            <th>Registered</th>
+            <th>Temp Password</th>
+            <th width="15%">Actions</th>
+        </tr>
+    </thead>
 
-        <tbody>
-            @foreach($users as $user)
-            <tr>
-                <td>{{ $user->id }}</td>
+    <tbody>
+        @foreach($users as $user)
+        <tr>
+            <td>{{ $user->id }}</td>
 
-                <td>{{ $user->name }}</td>
+            <td>{{ $user->name }}</td>
 
-                <td>{{ $user->email }}</td>
+            <td>{{ $user->email }}</td>
 
-                <td>
-                    <span class="badge bg-primary">
-                        {{ $user->is_admin ? 'Admin' : 'User' }}
+            <td>
+                <span class="badge {{ $user->is_admin ? 'bg-primary' : 'bg-secondary' }}">
+                    {{ $user->is_admin ? 'Admin' : 'User' }}
+                </span>
+            </td>
+
+            <td>{{ $user->created_at->format('M d, Y') }}</td>
+
+            <!-- TEMP PASSWORD COLUMN -->
+            <td>
+                @if($user->temp_password)
+                    <span class="badge bg-warning text-dark">
+                        {{ $user->temp_password }}
                     </span>
-                </td>
+                @else
+                    <span class="badge bg-success">
+                    Logged in / Password changed
+                </span>
+                @endif
+            </td>
 
-                <td>{{ $user->created_at->format('M d, Y') }}</td>
+            <!-- ACTIONS -->
+            <td>
+                <form action="{{ route('admin.users-account.destroy', $user->id) }}" method="POST"
+                      onsubmit="return confirm('Are you sure you want to delete this user?')">
+                    @csrf
+                    @method('DELETE')
+                    <button class="btn btn-danger btn-sm">Delete</button>
+                </form>
+            </td>
+        </tr>
+        @endforeach
+    </tbody>
+</table>
 
-                <td class="d-flex gap-1">
-
-                    <!-- Delete -->
-                    <form action="{{ route('admin.users-account.destroy', $user->id) }}" method="POST">
-                        @csrf
-                        @method('DELETE')
-                        <button class="btn btn-danger btn-sm">Delete</button>
-                    </form>
-
-                </td>
-            </tr>
-            @endforeach
-        </tbody>
-    </table>
 
     {{ $users->links() }}
 
+    <a href="{{ route('admin.users.register.form') }}" 
+   class="btn btn-primary mt-3">
+    ➕ Register a User
+</a>
+
+
 </main>
+    {{-- <script>
+setTimeout(() => {
+    const alert = document.querySelector('.alert');
+    if (alert) alert.classList.remove('show');
+}, 5000);
+</script> --}}
 
 </body>
 </html>

@@ -93,6 +93,23 @@ Route::middleware(['auth', 'admin'])
     ->name('admin.')
     ->group(function () {
 
+        // User management
+        Route::get('/users-account', [UserManagementController::class, 'index'])
+            ->name('users-account');
+
+        Route::delete('/users-account/{id}', [UserManagementController::class, 'destroy'])
+            ->name('users-account.destroy');
+
+        // Admin-only register
+        Route::get('/users/register', function () {
+            return view('admin.register');
+        })->name('users.register.form');
+
+        Route::post('/users/register', [UserManagementController::class, 'store'])
+            ->name('users.register');
+
+
+
         /* ===============================
          * ADMIN DASHBOARD STATIC PAGES
          * =============================== */
