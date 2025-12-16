@@ -13,7 +13,7 @@ class FranchiseAdminController extends Controller
      */
     public function index()
     {
-        return redirect()->route('admin.dashboard');
+        return redirect()->route('admin.application');
     }
 
     /**
@@ -43,7 +43,7 @@ class FranchiseAdminController extends Controller
 
         $app->delete();
 
-        return redirect()->route('admin.dashboard')
+        return redirect()->route('admin.application')
             ->with('success', 'Application deleted successfully!');
     }
 }

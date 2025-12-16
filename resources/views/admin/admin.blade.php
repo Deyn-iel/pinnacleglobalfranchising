@@ -139,49 +139,6 @@
 
         </div>
 
-        <hr class="my-4">
-
-        <!-- RECENT APPLICATIONS -->
-        <h3 class="mb-3">Recent Franchise Applications</h3>
-
-        <table class="table table-striped shadow-sm">
-            <thead class="table-dark">
-                <tr>
-                    <th>#</th>
-                    <th>Name</th>
-                    <th>Email</th>
-                    <th>Lead Source</th>
-                    <th>Date</th>
-                    <th width="100"></th>
-                </tr>
-            </thead>
-
-            <tbody>
-                @foreach(\App\Models\FranchiseApplication::latest()->take(5)->get() as $app)
-                <tr>
-                    <td>{{ $app->id }}</td>
-                    <td>{{ $app->personal_full_name }}</td>
-                    <td>{{ $app->email }}</td>
-                    <td>{{ $app->lead_source }}</td>
-                    <td>{{ $app->created_at->format('M d, Y') }}</td>
-
-                    <td class="d-flex gap-1">
-                        <a href="{{ route('admin.applications.show', $app->id) }}" class="btn btn-primary btn-sm">View</a>
-
-                        <form action="{{ route('admin.applications.destroy', $app->id) }}" 
-                              method="POST"
-                              onsubmit="return confirm('Are you sure you want to delete this application?');">
-                            @csrf
-                            @method('DELETE')
-                            <button class="btn btn-danger btn-sm">Delete</button>
-                        </form>
-                    </td>
-
-                </tr>
-                @endforeach
-            </tbody>
-        </table>
-
     </main>
 
 </body>

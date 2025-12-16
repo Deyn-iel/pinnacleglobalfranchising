@@ -109,30 +109,38 @@
             </thead>
 
             <tbody>
-                @foreach(\App\Models\FranchiseApplication::latest()->take(5)->get() as $app)
+            @forelse(\App\Models\FranchiseApplication::latest()->get() as $app)
                 <tr>
                     <td>{{ $app->id }}</td>
                     <td>{{ $app->personal_full_name }}</td>
                     <td>{{ $app->email }}</td>
                     <td>{{ $app->lead_source }}</td>
                     <td>{{ $app->created_at->format('M d, Y') }}</td>
-                    
                     <td class="d-flex gap-1">
-                    <a href="{{ route('admin.applications.show', $app->id) }}" class="btn btn-primary btn-sm">View</a>
+                        <a href="{{ route('admin.applications.show', $app->id) }}"
+                        class="btn btn-primary btn-sm">
+                            View
+                        </a>
 
-                    <form action="{{ route('admin.applications.destroy', $app->id) }}" method="POST"
-                        onsubmit="return confirm('Are you sure you want to delete this application?');">
-                        @csrf
-                        @method('DELETE')
-                        <button class="btn btn-danger btn-sm">Delete</button>
-                    </form>
-                </td>
-
+                        <form action="{{ route('admin.applications.destroy', $app->id) }}"
+                            method="POST"
+                            onsubmit="return confirm('Are you sure you want to delete this application?');">
+                            @csrf
+                            @method('DELETE')
+                            <button class="btn btn-danger btn-sm">Delete</button>
+                        </form>
+                    </td>
                 </tr>
-                @endforeach
-            </tbody>
-        </table>
+            @empty
+                <tr>
+                    <td colspan="6" class="text-center text-muted py-4">
+                        <i>No applications submitted yet.</i>
+                    </td>
+                </tr>
+            @endforelse
+        </tbody>
 
+        </table>
     </main>
 
 </body>

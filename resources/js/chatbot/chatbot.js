@@ -99,7 +99,7 @@ function typeBotMessage(fullText) {
             botMsg.innerHTML += fullText[index];
             index++;
             scrollToBottom();
-            setTimeout(typeLetter, 15);
+            setTimeout(typeLetter, 7);
         } else {
             // UNBLOCK SEND BUTTON
             isWaitingForBot = false;

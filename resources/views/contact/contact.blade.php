@@ -7,7 +7,7 @@
 
     <!-- ✅ BOOTSTRAP -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <!-- ✅ CSS FILES (ORDER MATTERS) -->
     @vite(['resources/css/header/app.css', 
             'resources/css/header/app.css',
@@ -65,6 +65,14 @@
                     <textarea class="form-field textarea" rows="5" placeholder=" " required></textarea>
                     <label class="label-message">Message*</label>
                 </div>
+
+                @if(session('success'))
+                <div class="alert alert-success alert-dismissible fade show mt-3" 
+                    role="alert"
+                    style="background:#4caf50; color:white; border:none; font-size:16px;">
+                    <strong>✔ Success!</strong> {{ session('success') }}
+                </div>
+                @endif
 
                 <button class="btn-submit w-100 mt-2">SEND</button>
 
@@ -127,12 +135,8 @@
     </main>
 
 
-<footer class="footer text-center">
-    <h4>Pinnacle Global Franchising Group Inc.</h4>
-    <p>Unit 2, G Building, San Fermin, Cauayan City, Isabela 3305</p>
-    <p>(078) 2582529 | 0916 169 7513</p>
-    <p>© 2025 Pinnacle Global</p>
-</footer>
+    {{-- ✅ FOOTER --}}
+    @include('partials.footer')
 
 
     <!-- ✅ SCRIPTS -->

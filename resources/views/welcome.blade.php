@@ -7,6 +7,8 @@
 
     <!-- ✅ BOOTSTRAP -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
 
     <!-- ✅ CSS FILES (ORDER MATTERS) -->
     @vite(['resources/css/header/app.css', 
@@ -187,7 +189,7 @@
 
     </div> --}}
     <p class="recaptcha">
-            This site is protected by reCAPTCHA and the <a href="https://policies.google.com/privacy" target="_blank">Google Privacy</a> Policy and <a href="https://policies.google.com/terms" target="_blank">Terms of Service</a> apply.
+            This site is protected by reCAPTCHA and the <a href="https://policies.google.com/privacy" target="_blank" style="text-decoration: none">Google Privacy</a> Policy and <a href="https://policies.google.com/terms" target="_blank" style="text-decoration: none">Terms of Service</a> apply.
         </p>
 </div>
   

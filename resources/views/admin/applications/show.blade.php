@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -13,8 +13,8 @@
     <!-- NAVBAR -->
     <nav class="navbar navbar-dark bg-dark mb-4">
         <div class="container">
-            <a class="navbar-brand" href="{{ route('admin.dashboard') }}">
-                ← Back to Dashboard
+            <a class="navbar-brand" href="{{ route('admin.application') }}">
+                ← Back to Admin Application
             </a>
         </div>
     </nav>
@@ -40,10 +40,16 @@
         <h4>Personal Details</h4>
         <table class="table table-bordered table-sm">
             <tr><th width="250">Complete Name</th><td>{{ $application->personal_full_name }}</td></tr>
-            @if($application->personal_photo)
+            {{-- @if($application->personal_photo)
             <p><b>Uploaded Photo:</b></p>
             <img src="{{ asset('storage/' . $application->personal_photo) }}" width="180" 
                  class="rounded shadow mb-4 border">
+        @endif --}}
+        @if($application->personal_photo)
+            <p><b>Uploaded Photo:</b></p>
+            <a href="{{ asset('storage/' . $application->personal_photo) }}" target="_blank" class="btn btn-info btn-sm mb-4">
+                View Uploaded Photo
+            </a>
         @endif
             <tr><th>Gender</th><td>{{ $application->personal_gender }}</td></tr>
             <tr><th>Civil Status</th><td>{{ $application->personal_civil_status }}</td></tr>
@@ -156,7 +162,7 @@
         <hr class="mb-5">
 
         <!-- BACK BUTTON -->
-        <a href="{{ route('admin.dashboard') }}" class="btn btn-secondary">
+        <a href="{{ route('admin.application') }}" class="btn btn-secondary">
             ← Back to Dashboard
         </a>
 

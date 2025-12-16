@@ -23,7 +23,6 @@
      role="alert"
      style="background:#4caf50; color:white; border:none; font-size:16px;">
     <strong>✔ Success!</strong> {{ session('success') }}
-    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert"></button>
 </div>
 @endif
 
@@ -433,27 +432,31 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
 <!-- PREVIEW MODAL -->
-<div class="modal fade" id="previewModal" tabindex="-1">
-  <div class="modal-dialog modal-lg modal-dialog-centered modal-scrollable">
-    <div class="modal-content" style="border-radius:12px;">
-      
-      <div class="modal-header" style="background:#0d3553; color:white;">
+<div class="modal fade" id="previewModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-content preview-modal">
+
+      <!-- HEADER -->
+      <div class="modal-header">
         <h5 class="modal-title">Application Preview</h5>
-        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
       </div>
 
-      <div class="modal-body" id="previewContent" style="font-size:15px; line-height:1.6;">
+      <!-- BODY -->
+      <div class="modal-body" id="previewContent">
         <!-- Preview content inserts here -->
       </div>
 
+      <!-- FOOTER -->
       <div class="modal-footer">
-        <button class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <button type="submit" class="btn">Submit Application</button>
+        <button class="btn btn-outline-secondary" data-bs-dismiss="modal">
+          Close
+        </button>
       </div>
 
     </div>
   </div>
 </div>
+
 
 </body>
 </html>

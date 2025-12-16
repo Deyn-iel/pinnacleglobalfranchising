@@ -1,3 +1,18 @@
+* {
+    box-sizing: border-box;
+}
+
+html, body {
+    overflow-x: hidden;
+}
+body {
+    background-color: #0d3553;
+    color: #ffffff;
+    font-family: 'Helvetica', sans-serif;
+    margin: 0;
+    padding: 0;
+    scroll-behavior: smooth;
+}
 /* =========================
    IMAGE + VIDEO SECTION
 ==========================*/
@@ -33,7 +48,7 @@
     justify-content: center;
     align-items: stretch;
     width: 100%;
-    margin-top: 10px;
+    margin-top: 40px;
     padding: 0 40px; /* ⬅️ PADDING ON BOTH SIDES */
     flex-wrap: nowrap;
 }
@@ -91,7 +106,7 @@
     .logo-item,
     .video-item {
         width: 50%;
-        aspect-ratio: 16 / 9;
+        aspect-ratio: 16 / 8.9;
         display: flex;
         justify-content: center;        /* center inside */
         align-items: center;

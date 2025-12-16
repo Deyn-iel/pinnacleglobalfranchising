@@ -137,6 +137,7 @@
 
 <div class="container">
 
+    
     <!-- SUCCESS MESSAGE -->
     @if(session('success'))
         <div class="success-box">

@@ -3,14 +3,14 @@
 <head>
 <meta charset="UTF-8">
 <title>Create Exam</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 
 <style>
-    body {
-        font-family: Arial, sans-serif;
-        background: #eef2f7;
-        margin: 0;
-        padding: 30px;
-    }
+    body { background: #f5f6fa; }
+        .sidebar-link:hover { background: #1f2937 !important; }
+        .sidebar-link { text-decoration: none; }
+        aside { z-index: 999; }
+        main { transition: margin-left 0.3s; }
 
     .container {
         max-width: 900px;
@@ -135,8 +135,28 @@
 
 </head>
 <body>
+<nav class="navbar navbar-dark bg-dark">
+        <div class="container-fluid d-flex align-items-center">
+
+            <button @click="open = !open" class="btn btn-outline-light d-md-none me-3">☰</button>
+
+            <span class="navbar-brand fw-bold">Users Account</span>
+
+            <div class="ms-auto text-white me-3">
+                {{ Auth::user()->name }}
+            </div>
+
+            <form method="POST" action="{{ route('custom.logout') }}">
+                @csrf
+                <button class="btn btn-danger btn-sm">Logout</button>
+            </form>
+        </div>
+    </nav>
+@include('admin-sidebar.sidebar') {{-- reusable sidebar --}}
 
 <div class="container">
+    
+        
 
     <!-- SUCCESS MESSAGE -->
     @if(session('success'))

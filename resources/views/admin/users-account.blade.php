@@ -13,6 +13,25 @@
         .sidebar-link { text-decoration: none; }
         aside { z-index: 999; }
         main { transition: margin-left 0.3s; }
+        .alert.auto-hide {
+    overflow: hidden;
+    will-change: opacity, max-height;
+
+    transition:
+        opacity 0.65s cubic-bezier(0.25, 0.1, 0.25, 1),
+        max-height 0.6s cubic-bezier(0.25, 0.1, 0.25, 1),
+        margin 0.6s ease,
+        padding 0.6s ease;
+}
+
+.alert.hide {
+    opacity: 0;
+    max-height: 0;
+    margin-top: 0;
+    margin-bottom: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+}
     </style>
 </head>
 
@@ -45,7 +64,6 @@
     @if(session('success'))
     <div class="alert alert-success alert-dismissible fade show" role="alert">
         ✅ {{ session('success') }}
-        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
     </div>
 @endif
 
@@ -127,12 +145,20 @@
 
 
 </main>
-    {{-- <script>
-setTimeout(() => {
+    <script>
+        setTimeout(() => {
     const alert = document.querySelector('.alert');
-    if (alert) alert.classList.remove('show');
-}, 5000);
-</script> --}}
+    if (!alert) return;
+
+    // smooth hide
+    alert.classList.add('hide');
+
+    // remove element completely (fix layout)
+    setTimeout(() => {
+        alert.remove();
+    }, 400); // match CSS transition
+}, 3000);
+    </script>
 
 </body>
 </html>

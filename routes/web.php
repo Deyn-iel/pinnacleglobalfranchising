@@ -88,7 +88,8 @@ Route::post('/franchise/submit', [FranchiseController::class, 'store'])
 |
 |--------------------------------------------------------------------------
 */
-Route::middleware(['auth', 'admin'])
+
+Route::middleware(['auth', 'admin', 'admin.desktop'])
     ->prefix('admin')
     ->name('admin.')
     ->group(function () {
@@ -118,6 +119,7 @@ Route::middleware(['auth', 'admin'])
         Route::view('/application', 'admin.application')->name('application');
         Route::view('/supplies', 'admin.supplies')->name('supplies');
         Route::view('/requirements', 'admin.requirements')->name('requirements');
+        Route::view('/contacts', 'admin.contacts')->name('contacts');
 
         /* ⚠️ IMPORTANT:
            Removed the WRONG route:
@@ -198,6 +200,10 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    Route::patch('/profile/update-all', 
+    [\App\Http\Controllers\ProfileController::class, 'updateAll']
+    )->name('profile.update.all');
+
 
 });
 

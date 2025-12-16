@@ -1,105 +1,171 @@
-
 document.addEventListener("DOMContentLoaded", () => {
 
-    const refsContainer = document.getElementById('refs');
-    const addRefBtn = document.getElementById('addRef');
-    const previewBtn = document.getElementById('previewBtn');
-    const previewContent = document.getElementById('previewContent');
-    const form = document.getElementById('franchiseForm');
+    const form = document.querySelector("form");
+    const previewBtn = document.getElementById("previewBtn");
+    const previewContent = document.getElementById("previewContent");
 
-    // Bootstrap modal instance
-    const previewModal = new bootstrap.Modal(document.getElementById('previewModal'));
+    const previewModal = new bootstrap.Modal(
+        document.getElementById("previewModal")
+    );
 
-    function addRefRow(name = '', contact = '') {
-        const row = document.createElement('div');
-        row.className = 'ref-row';
-        row.innerHTML = `
-            <input placeholder="Reference name" class="ref-name" value="${escapeHtml(name)}" />
-            <input placeholder="Contact info" class="ref-contact" value="${escapeHtml(contact)}" />
-            <button type="button" class="btn ghost removeRef">Remove</button>
-        `;
-        row.querySelector('.removeRef').addEventListener('click', () => row.remove());
-        refsContainer.appendChild(row);
-    }
+    // ============================
+    // PREVIEW BUTTON
+    // ============================
+    previewBtn.addEventListener("click", () => {
 
-    addRefBtn?.addEventListener('click', () => addRefRow());
+        // 1️⃣ CHECK REQUIRED FIELDS
+        const invalidField = checkRequiredFields(form);
+        if (invalidField) {
+            alert("⚠ Please complete all required fields before previewing.");
+            invalidField.focus();
+            invalidField.scrollIntoView({ behavior: "smooth", block: "center" });
+            return;
+        }
 
-    previewBtn?.addEventListener('click', () => {
-        const data = collectForm();
-        if (!data) return;
+        // 2️⃣ COLLECT DATA
+        const data = collectFormData(form);
 
-        previewContent.innerHTML =
-            `<strong style='font-size:18px;'>${escapeHtml(data.company)}</strong><br>` +
-            `<div class="small text-muted mt-1">Contact: ${escapeHtml(data.contactName)} • ${escapeHtml(data.phone)} • ${escapeHtml(data.email)}</div><hr>` +
-            `<div><b>Location:</b> ${escapeHtml(data.location)}</div>` +
-            `<div><b>Model:</b> ${escapeHtml(data.model)}</div>` +
-            `<div><b>Investment:</b> ${escapeHtml(data.investment)}</div><hr>` +
-            `<div><strong>Description</strong><p>${escapeHtml(data.description)}</p></div>` +
-            `<div><strong>References</strong><ul>${data.references.map(r =>
-                `<li>${escapeHtml(r.name)} — ${escapeHtml(r.contact)}</li>`
-            ).join('')}</ul></div>` +
-            `<div class="small text-muted"><b>Files uploaded:</b> ${data.files.length}</div>`;
+        // 3️⃣ BUILD PREVIEW HTML (SECTIONED)
+        let html = "";
 
+        Object.entries(data).forEach(([section, fields]) => {
+            html += `
+                <div style="margin-bottom:24px;">
+                    <h5 style="border-bottom:2px solid #0d3553; padding-bottom:6px;">
+                        ${escapeHtml(section)}
+                    </h5>
+            `;
+
+            fields.forEach(item => {
+                if (Array.isArray(item.value)) {
+                    html += `
+                        <div style="margin:10px 0;">
+                            <strong>${escapeHtml(item.label)}</strong>
+                            <ul>
+                                ${item.value.map(v => `<li>${escapeHtml(v)}</li>`).join("")}
+                            </ul>
+                        </div>
+                    `;
+                } else {
+                    html += `
+                        <div style="margin:8px 0;">
+                            <strong>${escapeHtml(item.label)}:</strong><br>
+                            <span>${escapeHtml(item.value)}</span>
+                        </div>
+                    `;
+                }
+            });
+
+            html += `</div>`;
+        });
+
+        previewContent.innerHTML = html;
+
+        // 4️⃣ SHOW MODAL
         previewModal.show();
     });
 
-    form?.addEventListener('submit', e => {
-        e.preventDefault();
-        const data = collectForm();
-        if (!data) return;
+    // ============================
+    // CHECK REQUIRED FIELDS
+    // ============================
+    function checkRequiredFields(form) {
+        const requiredFields = form.querySelectorAll("[required]");
 
-        alert("Application submitted! (Mock)");
-        console.log("SUBMITTED DATA:", data);
-
-        form.reset();
-        refsContainer.innerHTML = '';
-        addRefRow();
-        previewModal.hide();
-    });
-
-    function collectForm() {
-        const company = document.getElementById('company')?.value.trim();
-        const contactName = document.getElementById('contactName')?.value.trim();
-        const phone = document.getElementById('phone')?.value.trim();
-        const email = document.getElementById('email')?.value.trim();
-        const location = document.getElementById('location')?.value.trim();
-        const model = document.getElementById('model')?.value;
-        const investment = document.getElementById('investment')?.value;
-        const description = document.getElementById('description')?.value.trim();
-        const agree = document.getElementById('agree')?.checked;
-
-        if (!company || !contactName || !phone || !email || !location || !model || !investment || !description) {
-            alert("Please complete all required fields.");
-            return null;
+        for (const field of requiredFields) {
+            if (field.type === "checkbox" && !field.checked) return field;
+            if (field.type === "file" && field.files.length === 0) return field;
+            if (
+                field.type !== "checkbox" &&
+                field.type !== "file" &&
+                field.value.trim() === ""
+            ) return field;
         }
-        if (!agree) {
-            alert("Please confirm agreement to terms.");
-            return null;
+        return null;
+    }
+
+    // ============================
+    // COLLECT FORM DATA (GROUPED)
+    // ============================
+    function collectFormData(form) {
+
+        const elements = Array.from(form.elements);
+        const previewData = {};
+
+        for (const el of elements) {
+
+            if (
+                !el.name ||
+                el.type === "submit" ||
+                el.type === "button" ||
+                el.type === "hidden"
+            ) continue;
+
+            const section =
+                el.closest(".card")?.querySelector(".section-title")?.innerText ||
+                "General Information";
+
+            if (!previewData[section]) {
+                previewData[section] = [];
+            }
+
+            let value = "";
+
+            // CHECKBOX
+            if (el.type === "checkbox") {
+                value = el.checked ? "Yes" : "No";
+            }
+
+            // FILE INPUT
+            else if (el.type === "file") {
+                value = Array.from(el.files).map(f => f.name);
+            }
+
+            // NORMAL INPUT
+            else if (el.value.trim() !== "") {
+                value = el.value.trim();
+            } else {
+                continue;
+            }
+
+            previewData[section].push({
+                label: formatLabel(el.name),
+                value
+            });
         }
 
-        const files = Array.from(document.getElementById('docs')?.files || [])
-            .map(f => ({ name: f.name, size: f.size, type: f.type }));
+        return previewData;
+    }
 
-        const references = Array.from(refsContainer.querySelectorAll('.ref-row')).map(r => ({
-            name: r.querySelector('.ref-name')?.value.trim(),
-            contact: r.querySelector('.ref-contact')?.value.trim()
-        })).filter(r => r.name || r.contact);
-
-        return { company, contactName, phone, email, location, model, investment, description, files, references };
+    // ============================
+    // HELPERS
+    // ============================
+    function formatLabel(name) {
+        return name
+            .replace(/_/g, " ")
+            .replace(/\b\w/g, c => c.toUpperCase());
     }
 
     function escapeHtml(str) {
-        return String(str || '').replace(/[&<>"']/g, m => ({
-            '&': '&amp;',
-            '<': '&lt;',
-            '>': '&gt;',
-            '"': '&quot;',
-            "'": '&#39;'
+        return String(str || "").replace(/[&<>"']/g, m => ({
+            "&": "&amp;",
+            "<": "&lt;",
+            ">": "&gt;",
+            '"': "&quot;",
+            "'": "&#39;"
         }[m]));
     }
 
-    refsContainer.innerHTML = "";
-    addRefRow();
-
 });
 
+setTimeout(() => {
+    const alert = document.querySelector('.alert');
+    if (!alert) return;
+
+    // smooth hide
+    alert.classList.add('hide');
+
+    // remove element completely (fix layout)
+    setTimeout(() => {
+        alert.remove();
+    }, 400); // match CSS transition
+}, 3000);
