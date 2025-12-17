@@ -35,7 +35,8 @@
     </div>
 
     <div id="chat-input">
-        <input type="text" id="chat-text" placeholder="Type a message...">
-        <button id="send-btn">➤</button>
-    </div>
+            <input type="text" id="chat-text" placeholder="Type a message...">
+            <button id="send-btn" disabled>➤</button>
+        </div>
+
 </div>

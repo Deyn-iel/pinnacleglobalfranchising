@@ -4,114 +4,25 @@ document.addEventListener("DOMContentLoaded", function () {
     const chatBox = document.getElementById("chatbox");
     const closeChat = document.getElementById("close-chat");
     const clearChat = document.getElementById("clear-chat");
+
     const sendBtn = document.getElementById("send-btn");
     const chatText = document.getElementById("chat-text");
     const chatMessages = document.getElementById("chat-messages");
     const typingIndicator = document.getElementById("typing-indicator");
 
-    let isWaitingForBot = false; // Block send button only
+    let isWaitingForBot = false;
 
-    // OPEN CHATBOX
-    chatButton.addEventListener("click", () => {
-        chatBox.style.display = chatBox.style.display === "flex" ? "none" : "flex";
-    });
+    /* ===============================
+       HELPERS
+    =============================== */
 
-    // CLOSE CHATBOX
-    closeChat.addEventListener("click", () => {
-        chatBox.style.display = "none";
-    });
-
-    // CLEAR CHAT EXCEPT GREETING
-    clearChat.addEventListener("click", () => {
-        const messages = chatMessages.querySelectorAll(".message");
-
-        messages.forEach(msg => {
-            if (!msg.id.includes("chat-greeting")) msg.remove();
-        });
-
-        typingIndicator.style.display = "none";
-        sendBtn.disabled = false;
-        isWaitingForBot = false;
-    });
-
-    // SEND MESSAGE CLICK
-    sendBtn.addEventListener("click", sendMessage);
-
-    // ENTER KEY (BLOCKED DURING BOT REPLY)
-        chatText.addEventListener("keypress", function (e) {
-            if (e.key === "Enter" && !isWaitingForBot) {
-                sendMessage();
-            }
-        });
-
-        function sendMessage() {
-            let message = chatText.value.trim();
-            if (message === "") return;
-
-            if (isWaitingForBot) return;
-
-            addMessage(message, "user");
-            chatText.value = "";
-
-            // BLOCK BUTTON + REMOVE HOVER
-            isWaitingForBot = true;
-            sendBtn.disabled = true;
-            sendBtn.classList.add("send-disabled");
-
-            // Show typing bubble
-            typingIndicator.style.display = "block";
-            chatMessages.appendChild(typingIndicator);
-            scrollToBottom();
-
-            setTimeout(() => {
-                typingIndicator.style.display = "none";
-
-                typeBotMessage(
-                    "Thanks for messaging Pinnacle! How can we help you? Our team will get back to you shortly. Have a great day! Thanks for messaging Pinnacle! How can we help you? Our team will get back to you shortly. Have a great day! Thanks for messaging Pinnacle! How can we help you? Our team will get back to you shortly. Have a great day! Thanks for messaging Pinnacle! How can we help you? Our team will get back to you shortly. Have a great day!",
-                    () => {
-                        // ENABLE BUTTON AGAIN AFTER BOT FINISHES
-                        sendBtn.disabled = false;
-                        sendBtn.classList.remove("send-disabled");
-                        isWaitingForBot = false;
-                    }
-                );
-
-            }, 1200);
-        }
-
-
-    /* BOT TYPEWRITER EFFECT */
-function typeBotMessage(fullText) {
-    const botMsg = document.createElement("div");
-    botMsg.classList.add("message", "bot");
-    botMsg.innerHTML = "";
-    chatMessages.appendChild(botMsg);
-
-    let index = 0;
-
-    // BLOCK SEND BUTTON + REMOVE HOVER
-    isWaitingForBot = true;
-    sendBtn.disabled = true;
-    sendBtn.classList.add("send-disabled");
-
-    function typeLetter() {
-        if (index < fullText.length) {
-            botMsg.innerHTML += fullText[index];
-            index++;
-            scrollToBottom();
-            setTimeout(typeLetter, 7);
-        } else {
-            // UNBLOCK SEND BUTTON
-            isWaitingForBot = false;
-            sendBtn.disabled = false;
-            sendBtn.classList.remove("send-disabled");
-            chatText.focus();
-        }
+    function updateSendButtonState() {
+        sendBtn.disabled = isWaitingForBot || chatText.value.trim() === "";
     }
 
-    typeLetter();
-}
-
+    function scrollToBottom() {
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
 
     function addMessage(text, type) {
         const msg = document.createElement("div");
@@ -121,8 +32,115 @@ function typeBotMessage(fullText) {
         scrollToBottom();
     }
 
-    function scrollToBottom() {
-        chatMessages.scrollTop = chatMessages.scrollHeight;
+    /* ===============================
+       OPEN / CLOSE CHAT
+    =============================== */
+
+    chatButton.addEventListener("click", () => {
+        chatBox.style.display = chatBox.style.display === "flex" ? "none" : "flex";
+        chatText.focus();
+    });
+
+    closeChat.addEventListener("click", () => {
+        chatBox.style.display = "none";
+    });
+
+    /* ===============================
+       CLEAR CHAT (KEEP GREETING)
+    =============================== */
+
+    clearChat.addEventListener("click", () => {
+        const messages = chatMessages.querySelectorAll(".message");
+
+        messages.forEach(msg => {
+            if (!msg.id || !msg.id.includes("chat-greeting")) {
+                msg.remove();
+            }
+        });
+
+        typingIndicator.style.display = "none";
+        isWaitingForBot = false;
+        updateSendButtonState();
+    });
+
+    /* ===============================
+       INPUT EVENTS
+    =============================== */
+
+    chatText.addEventListener("input", () => {
+        updateSendButtonState();
+    });
+
+    chatText.addEventListener("keypress", (e) => {
+        if (e.key === "Enter" && !isWaitingForBot) {
+            e.preventDefault();
+            sendMessage();
+        }
+    });
+
+    sendBtn.addEventListener("click", sendMessage);
+
+    /* ===============================
+       SEND MESSAGE
+    =============================== */
+
+    function sendMessage() {
+        const message = chatText.value.trim();
+        if (message === "" || isWaitingForBot) return;
+
+        addMessage(message, "user");
+        chatText.value = "";
+
+        isWaitingForBot = true;
+        updateSendButtonState();
+
+        // Show typing indicator
+        typingIndicator.style.display = "block";
+        chatMessages.appendChild(typingIndicator);
+        scrollToBottom();
+
+        // Simulate bot thinking
+        setTimeout(() => {
+            typingIndicator.style.display = "none";
+
+            typeBotMessage(
+                "Thanks for messaging Pinnacle! How can we help you today? Thanks for messaging Pinnacle! How can we help you today?Thanks for messaging Pinnacle! How can we help you today? Thanks for messaging Pinnacle! How can we help you today? Thanks for messaging Pinnacle! How can we help you today? Thanks for messaging Pinnacle! How can we help you today? Thanks for messaging Pinnacle! How can we help you today?"
+            );
+        }, 1200);
     }
+
+    /* ===============================
+       BOT TYPEWRITER EFFECT
+    =============================== */
+
+    function typeBotMessage(fullText) {
+        const botMsg = document.createElement("div");
+        botMsg.classList.add("message", "bot");
+        chatMessages.appendChild(botMsg);
+
+        let index = 0;
+        isWaitingForBot = true;
+        updateSendButtonState();
+
+        function typeLetter() {
+            if (index < fullText.length) {
+                botMsg.innerHTML += fullText[index];
+                index++;
+                scrollToBottom();
+                setTimeout(typeLetter, 8);
+            } else {
+                isWaitingForBot = false;
+                updateSendButtonState();
+                chatText.focus();
+            }
+        }
+
+        typeLetter();
+    }
+
+    /* ===============================
+       INITIAL STATE
+    =============================== */
+    updateSendButtonState();
 
 });

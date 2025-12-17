@@ -70,7 +70,6 @@
 @if(session('error'))
     <div class="alert alert-danger alert-dismissible fade show" role="alert">
         ❌ {{ session('error') }}
-        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
     </div>
 @endif
 
@@ -104,6 +103,7 @@
                 <span class="badge {{ $user->is_admin ? 'bg-primary' : 'bg-secondary' }}">
                     {{ $user->is_admin ? 'Admin' : 'User' }}
                 </span>
+
             </td>
 
             <td>{{ $user->created_at->format('M d, Y') }}</td>
@@ -138,7 +138,7 @@
 
     {{ $users->links() }}
 
-    <a href="{{ route('admin.users.register.form') }}" 
+    <a href="{{ route('admin.users.store') }}" 
    class="btn btn-primary mt-3">
     ➕ Register a User
 </a>

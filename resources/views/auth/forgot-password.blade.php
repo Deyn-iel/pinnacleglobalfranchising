@@ -2,7 +2,7 @@
     @section('title', 'Forgot Password')
 
     <div class="mb-4 text-sm text-gray-600">
-        {{ __('Just let us know your email address and we will email you a account that will allow you to login to this website.') }}
+        {{ __('Please provide your email address. We will send you an account invitation that will allow you to log in to this website.') }}
     </div>
 
     <!-- Session Status -->

@@ -8,6 +8,7 @@
     <!-- ✅ BOOTSTRAP -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://unpkg.com/@phosphor-icons/web@2.0.3/src/regular/style.css" rel="stylesheet">
     <!-- ✅ CSS FILES (ORDER MATTERS) -->
     @vite(['resources/css/header/app.css', 
             'resources/css/header/app.css',
@@ -17,6 +18,7 @@
             'resources/css/scroll/app.css',
             
             // js files
+            'resources/js/header/app.js',
             'resources/js/chatbot/app.js',
             'resources/js/scroll/app.js',
             'resources/js/app.js'])
@@ -98,13 +100,13 @@
             </button>
 
             <div class="hours-menu">
-                <p>Monday: 08:30AM – 5:30PM</p>
-                <p>Tuesday: 08:30AM – 5:30PM</p>
-                <p>Wednesday: 08:30AM – 5:30PM</p>
-                <p>Thursday: 08:30AM – 5:30PM</p>
-                <p>Friday: 08:30AM – 5:30PM</p>
-                <p>Saturday: 08:30AM – 5:30PM</p>
-                <p>Sunday: Closed</p>
+                <p><strong>Monday:</strong> 08:30AM – 5:30PM</p>
+                <p><strong>Tuesday:</strong> 08:30AM – 5:30PM</p>
+                <p><strong>Wednesday:</strong> 08:30AM – 5:30PM</p>
+                <p><strong>Thursday:</strong> 08:30AM – 5:30PM</p>
+                <p><strong>Friday:</strong> 08:30AM – 5:30PM</p>
+                <p><strong>Saturday:</strong> 08:30AM – 5:30PM</p>
+                <p><strong>Sunday:</strong> Closed</p>
             </div>
         </div>
 

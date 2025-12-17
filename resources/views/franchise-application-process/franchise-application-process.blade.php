@@ -19,12 +19,12 @@
 <div class="container">
   
 @if(session('success'))
-<div class="alert alert-success alert-dismissible fade show mt-3" 
-     role="alert"
-     style="background:#4caf50; color:white; border:none; font-size:16px;">
-    <strong>✔ Success!</strong> {{ session('success') }}
-</div>
+    <div class="alert custom-alert-success auto-hide mt-3" role="alert">
+        <span class="alert-icon">✔</span>
+        <span class="alert-text">{{ session('success') }}</span>
+    </div>
 @endif
+
 
 
   <div class="container header-flex">

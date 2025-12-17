@@ -417,6 +417,38 @@ hr {
     }
 }
 
+/* BASE ALERT */
+.alert {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+
+    padding: 14px 18px;
+    margin-bottom: 15px;
+
+    border-radius: 8px;
+    font-size: 14.5px;
+    font-weight: 500;
+
+    max-height: 200px;
+}
+
+/* SUCCESS STYLE */
+.custom-alert-success {
+    background: #ecfdf3;
+    color: #065f46;
+
+    border-left: 4px solid #22c55e;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+/* ICON */
+.alert-icon {
+    font-size: 18px;
+    line-height: 1.2;
+}
+
+/* AUTO HIDE TRANSITION */
 .alert.auto-hide {
     overflow: hidden;
     will-change: opacity, max-height;
@@ -425,16 +457,21 @@ hr {
         opacity 0.65s cubic-bezier(0.25, 0.1, 0.25, 1),
         max-height 0.6s cubic-bezier(0.25, 0.1, 0.25, 1),
         margin 0.6s ease,
-        padding 0.6s ease;
+        padding 0.6s ease,
+        transform 0.4s ease;
 }
 
+/* HIDE STATE */
 .alert.hide {
     opacity: 0;
     max-height: 0;
+
     margin-top: 0;
     margin-bottom: 0;
     padding-top: 0;
     padding-bottom: 0;
+
+    transform: translateY(-6px);
 }
 
 

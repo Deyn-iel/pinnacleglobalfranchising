@@ -8,7 +8,7 @@
     <!-- ✅ BOOTSTRAP -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-
+    <link href="https://unpkg.com/@phosphor-icons/web@2.0.3/src/regular/style.css" rel="stylesheet">
 
     <!-- ✅ CSS FILES (ORDER MATTERS) -->
     @vite(['resources/css/header/app.css', 
@@ -19,6 +19,7 @@
             'resources/css/scroll/app.css',
             
             // js files
+            'resources/js/header/app.js',
             'resources/js/chatbot/app.js',
             'resources/js/scroll/app.js',
             'resources/js/app.js'])
@@ -71,7 +72,7 @@
 
             <!-- KAPE ILOKANO -->
             <div class="col-md-5 col-lg-4 text-center">
-                <div class="circle-box">
+                <div class="circle-box animate scale-up delay-2">
                     <img src="{{ asset('img/kape.webp') }}" alt="Kape Ilokano">
                 </div>
                 <h3 class="brand-name mt-3">Kape Ilokano</h3>
@@ -252,6 +253,28 @@
             offset: 100,   // trigger earlier
             easing: 'ease-out-back',
         });
+        document.addEventListener("DOMContentLoaded", () => {
+    const elements = document.querySelectorAll(
+        ".image, .franchise-section, .circle-box, .franchise-now-container, .franchise-steps, .step, .franchise-now-button-wrapper, .brand-name, .brand-desc"
+    );
+
+    const observer = new IntersectionObserver(
+        entries => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add("animate-show");
+                    observer.unobserve(entry.target);
+                }
+            });
+        },
+        {
+            threshold: 0.15,
+            rootMargin: "0px 0px -50px 0px"
+        }
+    );
+
+    elements.forEach(el => observer.observe(el));
+});
     </script>
 </body>
 </html>

@@ -12,6 +12,7 @@ use App\Http\Controllers\FranchiseController;
 use App\Http\Controllers\Admin\FranchiseAdminController;
 use App\Http\Controllers\Admin\UserManagementController;
 use App\Http\Controllers\AdminExamController;
+use App\Http\Controllers\Admin\AdminUserController;
 use App\Http\Controllers\ExamController;
 /*
 |--------------------------------------------------------------------------
@@ -50,15 +51,17 @@ Route::prefix('franchisability')->group(function () {
 
 Route::middleware(['auth', 'verified'])->group(function () {
 
-    Route::view('/user-dashboard', 'user-dashboard.dashboard')->name('dashboard');
+    Route::view('/awdawdawdgbawiouabgwoufdgouua9wdu9ud9awu9', 'user-dashboard.dashboard')->name('dashboard');
 
-    Route::view('/user-dashboard/ordering-supplies', 'user-dashboard.ordering-supplies.ordering-supplies')
+    Route::view('/user-dashboard/a8afe8b8eaf9be675baugfiab67ta8fb87bfaigf', 'user-dashboard.ordering-supplies.ordering-supplies')
         ->name('ordering.supplies');
 
     Route::view('/user-dashboard/uploading-requirements', 'user-dashboard.uploading-requirements.uploading-requirements')
         ->name('uploading.requirements');
-    Route::view('/user-dashboard/exam', 'user-dashboard.exam.exam')
+    Route::view('/user-dashboard/fafeweafaffa897feafa8ef70a8ea08a0e8f', 'user-dashboard.exam.exam')
         ->name('exam');
+        Route::view('/user-dashboard/adw6daid7ad97w8ydawd3acr3rarvavr53a3', 'user-dashboard.exam.proceed')
+        ->name('proceed');
 });
 
 /*
@@ -101,14 +104,15 @@ Route::middleware(['auth', 'admin', 'admin.desktop'])
         Route::delete('/users-account/{id}', [UserManagementController::class, 'destroy'])
             ->name('users-account.destroy');
 
-        // Admin-only register
-        Route::get('/users/register', function () {
-            return view('admin.register');
-        })->name('users.register.form');
-
-        Route::post('/users/register', [UserManagementController::class, 'store'])
+       // Show register form
+        Route::get('/users/register', [AdminUserController::class, 'create'])
             ->name('users.register');
 
+        // Handle register submit
+        Route::post('/users/register', [AdminUserController::class, 'store'])
+            ->name('users.store');
+
+        
 
 
         /* ===============================

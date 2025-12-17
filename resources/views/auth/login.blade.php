@@ -1,4 +1,5 @@
 <x-guest-layout>
+
 @section('title', 'Login')
 @if (Route::has('register'))
             <div class="extra-links">
@@ -78,4 +79,11 @@
         </div>
 
     </form>
+    @if(session('error'))
+    <div class="custom-alert-error">
+        {{ session('error') }}
+    </div>
+@endif
+
+
 </x-guest-layout>

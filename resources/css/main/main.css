@@ -650,3 +650,47 @@ form {
     transform: translateY(0);
 }
 
+/* =====================================
+   SAFE SCROLL ANIMATIONS (NO HTML CHANGES)
+===================================== */
+
+/* Default hidden state */
+.image,
+.franchise-section,
+.circle-box,
+.franchise-now-container,
+.franchise-steps,
+.step,
+.franchise-now-button-wrapper,
+.brand-name,
+.brand-desc {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.9s ease, transform 0.9s ease;
+}
+
+/* Show state */
+.animate-show {
+    opacity: 1 !important;
+    transform: translateY(0) !important;
+}
+
+/* Slight stagger for steps */
+.step:nth-child(1) { transition-delay: 0.1s; }
+.step:nth-child(2) { transition-delay: 0.2s; }
+.step:nth-child(3) { transition-delay: 0.3s; }
+.step:nth-child(4) { transition-delay: 0.4s; }
+.step:nth-child(5) { transition-delay: 0.5s; }
+.step:nth-child(6) { transition-delay: 0.6s; }
+
+/* Mobile optimization */
+@media (max-width: 576px) {
+    .image,
+    .franchise-section,
+    .circle-box,
+    .franchise-now-container,
+    .step {
+        transform: translateY(20px);
+        transition-duration: 0.6s;
+    }
+}

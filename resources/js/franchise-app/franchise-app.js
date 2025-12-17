@@ -158,14 +158,17 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 setTimeout(() => {
-    const alert = document.querySelector('.alert');
+    const alert = document.querySelector('.alert.auto-hide');
     if (!alert) return;
 
-    // smooth hide
+    // smooth hide (CSS-based)
     alert.classList.add('hide');
 
-    // remove element completely (fix layout)
+    // remove element completely after animation
     setTimeout(() => {
         alert.remove();
-    }, 400); // match CSS transition
-}, 3000);
+    }, 650); // match CSS transition
+}, 4000);
+
+
+

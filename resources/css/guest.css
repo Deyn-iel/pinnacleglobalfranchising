@@ -222,19 +222,8 @@ body {
     transition: 0.25s ease;
 }
 
-.link-small::after {
-    content: '';
-    position: absolute;
-    left: 0;
-    bottom: -3px;
-    width: 0%;
-    height: 2px;
-    background: #0d3553;
-    transition: width 0.25s ease;
-}
-
-.link-small:hover::after {
-    width: 100%;
+.link-small:hover {
+    color: #666666;
 }
 
 /* ===============================
@@ -247,12 +236,18 @@ body {
         min-height: 700px;
     }
 
+    /* LEFT SMALLER */
     .left {
+        flex: 0.7;
+        min-height: 100%;
         padding: 35px;
     }
 
+    /* RIGHT BIGGER (LOGIN PRIORITY) */
     .right {
-        padding: 35px;
+        flex: 1.3;
+        min-height: 600px;
+        padding: 40px 35px;
     }
 
     .welcome-box h1 {
@@ -272,4 +267,17 @@ body {
     .link-small {
         font-size: 15px;
     }
+}
+.custom-alert-error {
+    background: #fdecea;
+    color: #b91c1c;
+    padding: 14px 18px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+
+    border-left: 4px solid #dc2626;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+
+    margin-top: 15px;
 }
