@@ -13,7 +13,7 @@ class AdminDesktopOnly
     {
         $agent = new Agent();
 
-        if ($agent->isMobile() || $agent->isTablet()) {
+        if ($agent->isMobile() || $agent->isTablet() || $agent->isIpad()) {
 
             // Force logout
             Auth::logout();
