@@ -85,7 +85,9 @@
 
 <div class="exam-container">
     <h2>Multiple Choice Exam</h2>
-    <div id="timer">Time Left: <span id="time">{{ $exam->timer }}</span>s</div>
+    <div id="timer">
+    Time Left: <span id="time">{{ $exam->timer ?? 60 }}</span>s
+</div>
 
     <div id="question-box"></div>
 

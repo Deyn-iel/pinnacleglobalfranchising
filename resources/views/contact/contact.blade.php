@@ -51,34 +51,33 @@
         <div class="col-md-6 mb-4">
             <h3 class="section-title">Contact Us</h3>
 
-            <form>
+            <form id="contactForm">
+                @csrf
 
                 <div class="field-group">
-                    <input type="text" class="form-field" placeholder=" " required>
+                    <input type="text" name="name" class="form-field" placeholder=" " required>
                     <label>Full Name*</label>
                 </div>
 
                 <div class="field-group">
-                    <input type="email" class="form-field" placeholder=" " required>
+                    <input type="email" name="email" class="form-field" placeholder=" " required>
                     <label>Email Address*</label>
                 </div>
 
                 <div class="field-group">
-                    <textarea class="form-field textarea" rows="5" placeholder=" " required></textarea>
+                    <textarea name="message" class="form-field textarea" rows="5" placeholder=" " required></textarea>
                     <label class="label-message">Message*</label>
                 </div>
 
-                @if(session('success'))
-                <div class="alert alert-success alert-dismissible fade show mt-3" 
-                    role="alert"
-                    style="background:#4caf50; color:white; border:none; font-size:16px;">
-                    <strong>✔ Success!</strong> {{ session('success') }}
+                <!-- SUCCESS MESSAGE -->
+                <div id="successMsg" class="success-msg" style="display:none;">
+                    ✔ Your message has been received. We’ll get back to you shortly.
                 </div>
-                @endif
 
-                <button class="btn-submit w-100 mt-2">SEND</button>
-
+                <button type="submit" class="btn-submit w-100 mt-2">SEND</button>
             </form>
+
+
             <p class="recaptcha">
             This site is protected by reCAPTCHA and the <a href="https://policies.google.com/privacy" target="_blank">Google Privacy</a> Policy and <a href="https://policies.google.com/terms" target="_blank">Terms of Service</a> apply.
         </p>
@@ -143,10 +142,44 @@
 
     <!-- ✅ SCRIPTS -->
     <script src="{{ asset('js/app.js') }}"></script>
-<script>document.querySelector('.hours-btn').addEventListener('click', function () {
-    document.querySelector('.open-hours').classList.toggle('show');
-});
+<script>
+document.getElementById('contactForm').addEventListener('submit', function (e) {
+    e.preventDefault(); // ❌ stop page refresh
 
+    const form = this;
+    const formData = new FormData(form);
+    const successMsg = document.getElementById('successMsg');
+
+    fetch("{{ route('contact.send') }}", {
+        method: "POST",
+        headers: {
+            "X-CSRF-TOKEN": document.querySelector('input[name=_token]').value
+        },
+        body: formData
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.success) {
+            form.reset();
+
+            successMsg.textContent = "✔ " + data.message;
+            successMsg.style.display = "block";
+            successMsg.style.opacity = "1";
+
+            setTimeout(() => {
+                successMsg.style.opacity = "0";
+                setTimeout(() => {
+                    successMsg.style.display = "none";
+                }, 600);
+            }, 3000);
+        }
+    })
+
+    .catch(() => {
+        alert("Something went wrong. Please try again.");
+    });
+});
 </script>
+
 </body>
 </html>

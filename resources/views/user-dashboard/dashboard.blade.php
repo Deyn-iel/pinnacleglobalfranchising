@@ -138,21 +138,67 @@ body {
     height: 100%;
 }
 
+/* LIST */
 .sidebar ul {
     list-style: none;
     margin-top: 20px;
+    padding: 0;
 }
 
+/* LI */
 .sidebar ul li {
+    margin: 4px 0;
+}
+
+/* LINK STYLE (MAIN FIX) */
+.sidebar ul li a,
+.logout-btn {
+    width: 100%;
     padding: 14px 22px;
     display: flex;
-    align-items: center; /* 🔥 ALIGN FIX */
+    align-items: center;
     gap: 15px;
+    color: #fff;
+    text-decoration: none;
+    background: transparent;
+    border: none;
     cursor: pointer;
+    font-size: 15px;
+    transition: background 0.2s ease;
 }
 
-.sidebar ul li:hover {
-    background: rgba(255,255,255,0.1);
+/* ICON */
+.sidebar ul li i {
+    font-size: 16px;
+    width: 20px;
+    text-align: center;
+}
+
+/* HOVER */
+.sidebar ul li a:hover,
+.logout-btn:hover {
+    background: rgba(255, 255, 255, 0.12);
+}
+
+/* ACTIVE (OPTIONAL) */
+.sidebar ul li.active a {
+    background: rgba(255, 255, 255, 0.18);
+    border-left: 4px solid #3b82f6;
+}
+
+/* LOGOUT */
+.logout-item {
+    margin-top: 25px;
+}
+
+.logout-btn {
+    background: none;
+    color: #fff;
+}
+
+/* MOBILE CLOSE */
+.close-btn {
+    cursor: pointer;
 }
 
 /* ================= LOGOUT FIX ================= */
@@ -271,6 +317,19 @@ body {
     font-size: 28px;
     margin-top: 6px;
 }
+.status-online {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.dot-online {
+    width: 10px;
+    height: 10px;
+    background: #22c55e; /* green */
+    border-radius: 50%;
+    box-shadow: 0 0 6px rgba(34,197,94,0.6);
+}
 
 /* ================= SECTIONS ================= */
 .sections {
@@ -352,7 +411,7 @@ body {
     display: block;
     height: 100%;
     background: #0d3553;
-    width: 70%;
+    width: 100%;
 }
 
 /* ================= RESPONSIVE ================= */
@@ -418,35 +477,59 @@ body {
 <div class="wrapper">
     <aside class="sidebar" id="sidebar">
         <div class="sidebar-header">
-            <span class="logo-text">MyDashboard</span>
+            
+            <span class="logo-text">
+                {{ ucwords(strtolower(Auth::user()->name)) }}'s Dashboard
+            </span>
             <i class="fas fa-times close-btn" id="closeSidebar"></i>
         </div>
 
         <ul>
-            <li><i class="fas fa-home"></i>Dashboard</li>
             <li>
-            <a href="{{ route('profile.edit') }}">
-                <i class="fas fa-cog"></i>
-                Profile
-            </a>
+                <a href="{{ route('dashboard') }}">
+                    <i class="fas fa-home"></i>
+                    <span>Dashboard</span>
+                </a>
+            </li>
+            <li>
+                <a href="{{ route('proceed') }}">
+                    <i class="fas fa-home"></i>
+                    <span>Exam</span>
+                </a>
             </li>
 
-            <li><i class="fas fa-chart-line"></i>Analytics</li>
-            <li><i class="fas fa-bell"></i>Notifications</li>
-            <li><i class="fas fa-cog"></i>Settings</li>
+            <!-- ✅ PROFILE (FIXED) -->
+            <li>
+                <a href="{{ route('profile.edit') }}">
+                    <i class="fas fa-user-edit"></i>
+                    <span>Profile</span>
+                </a>
+            </li>
 
-            <!-- LOGOUT (SAME DESIGN AS OTHERS) -->
+            <li>
+                <a href="{{ route('ordering.supplies') }}">
+                    <i class="fas fa-box"></i>
+                    <span>Order</span>
+                </a>
+            </li>
+
+            <li>
+                <a href="#">
+                    <i class="fas fa-bell"></i>
+                    <span>Notifications</span>
+                </a>
+            </li>
+
+            <!-- LOGOUT -->
             <li class="logout-item">
-            <form method="POST" action="{{ route('custom.logout') }}" onsubmit="handleLogout(event)">
-                @csrf
-                <button type="submit" class="logout-btn">
-                    <i class="fas fa-sign-out-alt"></i>
-                    <span>Log Out</span>
-                </button>
-            </form>
-        </li>
-
-            
+                <form method="POST" action="{{ route('custom.logout') }}" onsubmit="handleLogout(event)">
+                    @csrf
+                    <button type="submit" class="logout-btn">
+                        <i class="fas fa-sign-out-alt"></i>
+                        <span>Log Out</span>
+                    </button>
+                </form>
+            </li>
         </ul>
     </aside>
 
@@ -458,7 +541,12 @@ body {
             <!-- RIGHT SIDE -->
             <div class="profile">
                 <span>Hi, {{ ucwords(strtolower(Auth::user()->name)) }}</span>
-                <img src="https://i.pravatar.cc/150?img=3">
+                <img src="data:image/svg+xml;utf8,
+                <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%239ca3af'>
+                <circle cx='12' cy='8' r='4'/>
+                <path d='M4 20c0-4 4-6 8-6s8 2 8 6'/>
+                </svg>">
+
             </div>
         </div>
 
@@ -467,7 +555,14 @@ body {
                 <div class="card"><h4>Active Users</h4><h2>1,245</h2></div>
                 <div class="card"><h4>Pending Tasks</h4><h2>18</h2></div>
                 <div class="card"><h4>Notifications</h4><h2>5</h2></div>
-                <div class="card"><h4>Status</h4><h2>Online</h2></div>
+                <div class="card">
+                <h4>Status</h4>
+                <h2 class="status-online">
+                    <span class="dot-online"></span>
+                    Online
+                </h2>
+            </div>
+
             </div>
 
             <div class="sections">
@@ -479,7 +574,7 @@ body {
                         <div class="activity-icon"><i class="fas fa-sign-in-alt"></i></div>
                         <div class="activity-content">
                             <p>Logged in successfully</p>
-                            <span>Just now</span>
+                            <span id="loginTimeText">Just now</span>
                         </div>
                     </div>
 
@@ -502,75 +597,136 @@ body {
 
                 <!-- PROFILE -->
                 <div class="profile-card">
-                    <img src="https://i.pravatar.cc/150?img=5">
+                    <img src="data:image/svg+xml;utf8,
+                <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%239ca3af'>
+                <circle cx='12' cy='8' r='4'/>
+                <path d='M4 20c0-4 4-6 8-6s8 2 8 6'/>
+                </svg>">
                     <h3>{{ ucwords(strtolower(Auth::user()->name)) }}</h3>
                     <p>Active Member</p>
                     <div class="progress"><span></span></div>
-                    <small>Profile Completion: 70%</small>
                 </div>
             </div>
         </div>
+        @if (session('error'))
+    <div style="
+        background:#fdecea;
+        color:#842029;
+        padding:15px;
+        border-radius:8px;
+        margin-bottom:20px;
+        border-left:5px solid #dc3545;
+        font-weight:600;
+    ">
+        {{ session('error') }}
+    </div>
+@endif
     </div>
 </div>
 
 <script>
-const sidebar = document.getElementById("sidebar");
-const menuBtn = document.getElementById("menuBtn");
-const closeSidebar = document.getElementById("closeSidebar");
-const loginOverlay = document.getElementById("loginOverlay");
+/* ================= DOM ELEMENTS ================= */
+document.addEventListener("DOMContentLoaded", () => {
 
-/* SIDEBAR TOGGLE (MOBILE) */
-menuBtn.onclick = () => sidebar.classList.toggle("show");
-closeSidebar.onclick = () => sidebar.classList.remove("show");
+    const sidebar = document.getElementById("sidebar");
+    const menuBtn = document.getElementById("menuBtn");
+    const closeSidebar = document.getElementById("closeSidebar");
+    const loginOverlay = document.getElementById("loginOverlay");
+    const timeText = document.getElementById("loginTimeText");
 
-/* ================= LOGIN ANIMATION ================= */
-/*
-  Lalabas lang:
-  - kapag bagong login
-  Hindi lalabas:
-  - kapag refresh lang
-*/
-/* ================= LOGIN ANIMATION (WITH FADE) ================= */
-if (localStorage.getItem("hasLoggedIn")) {
-    loginOverlay.style.display = "none";
-} else {
-    // wait before fading
-    setTimeout(() => {
-        loginOverlay.classList.add("fade-out");
-    }, 2000); // bago mag-fade
+    /* ================= SIDEBAR TOGGLE (MOBILE) ================= */
+    if (menuBtn && sidebar) {
+        menuBtn.onclick = () => sidebar.classList.toggle("show");
+    }
 
-    // after fade animation
-    setTimeout(() => {
-        loginOverlay.style.display = "none";
-        localStorage.setItem("hasLoggedIn", "true");
-    }, 2800); // fade duration included
-}
+    if (closeSidebar && sidebar) {
+        closeSidebar.onclick = () => sidebar.classList.remove("show");
+    }
 
+    /* ================= LOGIN ANIMATION ================= */
+    /*
+      Lalabas lang:
+      - kapag bagong login
+      Hindi lalabas:
+      - kapag refresh
+    */
+    if (loginOverlay) {
+        if (localStorage.getItem("hasLoggedIn")) {
+            loginOverlay.style.display = "none";
+        } else {
+            // show overlay first
+            loginOverlay.style.display = "flex";
 
-/* ================= LOGOUT HANDLER ================= */
-/*
-  Tatawagin ito ng logout FORM
-  para sa next login, may animation ulit
-*/
+            // start fade after delay
+            setTimeout(() => {
+                loginOverlay.classList.add("fade-out");
+            }, 2000);
+
+            // hide completely after fade
+            setTimeout(() => {
+                loginOverlay.style.display = "none";
+                localStorage.setItem("hasLoggedIn", "true");
+            }, 2800);
+        }
+    }
+
+    /* ================= LOGIN TIME TRACKER ================= */
+
+    // save login time ONCE per login
+    if (!localStorage.getItem("loginTime")) {
+        localStorage.setItem("loginTime", Date.now());
+    }
+
+    function updateLoginTime() {
+        const loginTime = parseInt(localStorage.getItem("loginTime"));
+        if (!loginTime || !timeText) return;
+
+        const now = Date.now();
+        const diff = Math.floor((now - loginTime) / 1000);
+
+        if (diff < 60) {
+            timeText.textContent = "Just now";
+        } else if (diff < 3600) {
+            const mins = Math.floor(diff / 60);
+            timeText.textContent = `${mins} min${mins > 1 ? "s" : ""} ago`;
+        } else if (diff < 86400) {
+            const hrs = Math.floor(diff / 3600);
+            timeText.textContent = `${hrs} hr${hrs > 1 ? "s" : ""} ago`;
+        } else {
+            const days = Math.floor(diff / 86400);
+            timeText.textContent = `${days} day${days > 1 ? "s" : ""} ago`;
+        }
+    }
+
+    // run immediately & every minute
+    updateLoginTime();
+    setInterval(updateLoginTime, 60000);
+
+});
+
+/* ================= LOGOUT HANDLER (ONLY ONE) ================= */
 function handleLogout(event) {
-    event.preventDefault(); // stop instant submit
+    event.preventDefault();
 
-    const logoutItem = event.target.closest(".logout-item");
     const form = event.target;
+    const logoutItem = form.closest(".logout-item");
 
-    // trigger fade
-    logoutItem.classList.add("fading");
+    // optional fade on logout button
+    if (logoutItem) {
+        logoutItem.classList.add("fading");
+    }
 
-    // clear login animation flag
+    // 🔥 CLEAR ALL LOGIN FLAGS
     localStorage.removeItem("hasLoggedIn");
+    localStorage.removeItem("loginTime");
 
-    // submit AFTER fade finishes
+    // submit after small delay
     setTimeout(() => {
         form.submit();
     }, 300);
 }
-
 </script>
+
 
 
 </body>

@@ -202,8 +202,7 @@ body {
             I have read and understood the rules and agree to proceed with the exam.
         </label>
     </div>
-
-    <a href="exam.html" id="proceedBtn" class="confirm-btn disabled">
+    <a href="{{ route('exam') }}" id="proceedBtn" class="confirm-btn disabled">
         Proceed to Exam
     </a>
 

@@ -12,8 +12,10 @@ use App\Http\Controllers\FranchiseController;
 use App\Http\Controllers\Admin\FranchiseAdminController;
 use App\Http\Controllers\Admin\UserManagementController;
 use App\Http\Controllers\AdminExamController;
-use App\Http\Controllers\Admin\AdminUserController;
+use App\Http\Controllers\AdminUserController;
 use App\Http\Controllers\ExamController;
+use App\Models\Contact;
+use App\Http\Controllers\ContactController;
 /*
 |--------------------------------------------------------------------------
 | PUBLIC PAGES
@@ -51,18 +53,33 @@ Route::prefix('franchisability')->group(function () {
 
 Route::middleware(['auth', 'verified'])->group(function () {
 
-    Route::view('/awdawdawdgbawiouabgwoufdgouua9wdu9ud9awu9', 'user-dashboard.dashboard')->name('dashboard');
+    Route::view(
+        '/awdawdawdgbawiouabgwoufdgouua9wdu9ud9awu9',
+        'user-dashboard.dashboard'
+    )->name('dashboard');
 
-    Route::view('/user-dashboard/a8afe8b8eaf9be675baugfiab67ta8fb87bfaigf', 'user-dashboard.ordering-supplies.ordering-supplies')
-        ->name('ordering.supplies');
+    Route::view(
+        '/user-dashboard/a8afe8b8eaf9be675baugfiab67ta8fb87bfaigf',
+        'user-dashboard.ordering-supplies.ordering-supplies'
+    )->name('ordering.supplies');
 
-    Route::view('/user-dashboard/uploading-requirements', 'user-dashboard.uploading-requirements.uploading-requirements')
-        ->name('uploading.requirements');
-    Route::view('/user-dashboard/fafeweafaffa897feafa8ef70a8ea08a0e8f', 'user-dashboard.exam.exam')
-        ->name('exam');
-        Route::view('/user-dashboard/adw6daid7ad97w8ydawd3acr3rarvavr53a3', 'user-dashboard.exam.proceed')
-        ->name('proceed');
+    Route::view(
+        '/user-dashboard/uploading-requirements',
+        'user-dashboard.uploading-requirements.uploading-requirements'
+    )->name('uploading.requirements');
+
+    /* ✅ EXAM – MUST USE CONTROLLER */
+    Route::get('/user-dashboard/exam', [ExamController::class, 'start'])
+    ->name('exam');
+
+
+    /* ✅ PROCEED – STATIC PAGE */
+    Route::view(
+        '/user-dashboard/adw6daid7ad97w8ydawd3acr3rarvavr53a3',
+        'user-dashboard.exam.proceed'
+    )->name('proceed');
 });
+
 
 /*
 |--------------------------------------------------------------------------
@@ -112,8 +129,6 @@ Route::middleware(['auth', 'admin', 'admin.desktop'])
         Route::post('/users/register', [AdminUserController::class, 'store'])
             ->name('users.store');
 
-        
-
 
         /* ===============================
          * ADMIN DASHBOARD STATIC PAGES
@@ -123,7 +138,6 @@ Route::middleware(['auth', 'admin', 'admin.desktop'])
         Route::view('/application', 'admin.application')->name('application');
         Route::view('/supplies', 'admin.supplies')->name('supplies');
         Route::view('/requirements', 'admin.requirements')->name('requirements');
-        Route::view('/contacts', 'admin.contacts')->name('contacts');
 
         /* ⚠️ IMPORTANT:
            Removed the WRONG route:
@@ -173,9 +187,32 @@ Route::middleware(['auth', 'admin', 'admin.desktop'])
         Route::delete('/users-account/{id}', [UserManagementController::class, 'destroy'])
             ->name('users-account.destroy');
 
+           /* CONTACT LIST */
+Route::get('/contacts', function () {
+    $contacts = \App\Models\Contact::latest()->get();
+    return view('admin.contacts', compact('contacts'));
+})->name('contacts');
+
+/* ✅ DELETE ALL — MUST BE FIRST */
+Route::delete('/contacts/delete-all', function () {
+    \App\Models\Contact::truncate();
+
+    return redirect()
+        ->route('admin.contacts')
+        ->with('success', 'All contact messages have been deleted.');
+})->name('contacts.deleteAll');
+
+/* DELETE SINGLE — MUST BE LAST */
+Route::delete('/contacts/{id}', [\App\Http\Controllers\ContactController::class, 'destroy'])
+    ->name('contacts.delete');
+
+
+
     });
 
-
+//contact
+Route::post('/contact/send', [ContactController::class, 'store'])
+    ->name('contact.send');
 /*
 |--------------------------------------------------------------------------
 | USER LOGOUT

@@ -7,10 +7,18 @@ use App\Models\Exam;
 class ExamController extends Controller
 {
     public function start()
-    {
-        $exam = Exam::with('questions.options')->first();
+{
+    $exam = Exam::with('questions.options')->first();
 
-        return view('admin.user-dashboard', compact('exam'));
+    if (!$exam) {
+        return redirect()->route('dashboard')
+            ->with('error', 'No exam available.');
     }
+
+    $exam->timer = $exam->timer ?? 60;
+
+    return view('user-dashboard.exam.exam', compact('exam'));
+}
+
 }
 
