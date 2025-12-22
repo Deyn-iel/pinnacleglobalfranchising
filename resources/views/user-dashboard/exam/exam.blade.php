@@ -2,112 +2,203 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Secure Exam</title>
 
 <style>
-    body {
-        font-family: Arial, sans-serif;
-        background: #f3f3f3;
-        margin: 0;
-        padding: 30px;
-        text-align:center;
-    }
+/* ================= RESET ================= */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', system-ui, sans-serif;
+}
 
-    h1 {
-        max-width: 800px;
-        margin: 0 auto 25px auto;
-        font-size: 18px;
-        background: #fff3cd;
-        padding: 15px;
-        border-radius: 8px;
-        border-left: 6px solid #ffcc00;
-        text-align: left;
-    }
+body {
+    background: linear-gradient(135deg, #eef2f7, #f8fafc);
+    min-height: 100vh;
+    padding: 20px;
+}
 
-    .exam-container, 
+/* ================= WARNING ================= */
+.warning {
+    max-width: 900px;
+    margin: 0 auto 25px;
+    background: #fff7ed;
+    color: #92400e;
+    padding: 18px 20px;
+    border-radius: 14px;
+    border-left: 6px solid #f59e0b;
+    font-size: 15px;
+    line-height: 1.6;
+}
+
+/* ================= EXAM CARD ================= */
+.exam-container,
+#result-page {
+    max-width: 520px;
+    margin: auto;
+    background: #ffffff;
+    padding: 28px;
+    border-radius: 18px;
+    box-shadow: 0 20px 45px rgba(0,0,0,0.1);
+}
+
+/* ================= HEADER ================= */
+.exam-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.exam-header h2 {
+    font-size: 20px;
+    font-weight: 700;
+    color: #0f172a;
+}
+
+/* ================= TIMER ================= */
+#timer {
+    background: #0d3553;
+    color: #ffffff;
+    padding: 8px 14px;
+    border-radius: 999px;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+/* ================= QUESTION ================= */
+#question-box h3 {
+    font-size: 17px;
+    margin-bottom: 18px;
+    color: #1f2937;
+}
+
+/* ================= ANSWERS ================= */
+.answer {
+    padding: 14px 16px;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    margin-bottom: 12px;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    font-size: 15px;
+}
+
+.answer:hover {
+    background: #f1f5ff;
+    border-color: #2563eb;
+}
+
+.answer.selected {
+    background: #2563eb;
+    color: #ffffff;
+    border-color: #2563eb;
+}
+
+/* ================= BUTTON ================= */
+button {
+    width: 100%;
+    padding: 14px;
+    margin-top: 18px;
+    background: #2563eb;
+    color: #ffffff;
+    border: none;
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.25s ease;
+}
+
+button:hover {
+    background: #1e40af;
+}
+
+button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* ================= RESULT ================= */
+#result-page h2 {
+    text-align: center;
+    font-size: 24px;
+    margin-bottom: 10px;
+}
+
+#score-text {
+    text-align: center;
+    font-size: 16px;
+    margin-bottom: 20px;
+}
+
+/* ================= UTIL ================= */
+.hidden {
+    display: none;
+}
+
+/* ================= RESPONSIVE ================= */
+@media (max-width: 480px) {
+    .exam-container,
     #result-page {
-        background: white;
-        padding: 25px;
-        border-radius: 10px;
-        width: 450px;
-        margin: 20px auto;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-        text-align:left;
+        padding: 22px;
     }
 
-    .hidden { display: none; }
+    .warning {
+        font-size: 14px;
+    }
 
-    #timer {
+    .exam-header h2 {
         font-size: 18px;
-        margin-bottom: 20px;
-        font-weight: bold;
     }
-
-    .answer {
-        padding: 12px;
-        border: 1px solid #ccc;
-        border-radius: 8px;
-        margin-bottom: 10px;
-        cursor: pointer;
-        transition: 0.2s;
-    }
-
-    .answer:hover {
-        background: #e7f0ff;
-    }
-
-    .selected {
-        background: #4a90e2;
-        color: white;
-    }
-
-    button {
-        padding: 12px 20px;
-        margin-top: 15px;
-        cursor: pointer;
-        background: #4a90e2;
-        color: white;
-        border: none;
-        border-radius: 8px;
-        font-weight: bold;
-        display:inline-block;
-    }
-
-    button:hover {
-        background: #3577c8;
-    }
+}
 </style>
-
 </head>
-<body>
 
-<h1><b>Note:</b> Do not take screenshots or use any device to capture the exam content. Any form of cheating will result in consequences.</h1>
+<body>
+<form id="submitForm" method="POST" action="{{ route('exam.submit') }}">
+    @csrf
+    <input type="hidden" name="exam_id" value="{{ $exam->id }}">
+    <input type="hidden" name="answers" id="answersInput">
+</form>
+
+<div class="warning">
+    <strong>Important:</strong> Do not take screenshots, record the screen, or switch tabs during the exam.
+    Any form of cheating will automatically submit your exam.
+</div>
 
 <div class="exam-container">
-    <h2>Multiple Choice Exam</h2>
-    <div id="timer">
-    Time Left: <span id="time">{{ $exam->timer ?? 60 }}</span>s
-</div>
+    <div class="exam-header">
+        <h2>Multiple Choice Exam</h2>
+        <div id="timer">⏱ <span id="time">{{ $exam->timer ?? 60 }}</span>s</div>
+    </div>
 
     <div id="question-box"></div>
 
-    <button id="next-btn" onclick="nextQuestion()" disabled>Next</button>
+    <button id="next-btn" onclick="nextQuestion()" disabled>Next Question</button>
 </div>
 
 <!-- RESULT PAGE -->
 <div id="result-page" class="hidden">
-    <h2>Your Score</h2>
+    <h2>Exam Completed</h2>
     <p id="score-text"></p>
-    <button onclick="restartExam()">Retake Exam</button>
+    <button id="dashboardBtn" disabled>
+    Submitting result...
+</button>
+
+
+
 </div>
 
 <script>
+let userAnswers = {};
 let exam = @json($exam);
 let questions = exam.questions;
 let timerValue = exam.timer;
 
 let current = 0;
-let score = 0;
 let timeLeft = timerValue;
 let timer;
 
@@ -117,7 +208,8 @@ function startExam() {
 }
 
 function loadQuestion() {
-    document.getElementById("next-btn").disabled = true;
+    const nextBtn = document.getElementById("next-btn");
+    nextBtn.disabled = true;
 
     let q = questions[current];
     let box = document.getElementById("question-box");
@@ -125,16 +217,27 @@ function loadQuestion() {
 
     q.options.forEach((opt, i) => {
         box.innerHTML += `
-            <div class="answer" onclick="selectAnswer(this, ${i})">${opt.option_text}</div>
+            <div class="answer" onclick="selectAnswer(this, ${i})">
+                ${opt.option_text}
+            </div>
         `;
     });
+
+    // change button text on last question
+    nextBtn.textContent =
+        current === questions.length - 1
+            ? "Submit Exam"
+            : "Next Question";
 }
 
-function selectAnswer(element, index) {
-    document.querySelectorAll(".answer").forEach(a => a.classList.remove("selected"));
-    element.classList.add("selected");
+function selectAnswer(el, index) {
+    document.querySelectorAll(".answer").forEach(a =>
+        a.classList.remove("selected")
+    );
+    el.classList.add("selected");
 
-    if (index + 1 === questions[current].correct_option) score++;
+    // store answer
+    userAnswers[current] = index + 1;
 
     document.getElementById("next-btn").disabled = false;
 }
@@ -157,95 +260,46 @@ function startTimer() {
 function nextQuestion() {
     clearInterval(timer);
 
-    current++;
-    if (current >= questions.length) {
+    if (current === questions.length - 1) {
         finishExam();
         return;
     }
 
+    current++;
     loadQuestion();
     startTimer();
 }
 
+/* ✅ FINAL & ONLY finishExam() */
 function finishExam() {
     document.querySelector(".exam-container").classList.add("hidden");
     document.getElementById("result-page").classList.remove("hidden");
 
+    const displayScore = Object.values(userAnswers).filter(
+        (ans, i) => ans === questions[i].correct_option
+    ).length;
+
     document.getElementById("score-text").innerText =
-        `You scored ${score} out of ${questions.length}`;
+        `You scored ${displayScore} out of ${questions.length}`;
+
+    document.getElementById("answersInput").value =
+        JSON.stringify(userAnswers);
+
+    const btn = document.getElementById("dashboardBtn");
+
+    setTimeout(() => {
+        btn.disabled = false;
+        btn.textContent = "Return to Dashboard";
+        btn.onclick = () => window.location.href = "{{ route('dashboard') }}";
+
+        document.getElementById("submitForm").submit();
+    }, 3000);
 }
 
-function restartExam() {
-    current = 0;
-    score = 0;
-
-    document.getElementById("result-page").classList.add("hidden");
-    document.querySelector(".exam-container").classList.remove("hidden");
-
-    startExam();
-}
 
 startExam();
-
-/* =====================================================
-   HARD SCREENSHOT / CHEAT BLOCK (WORKING + CLEANED UP)
-===================================================== */
-
-function blackoutScreen() {
-    document.body.innerHTML = `
-        <div style="
-            width:100vw; height:100vh;
-            background:black; color:white;
-            display:flex; flex-direction:column;
-            justify-content:center; align-items:center;
-            text-align:center; padding:20px;">
-            
-            <div style="font-size:25px; font-weight:bold; margin-bottom:20px;">
-                ⚠ SCREENSHOT ATTEMPT DETECTED — EXAM LOCKED
-            </div>
-
-            <button onclick="location.reload()" style="
-                padding:12px 25px; font-size:18px;
-                border:none; border-radius:8px;
-                background:#1e90ff; color:white;">
-                OK — Return to Exam
-            </button>
-        </div>
-    `;
-}
-
-// Right click
-document.addEventListener("contextmenu", e => { e.preventDefault(); blackoutScreen(); });
-
-// Print Screen
-document.addEventListener("keyup", e => {
-    if (e.key === "PrintScreen") {
-        navigator.clipboard.writeText("");
-        blackoutScreen();
-    }
-});
-
-// Copy
-document.addEventListener("copy", e => { e.preventDefault(); blackoutScreen(); });
-
-// Devtools
-document.addEventListener("keydown", e => {
-    if (["F12"].includes(e.key) ||
-       (e.ctrlKey && e.shiftKey && ["I","C"].includes(e.key)) ||
-       (e.ctrlKey && e.key === "U")) {
-        e.preventDefault();
-        blackoutScreen();
-    }
-});
-
-// Tab switch
-document.addEventListener("visibilitychange", () => {
-    if (document.hidden) blackoutScreen();
-});
-
-// Blur (focus lost)
-window.addEventListener("blur", () => blackoutScreen());
 </script>
+
 
 </body>
 </html>

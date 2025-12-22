@@ -164,7 +164,7 @@ input:focus {
 }
 
 .actions a:hover {
-    text-decoration: underline;
+    color: #0d3553
 }
 
 /* =========================

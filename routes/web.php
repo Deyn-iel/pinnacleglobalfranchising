@@ -16,6 +16,7 @@ use App\Http\Controllers\AdminUserController;
 use App\Http\Controllers\ExamController;
 use App\Models\Contact;
 use App\Http\Controllers\ContactController;
+use App\Http\Controllers\AdminExamResultController;
 /*
 |--------------------------------------------------------------------------
 | PUBLIC PAGES
@@ -78,6 +79,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
         '/user-dashboard/adw6daid7ad97w8ydawd3acr3rarvavr53a3',
         'user-dashboard.exam.proceed'
     )->name('proceed');
+
+    Route::view(
+        '/user-dashboard/adw6daid7ad97w8ydawd3acr3rarvavr5dawda1=',
+        'user-dashboard.exam.exam-done'
+    )->name('exam-done');
 });
 
 
@@ -109,10 +115,28 @@ Route::post('/franchise/submit', [FranchiseController::class, 'store'])
 |--------------------------------------------------------------------------
 */
 
+
+Route::post('/user-dashboard/exam/submit', [ExamController::class, 'submit'])
+    ->name('exam.submit');
+
+Route::get('/admin/exams/{id}/edit', [AdminExamController::class, 'edit'])
+    ->name('admin.exams.edit');
+
+Route::put('/admin/exams/{id}', [AdminExamController::class, 'update'])
+    ->name('admin.exams.update');
+
+
 Route::middleware(['auth', 'admin', 'admin.desktop'])
     ->prefix('admin')
     ->name('admin.')
     ->group(function () {
+
+        // VIEW EXAM RESULTS
+        Route::get('/exam-results', [AdminExamResultController::class, 'results'])
+            ->name('exam-results');
+
+        Route::delete('/exam-results/{id}', [AdminExamResultController::class, 'destroy'])
+            ->name('exam-results.delete');
 
         // User management
         Route::get('/users-account', [UserManagementController::class, 'index'])

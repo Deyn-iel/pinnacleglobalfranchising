@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Exam;
 use App\Models\ExamQuestion;
 use App\Models\ExamOption;
+use App\Models\ExamResult;
 
 class AdminExamController extends Controller
 {
@@ -56,5 +57,58 @@ class AdminExamController extends Controller
 
         return back()->with('success', 'Exam deleted successfully!');
     }
+    public function edit($id)
+{
+    $exam = Exam::with('questions')->findOrFail($id);
+    return view('admin.exams.edit', compact('exam'));
+}
+
+public function update(Request $request, $id)
+{
+    $exam = Exam::findOrFail($id);
+
+    $exam->update([
+        'title' => $request->title,
+        'timer' => $request->timer
+    ]);
+
+    // 🔥 DELETE QUESTIONS
+    if ($request->has('deleted_questions')) {
+        ExamQuestion::whereIn('id', $request->deleted_questions)->each(function ($q) {
+            $q->options()->delete();
+            $q->delete();
+        });
+    }
+
+    // 🔥 UPDATE EXISTING QUESTIONS
+    foreach ($exam->questions as $index => $question) {
+        if (!isset($request->questions[$index])) continue;
+
+        $question->update([
+            'question' => $request->questions[$index],
+            'correct_option' => $request->correct[$index]
+        ]);
+
+        foreach ($question->options as $oIndex => $option) {
+            $option->update([
+                'option_text' => $request->options[$index][$oIndex]
+            ]);
+        }
+    }
+
+    return redirect()
+        ->route('admin.uploading-exams')
+        ->with('success', 'Exam updated successfully!');
+}
+
+
+public function results()
+{
+    $results = ExamResult::with(['user', 'exam'])
+        ->latest()
+        ->get();
+
+    return view('admin.exam-results', compact('results'));
+}
 
 }

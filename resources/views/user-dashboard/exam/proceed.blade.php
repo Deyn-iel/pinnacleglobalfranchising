@@ -187,12 +187,13 @@ body {
     </div>
 
     <div class="rules">
-        <p>• Once the exam starts, you cannot exit or refresh the page.</p>
+        <p>• After the exam begins, pausing, exiting, or refreshing the page is not permitted.</p>
         <p>• Screenshots, screen recording, and tab switching are not allowed.</p>
         <p>• Opening a new tab or attempting to switch tabs will automatically submit your exam.</p>
         <p>• This exam allows a maximum of one attempt only. Please ensure that all answers are final.</p>
         <p>• Your exam will be automatically submitted when time expires.</p>
-        <p>• Once started, the exam cannot be paused.</p>
+        <p>• Right-clicking the mouse on a PC or laptop will automatically submit your exam.</p>
+        <p>• Once you proceed to the next question, you will no longer be able to change your previous answer.</p>
         <p>• Any violation may result in disqualification.</p>
     </div>
 

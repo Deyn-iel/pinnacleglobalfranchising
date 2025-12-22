@@ -459,6 +459,46 @@ body {
         display: block;
     }
 }
+.alert-error {
+    background: #fdecea;
+    color: #842029;
+    padding: 14px 18px;
+    border-radius: 10px;
+    margin: 20px 0;
+    border-left: 5px solid #dc3545;
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 1.5;
+
+    /* animation defaults */
+    opacity: 1;
+    transform: translateY(0);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+/* fade out state */
+.alert-error.fade-out {
+    opacity: 0;
+    transform: translateY(-10px);
+}
+
+/* Tablet */
+@media (max-width: 768px) {
+    .alert-error {
+        padding: 12px 16px;
+        font-size: 13.5px;
+    }
+}
+
+/* Mobile */
+@media (max-width: 480px) {
+    .alert-error {
+        padding: 12px;
+        font-size: 13px;
+        border-left-width: 4px;
+    }
+}
+
 
 </style>
 </head>
@@ -549,8 +589,14 @@ body {
 
             </div>
         </div>
+        
 
         <div class="content">
+            @if (session('error'))
+            <div class="alert-error" id="alertError">
+                {{ session('error') }}
+            </div>
+        @endif
             <div class="cards">
                 <div class="card"><h4>Active Users</h4><h2>1,245</h2></div>
                 <div class="card"><h4>Pending Tasks</h4><h2>18</h2></div>
@@ -608,19 +654,8 @@ body {
                 </div>
             </div>
         </div>
-        @if (session('error'))
-    <div style="
-        background:#fdecea;
-        color:#842029;
-        padding:15px;
-        border-radius:8px;
-        margin-bottom:20px;
-        border-left:5px solid #dc3545;
-        font-weight:600;
-    ">
-        {{ session('error') }}
-    </div>
-@endif
+        
+
     </div>
 </div>
 
@@ -633,7 +668,19 @@ document.addEventListener("DOMContentLoaded", () => {
     const closeSidebar = document.getElementById("closeSidebar");
     const loginOverlay = document.getElementById("loginOverlay");
     const timeText = document.getElementById("loginTimeText");
+    const alert = document.getElementById("alertError");
 
+    if (alert) {
+        // wait 5 seconds
+        setTimeout(() => {
+            alert.classList.add("fade-out");
+
+            // remove completely after animation
+            setTimeout(() => {
+                alert.remove();
+            }, 600);
+        }, 5000);
+    }
     /* ================= SIDEBAR TOGGLE (MOBILE) ================= */
     if (menuBtn && sidebar) {
         menuBtn.onclick = () => sidebar.classList.toggle("show");
