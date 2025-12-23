@@ -20,7 +20,7 @@
         <div class="footer-socials">
             <a href="https://www.facebook.com/" aria-label="Facebook" target="_blank"><i class="fab fa-facebook-f"></i></a>
             <a href="https://www.instagram.com" aria-label="Instagram" target="_blank"><i class="fab fa-instagram"></i></a>
-            <a href="https://www.gmail.com" aria-label="Email" target="_blank"><i class="fa-solid fa-envelope"></i></a>
+            <a href="pinnacleglobalfranchisinggroup@gmail.com" aria-label="Email" target="_blank"><i class="fa-solid fa-envelope"></i></a>
         </div>
 
         <p class="footer-copy">

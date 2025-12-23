@@ -67,32 +67,59 @@ public function update(Request $request, $id)
 {
     $exam = Exam::findOrFail($id);
 
+    // ✅ UPDATE EXAM INFO
     $exam->update([
         'title' => $request->title,
         'timer' => $request->timer
     ]);
 
-    // 🔥 DELETE QUESTIONS
-    if ($request->has('deleted_questions')) {
+    // ✅ DELETE QUESTIONS
+    if ($request->filled('deleted_questions')) {
         ExamQuestion::whereIn('id', $request->deleted_questions)->each(function ($q) {
             $q->options()->delete();
             $q->delete();
         });
     }
 
-    // 🔥 UPDATE EXISTING QUESTIONS
-    foreach ($exam->questions as $index => $question) {
-        if (!isset($request->questions[$index])) continue;
+    // ✅ HANDLE QUESTIONS (UPDATE + CREATE)
+    foreach ($request->questions as $index => $questionText) {
 
-        $question->update([
-            'question' => $request->questions[$index],
-            'correct_option' => $request->correct[$index]
-        ]);
+        // ⛔ SKIP EMPTY INPUTS (IMPORTANT)
+        if (trim($questionText) === '') {
+            continue;
+        }
 
-        foreach ($question->options as $oIndex => $option) {
-            $option->update([
-                'option_text' => $request->options[$index][$oIndex]
+        // ✅ EXISTING QUESTION
+        if (!empty($request->question_ids[$index] ?? null)) {
+
+            $question = ExamQuestion::find($request->question_ids[$index]);
+            if (!$question) continue;
+
+            $question->update([
+                'question' => $questionText,
+                'correct_option' => $request->correct[$index]
             ]);
+
+            foreach ($question->options as $oIndex => $option) {
+                $option->update([
+                    'option_text' => $request->options[$index][$oIndex]
+                ]);
+            }
+
+        }
+        // 🆕 NEW QUESTION
+        else {
+
+            $newQuestion = $exam->questions()->create([
+                'question' => $questionText,
+                'correct_option' => $request->correct[$index]
+            ]);
+
+            foreach ($request->options[$index] as $optText) {
+                $newQuestion->options()->create([
+                    'option_text' => $optText
+                ]);
+            }
         }
     }
 
@@ -100,6 +127,8 @@ public function update(Request $request, $id)
         ->route('admin.uploading-exams')
         ->with('success', 'Exam updated successfully!');
 }
+
+
 
 
 public function results()

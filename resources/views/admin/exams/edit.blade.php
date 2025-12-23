@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -123,62 +123,75 @@
             <div id="deleted-questions"></div>
             <!-- EXAM INFO -->
             <div class="row mb-4">
-                <div class="col-md-8">
-                    <label>Exam Title</label>
-                    <input type="text" name="title" class="form-control"
-                           value="{{ $exam->title }}" required>
-                </div>
-
-                <div class="col-md-4">
-                    <label>Timer (seconds)</label>
-                    <input type="number" name="timer" class="form-control"
-                           value="{{ $exam->timer }}" required>
-                </div>
+            <div class="col-md-8">
+                <label>Exam Title</label>
+                <input type="text"
+                    name="title"
+                    class="form-control"
+                    value="{{ $exam->title }}"
+                    required>
             </div>
+
+            <div class="col-md-4">
+                <label>Timer (seconds)</label>
+                <input type="number"
+                    name="timer"
+                    class="form-control"
+                    value="{{ $exam->timer }}"
+                    required>
+            </div>
+        </div>
+
 
             <!-- QUESTIONS -->
             <h5 class="mb-3 fw-bold text-secondary">Questions</h5>
 
             <div id="questions-area">
             @foreach ($exam->questions as $qIndex => $question)
-                <div class="question-card" data-question-id="{{ $question->id }}">
-                    <button type="button"
-                            class="remove-btn"
-                            onclick="deleteExistingQuestion(this, {{ $question->id }})">
-                        ✕
-                    </button>
+    <div class="question-card" data-question-id="{{ $question->id }}">
+        <button type="button"
+                class="remove-btn"
+                onclick="deleteExistingQuestion(this, {{ $question->id }})">
+            ✕
+        </button>
 
-                    <h6>Question {{ $qIndex + 1 }}</h6>
+        <h6>Question {{ $qIndex + 1 }}</h6>
 
+        <!-- 🔑 IMPORTANT: QUESTION ID -->
+        <input type="hidden"
+               name="question_ids[{{ $qIndex }}]"
+               value="{{ $question->id }}">
+
+        <input type="text"
+               name="questions[{{ $qIndex }}]"
+               class="form-control mb-3"
+               value="{{ $question->question }}"
+               required>
+
+        <div class="row">
+            @foreach ($question->options as $oIndex => $option)
+                <div class="col-md-6">
                     <input type="text"
-                        name="questions[{{ $qIndex }}]"
-                        class="form-control mb-3"
-                        value="{{ $question->question }}"
-                        required>
-
-                    <div class="row">
-                        @foreach ($question->options as $oIndex => $option)
-                            <div class="col-md-6">
-                                <input type="text"
-                                    name="options[{{ $qIndex }}][{{ $oIndex }}]"
-                                    class="form-control option-input"
-                                    value="{{ $option->option_text }}"
-                                    required>
-                            </div>
-                        @endforeach
-                    </div>
-
-                    <div class="mt-3">
-                        <label>Correct Option (1–4)</label>
-                        <input type="number"
-                            name="correct[{{ $qIndex }}]"
-                            class="form-control correct-input"
-                            value="{{ $question->correct_option }}"
-                            min="1" max="4"
-                            required>
-                    </div>
+                           name="options[{{ $qIndex }}][{{ $oIndex }}]"
+                           class="form-control option-input"
+                           value="{{ $option->option_text }}"
+                           required>
                 </div>
             @endforeach
+        </div>
+
+        <div class="mt-3">
+            <label>Correct Option (1–4)</label>
+            <input type="number"
+                   name="correct[{{ $qIndex }}]"
+                   class="form-control correct-input"
+                   value="{{ $question->correct_option }}"
+                   min="1" max="4"
+                   required>
+        </div>
+    </div>
+@endforeach
+
             </div>
 
 

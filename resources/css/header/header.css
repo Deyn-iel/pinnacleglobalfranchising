@@ -69,12 +69,18 @@ body.nav-open {
   content: "▾";
   margin-left: 6px;
   font-size: 12px;
-  transition: transform 0.25s ease;
+
+  display: inline-block;
+  transform: translateY(0) rotate(0deg);
+  transition:
+    transform 0.28s cubic-bezier(.4,0,.2,1);
 }
 
+/* Open state – rotates + moves DOWN */
 .nav-section.open .nav-section-title::after {
-  transform: rotate(180deg);
+  transform: translateY(3px) rotate(180deg);
 }
+
 
 /* Desktop dropdown */
 .nav-submenu {

@@ -21,6 +21,7 @@
             'resources/js/header/app.js',
             'resources/js/chatbot/app.js',
             'resources/js/scroll/app.js',
+            'resources/js/contact/app.js',
             'resources/js/app.js'])
 </head>
 
@@ -51,7 +52,7 @@
         <div class="col-md-6 mb-4">
             <h3 class="section-title">Contact Us</h3>
 
-            <form id="contactForm">
+            <form id="contactForm" action="{{ route('contact.send') }}">
                 @csrf
 
                 <div class="field-group">
@@ -138,48 +139,6 @@
 
     {{-- ✅ FOOTER --}}
     @include('partials.footer')
-
-
-    <!-- ✅ SCRIPTS -->
-    <script src="{{ asset('js/app.js') }}"></script>
-<script>
-document.getElementById('contactForm').addEventListener('submit', function (e) {
-    e.preventDefault(); // ❌ stop page refresh
-
-    const form = this;
-    const formData = new FormData(form);
-    const successMsg = document.getElementById('successMsg');
-
-    fetch("{{ route('contact.send') }}", {
-        method: "POST",
-        headers: {
-            "X-CSRF-TOKEN": document.querySelector('input[name=_token]').value
-        },
-        body: formData
-    })
-    .then(res => res.json())
-    .then(data => {
-        if (data.success) {
-            form.reset();
-
-            successMsg.textContent = "✔ " + data.message;
-            successMsg.style.display = "block";
-            successMsg.style.opacity = "1";
-
-            setTimeout(() => {
-                successMsg.style.opacity = "0";
-                setTimeout(() => {
-                    successMsg.style.display = "none";
-                }, 600);
-            }, 3000);
-        }
-    })
-
-    .catch(() => {
-        alert("Something went wrong. Please try again.");
-    });
-});
-</script>
 
 </body>
 </html>

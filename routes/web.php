@@ -55,7 +55,7 @@ Route::prefix('franchisability')->group(function () {
 Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::view(
-        '/awdawdawdgbawiouabgwoufdgouua9wdu9ud9awu9',
+        '/dashboard',
         'user-dashboard.dashboard'
     )->name('dashboard');
 
@@ -114,6 +114,16 @@ Route::post('/franchise/submit', [FranchiseController::class, 'store'])
 |
 |--------------------------------------------------------------------------
 */
+
+// show list of available exams
+Route::get('/exam/select', [ExamController::class, 'select'])
+    ->name('exam.select');
+
+Route::get('/exam/start/{exam}', [ExamController::class, 'start'])
+    ->name('exam.start');
+
+Route::post('/exam/submit', [ExamController::class, 'submit'])
+    ->name('exam.submit');
 
 
 Route::post('/user-dashboard/exam/submit', [ExamController::class, 'submit'])

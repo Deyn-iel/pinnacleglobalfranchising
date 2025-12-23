@@ -5,12 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Our Service | Pinnacle Global</title>
 
-    <!-- ✅ BOOTSTRAP -->
+    <!-- BOOTSTRAP -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link href="https://unpkg.com/@phosphor-icons/web@2.0.3/src/regular/style.css" rel="stylesheet">
 
-    <!-- ✅ CSS FILES (ORDER MATTERS) -->
+
     @vite(['resources/css/header/app.css', 
             'resources/css/header/app.css',
             'resources/css/footer/app.css',
@@ -26,27 +26,26 @@
 </head>
 
 <body>
-{{-- ✅ HEADER --}}
+
     @include('partials.header')
 
     <main>
 <main>
-<div class="main-wrapper"><!-- START WRAPPER -->
+<div class="main-wrapper">
 
-    <!-- IMAGE + CENTERED TITLE -->
     <div class="image">
         <div class="image-item logo-item">
             <img src="{{ asset('img/logo.webp') }}" alt="Logo">
         </div>
     </div>
 
-</div><!-- END MAIN WRAPPER -->
+</div>
 
 
 
-<!-- ========================= -->
-<!--       SERVICES SECTION    -->
-<!-- ========================= -->
+
+<!--SERVICES SECTION-->
+
 <section id="services" class="first-services">
     <h2>Services</h2>
     <div class="underline"></div>
@@ -65,9 +64,8 @@
 
 
 
-<!-- ========================= -->
-<!--   STRATEGIC PLANNING     -->
-<!-- ========================= -->
+
+<!--STRATEGIC PLANNING-->
 <section id="strategic-planning" class="second-services">
     <h2>Strategic Planning</h2>
     <div class="underline"></div>
@@ -96,9 +94,7 @@
 
 
 
-<!-- ========================= -->
-<!--    LEGAL DOCUMENTATION    -->
-<!-- ========================= -->
+<!--LEGAL DOCUMENTATION-->
 <section id="legal-docs" class="second-services">
     <h2>Legal Documentation</h2>
     <div class="underline"></div>
@@ -122,9 +118,7 @@
 
 
 
-<!-- ========================= -->
-<!--   FRANCHISE TRAINING     -->
-<!-- ========================= -->
+<!--FRANCHISE TRAINING-->
 <section id="franchise-training" class="second-services">
     <h2>Franchise Sales Training</h2>
     <div class="underline"></div>
@@ -141,9 +135,7 @@
 
 
 
-<!-- ========================= -->
-<!--    OPERATIONS SERVICES    -->
-<!-- ========================= -->
+<!--OPERATIONS SERVICES-->
 <section id="operations" class="second-services">
     <h2>Operations Services</h2>
     <div class="underline"></div>
@@ -163,9 +155,7 @@
 
 
 
-<!-- ========================= -->
-<!--   FRANCHISE MARKETING    -->
-<!-- ========================= -->
+<!--FRANCHISE MARKETING-->
 <section id="franchise-marketing" class="second-services">
     <h2>Franchise Marketing Services</h2>
     <div class="underline"></div>
@@ -186,9 +176,7 @@
 
 
 
-<!-- ========================= -->
-<!--    SPECIAL SERVICES    -->
-<!-- ========================= -->
+<!--SPECIAL SERVICES-->
 <section id="special-services" class="second-services">
     <h2>Special Services</h2>
     <div class="underline"></div>
@@ -212,12 +200,10 @@
 </section>
 
 
-{{-- Chatbot --}}
 @include('partials.chatbot')
 @include('partials.scroll-top')
 </main>
 
-{{-- ✅ FOOTER --}}
     @include('partials.footer')
 
 

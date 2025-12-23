@@ -5,12 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pinnacle Global</title>
     
-    <!-- ✅ BOOTSTRAP -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link href="https://unpkg.com/@phosphor-icons/web@2.0.3/src/regular/style.css" rel="stylesheet">
 
-    <!-- ✅ CSS FILES (ORDER MATTERS) -->
     @vite(['resources/css/header/app.css', 
             'resources/css/header/app.css',
             'resources/css/footer/app.css',
@@ -22,7 +20,8 @@
             'resources/js/header/app.js',
             'resources/js/chatbot/app.js',
             'resources/js/scroll/app.js',
-            'resources/js/app.js'])
+            'resources/js/app.js',
+            'resources/js/main/app.js'])
     
 <!-- AOS Animation Library -->
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
@@ -30,17 +29,14 @@
 
 <body>
 
-    {{-- ✅ HEADER --}}
     @include('partials.header')
 
-    {{-- ✅ PAGE CONTENT --}}
     <main>
         
         {{-- <div class="promo-image-container">
     <img src="{{ asset('img/1fj.jpg') }}" alt="Be a KI Owner">
     </div> --}}
 
-        <!-- IMAGE + VIDEO SECTION -->
     <div class="image">
 
         <div class="image-item logo-item">
@@ -59,9 +55,6 @@
     </div>
 
 
-<!-- ============================
-     FRANCHISE NOW SECTION
-============================= -->
 <section class="franchise-section text-center mt-5">
 
     <h2 class="franchise-title">FRANCHISE NOW!</h2>
@@ -233,68 +226,15 @@
     
 </section> --}}
 
-{{-- ✅ chatbot --}}
     @include('partials.chatbot')
     @include('partials.scroll-top')
     </main>
-
-    {{-- ✅ FOOTER --}}
     @include('partials.footer')
 
-    <!-- ✅ SCRIPTS -->
-    <script src="{{ asset('js/app.js') }}"></script>
 
     <script src="{{ asset('js/main.js') }}"></script>
 
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-    <script>
-        AOS.init({
-            once: false,   // animation plays every scroll
-            offset: 100,   // trigger earlier
-            easing: 'ease-out-back',
-        });
-        document.addEventListener("DOMContentLoaded", () => {
-    const elements = document.querySelectorAll(
-        ".image, .franchise-section, .circle-box, .franchise-now-container, .franchise-steps, .step, .franchise-now-button-wrapper, .brand-name, .brand-desc"
-    );
-
-    const observer = new IntersectionObserver(
-        entries => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add("animate-show");
-                    observer.unobserve(entry.target);
-                }
-            });
-        },
-        {
-            threshold: 0.15,
-            rootMargin: "0px 0px -50px 0px"
-        }
-    );
-
-    elements.forEach(el => observer.observe(el));
-});
-document.addEventListener("DOMContentLoaded", () => {
-
-    const animatedElements = document.querySelectorAll(
-        ".image, .franchise-section, .circle-box, .franchise-now-container, .franchise-steps, .step, .franchise-now-button-wrapper, .brand-name, .brand-desc"
-    );
-
-    const observer = new IntersectionObserver((entries, obs) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.classList.add("animate-show");
-                obs.unobserve(entry.target); // animate once only
-            }
-        });
-    }, {
-        threshold: 0.15,           // show when 15% visible
-        rootMargin: "0px 0px -50px 0px"
-    });
-
-    animatedElements.forEach(el => observer.observe(el));
-});
-    </script>
+    
 </body>
 </html>

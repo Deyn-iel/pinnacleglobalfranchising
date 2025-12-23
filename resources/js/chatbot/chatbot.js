@@ -104,7 +104,7 @@ document.addEventListener("DOMContentLoaded", function () {
             typingIndicator.style.display = "none";
 
             typeBotMessage(
-                "Thanks for messaging Pinnacle! How can we help you today? Thanks for messaging Pinnacle! How can we help you today?Thanks for messaging Pinnacle! How can we help you today? Thanks for messaging Pinnacle! How can we help you today? Thanks for messaging Pinnacle! How can we help you today? Thanks for messaging Pinnacle! How can we help you today? Thanks for messaging Pinnacle! How can we help you today?"
+                "This AI feature is coming soon..."
             );
         }, 1200);
     }
