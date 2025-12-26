@@ -15,6 +15,7 @@ use App\Http\Controllers\AdminExamController;
 use App\Http\Controllers\AdminUserController;
 use App\Http\Controllers\ExamController;
 use App\Models\Contact;
+use App\Http\Controllers\Admin\RequirementController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\AdminExamResultController;
 /*
@@ -136,6 +137,7 @@ Route::put('/admin/exams/{id}', [AdminExamController::class, 'update'])
     ->name('admin.exams.update');
 
 
+
 Route::middleware(['auth', 'admin', 'admin.desktop'])
     ->prefix('admin')
     ->name('admin.')
@@ -171,7 +173,12 @@ Route::middleware(['auth', 'admin', 'admin.desktop'])
         Route::view('/', 'admin.admin')->name('dashboard');
         Route::view('/application', 'admin.application')->name('application');
         Route::view('/supplies', 'admin.supplies')->name('supplies');
-        Route::view('/requirements', 'admin.requirements')->name('requirements');
+
+        Route::get('/requirements', [RequirementController::class, 'index'])
+    ->name('requirements');
+
+Route::post('/requirements', [RequirementController::class, 'store']);
+
 
         /* ⚠️ IMPORTANT:
            Removed the WRONG route:

@@ -79,24 +79,59 @@ p {
 }
 
 .hours-menu {
-    display: none;
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
     margin-top: 6px;
-    padding: 12px;
+    padding: 0 12px;
     background: transparent;
+    transition:
+        max-height 0.4s ease,
+        opacity 0.3s ease,
+        padding 0.3s ease;
+}
+
+/* SHOW STATE */
+.hours-menu.show {
+    max-height: 500px; /* enough for all days */
+    opacity: 1;
+    padding: 12px;
 }
 
 .open-hours.show .hours-menu {
     display: block;
 }
+/* Mobile */
+@media (max-width: 576px) {
+    .open-hours {
+        max-width: 100%;
+        margin: 0 auto;
+        text-align: center;
+    }
+
+    .hours-btn {
+        font-size: 15px;
+    }
+
+    .hours-menu p {
+        font-size: 17px;
+    }
+}
+
 
 .arrow {
+    display: inline-block;
     margin-left: 6px;
-    transition: transform 0.3s;
+    transition: transform 0.3s ease;
 }
 
-.open-hours.show .arrow {
+.arrow.rotate {
     transform: rotate(180deg);
 }
+
+/* .open-hours.show .arrow {
+    transform: rotate(180deg);
+} */
 
 /* Tablets */
 @media (max-width: 768px) {

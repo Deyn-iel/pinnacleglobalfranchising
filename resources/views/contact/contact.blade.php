@@ -94,7 +94,7 @@
 
             <h4 class="section-title mt-4">Office Hours</h4>
             <div class="open-hours">
-            <button class="hours-btn">
+            <button type="button" class="hours-btn">
                 Open today <strong>08:30AM – 5:30PM</strong>
                 <span class="arrow">▼</span>
             </button>

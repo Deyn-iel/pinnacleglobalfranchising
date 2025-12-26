@@ -106,20 +106,49 @@
 
         <table class="table table-bordered">
             <thead class="table-dark">
-                <tr>
-                    <th>File Name</th>
-                    <th>Category</th>
-                    <th>Uploaded At</th>
-                </tr>
-            </thead>
+<tr>
+    <th>Document Name</th>
+    <th>Category</th>
+    <th>Uploaded At</th>
+    <th>Action</th>
+</tr>
+</thead>
+
 
             <tbody>
-                <tr>
-                    <td class="text-muted">No uploaded files yet...</td>
-                    <td></td>
-                    <td></td>
-                </tr>
-            </tbody>
+@if($requirements->count())
+    @foreach($requirements as $req)
+        <tr>
+            <td>{{ $req->document_name }}</td>
+            <td>{{ $req->category }}</td>
+            <td>{{ $req->created_at->format('M d, Y h:i A') }}</td>
+            <td>
+                <!-- VIEW -->
+                <a href="{{ asset('storage/'.$req->file_path) }}"
+                   target="_blank"
+                   class="btn btn-sm btn-primary">
+                   View
+                </a>
+
+                <!-- DOWNLOAD -->
+                <a href="{{ asset('storage/'.$req->file_path) }}"
+                   download
+                   class="btn btn-sm btn-secondary">
+                   Download
+                </a>
+            </td>
+        </tr>
+    @endforeach
+@else
+    <tr>
+        <td colspan="4" class="text-center text-muted">
+            No uploaded files yet...
+        </td>
+    </tr>
+@endif
+</tbody>
+
+
         </table>
 
     </main>

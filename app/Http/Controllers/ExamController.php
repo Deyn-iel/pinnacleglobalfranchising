@@ -74,7 +74,7 @@ class ExamController extends Controller
         return redirect('/dashboard')->with(
             $request->cheated == 1 ? 'error' : 'success',
             $request->cheated == 1
-                ? 'Exam terminated due to cheating.'
+                ? 'Exam terminated due to detected cheating. Your exam has been automatically submitted.'
                 : 'Exam submitted successfully.'
         );
     }
