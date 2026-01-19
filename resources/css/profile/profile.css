@@ -1,0 +1,282 @@
+/* ================= PROFILE PAGE ================= */
+
+.profile-page {
+    width: 100%;
+    animation: fadeUp 0.5s ease forwards;
+}
+
+/* ================= PAGE TITLE ================= */
+
+.page-title {
+    margin-bottom: 32px;
+    background: #ffffff;
+    padding: 30px;
+    border-radius: 20px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.06),
+        0 2px 6px rgba(0,0,0,0.04);
+}
+
+.page-title h2 {
+    font-size: 20px;
+    font-weight: 800;
+    color: #000000;
+    letter-spacing: 0.3px;
+}
+
+.page-title p {
+    margin-top: 6px;
+    font-size: 14.5px;
+    color: #8b8b8b;
+    max-width: 520px;
+    line-height: 1.6;
+}
+
+.change-pass {
+    padding: 15px 0;
+    margin-bottom: 10px;
+    text-align: left;
+}
+
+/* ================= GRID LAYOUT ================= */
+
+.profile-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 32px;
+    align-items: start;
+}
+
+/* ================= CARD BASE ================= */
+
+.profile-card {
+    background: #ffffff;
+    text-align: left;
+    border-radius: 20px;
+    padding: 30px;
+    box-shadow:
+        0 10px 25px rgba(0,0,0,0.06),
+        0 2px 6px rgba(0,0,0,0.04);
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.profile-card:hover {
+    box-shadow:
+        0 16px 35px rgba(0,0,0,0.08),
+        0 4px 10px rgba(0,0,0,0.06);
+}
+
+/* ================= CARD HEADERS ================= */
+
+.profile-card h3 {
+    font-size: 22px;
+    font-weight: 700;
+    color: #000000;
+    padding-bottom: 5px;
+}
+
+.profile-card p {
+    font-size: 14px;
+    color: #a1a1a1;
+    line-height: 1.6;
+}
+
+/* ================= FORM ================= */
+
+.profile-card form {
+    margin-top: 22px;
+}
+
+.profile-card label {
+    display: block;
+    padding: 8px; /* ← ITO ANG KULANG */
+    font-size: 13.5px;
+    font-weight: 600;
+    color: #000000;
+}
+
+
+/* inputs */
+.profile-card input[type="text"],
+.profile-card input[type="email"],
+.profile-card input[type="password"] {
+    width: 100%;
+    padding: 12px 15px;
+    border-radius: 12px;
+    border: 1px solid #e5e7eb;
+    font-size: 14px;
+    background: #fafafa;
+    transition: all 0.25s ease;
+}
+
+.profile-card input:focus {
+    outline: none;
+    background: #ffffff;
+    border-color: #2563eb;
+    box-shadow: 0 0 0 4px rgba(37,99,235,0.15);
+}
+
+/* ================= BUTTONS ================= */
+
+.profile-card button {
+    border-radius: 14px;
+    margin-top: 10px;
+    padding: 12px 22px;
+    font-size: 14px;
+    font-weight: 700;
+    background-color: #0d3553;
+    color: #ffffff;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    border: none;
+}
+
+.profile-card button:hover {
+    cursor: pointer;
+}
+
+/* primary */
+.profile-card .bg-indigo-600,
+.profile-card .bg-blue-600 {
+    box-shadow: 0 10px 24px rgba(37,99,235,0.35);
+}
+
+/* ================= DIVIDER ================= */
+
+.profile-divider {
+    border-top: 1px solid #e5e7eb;
+    margin: 30px 0;
+}
+
+/* ================= DANGER CARD ================= */
+
+.profile-card.danger {
+    border-left: 5px solid #ef4444;
+    background: linear-gradient(180deg, #fff7f7, #ffffff);
+}
+
+.profile-card.danger h3 {
+    color: #b91c1c;
+}
+
+.profile-card.danger p {
+    color: #991b1b;
+}
+
+/* danger button */
+.profile-card.danger button {
+    margin-top: 20px;
+    box-shadow: 0 10px 25px rgba(239,68,68,0.35);
+}
+
+/* ================= SUCCESS / ERROR ================= */
+
+.profile-page .text-green-600 {
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.profile-page .text-red-600 {
+    font-size: 13px;
+}
+
+/* ================= MODAL ================= */
+
+.profile-page .fixed.inset-0 {
+    backdrop-filter: blur(6px);
+}
+
+.profile-page .fixed .bg-white {
+    border-radius: 18px;
+    box-shadow: 0 25px 60px rgba(0,0,0,0.25);
+}
+
+/* ================= ANIMATION ================= */
+
+@keyframes fadeUp {
+    from {
+        opacity: 0;
+        transform: translateY(16px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ================= RESPONSIVE ================= */
+
+@media (max-width: 1024px) {
+    .profile-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    .profile-card {
+        padding: 24px;
+        border-radius: 18px;
+    }
+
+    .page-title h2 {
+        font-size: 22px;
+    }
+}
+
+@media (max-width: 480px) {
+    .profile-card {
+        padding: 22px;
+    }
+
+    .page-title h2 {
+        font-size: 20px;
+    }
+
+    .page-title p {
+        font-size: 13.5px;
+    }
+}
+
+/* ================= PASSWORD EYE TOGGLE ================= */
+
+.password-group {
+    margin-bottom: 18px;
+}
+
+.password-label {
+    font-size: 13px;
+    font-weight: 600;
+    color: #374151;
+}
+
+.password-wrapper {
+    position: relative;
+}
+
+.password-input {
+    width: 100%;
+    padding: 12px 42px 12px 14px;
+    border-radius: 10px;
+    border: 1px solid #d1d5db;
+    font-size: 14px;
+}
+
+.password-input:focus {
+    outline: none;
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37,99,235,0.25);
+}
+
+.toggle-password {
+    position: absolute;
+    top: 50%;
+    right: 14px;
+    transform: translateY(-50%);
+    cursor: pointer;
+    color: #6b7280;
+    font-size: 15px;
+    z-index: 10;
+}
+
+.toggle-password:hover {
+    color: #111827;
+}
+

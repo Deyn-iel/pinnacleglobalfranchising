@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Exam Tutorial</title>
+<link rel="icon" type="image/png" href="{{ asset('img/logo1-removebg-preview.png') }}">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+
+@vite([
+    'resources/css/user-dashboard/app.css',
+    'resources/css/video/app.css',
+    'resources/js/user-dashboard/app.js'
+])
+
+
+</head>
+
+<body>
+
+{{-- LOGIN OVERLAY --}}
+<div class="login-overlay" id="loginOverlay">
+    <div class="login-box">
+        <i class="fas fa-user-check"></i>
+        <h2>Welcome, {{ ucwords(strtolower(Auth::user()->name)) }}!</h2>
+        <p>Loading dashboard...</p>
+    </div>
+</div>
+
+<div class="wrapper">
+
+    {{-- ✅ SIDEBAR --}}
+    @include('user-dashboard.partials-dashboard.sidebar')
+
+    <div class="main">
+
+        {{-- ✅ HEADER --}}
+        @include('user-dashboard.partials-dashboard.header')
+
+        {{-- ✅ MAIN CONTENT --}}
+        <div class="content tutorial-wrapper">
+        <div class="tutorial-page">
+
+            <div class="bg-shape one"></div>
+            <div class="bg-shape two"></div>
+
+            <header class="page-header">
+                <h1>Video Tutorial</h1>
+                <p>
+                    Make sure to watch the full tutorial video. You will be able to proceed to the exam only after the video ends.
+                </p>
+            </header>
+
+            <section class="video-section">
+                <div class="video-wrapper">
+                    <video id="tutorialVideo" controls controlsList="nodownload">
+                        <source src="{{ asset('img/copy_EEE3EA5B-4EDB-4351-9714-4A2524705B38.mov') }}" type="video/mp4">
+                    </video>
+                </div>
+            </section>
+
+            <div class="action-area">
+    <form method="GET" action="{{ route('proceed') }}">
+        <button type="submit"
+                class="btn"
+                id="proceedBtn">
+            Proceed
+        </button>
+    </form>
+</div>
+
+
+        </div>
+        </div>
+    </div>
+</div>
+
+<script>
+const video = document.getElementById("tutorialVideo");
+const proceedBtn = document.getElementById("proceedBtn");
+
+video.addEventListener("ended", () => {
+    proceedBtn.disabled = false;
+    proceedBtn.classList.add("enabled");
+});
+</script>
+
+
+
+
+
+</body>
+</html>

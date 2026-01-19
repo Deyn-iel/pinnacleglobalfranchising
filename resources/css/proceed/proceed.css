@@ -1,0 +1,175 @@
+/* ================= RESET ================= */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', system-ui, sans-serif;
+}
+
+/* ================= BODY ================= */
+body {
+    min-height: 100vh;
+    background:
+        radial-gradient(circle at top, #ffffff 0%, #969696 60%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+/* ================= CONTAINER ================= */
+.confirm-container {
+    background: rgba(255,255,255,0.97);
+    max-width: 520px;
+    width: 100%;
+    border-radius: 18px;
+    padding: 34px 30px;
+    box-shadow:
+        0 20px 50px rgba(0,0,0,0.35),
+        inset 0 1px 0 rgba(255,255,255,0.6);
+    animation: fadeUp 0.6s ease;
+    backdrop-filter: blur(4px);
+}
+
+/* ================= HEADER ================= */
+.confirm-header {
+    text-align: center;
+    margin-bottom: 24px;
+}
+
+.confirm-header h1 {
+    font-size: 26px;
+    font-weight: 800;
+    color: #0d3553;
+    letter-spacing: 0.3px;
+}
+
+.confirm-header p {
+    margin-top: 10px;
+    font-size: 14px;
+    color: #5a5a5a;
+}
+
+/* ================= RULES ================= */
+.rules {
+    background: linear-gradient(180deg, #f8fbff, #f1f6fb);
+    border-left: 5px solid #0d3553;
+    padding: 18px;
+    border-radius: 10px;
+    margin-bottom: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.rules p {
+    font-size: 15px;
+    color: #2f2f2f;
+    line-height: 1.6;
+}
+
+/* ================= CHECKBOX ================= */
+.confirm-check {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 24px;
+}
+
+.confirm-check input {
+    margin-top: 3px;
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+    accent-color: #0d3553;
+}
+
+.confirm-check label {
+    font-size: 14px;
+    color: #444;
+    line-height: 1.45;
+    cursor: pointer;
+}
+
+/* ================= CONFIRM BUTTON ================= */
+.confirm-btn {
+    display: block;
+    width: 100%;
+    padding: 15px;
+
+    text-align: center;
+    text-decoration: none;
+
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: 0.3px;
+
+    background: linear-gradient(135deg, #0d3553, #14507a);
+    color: #ffffff;
+
+    box-shadow:
+        0 8px 22px rgba(0,0,0,0.35),
+        inset 0 1px 0 rgba(255,255,255,0.25);
+
+    transition:
+        background 0.25s ease,
+        transform 0.2s ease,
+        box-shadow 0.2s ease,
+        opacity 0.2s ease;
+
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+/* ENABLED STATE */
+.confirm-btn.active {
+    cursor: pointer;
+    opacity: 1;
+}
+
+/* HOVER (ONLY WHEN ACTIVE) */
+.confirm-btn.active:hover {
+    background: linear-gradient(135deg, #14507a, #1b5f8f);
+    transform: translateY(-2px);
+    box-shadow:
+        0 14px 35px rgba(0,0,0,0.45),
+        inset 0 1px 0 rgba(255,255,255,0.35);
+}
+
+/* ACTIVE CLICK */
+.confirm-btn.active:active {
+    transform: translateY(0);
+    box-shadow: 0 8px 18px rgba(0,0,0,0.35);
+}
+
+/* ================= FOOTER ================= */
+.confirm-footer {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 13px;
+    color: #777;
+}
+
+/* ================= ANIMATION ================= */
+@keyframes fadeUp {
+    from {
+        opacity: 0;
+        transform: translateY(18px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ================= RESPONSIVE ================= */
+@media (max-width: 480px) {
+    .confirm-container {
+        padding: 26px 22px;
+    }
+
+    .confirm-header h1 {
+        font-size: 22px;
+    }
+}

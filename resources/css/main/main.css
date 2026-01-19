@@ -1,0 +1,741 @@
+* {
+    box-sizing: border-box;
+}
+
+html, body {
+    overflow-x: hidden;
+}
+body {
+    background-color: #0d3553;
+    color: #ffffff;
+    font-family: 'Helvetica', sans-serif;
+    margin: 0;
+    padding: 0;
+    scroll-behavior: smooth;
+}
+/* =========================
+   IMAGE + VIDEO SECTION
+==========================*/
+
+/* Centering Wrapper */
+.promo-image-container {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    padding: 30px 20px;
+}
+
+/* Responsive Image Styling */
+.promo-image-container img {
+    width: 100%;
+    max-width: 900px;          /* Adjust max width here */
+    height: auto;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+    transition: transform 0.4s ease, box-shadow 0.3s ease;
+}
+
+/* Mobile Optimization */
+@media (max-width: 480px) {
+    .promo-image-container {
+        padding: 20px 10px;
+    }
+}
+
+
+/* Outer wrapper */
+.image {
+    display: flex;
+    justify-content: center;
+    align-items: stretch;
+    width: 100%;
+    margin-top: 40px;
+    padding: 0 40px; /* ⬅️ PADDING ON BOTH SIDES */
+    flex-wrap: nowrap;
+}
+
+/* Match sizes using aspect ratio */
+.logo-item,
+.video-item {
+    aspect-ratio: 16 / 9;
+    width: 35%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Logo background */
+.logo-item {
+    background-color: #042a47;
+    padding: 20px;
+}
+
+/* Smaller Logo Image */
+.logo-item img {
+    width: 45%;
+    height: auto;
+    object-fit: contain;
+}
+
+/* Video */
+.video-item iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+}
+
+/* =========================
+   Responsive Breakpoints
+==========================*/
+
+/* Large Tablets */
+@media (max-width: 1200px) {
+    .image {
+        width: 100%;                    /* FIX: ensure container stretches */
+        box-sizing: border-box;         /* FIX: avoid overflow spacing */
+        
+        flex-wrap: wrap;
+        padding: 0 20px;
+        margin-top: 20px;
+
+        display: flex;
+        justify-content: center;        /* center content horizontally */
+        align-items: center;            /* center vertically */
+        text-align: center;
+    }
+
+    .logo-item,
+    .video-item {
+        width: 50%;
+        aspect-ratio: 16 / 8.9;
+        display: flex;
+        justify-content: center;        /* center inside */
+        align-items: center;
+    }
+
+    .logo-item img {
+        width: 50%;
+        margin: 0 auto;
+        display: block;                 /* ensure no right-space issues */
+    }
+}
+
+/* Tablets */
+@media (max-width: 768px) {
+    .image {
+        width: 100%;                    /* FIX */
+        box-sizing: border-box;         /* FIX */
+
+        padding: 0 15px;
+        margin-top: 40px;
+
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+    }
+
+    .logo-item img {
+        width: 50%;
+        margin: 0 auto;
+        display: block;
+    }
+}
+
+/* Mobile */
+@media (max-width: 576px) {
+    .image {
+        width: 100%;                    /* FIX */
+        box-sizing: border-box;         /* FIX */
+
+        padding: 0 10px;
+        margin-top: 40px;
+
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+    }
+
+    .logo-item img {
+        width: 50%;
+        margin: 0 auto;
+        display: block;
+    }
+
+    .logo-item,
+    .video-item {
+        width: 100%;
+        display: flex;
+        justify-content: center;        /* center content */
+        align-items: center;
+    }
+}
+
+
+
+/* =========================
+   CIRCLE SECTION FIX
+==========================*/
+
+.circle-box {
+    width: 95%;
+    height: auto;
+    background: #ffffff;
+    border-radius: 50%;
+    aspect-ratio: 1 / 1; /* perfect circle */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 30px;
+    overflow: hidden;
+    margin: 0 auto;
+}
+
+.circle-box img {
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+}
+
+/* Tablets */
+@media (max-width: 768px) {
+    .circle-box {
+        width: 70%;
+    }
+}
+
+/* Mobile */
+@media (max-width: 576px) {
+    .circle-box {
+        width: 90%;
+        padding: 20px;
+    }
+}
+
+
+
+/* =========================
+   FRANCHISE SECTION
+=========================*/
+
+.franchise-title, .inquire-title {
+    font-size: 25px;
+    font-weight: 700;
+    letter-spacing: 1px;
+}
+
+.underline {
+    width: 120px;
+    height: 2px;
+    background-color: #ffffff;
+    margin: 20px auto;
+}
+
+
+/* Brand Text */
+.brand-name {
+    font-size: 26px;
+    font-weight: 600;
+}
+
+.brand-desc {
+    font-size: 18px;
+    opacity: 0.9;
+}
+
+
+/* =========================
+   INQUIRE SECTION
+=========================*/
+
+/* Center form fields */
+form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+
+
+/* Focus effect */
+.form-field:focus {
+    outline: none;
+    border-color: #00c7ff;
+    background: rgba(255, 255, 255, 0.12);
+    box-shadow: 0 0 8px rgba(0, 199, 255, 0.6);
+}
+
+/* Hover effect */
+.form-field:hover {
+    border-color: #ffffff;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .form-field {
+        width: 80%;
+    }
+}
+
+@media (max-width: 576px) {
+    .form-field {
+        width: 100%;
+    }
+}
+
+/* Wrapper */
+.field-group {
+    position: relative;
+    width: 65%;
+    margin-bottom: 20px;
+}
+
+/* Input style */
+.form-field {
+    width: 100%;
+    padding: 14px 15px;
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    color: #fff;
+    font-size: 16px;
+    border-radius: 0;
+    transition: 0.3s ease;
+}
+
+/* Placeholder normal state */
+.form-field::placeholder {
+    color: rgba(255, 255, 255, 0.7);
+    transition: 0.3s ease;
+}
+
+/* Floating label */
+.field-group label {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none;
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 16px;
+    transition: 0.3s ease;
+}
+.field-group .label-message {
+    top: 20%;
+}
+/* When focusing */
+.form-field:focus::placeholder {
+    opacity: 0; /* hides placeholder smoothly */
+}
+
+/* FLOAT when focused or has text */
+.form-field:focus + label,
+.form-field:not(:placeholder-shown) + label {
+    top: -10px;
+    left: 12px;
+    font-size: 13px;
+    color: #00c7ff;
+    padding: 0 6px;
+}
+
+/* Focus border glow */
+.form-field:focus {
+    border-color: #00c7ff;
+    outline: none;
+    background: rgba(255, 255, 255, 0.12);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .field-group { width: 80%; }
+}
+
+@media (max-width: 576px) {
+    .field-group { width: 100%; }
+}
+
+
+.btn-submit {
+    background: #ffffff;
+    color: #0d3553;
+    border: none;
+    padding: 10px 35px;
+    font-size: 18px;
+    font-weight: 600;
+    border-radius: 5px;
+}
+
+.recaptcha {
+    margin-top: 60px;
+    font-size: 14px;
+    opacity: 0.7;
+}
+
+/* ===============================
+   FRANCHISE NOW PAGE SECTION
+   PROFESSIONAL + ANIMATION
+================================*/
+.franchise-now-container {
+    margin-top: 60px;
+    padding: 10px 30px;
+    background: #0d3553;
+    text-align: center;
+    overflow: hidden;
+}
+
+/* Title */
+.franchise-now-title {
+    font-family: 'Times New Roman', serif;
+    font-size: 2.8rem;
+    font-weight: 800;
+    color: #ffffff;
+    letter-spacing: 1px;
+    animation: fadeDown 0.8s ease-out;
+}
+
+.franchise-now-underline {
+    width: 90px;
+    height: 4px;
+    background: #ffffff;
+    margin: 12px auto 30px;
+    border-radius: 3px;
+    animation: fadeDown 1s ease-out;
+}
+
+.franchise-now-subtext {
+    font-size: 25px;
+    font-weight: 700;
+    letter-spacing: 1px;
+}
+
+/* ===========================================
+   MODERN + PROFESSIONAL FRANCHISE STEPS DESIGN
+   GLASS + GRADIENT + DEPTH + RESPONSIVE
+=========================================== */
+.franchise-steps {
+    max-width: 1100px;
+    width: 100%;
+    margin: 0 auto;
+
+    display: grid;
+
+    /* 🔑 auto-fill para mapuno ang space */
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+
+    gap: 40px;
+    padding: 0;
+}
+
+
+
+/* ================= STEP ================= */
+.step {
+    text-align: center;
+}
+
+/* ================= RING WRAPPER (KEY FIX) ================= */
+.ring-wrap {
+    width: min(260px, 32vw);
+    margin: 20px auto;
+    aspect-ratio: 1 / 1;   /* 🔒 LOCK CIRCLE */
+}
+
+/* ================= RING ================= */
+.ring {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+}
+
+/* outer thin ring */
+.ring::before {
+    content: "";
+    position: absolute;
+    inset: -6%;
+    border: 2px solid #e5e7eb;
+    border-radius: 50%;
+}
+
+/* inner white circle (floating) */
+.ring::after {
+    content: "";
+    position: absolute;
+    inset: 14%;
+    background: #ffffff;
+    border-radius: 50%;
+    box-shadow:
+        0 12px 20px rgba(0,0,0,0.22),
+        0 4px 8px rgba(0,0,0,0.16);
+}
+
+/* number */
+.ring span {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    font-size: clamp(14px, 3vw, 22px);
+    line-height: 1.1;
+    color: #0f172a;
+}
+
+.ring span small {
+    display: block;
+    font-size: clamp(8px, 2vw, 11px);
+    font-weight: 600;
+    color: #6b7280;
+}
+
+/* ================= COLORS ================= */
+/* Warm to Cool – Premium Flow */
+.ring-1 { background: conic-gradient(#ffffff 0 300deg, #dadada 300deg); } /* Gold */
+.ring-2 { background: conic-gradient(#ffffff 0 300deg, #dadada 300deg); } /* Orange */
+.ring-3 { background: conic-gradient(#ffffff 0 300deg, #dadada 300deg); } /* Sky Blue */
+.ring-4 { background: conic-gradient(#ffffff 0 300deg, #dadada 300deg); } /* Green */
+.ring-5 { background: conic-gradient(#ffffff 0 300deg, #dadada 300deg); } /* Purple */
+.ring-6 { background: conic-gradient(#ffffff 0 300deg, #dadada 300deg); } /* Red */
+
+
+/* ================= TEXT ================= */
+.step h4 {
+    margin-top: 30px;
+    font-size: 17px;
+    font-weight: 700;
+    color: #ffffff;
+}
+
+.step p {
+    margin-top: 6px;
+    font-size: 15px;
+    line-height: 1.6;
+    color: #bebebe;
+}
+
+/* ================= TABLET ================= */
+@media (max-width: 900px) {
+    .franchise-steps {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+/* ===============================
+   FULL WIDTH FIX (MOBILE)
+================================ */
+@media (max-width: 768px) {
+
+    /* gawing full screen width */
+    .franchise-now-container,
+    .franchise-section {
+        width: 100vw;
+        margin-left: calc(50% - 50vw);
+        margin-right: calc(50% - 50vw);
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+
+    /* alisin ang max-width constraint */
+    .franchise-steps {
+        max-width: none;
+        width: 100%;
+    }
+}
+
+/* ================= MOBILE ================= */
+@media (max-width: 600px) {
+    .franchise-steps {
+        grid-template-columns: 1fr;
+        gap: 0;
+    }
+
+    .step {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        text-align: left;
+    }
+
+    .ring-wrap {
+        margin-top: 0;
+        width: 120px;   /* FIXED SAFE SIZE */
+        flex-shrink: 0;
+    }
+
+    .step h4 {
+        margin-top: 0;
+        font-size: 13px;
+    }
+
+    .step p {
+        font-size: 13px;
+    }
+}
+
+/* =============================
+   CTA Button
+============================= */
+.franchise-now-button-wrapper {
+    margin-top: 50px;
+    text-align: center;
+}
+
+.franchise-now-btn {
+    background: linear-gradient(135deg, #ffffff, #e9eef4);
+    color: #073047;
+    padding: 15px 45px;
+    font-size: 1.15rem;
+    font-weight: 700;
+
+    border-radius: 12px;
+    text-decoration: none;
+
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.28);
+    transition: 0.1s ease;
+}
+
+.franchise-now-btn:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 14px 35px rgba(0, 150, 255, 0.4);
+}
+
+
+/* =============================
+   Animation
+============================= */
+@keyframes fadeUp {
+    0% { opacity: 0; transform: translateY(25px); }
+    100% { opacity: 1; transform: translateY(0); }
+}
+
+
+/* ===============================
+   ANIMATIONS
+================================*/
+@keyframes fadeUp {
+    0% { opacity: 0; transform: translateY(25px); }
+    100% { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeIn {
+    0% { opacity: 0; }
+    100% { opacity: 1; }
+}
+
+@keyframes fadeDown {
+    0% { opacity: 0; transform: translateY(-20px); }
+    100% { opacity: 1; transform: translateY(0); }
+}
+
+/* ===============================
+   RESPONSIVE
+================================*/
+@media (max-width: 600px) {
+    .franchise-now-title {
+        font-size: 2.2rem;
+    }
+
+    .franchise-now-subtext {
+        font-size: 1.05rem;
+    }
+
+    .step {
+        padding: 28px 20px;
+    }
+
+    .step h3 {
+        font-size: 1.25rem;
+    }
+}
+    
+.section-title {
+    font-family: 'Times New Roman', serif;
+    text-align: center;
+    margin: 90px 0 20px;
+    font-size: 2.2rem;
+    font-weight: 700;
+    color: #ffffff;
+}
+
+.drinks-container {
+    max-width: 1100px;
+    margin: auto;
+    padding: 20px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 30px;
+}
+
+.drink-card {
+    padding: 20px;
+    border-radius: 18px;
+    text-align: center;
+    transition: transform 0.3s ease;
+}
+
+.drink-card:hover {
+    transform: translateY(-5px);
+}
+
+.drink-card img {
+    width: 100%;
+    border-radius: 16px;
+}
+
+/* FIX: Ensure AOS elements stay visible */
+[data-aos] {
+    opacity: 0;
+    transform: translateY(40px);
+    transition-property: opacity, transform !important;
+    transition-duration: 1s !important;
+}
+
+[data-aos].aos-animate {
+    opacity: 0;
+    transform: translateY(0);
+}
+
+/* =====================================
+   SAFE SCROLL ANIMATIONS (NO HTML CHANGES)
+===================================== */
+
+/* Default hidden state */
+.image,
+.franchise-section,
+.circle-box,
+.franchise-now-container,
+.franchise-steps,
+.step,
+.franchise-now-button-wrapper,
+.brand-name,
+.brand-desc {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.9s ease, transform 0.9s ease;
+}
+
+/* Show state */
+.animate-show {
+    opacity: 1 !important;
+    transform: translateY(0) !important;
+}
+
+/* Slight stagger for steps */
+.step:nth-child(1) { transition-delay: 0.1s; }
+.step:nth-child(2) { transition-delay: 0.2s; }
+.step:nth-child(3) { transition-delay: 0.3s; }
+.step:nth-child(4) { transition-delay: 0.4s; }
+.step:nth-child(5) { transition-delay: 0.5s; }
+.step:nth-child(6) { transition-delay: 0.6s; }
+
+/* Mobile optimization */
+@media (max-width: 576px) {
+    .image,
+    .franchise-section,
+    .circle-box,
+    .franchise-now-container,
+    .step {
+        transform: translateY(20px);
+        transition-duration: 0.6s;
+    }
+}
