@@ -1,96 +1,76 @@
 /* ================= ADMIN SIDEBAR ================= */
 .admin-sidebar {
     width: 260px;
-    background: linear-gradient(180deg, #0f172a, #020617);
-    color: #fff;
-    z-index: 1050;
     position: fixed;
-    inset: 0 auto 0 0; 
-    display: flex;        
-    flex-direction: column; 
-}
-/* ================= ENHANCED DIVIDER ================= */
-.sidebar-divider {
-    border: none;
-    height: 2px;
-    margin: 12px 20px;
+    inset: 0 auto 0 0;
+    z-index: 1050;
 
-    background: linear-gradient(
-        to right,
-        transparent,
-        white,
-        transparent
-    );
+    display: flex;
+    flex-direction: column;
+
+    background: linear-gradient(180deg, #0f172a, #020617);
+    color: #cbd5f5;
 }
 
-/* ================= BOTTOM GROUP ================= */
-.sidebar-bottom {
-    margin-top: auto; /* 🔥 Tinutulak pababa ang HR + FOOTER */
-}
-
-
-/* ================= SIDEBAR FOOTER ================= */
-.sidebar-footer {
-    margin-top: auto; /* 🔥 ITO ANG SUSI */
-    
-    padding: 14px 18px 18px;
-    font-size: 12px;
-    text-align: center;
-    color: rgba(255, 255, 255, 0.75);
-    line-height: 1.5;
-    user-select: none;
-
-    opacity: 0.9;
-    transition: opacity 0.25s ease;
-}
-
-
-
-/* BRAND */
+/* ================= BRAND ================= */
 .sidebar-brand {
     height: 70px;
     display: flex;
     align-items: center;
     gap: 12px;
+
     padding: 0 22px;
     font-size: 18px;
     font-weight: 800;
     letter-spacing: 0.4px;
+    color: #fff;
+
     border-bottom: 1px solid rgba(255,255,255,0.08);
 }
 
 .sidebar-brand i {
     font-size: 20px;
-    color: #ffffff;
+    color: #38bdf8;
 }
 
-/* NAV */
+/* ================= NAV ================= */
 .sidebar-nav {
     list-style: none;
     padding: 18px 0;
     margin: 0;
+    flex: 1;
 }
 
-/* ITEM */
 .sidebar-nav .nav-item {
     margin: 4px 0;
 }
 
-/* LINK */
+/* SECTION LABEL */
+.nav-section {
+    font-size: 11px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: #64748b;
+    margin: 18px 22px 6px;
+}
+
+/* LINKS */
 .sidebar-nav .nav-link {
     display: flex;
     align-items: center;
     gap: 14px;
+
     padding: 12px 22px;
+    border-radius: 10px;
+
     color: #cbd5f5;
     font-size: 14.5px;
     font-weight: 600;
     text-decoration: none;
-    transition: all 0.25s ease;
-    position: relative;
+
+    transition: background 0.25s ease, color 0.25s ease;
 }
 
-/* ICON */
 .sidebar-nav .nav-link i {
     width: 20px;
     text-align: center;
@@ -99,7 +79,7 @@
 
 /* HOVER */
 .sidebar-nav .nav-link:hover {
-    background: rgba(255,255,255,0.08);
+    background: rgba(56,189,248,0.12);
     color: #ffffff;
 }
 
@@ -111,18 +91,50 @@
         rgba(56,189,248,0.05)
     );
     color: #ffffff;
-    border-left: 4px solid #0004ff;
+    border-left: 4px solid #2563eb;
     padding-left: 18px;
 }
 
-.sidebar-nav .nav-link.active i {
-    color: #ffffff;
+/* DISABLED */
+.nav-item.disabled .nav-link {
+    opacity: 0.4;
+    cursor: not-allowed;
 }
 
-/* ================= MOBILE ================= */
+.nav-item.disabled small {
+    margin-left: auto;
+    font-size: 10px;
+    opacity: 0.7;
+}
+
+/* ================= DIVIDER ================= */
+.sidebar-divider {
+    border: none;
+    height: 2px;
+    margin: 12px 20px;
+    background: linear-gradient(to right, transparent, white, transparent);
+}
+
+/* ================= FOOTER ================= */
+.sidebar-bottom {
+    margin-top: auto;
+    padding-top: 10px;
+}
+
+.sidebar-footer {
+    padding: 14px 18px 18px;
+    font-size: 12px;
+    text-align: center;
+    color: rgba(255,255,255,0.75);
+    line-height: 1.5;
+    user-select: none;
+}
+
+/* ================= MOBILE SIDEBAR ================= */
 @media (max-width: 992px) {
     .admin-sidebar {
         transform: translateX(-100%);
+        transition: transform 0.3s ease;
     }
 
     .admin-sidebar.show {
@@ -130,37 +142,39 @@
     }
 }
 
-
 /* ================= ADMIN TOPBAR ================= */
 .admin-topbar {
     height: 64px;
     padding: 0 26px;
-    background: linear-gradient(135deg, #0f172a, #020617);
+
     display: flex;
     align-items: center;
     justify-content: space-between;
+
+    background: linear-gradient(135deg, #0f172a, #020617);
     color: #ffffff;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.35);
+
     position: sticky;
     top: 0;
     z-index: 1200;
+
+    box-shadow: 0 4px 20px rgba(0,0,0,0.35);
 }
 
-/* LEFT */
+/* TOPBAR LEFT */
 .topbar-left {
     display: flex;
     align-items: center;
     gap: 12px;
     font-size: 18px;
     font-weight: 800;
-    letter-spacing: 0.4px;
 }
 
 .topbar-left i {
     font-size: 20px;
 }
 
-/* RIGHT */
+/* TOPBAR RIGHT */
 .topbar-right {
     display: flex;
     align-items: center;
@@ -181,13 +195,16 @@
     width: 34px;
     height: 34px;
     border-radius: 50%;
-    background: linear-gradient(135deg, #2563eb, #1e40af);
+
     display: flex;
     align-items: center;
     justify-content: center;
-    font-weight: 800;
-    font-size: 14px;
+
+    background: linear-gradient(135deg, #2563eb, #1e40af);
     color: #ffffff;
+
+    font-size: 14px;
+    font-weight: 800;
     box-shadow: 0 4px 12px rgba(37,99,235,0.6);
 }
 
@@ -196,19 +213,19 @@
     display: flex;
     align-items: center;
     gap: 6px;
+
     background: #dc2626;
     border: none;
     color: #ffffff;
+
     padding: 7px 14px;
     border-radius: 999px;
+
     font-size: 13px;
     font-weight: 700;
     cursor: pointer;
-    transition: all 0.25s ease;
-}
 
-.logout-btn i {
-    font-size: 13px;
+    transition: all 0.25s ease;
 }
 
 .logout-btn:hover {
@@ -217,7 +234,7 @@
     transform: translateY(-1px);
 }
 
-/* ================= MOBILE ================= */
+/* MOBILE TOPBAR */
 @media (max-width: 640px) {
     .admin-user .name {
         display: none;

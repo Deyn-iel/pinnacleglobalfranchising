@@ -50,9 +50,8 @@
                 <h4>Active Users</h4>
                 <h2>{{ $activeUsers }}</h2>
             </div>
-
-                <div class="card"><h4>Exam Schedule</h4><h2>0</h2></div>
-                <div class="card"><h4>Notifications</h4><h2>3</h2></div>
+{{-- 
+                <div class="card"><h4>Exam Schedule</h4><h2>0</h2></div> --}}
                 <div class="card">
                     <h4>Status</h4>
                     <h2 class="status-online">

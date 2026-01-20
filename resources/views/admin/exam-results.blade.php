@@ -4,70 +4,98 @@
     <title>Exam Results</title>
     <link rel="icon" type="image/png" href="{{ asset('img/logo1-removebg-preview.png') }}">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Alpine.js (Sidebar Toggle) -->
-    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
-    @vite([
-    'resources/css/admin/app.css'
-])
-<style>
-    .alert {
-    transition: opacity 0.6s ease, transform 0.6s ease;
-}
+    @vite(['resources/css/admin/app.css'])
 
-.alert.fade:not(.show) {
-    opacity: 0;
-    transform: translateY(-10px);
-}
-</style>
+    <style>
+        .user-block {
+            border: 1px solid #e5e7eb;
+            border-radius: 6px;
+            padding: 15px;
+            margin-bottom: 20px;
+            background: #fff;
+        }
+
+        .user-name {
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .exam-row {
+            padding: 8px 0;
+            border-bottom: 1px solid #f1f5f9;
+            font-size: 14px;
+        }
+
+        .exam-row:last-child {
+            border-bottom: none;
+        }
+
+        .muted {
+            color: #6b7280;
+            font-size: 13px;
+        }
+    </style>
 </head>
+
 <body>
-<!-- NAV -->
-    @include('admin-sidebar.navbar')
-<div class="container mt-5">
 
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2> Exam Results</h2>
+@include('admin-sidebar.navbar')
 
-        <a href="{{ route('admin.uploading-exams') }}" class="btn btn-secondary">
+<div class="container mt-5 mb-5">
+
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h4 class="fw-semibold mb-0">Exam Results</h4>
+
+        <a href="{{ route('admin.uploading-exams') }}"
+           class="btn btn-outline-secondary btn-sm">
             ← Back
         </a>
     </div>
 
-    @if(session('success'))
-<div id="uploadSuccessAlert"
-     class="alert alert-success alert-dismissible fade show d-flex align-items-center gap-2"
-     role="alert">
-     
-    <i class="fas fa-check-circle fs-5"></i>
-    <strong>{{ session('success') }}</strong>
-</div>
-@endif
+    @php
+        $groupedResults = $results->groupBy('user_id');
+    @endphp
 
-    <table class="table table-bordered table-striped align-middle">
-        <thead class="table-dark">
-            <tr>
-                <th>User</th>
-                <th>Exam</th>
-                <th>Score</th>
-                <th>Total</th>
-                <th>Date Taken</th>
-                <th>Action</th>
-            </tr>
-        </thead>
+    @forelse($groupedResults as $userResults)
 
-        <tbody>
-           @forelse($results as $result)
-<tr>
-    <td>{{ $result->user->name }}</td>
-    <td>{{ $result->exam->title }}</td>
-    <td><strong>{{ $result->score }}</strong></td>
-    <td>{{ $result->total_questions }}</td>
-    <td>{{ $result->created_at->format('M d, Y h:i A') }}</td>
-    <td class="d-flex gap-2">
+        @php
+            $user = $userResults->first()->user;
+        @endphp
+
+        <!-- USER BLOCK -->
+        <div class="user-block">
+
+            <!-- USER NAME -->
+            <div class="user-name">
+                {{ $user->name }}
+                <span class="muted">({{ $user->email ?? 'User' }})</span>
+            </div>
+
+            <!-- EXAMS -->
+            @foreach($userResults as $result)
+                <div class="exam-row d-flex justify-content-between align-items-center">
+
+                    <div>
+                        <strong>{{ $result->exam->title }}</strong>
+                        <div class="muted">
+                            {{ $result->created_at->format('M d, Y h:i A') }}
+                        </div>
+                    </div>
+
+                    <div class="text-end">
+                        <span class="me-3">
+                            <strong>{{ $result->score }}</strong> /
+                            {{ $result->total_questions }}
+                        </span>
+
+                        <div class="d-flex gap-2">
+
     <a href="{{ route('admin.exam-results.view', $result->id) }}"
-       class="btn btn-sm btn-primary">
-        View
+       class="btn btn-sm btn-light border"
+       title="View Result">
+        <i class="fas fa-eye text-primary"></i>
     </a>
 
     <form action="{{ route('admin.exam-results.delete', $result->id) }}"
@@ -75,58 +103,30 @@
           onsubmit="return confirm('Delete this exam result?')">
         @csrf
         @method('DELETE')
-        <button class="btn btn-sm btn-danger">Delete</button>
+
+        <button class="btn btn-sm btn-light border text-danger"
+                title="Delete Result">
+            <i class="fas fa-trash"></i>
+        </button>
     </form>
-</td>
-
-</tr>
-
-@if($result->essay_answers)
-<tr>
-    <td colspan="6">
-        <strong>📝 Essay Answers:</strong>
-        @php
-            $essayAnswers = json_decode($result->essay_answers, true);
-        @endphp
-
-        @foreach($essayAnswers as $qid => $answer)
-            <div class="mt-2">
-                <strong>Question ID {{ $qid }}:</strong>
-                <p class="mb-1">{{ $answer }}</p>
-            </div>
-        @endforeach
-    </td>
-</tr>
-@endif
-@empty
-
-                <tr>
-                    <td colspan="6" class="text-center text-muted">
-                        No exam results yet.
-                    </td>
-                </tr>
-            @endforelse
-        </tbody>
-    </table>
 
 </div>
-<script>
-document.addEventListener("DOMContentLoaded", () => {
-    const alertBox = document.getElementById("uploadSuccessAlert");
 
-    if (alertBox) {
-        // wait 2.5 seconds then fade out
-        setTimeout(() => {
-            alertBox.classList.remove("show");
-            alertBox.classList.add("fade");
 
-            // fully remove after animation
-            setTimeout(() => {
-                alertBox.remove();
-            }, 600);
-        }, 2500);
-    }
-});
-</script>
+                    </div>
+
+                </div>
+            @endforeach
+
+        </div>
+
+    @empty
+        <div class="text-center text-muted mt-5">
+            No exam results yet.
+        </div>
+    @endforelse
+
+</div>
+
 </body>
 </html>

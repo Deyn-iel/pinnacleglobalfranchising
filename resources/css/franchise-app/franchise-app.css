@@ -435,10 +435,9 @@ hr {
 
 /* SUCCESS STYLE */
 .custom-alert-success {
-    background: #f9fffc;
-    color: #065f46;
+    background: #00a352;
+    color: #f7f7f7;
 
-    border-left: 4px solid #22c55e;
     box-shadow: 0 4px 12px rgba(0,0,0,0.08);
 }
 

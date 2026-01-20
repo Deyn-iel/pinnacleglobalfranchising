@@ -277,8 +277,7 @@ button:disabled {
 
 
 <div class="warning">
-    <strong>Important:</strong> Do not take screenshots, record the screen, or switch tabs during the exam.
-    Any form of cheating will automatically submit your exam.
+    <strong>Godbless</strong> you.
 </div>
 
 <div class="exam-container">
@@ -633,7 +632,7 @@ function triggerCheat(reason) {
 
     setTimeout(() => {
         document.getElementById("submitForm").submit();
-    }, 3000);
+    }, 1000);
 }
 
 /* ===============================

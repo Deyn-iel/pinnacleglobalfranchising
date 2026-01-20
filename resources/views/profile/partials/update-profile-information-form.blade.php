@@ -7,6 +7,21 @@
         </p>
     </header>
 
+    @if (session('status') === 'updated')
+                <p
+                x-data="{ show: true }"
+                x-show="show"
+                x-transition
+                x-init="setTimeout(() => show = false, 2000)"
+                style="color:#16a34a; padding-top:15px; margin-bottom:-5px;"
+                class="text-sm font-semibold"
+            >
+                Saved successfully.
+            </p>
+
+
+            @endif
+            
     <form id="send-verification" method="post" action="{{ route('verification.send') }}">
         @csrf
     </form>
@@ -80,7 +95,6 @@
                         type="password"
                         class="mt-1 block w-full password-input"
                         autocomplete="current-password"
-                        required
                     />
 
                     <i class="far fa-eye toggle-password"
@@ -105,7 +119,6 @@
                         type="password"
                         class="mt-1 block w-full password-input"
                         autocomplete="new-password"
-                        required
                     />
 
                     <i class="far fa-eye toggle-password"
@@ -129,7 +142,6 @@
                         type="password"
                         class="mt-1 block w-full password-input"
                         autocomplete="new-password"
-                        required
                     />
 
                     <i class="far fa-eye toggle-password"
@@ -145,17 +157,6 @@
                 {{ __('Save Changes') }}
             </x-primary-button>
 
-            @if (session('status') === 'updated')
-                <p
-                    x-data="{ show: true }"
-                    x-show="show"
-                    x-transition
-                    x-init="setTimeout(() => show = false, 2000)"
-                    class="text-sm text-green-600"
-                >
-                    {{ __('Saved successfully.') }}
-                </p>
-            @endif
         </div>
 
     </form>

@@ -1,11 +1,15 @@
 <aside class="admin-sidebar position-fixed top-0 start-0 h-100">
+
     <!-- BRAND -->
     <div class="sidebar-brand">
         <i class="fas fa-shield-halved"></i>
+        <span>Admin Panel</span>
     </div>
 
     <!-- NAV -->
     <ul class="sidebar-nav">
+
+        <li class="nav-section">MAIN</li>
 
         <li class="nav-item">
             <a href="{{ route('admin.dashboard') }}"
@@ -15,23 +19,15 @@
             </a>
         </li>
 
-        <li class="nav-item" style="opacity:0.5; cursor:not-allowed;">
-            <a href="javascript:void(0)"
-            class="nav-link"
-            onclick="return false;"
-            style="pointer-events:none;">
+        <li class="nav-item disabled">
+            <a href="javascript:void(0)" class="nav-link">
                 <i class="fas fa-calendar-check"></i>
                 <span>Attendance</span>
+                <small>soon</small>
             </a>
         </li>
 
-        {{-- <li class="nav-item">
-            <a href="{{ route('admin.attendance') }}"
-               class="nav-link {{ request()->routeIs('admin.attendance') ? 'active' : '' }}">
-                <i class="fas fa-calendar-check"></i>
-                <span>Attendance</span>
-            </a>
-        </li> --}}
+        <li class="nav-section">MANAGEMENT</li>
 
         <li class="nav-item">
             <a href="{{ route('admin.application') }}"
@@ -50,15 +46,6 @@
         </li>
 
         <li class="nav-item">
-            <a href="{{ route('admin.admin-profile.edit') }}"
-            class="nav-link {{ request()->routeIs('admin.admin-profile.edit') ? 'active' : '' }}">
-                <i class="fas fa-user-gear"></i>
-                <span>My Profile</span>
-            </a>
-        </li>
-
-
-        <li class="nav-item">
             <a href="{{ route('admin.requirements') }}"
                class="nav-link {{ request()->routeIs('admin.requirements') ? 'active' : '' }}">
                 <i class="fas fa-file-lines"></i>
@@ -74,11 +61,13 @@
             </a>
         </li>
 
+        <li class="nav-section">USERS & EXAMS</li>
+
         <li class="nav-item">
             <a href="{{ route('admin.users-account') }}"
                class="nav-link {{ request()->routeIs('admin.users-account') ? 'active' : '' }}">
                 <i class="fas fa-users"></i>
-                <span>Users Accounts</span>
+                <span>User Accounts</span>
             </a>
         </li>
 
@@ -90,13 +79,24 @@
             </a>
         </li>
 
+        <li class="nav-section">ACCOUNT</li>
+
+        <li class="nav-item">
+            <a href="{{ route('admin.admin-profile.edit') }}"
+               class="nav-link {{ request()->routeIs('admin.admin-profile.edit') ? 'active' : '' }}">
+                <i class="fas fa-user-gear"></i>
+                <span>My Profile</span>
+            </a>
+        </li>
 
     </ul>
-    <!-- 🔥 BOTTOM SECTION -->
+
+    <!-- FOOTER -->
     <div class="sidebar-bottom">
-        <hr class="sidebar-divider">
         <div class="sidebar-footer">
-            Pinnacle Global Franchising © {{ date('Y') }}
+            Pinnacle Global Franchising  
+            <small>© {{ date('Y') }}</small>
         </div>
     </div>
+
 </aside>
