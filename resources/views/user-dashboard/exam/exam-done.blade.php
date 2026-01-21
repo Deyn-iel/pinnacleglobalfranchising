@@ -31,7 +31,7 @@
         padding: 38px 32px;
         text-align: center;
         box-shadow: 0 30px 70px rgba(0,0,0,0.18);
-        border-top: 6px solid #dc2626;
+        border-top  : 6px solid #dc2626;
         animation: shake 0.4s ease-in-out;
     }
 
@@ -58,30 +58,33 @@
         box-shadow: 0 12px 30px rgba(220,38,38,0.45);
     }
 
-    h2 {
-        font-size: 26px;
-        font-weight: 800;
-        color: #7f1d1d;
-        margin-bottom: 12px;
-        letter-spacing: 0.3px;
-    }
+    /* ================= TITLE ================= */
+h2 {
+    font-size: 26px;
+    font-weight: 800;
+    color: #7f1d1d;
+    letter-spacing: 0.4px;
+    margin-bottom: 14px;
+}
 
-    p {
-        font-size: 15px;
-        color: #374151;
-        line-height: 1.7;
-        margin-bottom: 18px;
-    }
+/* ================= TEXT ================= */
+p {
+    font-size: 15px;
+    color: #374151;
+    line-height: 1.7;
+    margin-bottom: 22px;
+}
 
-    .info-box {
-        background: #fff1f2;
-        padding: 16px;
-        border-radius: 14px;
-        font-size: 14px;
-        color: #7f1d1d;
-        margin-bottom: 20px;
-        border: 1px solid #fecaca;
-    }
+/* ================= INFO BOX ================= */
+.info-box {
+    background: #fff1f2;
+    border: 1px solid #fecaca;
+    border-radius: 14px;
+    padding: 18px;
+    font-size: 14px;
+    color: #7f1d1d;
+    margin-bottom: 26px;
+}
 
     .countdown {
         font-size: 14px;
@@ -124,7 +127,7 @@
 <div class="limit-card">
     <div class="icon">⛔</div>
 
-    <h2>ACCESS DENIED</h2>
+    <h2>ACCESS RESTRICTED</h2>
 
     <p>
         You are no longer allowed to take or start any additional exams.

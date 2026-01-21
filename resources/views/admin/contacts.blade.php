@@ -69,6 +69,10 @@
 .sidebar-link.active i {
     color: #ffffff;
 }
+.no-hover {
+    pointer-events: none;
+    background-color: transparent !important;
+}
 
     </style>
 </head>
@@ -154,9 +158,10 @@
     </tr>
 @empty
     <tr>
-        <td colspan="5" class="text-center text-muted py-4">
-            No messages received yet.
-        </td>
+        <td colspan="5" class="text-center text-muted py-4 no-hover">
+    No messages received yet.
+</td>
+
     </tr>
 @endforelse
 </tbody>

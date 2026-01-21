@@ -432,11 +432,12 @@ form {
     text-align: center;
 }
 
-/* ================= RING WRAPPER (KEY FIX) ================= */
+/* ================= RING WRAPPER ================= */
 .ring-wrap {
-    width: min(260px, 32vw);
-    margin: 20px auto;
-    aspect-ratio: 1 / 1;   /* 🔒 LOCK CIRCLE */
+    width: clamp(140px, 30vw, 260px); /* 🔥 auto scale */
+    aspect-ratio: 1 / 1;             /* perfect circle */
+    margin: clamp(12px, 3vw, 24px) auto;
+    position: relative;
 }
 
 /* ================= RING ================= */
@@ -448,46 +449,48 @@ form {
     display: flex;
     align-items: center;
     justify-content: center;
-    font-weight: 800;
+    font-weight: 700;
 }
 
-/* outer thin ring */
+/* ================= OUTER RING ================= */
 .ring::before {
     content: "";
     position: absolute;
-    inset: -6%;
-    border: 2px solid #e5e7eb;
+    inset: -5%;
+    border: clamp(1px, 0.4vw, 2px) solid #e5e7eb;
     border-radius: 50%;
 }
 
-/* inner white circle (floating) */
+/* ================= INNER FLOATING CIRCLE ================= */
 .ring::after {
     content: "";
     position: absolute;
-    inset: 14%;
+    inset: 15%;
     background: #ffffff;
     border-radius: 50%;
     box-shadow:
-        0 12px 20px rgba(0,0,0,0.22),
-        0 4px 8px rgba(0,0,0,0.16);
+        0 clamp(6px, 1.5vw, 12px) clamp(12px, 3vw, 20px) rgba(0,0,0,0.18),
+        0 clamp(2px, 0.8vw, 6px) clamp(6px, 2vw, 10px) rgba(0,0,0,0.12);
 }
 
-/* number */
+/* ================= TEXT ================= */
 .ring span {
     position: relative;
     z-index: 2;
     text-align: center;
-    font-size: clamp(14px, 3vw, 22px);
+    font-size: clamp(16px, 4vw, 26px);
     line-height: 1.1;
     color: #0f172a;
 }
 
 .ring span small {
     display: block;
-    font-size: clamp(8px, 2vw, 11px);
+    margin-top: 2px;
+    font-size: clamp(10px, 2.5vw, 13px);
     font-weight: 600;
     color: #6b7280;
 }
+
 
 /* ================= COLORS ================= */
 /* Warm to Cool – Premium Flow */

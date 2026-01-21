@@ -44,7 +44,7 @@ class ExamController extends Controller
             ->where('exam_id', $exam->id)
             ->first();
 
-        // ❌ attempt limit reached
+        // ❌ already attempted
         if ($attempt && $attempt->attempt_count >= 1) {
             return view('user-dashboard.exam.exam-done');
         }
@@ -55,14 +55,26 @@ class ExamController extends Controller
                 'user_id'       => $userId,
                 'exam_id'       => $exam->id,
                 'attempt_count' => 0,
+                'started_at'    => now(), // 🔥 KEY FIX
             ]);
+        }
+
+        // 🔁 ensure started_at exists (refresh safe)
+        if (!$attempt->started_at) {
+            $attempt->started_at = now();
+            $attempt->save();
         }
 
         // load questions + options
         $exam->load('questions.options');
         $exam->timer = $exam->timer ?? 60;
 
-        return view('user-dashboard.exam.exam', compact('exam', 'attempt'));
+        return view('user-dashboard.exam.exam', [
+            'exam' => $exam,
+            'attempt' => $attempt,
+            'questionStartedAt' => $attempt->started_at, // ✅ NOW DEFINED
+             'freshAttempt' => $attempt->attempt_count == 0
+        ]);
     }
 
     /* ===============================

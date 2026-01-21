@@ -308,18 +308,53 @@ button:disabled {
 </div>
 
 <script>
+
+const QUESTION_TIME = {{ $exam->timer }}; // per question (DB)
+let questionStartedAt = {{ $questionStartedAt->timestamp }};
+
+
+let timerInterval;
+
+function startPerQuestionTimer() {
+    clearInterval(timerInterval);
+
+    const now = Math.floor(Date.now() / 1000);
+    let remaining = QUESTION_TIME - (now - questionStartedAt);
+
+    if (remaining <= 0) {
+        nextQuestion(true);
+        return;
+    }
+
+    updateTimer(remaining);
+
+    timerInterval = setInterval(() => {
+        remaining--;
+        updateTimer(remaining);
+
+        if (remaining <= 0) {
+            clearInterval(timerInterval);
+            nextQuestion(true);
+        }
+    }, 1000);
+}
+
+
+function updateTimer(seconds) {
+    document.getElementById("time").innerText =
+        Math.max(0, seconds);
+}
+
+
 /* ===============================
    STATE
 ================================ */
 let userAnswers = {};
 let exam = @json($exam);
 let questions = exam.questions;
+let userInteracted = false;
 
 let current = 0;
-const TIME_PER_QUESTION = {{ $exam->timer }};
-let timeLeft = TIME_PER_QUESTION;
-
-let timer;
 
 /* ===============================
    DEVICE DETECTION
@@ -331,7 +366,6 @@ const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
 ================================ */
 let examStarted = false;
 let cheatTriggered = false;
-let userInteracted = false;
 
 /* ===============================
    MARK REAL USER INTERACTION
@@ -356,7 +390,7 @@ function startExam() {
     }
 
     loadQuestion();
-    startTimer();
+    startPerQuestionTimer();
 }
 
 /* ===============================
@@ -426,8 +460,6 @@ window.addEventListener(
    QUESTION RENDER
 ================================ */
 function loadQuestion() {
-    timeLeft = TIME_PER_QUESTION;
-    document.getElementById("time").innerText = timeLeft;
 
     document.getElementById("progressBar").style.width =
         ((current + 1) / questions.length) * 100 + "%";
@@ -523,30 +555,16 @@ function restoreSelection(questionId) {
     });
 }
 
-/* ===============================
-   TIMER
-================================ */
-function startTimer() {
-    clearInterval(timer);
 
-    timer = setInterval(() => {
-        timeLeft--;
-        document.getElementById("time").innerText = timeLeft;
-
-        if (timeLeft <= 0) {
-            clearInterval(timer);
-            current === questions.length - 1
-                ? finishExam()
-                : nextQuestion(true);
-        }
-    }, 1000);
-}
 
 /* ===============================
    NAVIGATION
 ================================ */
 function nextQuestion(auto = false) {
-    clearInterval(timer);
+
+    if (auto && userAnswers[questions[current].id] == null) {
+        userAnswers[questions[current].id] = "";
+    }
 
     if (!auto && userAnswers[questions[current].id] == null) return;
 
@@ -556,14 +574,20 @@ function nextQuestion(auto = false) {
     }
 
     current++;
+
+    // ✅ RESET START TIME FOR NEW QUESTION (CLIENT SIDE)
+    questionStartedAt = Math.floor(Date.now() / 1000);
+
     loadQuestion();
-    startTimer();
+    startPerQuestionTimer();
 }
+
 
 /* ===============================
    FINISH EXAM
 ================================ */
 function finishExam() {
+     if (cheatTriggered) return;
     examStarted = false;
     cheatTriggered = true;
 
@@ -593,7 +617,8 @@ function triggerCheat(reason) {
     if (cheatTriggered) return;
     cheatTriggered = true;
 
-    clearInterval(timer);
+    clearInterval(timerInterval);
+
 
     document.getElementById("cheatedInput").value = "1";
     document.getElementById("answersInput").value =
@@ -693,21 +718,23 @@ document.addEventListener("keydown", function (e) {
 
     // F5
     if (e.key === "F5") {
-        e.preventDefault();
-        triggerCheat("Page refresh detected (F5)");
-    }
+    e.preventDefault();
+    location.reload();
+}
 
-    // Ctrl + R / Cmd + R
+
     if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "r") {
-        e.preventDefault();
-        triggerCheat("Page refresh detected (Ctrl/Cmd + R)");
-    }
+    e.preventDefault();
+    location.reload();
+}
+
 
     // Ctrl + Shift + R (hard reload)
     if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key.toLowerCase() === "r") {
-        e.preventDefault();
-        triggerCheat("Hard refresh detected");
-    }
+    e.preventDefault();
+    location.reload();
+}
+
 });
 
 // ⛔ Browser reload (toolbar / swipe refresh)
@@ -718,13 +745,6 @@ window.addEventListener("beforeunload", function (e) {
     e.returnValue = ""; // required for Chrome
 });
 
-// ⛔ Detect reload AFTER it already happened (fallback)
-setTimeout(() => {
-    const nav = performance.getEntriesByType("navigation")[0];
-    if (examStarted && nav && nav.type === "reload") {
-        triggerCheat("Page reload detected");
-    }
-}, 1500);
 
 
 
