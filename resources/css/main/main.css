@@ -179,17 +179,48 @@ body {
 
 .circle-box {
     width: 95%;
-    height: auto;
     background: #ffffff;
     border-radius: 50%;
-    aspect-ratio: 1 / 1; /* perfect circle */
+    aspect-ratio: 1 / 1;
     display: flex;
     justify-content: center;
     align-items: center;
     padding: 30px;
     overflow: hidden;
     margin: 0 auto;
+    position: relative;
+    transition: transform 0.3s ease;
 }
+
+
+/* hover description */
+.circle-desc {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.65);
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 20px;
+    opacity: 0;
+    font-size: 25px;
+    font-family: 'Lovelo', sans-serif;
+    line-height: 1.4;
+    transition: opacity 0.3s ease;
+}
+
+/* show description on hover */
+.circle-box:hover .circle-desc {
+    opacity: 1;
+}
+
+/* subtle zoom (optional) */
+.circle-box:hover {
+    transform: scale(1.03);
+}
+
 
 .circle-box img {
     width: 100%;
@@ -202,6 +233,9 @@ body {
     .circle-box {
         width: 70%;
     }
+    .circle-desc{
+       font-size: 12px; 
+    }
 }
 
 /* Mobile */
@@ -209,6 +243,9 @@ body {
     .circle-box {
         width: 90%;
         padding: 20px;
+    }
+    .circle-desc{
+       font-size: 20px; 
     }
 }
 

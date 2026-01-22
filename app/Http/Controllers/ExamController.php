@@ -38,6 +38,11 @@ class ExamController extends Controller
     =============================== */
     public function start(Exam $exam)
     {
+        if (! $exam->is_active) {
+        return response()
+            ->view('user-dashboard.exam.exam-disabled', [], 403);
+    }
+
         $userId = Auth::id();
 
         $attempt = ExamAttempt::where('user_id', $userId)

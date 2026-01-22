@@ -334,22 +334,39 @@ select:focus {
                     </div>
 
                     <div class="d-flex gap-2">
-                        <a href="{{ route('admin.exams.edit', $exam->id) }}"
-                        class="btn btn-sm btn-primary fw-semibold">
-                            <i class="fas fa-pen me-1"></i> Edit
-                        </a>
 
+                    <!-- ENABLE / DISABLE -->
+                    <form action="{{ route('admin.exams.toggle', $exam->id) }}" method="POST">
+                        @csrf
+                        @method('PATCH')
 
-                        <form action="{{ route('admin.exams.delete', $exam->id) }}"
-                              method="POST"
-                              onsubmit="return confirm('Delete this exam?')">
-                            @csrf
-                            @method('DELETE')
-                            <button class="btn btn-sm btn-danger fw-semibold">
-                                Delete
-                            </button>
-                        </form>
-                    </div>
+                        <button
+                            class="btn btn-sm fw-semibold
+                            {{ $exam->is_active ? 'btn-warning' : 'btn-success' }}">
+                            
+                            {{ $exam->is_active ? 'Disable' : 'Enable' }}
+                        </button>
+                    </form>
+
+                    <!-- EDIT -->
+                    <a href="{{ route('admin.exams.edit', $exam->id) }}"
+                    class="btn btn-sm btn-primary fw-semibold">
+                        <i class="fas fa-pen me-1"></i> Edit
+                    </a>
+
+                    <!-- DELETE -->
+                    <form action="{{ route('admin.exams.delete', $exam->id) }}"
+                        method="POST"
+                        onsubmit="return confirm('Delete this exam?')">
+                        @csrf
+                        @method('DELETE')
+                        <button class="btn btn-sm btn-danger fw-semibold">
+                            Delete
+                        </button>
+                    </form>
+
+                </div>
+
                 </div>
             @empty
                 <p class="text-muted">No exams uploaded yet.</p>

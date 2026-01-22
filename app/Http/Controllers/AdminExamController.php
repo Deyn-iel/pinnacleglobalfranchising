@@ -221,4 +221,18 @@ if ($type === 'mcq' && isset($request->options[$qid])) {
 
         return view('admin.exam-results', compact('results'));
     }
+
+    public function toggle(Exam $exam)
+{
+    $exam->update([
+        'is_active' => ! $exam->is_active
+    ]);
+
+    return back()->with(
+        'success',
+        $exam->is_active
+            ? 'Exam ENABLED'
+            : 'Exam DISABLED'
+    );
+}
 }

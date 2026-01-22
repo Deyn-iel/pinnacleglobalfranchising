@@ -59,53 +59,65 @@
     <div class="underline"></div>
 
     <div class="container mt-5">
-        <div class="row justify-content-center g-5">
+    <div class="row justify-content-center g-5">
 
+        <div class="col-md-5 col-lg-4 text-center">
+            <div class="circle-box animate scale-up delay-2">
+                <img src="{{ asset('img/kape.webp') }}" alt="Kape Ilokano">
 
-            <div class="col-md-5 col-lg-4 text-center">
-                <div class="circle-box animate scale-up delay-2">
-                    <img src="{{ asset('img/kape.webp') }}" alt="Kape Ilokano">
+                <div class="circle-desc">
+                    Naimas nga kape inspired by Ilokano culture
                 </div>
-                <h3 class="brand-name mt-3">Kape Ilokano</h3>
-                <p class="brand-desc">Serving Naimas Nga Kape</p>
             </div>
-
-       
-            <div class="col-md-5 col-lg-4 text-center">
-                <div class="circle-box">
-                    <img src="{{ asset('img/patatas.webp') }}" alt="Patatas Project">
-                </div>
-                <h3 class="brand-name mt-3">Patatas Project</h3>
-                <p class="brand-desc">Fries that Fuel Dreams</p>
-            </div>
-
+            <h3 class="brand-name mt-3">Kape Ilokano</h3>
+            <p class="brand-desc">Serving Naimas Nga Kape</p>
         </div>
 
+        <div class="col-md-5 col-lg-4 text-center">
+            <div class="circle-box">
+                <img src="{{ asset('img/patatas.webp') }}" alt="Patatas Project">
 
-        <div class="row justify-content-center mt-5 g-5">
-
-           
-            <div class="col-md-5 col-lg-4 text-center">
-                <div class="circle-box">
-                    <img src="{{ asset('img/maria_cofee.webp') }}" alt="Maria Coffee">
+                <div class="circle-desc">
+                    Crispy fries crafted to fuel big dreams.
                 </div>
-                <h3 class="brand-name mt-3">Maria Coffee</h3>
-                <p class="brand-desc">
-                    Something good<br>is going to happen
-                </p>
             </div>
-
-            
-            <div class="col-md-5 col-lg-4 text-center">
-                <div class="circle-box">
-                    <img src="{{ asset('img/wings.webp') }}" alt="Wings 2 Go">
-                </div>
-                <h3 class="brand-name mt-3">Wings 2 Go</h3>
-                <p class="brand-desc">Best Chicken Wings of All Time</p>
-            </div>
-
+            <h3 class="brand-name mt-3">Patatas Project</h3>
+            <p class="brand-desc">Fries that Fuel Dreams</p>
         </div>
+
     </div>
+
+    <div class="row justify-content-center mt-5 g-5">
+
+        <div class="col-md-5 col-lg-4 text-center">
+            <div class="circle-box">
+                <img src="{{ asset('img/maria_cofee.webp') }}" alt="Maria Coffee">
+
+                <div class="circle-desc">
+                    Warm, comforting coffee for everyday moments.
+                </div>
+            </div>
+            <h3 class="brand-name mt-3">Maria Coffee</h3>
+            <p class="brand-desc">
+                Something good<br>is going to happen
+            </p>
+        </div>
+
+        <div class="col-md-5 col-lg-4 text-center">
+            <div class="circle-box">
+                <img src="{{ asset('img/wings.webp') }}" alt="Wings 2 Go">
+
+                <div class="circle-desc">
+                    Flavor-packed wings made to satisfy cravings.
+                </div>
+            </div>
+            <h3 class="brand-name mt-3">Wings 2 Go</h3>
+            <p class="brand-desc">Best Chicken Wings of All Time</p>
+        </div>
+
+    </div>
+</div>
+
 </section>
 
 <div class="franchise-now-container">
@@ -198,46 +210,6 @@
 </section>
 
 
-    {{-- <div class="franchise-steps">
-
-        <div class="step">
-    <div class="step-icon">1</div>
-    <h3>Submit Franchise Application</h3>
-    <p>Complete and submit the official franchise application form together with the required initial documents.</p>
-        </div>
-
-        <div class="step">
-            <div class="step-icon">2</div>
-            <h3>Attend Franchise Orientation</h3>
-            <p>Participate in the orientation to understand the franchise model, investment details, operational guidelines, and brand standards.</p>
-        </div>
-
-        <div class="step">
-            <div class="step-icon">3</div>
-            <h3>Evaluation, Approval & Contract Signing</h3>
-            <p>Your application will undergo review and assessment. Once approved, you will proceed with the Franchise Agreement signing.</p>
-        </div>
-
-        <div class="step">
-            <div class="step-icon">4</div>
-            <h3>Site Preparation & Training Program</h3>
-            <p>We coordinate with you on store layout, design requirements, equipment setup, and conduct hands-on training for franchisees and staff.</p>
-        </div>
-
-        <div class="step">
-            <div class="step-icon">5</div>
-            <h3>Store Installation & Pre-Opening Assistance</h3>
-            <p>Our team provides full support in store setup, branding, product preparation, and pre-opening activities to ensure operational readiness.</p>
-        </div>
-
-        <div class="step">
-            <div class="step-icon">6</div>
-            <h3>Grand Opening & Continuous Support</h3>
-            <p>Launch your franchise store with our on-site assistance. Receive ongoing operational guidance, marketing support, and performance monitoring.</p>
-        </div>
-        
-    </div> --}}
-
     <!-- CTA BUTTON -->
     <div class="franchise-now-button-wrapper">
         <a href="{{ route('franchise.process') }}" class="franchise-now-btn">Fill-up</a>
@@ -264,6 +236,7 @@
     <p class="recaptcha">
             This site is protected by reCAPTCHA and the <a href="https://policies.google.com/privacy" target="_blank" style="text-decoration: none; color:white; font-weight: 700;">Google Privacy</a> Policy and <a href="https://policies.google.com/terms" target="_blank" style="text-decoration: none; color:white; font-weight: 700;">Terms of Service</a> apply.
         </p>
+        
 </div>
   
 <!-- INQUIRE NOW FORM -->
@@ -274,7 +247,7 @@
     <h2 class="inquire-title">INQUIRE NOW!</h2>
     <div class="underline"></div>
 
-    <p class="inquire-sub">Feel free to inquire or <a href="{{ url('/login') }}" class="login-btn">Login</a> as a user.</p>
+    <p class="inquire-sub">Feel free to inquire.</p>
 
     <div class="container mt-4">
         <form>
@@ -299,8 +272,7 @@
             <button type="submit" class="btn-submit mt-2">SUBMIT</button>
 
         </form>
-
-        
+  
     </div>
     
 </section> --}}

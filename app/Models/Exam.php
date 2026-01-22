@@ -14,6 +14,7 @@ class Exam extends Model
     protected $fillable = [
         'title',
         'timer',
+        'is_active'
     ];
 
     public function questions()

@@ -178,6 +178,11 @@ Route::middleware(['auth', 'admin', 'admin.desktop'])
     ->name('admin.')
     ->group(function () {
 
+    Route::patch(
+    '/exams/{exam}/toggle',
+    [AdminExamController::class, 'toggle']
+)->name('exams.toggle');
+
 
     Route::get('/dashboard', [AdminDashboardController::class, 'index'])
     ->name('admin.dashboard');
