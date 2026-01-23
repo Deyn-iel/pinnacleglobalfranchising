@@ -50,8 +50,13 @@
                 <h4>Active Users</h4>
                 <h2>{{ $activeUsers }}</h2>
             </div>
-{{-- 
-                <div class="card"><h4>Exam Schedule</h4><h2>0</h2></div> --}}
+            <div class="card">
+                <h4>Exam</h4>
+                <h2>
+                    <a href="{{ route('video') }}" style="text-decoration: none; color:#0d3553; font-size:20px;"><i class="fas fa-arrow-right"></i> Take Exam</a>
+                </h2>
+            </div>
+
                 <div class="card">
                     <h4>Status</h4>
                     <h2 class="status-online">
@@ -103,6 +108,7 @@
 
         </div>
     </div>
+    
 </div>
 
 </body>

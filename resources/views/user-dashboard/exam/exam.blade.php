@@ -66,20 +66,61 @@ body {
 
 /* ================= PROGRESS ================= */
 .progress {
-    height: 6px;
+    height: 10px; /* 👈 mas kita */
     background: #e5e7eb;
     border-radius: 999px;
     overflow: hidden;
     margin-bottom: 20px;
 }
 
+.progress span.complete::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+        120deg,
+        transparent,
+        rgba(255,255,255,0.6),
+        transparent
+    );
+    animation: shine 1.5s infinite;
+}
+
+@keyframes shine {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+}
+
+
 .progress span {
+    position: relative; /* 🔥 REQUIRED FOR ::after */
     display: block;
     height: 100%;
     width: 0%;
     background: linear-gradient(90deg, #2563eb, #38bdf8);
-    transition: width 0.4s ease;
+    transition: width 0.4s ease, background 0.4s ease, box-shadow 0.4s ease;
+    overflow: hidden;
 }
+
+
+/* 🟡 NEAR END */
+.progress span.warning {
+    background: linear-gradient(90deg, #facc15, #f59e0b);
+}
+
+/* 🟢 FINAL / COMPLETE */
+.progress span.complete {
+    background: linear-gradient(90deg, #22c55e, #16a34a);
+    box-shadow: 0 0 12px rgba(34,197,94,0.8);
+    animation: pulse 1.2s infinite;
+}
+
+@keyframes pulse {
+    0% { box-shadow: 0 0 8px rgba(34,197,94,0.6); }
+    50% { box-shadow: 0 0 16px rgba(34,197,94,1); }
+    100% { box-shadow: 0 0 8px rgba(34,197,94,0.6); }
+}
+
 
 /* ================= TIMER ================= */
 #timer {
@@ -253,13 +294,67 @@ button:disabled {
     color: #0f172a;
 }
 
-/* WORD COUNT */
-.word-count {
-    margin-top: 8px;
-    font-size: 12px;
-    color: #64748b;
-    text-align: right;
-}
+
+
+
+.hidden {
+            display: none;
+        }
+
+        /* ================= FRIENDLY RESULT ================= */
+        .result-friendly {
+            text-align: center;
+            animation: fadeInUp 0.5s ease;
+            padding: 40px 20px;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+            max-width: 420px;
+            width: 100%;
+        }
+
+        .result-icon img {
+            width: 300px;
+            margin-bottom: 16px;
+        }
+
+        .result-friendly h2 {
+            font-size: 28px;
+            font-weight: 800;
+            color: #0f172a;
+            margin-bottom: 8px;
+        }
+
+        .result-sub {
+            font-size: 16px;
+            color: #475569;
+            margin-bottom: 20px;
+        }
+
+        .score-box {
+            background: linear-gradient(135deg, #0dcc73);
+            border-radius: 16px;
+            padding: 16px;
+            font-size: 18px;
+            font-weight: 700;
+            color: rgb(54, 54, 54);
+            margin-bottom: 20px;
+        }
+
+        .result-footer {
+            font-size: 14px;
+            color: #64748b;
+            line-height: 1.5;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(12px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
 
 </style>
 </head>
@@ -282,13 +377,16 @@ button:disabled {
 
 <div class="exam-container">
     <div class="exam-header">
-        <div class="progress"><span id="progressBar"></span></div>
-        <h2>{{ $exam->title }}</h2>
-        <div id="timer">
-            ⏱ <span id="time">{{ $remainingTime ?? $exam->timer }}</span>s
-            </div>
-
+    <h2>{{ $exam->title }}</h2>
+    <div id="timer">
+        ⏱ <span id="time">{{ $remainingTime ?? $exam->timer }}</span>s
     </div>
+</div>
+
+<div class="progress">
+    <span id="progressBar"></span>
+</div>
+
 
     <div id="question-box"></div>
 
@@ -296,16 +394,29 @@ button:disabled {
 </div>
 
 <!-- RESULT PAGE -->
-<div id="result-page" class="hidden">
-    <h2>Exam Completed</h2>
-    <p id="score-text"></p>
-    <button id="dashboardBtn" disabled>
-    Submitting result...
-</button>
+<div id="result-wrapper" class="d-flex justify-content-center align-items-center min-vh-100 hidden">
+    <div id="result-page" class="result-friendly bg-white shadow rounded-4">
 
-
-
+            <div class="result-icon hidden" id="result-icon">
+    <img src="{{ asset('img/Celebration-pana.svg') }}" alt="Celebration">
 </div>
+
+
+            <h2>Exam Completed!</h2>
+
+            <p class="result-sub">
+                Great job! You’ve successfully submitted your answers.
+            </p>
+
+            <div id="score-text" class="score-box">
+            </div>
+
+            <div class="result-footer">
+                Saving your results…
+            </div>
+        </div>
+    </div>
+
 
 <script>
 
@@ -354,7 +465,11 @@ let exam = @json($exam);
 let questions = exam.questions;
 let userInteracted = false;
 
-let current = 0;
+let current = {{ is_numeric($currentQuestion) ? $currentQuestion : 0 }};
+current = Math.min(current, questions.length - 1);
+
+
+
 
 /* ===============================
    DEVICE DETECTION
@@ -388,6 +503,8 @@ function startExam() {
             "<p>No questions available.</p>";
         return;
     }
+
+    current = Math.min(current, questions.length - 1);
 
     loadQuestion();
     startPerQuestionTimer();
@@ -461,8 +578,31 @@ window.addEventListener(
 ================================ */
 function loadQuestion() {
 
-    document.getElementById("progressBar").style.width =
-        ((current + 1) / questions.length) * 100 + "%";
+    // 🚨 SAFETY GUARD: prevent freeze / invalid index
+    if (current >= questions.length) {
+        finishExam();
+        return;
+    }
+
+    const progress = ((current + 1) / questions.length) * 100;
+const bar = document.getElementById("progressBar");
+
+bar.style.width = progress + "%";
+
+// reset states
+bar.classList.remove("warning", "complete");
+
+// 🟡 mid
+if (progress >= 60 && progress < 85) {
+    bar.classList.add("warning");
+}
+
+// 🟢 FORCE GREEN SA LAST QUESTION
+if (current === questions.length - 1 || progress >= 85) {
+    bar.classList.add("complete");
+}
+
+
 
     const q = questions[current];
     const box = document.getElementById("question-box");
@@ -508,8 +648,14 @@ function loadQuestion() {
 
     restoreSelection(q.id);
 
-    nextBtn.textContent =
-        current === questions.length - 1 ? "Submit Exam" : "Next Question";
+// 🟢 ALLOW SUBMIT IF LAST QUESTION
+if (current === questions.length - 1) {
+    nextBtn.disabled = false;
+}
+
+nextBtn.textContent =
+    current === questions.length - 1 ? "Submit Exam" : "Next Question";
+
 }
 
 /* ===============================
@@ -562,6 +708,20 @@ function restoreSelection(questionId) {
 ================================ */
 function nextQuestion(auto = false) {
 
+        fetch("{{ route('exam.saveProgress') }}", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "X-CSRF-TOKEN": "{{ csrf_token() }}"
+        },
+        body: JSON.stringify({
+    exam_id: {{ $exam->id }},
+    current_question: current + 1
+})
+
+    });
+
+
     if (auto && userAnswers[questions[current].id] == null) {
         userAnswers[questions[current].id] = "";
     }
@@ -574,13 +734,11 @@ function nextQuestion(auto = false) {
     }
 
     current++;
-
-    // ✅ RESET START TIME FOR NEW QUESTION (CLIENT SIDE)
     questionStartedAt = Math.floor(Date.now() / 1000);
-
     loadQuestion();
     startPerQuestionTimer();
 }
+
 
 
 /* ===============================
@@ -592,15 +750,25 @@ function finishExam() {
     cheatTriggered = true;
 
     document.querySelector(".exam-container").classList.add("hidden");
-    document.getElementById("result-page").classList.remove("hidden");
+
+// show result wrapper
+document.getElementById("result-wrapper").classList.remove("hidden");
+
+// show svg with small delay (kilig effect 😌)
+setTimeout(() => {
+    document.getElementById("result-icon").classList.remove("hidden");
+}, 0);
+
 
     const autoGraded = questions.filter(q => q.type !== 'essay');
     const score = autoGraded.filter(q =>
         String(userAnswers[q.id]) === String(q.correct_option)
     ).length;
 
-    document.getElementById("score-text").innerText =
-        `You scored ${score} out of ${autoGraded.length}`;
+    document.getElementById("score-text").innerHTML =
+    ` <strong>Your Score:</strong><br>
+     ${score} out of ${autoGraded.length}`;
+
 
     document.getElementById("answersInput").value =
         JSON.stringify(userAnswers);

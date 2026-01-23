@@ -63,6 +63,8 @@ Route::middleware(['auth'])->group(function () {
         ->name('attendance.log');
 });
 
+Route::post('/exam/save-progress', [ExamController::class, 'saveProgress'])
+    ->name('exam.saveProgress');
 
 Route::middleware(['auth', 'verified'])->group(function () {
 
@@ -85,32 +87,32 @@ Route::middleware(['auth', 'verified'])->group(function () {
     
 
     /* ✅ EXAM – MUST USE CONTROLLER */
-    Route::get('/exam/start/{exam}', [ExamController::class, 'start'])
+    Route::get('/I%2jdawh=adwIpkadLHiadw0476jhJ/{exam}', [ExamController::class, 'start'])
     ->name('exam.start');
 
     Route::view(
-        '/user-dashboard/notification',
+        '/dwajn0938UIHi&*65wauhunotificationawduhygy6wedag',
         'user-dashboard.notification.notification'
     )->name('notification');
 
     Route::view(
-        '/user-dashboard/attendance',
+        '/Pjaefiu=8yhbPFUaehu89fsaehui-jieafawdawd90)daiu',
         'user-dashboard.attendance.attendance'
     )->name('attendance');
 
     /* ✅ PROCEED – STATIC PAGE */
     Route::view(
-        '/user-dashboard/adw6daid7ad97w8ydawd3acr3rarvavr53a3',
+        '/adw6daid7ad97w8ydawd3acr3rarvavr53a3',
         'user-dashboard.exam.proceed'
     )->name('proceed');
 
     Route::view(
-        '/user-dashboard/video',
+        '/hauwdh9839j9ed9oIEJ8eh=videoefuj)jawd-iiadwjmo0PDJd',
         'user-dashboard.exam.video'
     )->name('video');
 
     Route::view(
-        '/user-dashboard/adw6daid7ad97w8ydawd3acr3rarvavr5dawda1=',
+        '/adw6daid7ad97w8ydawd3acr3rarvavr5dawda1=',
         'user-dashboard.exam.exam-done'
     )->name('exam-done');
 });
@@ -149,7 +151,7 @@ Route::post('/franchise/submit', [FranchiseController::class, 'store'])
 
 
 // show list of available exams
-Route::get('/exam/select', [ExamController::class, 'select'])
+Route::get('/ihu$HIHdw08dahi=opOjdN@7UUHOOIAWDIjsfse', [ExamController::class, 'select'])
     ->name('exam.select');
 
 

@@ -1,0 +1,143 @@
+/* 403 */
+/* ================= BASE ================= */
+body {
+    margin: 0;
+    min-height: 100vh;
+    background: #063e69;
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    color: #ffffff;
+}
+
+/* ================= CENTER WRAPPER ================= */
+.wrapper {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 32px;
+}
+
+/* ================= LAYOUT ================= */
+.layout {
+    width: 100%;
+    max-width: 1100px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 64px;
+}
+
+/* ================= TEXT ================= */
+.text-area {
+    max-width: 480px;
+}
+
+.text-area h1 {
+    font-size: clamp(34px, 6vw, 46px);
+    font-weight: 800;
+    margin-bottom: 6px;
+}
+
+.text-area h2 {
+    font-size: clamp(22px, 4.5vw, 28px);
+    font-weight: 600;
+    margin-bottom: 16px;
+}
+
+.text-area p {
+    font-size: clamp(14px, 3.5vw, 16px);
+    line-height: 1.6;
+    color: rgba(255,255,255,0.9);
+    margin-bottom: 28px;
+}
+
+/* ================= BUTTON ================= */
+.btn-back {
+    background: #ffffff;
+    color: #1e3a8a;
+    font-weight: 700;
+    border-radius: 14px;
+    padding: 12px 28px;
+    border: none;
+    transition: none !important;
+}
+
+.btn-back:hover,
+.btn-back:focus,
+.btn-back:active {
+    background: #ffffff !important;
+    color: #1e3a8a !important;
+    box-shadow: none !important;
+    transform: none !important;
+    outline: none !important;
+}
+
+/* ================= SVG ================= */
+.illustration {
+    flex-shrink: 0;
+}
+
+.illustration img {
+    width: min(600px, 45vw);
+    height: auto;
+}
+
+/* ================= iPAD / TABLET ================= */
+@media (max-width: 1199px) {
+    .layout {
+        gap: 40px;
+    }
+
+    .illustration img {
+        width: min(520px, 42vw);
+    }
+}
+/* ================= iPAD FIX ================= */
+@media (min-width: 768px) and (max-width: 1024px) {
+    .layout {
+        justify-content: center;   /* 🔥 center whole block */
+        gap: 40px;                 /* bawasan space */
+    }
+
+    .text-area {
+        max-width: 420px;
+    }
+
+    .illustration img {
+        width: 360px;              /* 🔥 sakto sa iPad */
+    }
+}
+
+/* ================= MOBILE ================= */
+@media (max-width: 767px) {
+    .layout {
+        flex-direction: column;
+        text-align: center;
+        gap: 32px;
+    }
+
+    /* SVG SA TAAS */
+    .illustration {
+        order: -1;
+    }
+
+    .illustration img {
+        width: min(300px, 80vw);
+    }
+
+    .text-area {
+        max-width: 520px;
+    }
+
+    .btn-back {
+        width: 100%;
+        max-width: 320px;
+    }
+}
+
+/* ================= SMALL PHONE ================= */
+@media (max-width: 360px) {
+    .illustration img {
+        width: 220px;
+    }
+}

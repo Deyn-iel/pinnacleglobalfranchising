@@ -131,7 +131,6 @@ body {
 /* HOVER (ONLY WHEN ACTIVE) */
 .confirm-btn.active:hover {
     background: linear-gradient(135deg, #14507a, #1b5f8f);
-    transform: translateY(-2px);
     box-shadow:
         0 14px 35px rgba(0,0,0,0.45),
         inset 0 1px 0 rgba(255,255,255,0.35);

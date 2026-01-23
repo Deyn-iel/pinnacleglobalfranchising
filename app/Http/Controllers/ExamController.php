@@ -55,14 +55,24 @@ class ExamController extends Controller
         }
 
         // ✅ create attempt if not exists
+        // create if not exists
         if (!$attempt) {
             $attempt = ExamAttempt::create([
-                'user_id'       => $userId,
-                'exam_id'       => $exam->id,
-                'attempt_count' => 0,
-                'started_at'    => now(), // 🔥 KEY FIX
+                'user_id'         => $userId,
+                'exam_id'         => $exam->id,
+                'attempt_count'   => 0,
+                'current_question'=> 0,
+                'started_at'      => now(),
             ]);
         }
+
+        // safety for old / null data
+        if ($attempt->current_question === null) {
+            $attempt->current_question = 0;
+            $attempt->save();
+        }
+
+
 
         // 🔁 ensure started_at exists (refresh safe)
         if (!$attempt->started_at) {
@@ -77,9 +87,10 @@ class ExamController extends Controller
         return view('user-dashboard.exam.exam', [
             'exam' => $exam,
             'attempt' => $attempt,
-            'questionStartedAt' => $attempt->started_at, // ✅ NOW DEFINED
-             'freshAttempt' => $attempt->attempt_count == 0
+            'questionStartedAt' => $attempt->started_at,
+            'currentQuestion' => $attempt->current_question, // 🔥 ADD THIS
         ]);
+
     }
 
     /* ===============================
@@ -101,7 +112,13 @@ class ExamController extends Controller
 
             if ($attempt) {
                 $attempt->increment('attempt_count');
+
+                // ✅ RESET progress AFTER EXAM FINISH
+                $attempt->update([
+                    'current_question' => 0
+                ]);
             }
+
 
             /* ===============================
                GET ANSWERS FROM JS
@@ -165,4 +182,15 @@ class ExamController extends Controller
                 : 'Exam submitted successfully.'
         );
     }
+    public function saveProgress(Request $request)
+{
+    ExamAttempt::where('user_id', Auth::id())
+        ->where('exam_id', $request->exam_id)
+        ->update([
+            'current_question' => $request->current_question
+        ]);
+
+    return response()->json(['ok' => true]);
+}
+
 }

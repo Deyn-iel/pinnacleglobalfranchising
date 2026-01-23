@@ -15,6 +15,6 @@ class AdminMiddleware
         }
 
         // redirect user if NOT admin
-        return redirect('/user-dashboard');
+        return redirect('/dashboard');
     }
 }
