@@ -39,6 +39,7 @@ export default defineConfig({
                 'resources/css/profile/app.css',
                 'resources/css/attendance/app.css',
                 'resources/css/user-exam-disabled/app.css',
+                'resources/css/user-dashboard-select/app.css',
         
                 // js files
                 'resources/js/proceed/app.js',

@@ -23,7 +23,14 @@
             </a>
         </li>
 
-        @php $disabled = true; @endphp
+        <li class="{{ request()->routeIs('attendance') ? 'active' : '' }}">
+            <a href="{{ route('attendance') }}">
+                <i class="fas fa-calendar-check"></i>
+                <span>Attendance</span>
+            </a>
+        </li>
+        
+        {{-- @php $disabled = true; @endphp
         <li class="{{ $disabled ? 'disabled' : '' }}">
             <a href="{{ $disabled ? 'javascript:void(0)' : route('attendance') }}">
                 <i class="fas fa-calendar-check"></i>
@@ -32,7 +39,7 @@
                     <small>soon</small>
                 @endif
             </a>
-        </li>
+        </li> --}}
 
         <li class="{{ request()->routeIs('video') ? 'active' : '' }}">
             <a href="{{ route('video') }}">

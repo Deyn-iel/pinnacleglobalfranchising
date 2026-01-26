@@ -19,13 +19,21 @@
             </a>
         </li>
 
-        <li class="nav-item disabled">
+        <li class="nav-item">
+            <a href="{{ route('admin.attendance') }}"
+               class="nav-link {{ request()->routeIs('admin.attendance') ? 'active' : '' }}">
+                <i class="fas fa-calendar-check"></i>
+                <span>Attendance</span>
+            </a>
+        </li>
+
+        {{-- <li class="nav-item disabled">
             <a href="javascript:void(0)" class="nav-link">
                 <i class="fas fa-calendar-check"></i>
                 <span>Attendance</span>
                 <small>soon</small>
             </a>
-        </li>
+        </li> --}}
 
         <li class="nav-section">MANAGEMENT</li>
 
@@ -37,13 +45,21 @@
             </a>
         </li>
 
-        <li class="nav-item">
+        <li class="nav-item disabled">
+            <a href="javascript:void(0)" class="nav-link">
+                <i class="fas fa-boxes-stacked"></i>
+                <span>Supplies</span>
+                <small>soon</small>
+            </a>
+        </li>
+
+        {{-- <li class="nav-item">
             <a href="{{ route('admin.supplies') }}"
                class="nav-link {{ request()->routeIs('admin.supplies') ? 'active' : '' }}">
                 <i class="fas fa-boxes-stacked"></i>
                 <span>Supplies</span>
             </a>
-        </li>
+        </li> --}}
 
         <li class="nav-item">
             <a href="{{ route('admin.requirements') }}"

@@ -15,7 +15,6 @@
 
 <body>
 
-{{-- LOGIN OVERLAY --}}
 <div class="login-overlay" id="loginOverlay">
     <div class="login-box">
         <i class="fas fa-user-check"></i>
@@ -27,15 +26,12 @@
 
 <div class="wrapper">
 
-    {{-- ✅ SIDEBAR --}}
     @include('user-dashboard.partials-dashboard.sidebar')
 
     <div class="main">
 
-        {{-- ✅ HEADER --}}
         @include('user-dashboard.partials-dashboard.header')
 
-        {{-- ✅ MAIN CONTENT (UNCHANGED) --}}
         <div class="content fade-up">
 
             @if (session('error'))

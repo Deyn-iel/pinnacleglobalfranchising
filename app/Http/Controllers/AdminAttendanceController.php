@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use App\Exports\AttendanceExport;
 use Maatwebsite\Excel\Facades\Excel;
 use Carbon\Carbon;
+use App\Models\AttendanceSetting;
+
 
 class AdminAttendanceController extends Controller
 {
@@ -21,7 +23,10 @@ class AdminAttendanceController extends Controller
         ->orderBy('created_at', 'desc')
         ->get();
 
-    return view('admin.attendance', compact('records', 'date'));
+    $setting = AttendanceSetting::first();
+
+return view('admin.attendance', compact('records', 'date', 'setting'));
+
 }
     public function destroy($id)
 {
@@ -101,6 +106,29 @@ public function update(Request $request, Attendance $attendance)
     $attendance->save();
 
     return back()->with('success', 'Attendance time updated successfully.');
+}
+
+public function editLocation()
+{
+    $setting = AttendanceSetting::first();
+    return view('admin.attendance.location', compact('setting'));
+}
+
+public function updateLocation(Request $request)
+{
+    $request->validate([
+        'lat'    => 'required|numeric',
+        'lng'    => 'required|numeric',
+        'radius' => 'required|integer|min:10'
+    ]);
+
+    AttendanceSetting::updateOrCreate(
+    ['id' => AttendanceSetting::first()?->id],
+    $request->only('lat', 'lng', 'radius')
+);
+
+
+    return back()->with('success', 'Attendance location updated');
 }
 
 }

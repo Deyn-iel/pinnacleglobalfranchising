@@ -180,6 +180,10 @@ Route::middleware(['auth', 'admin', 'admin.desktop'])
     ->name('admin.')
     ->group(function () {
 
+
+    Route::post('/attendance/location', [AdminAttendanceController::class, 'updateLocation'])
+    ->name('attendance.location.update');
+
     Route::patch(
     '/exams/{exam}/toggle',
     [AdminExamController::class, 'toggle']

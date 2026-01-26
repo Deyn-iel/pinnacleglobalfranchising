@@ -471,7 +471,7 @@ form {
 
 /* ================= RING WRAPPER ================= */
 .ring-wrap {
-    width: clamp(140px, 30vw, 260px); /* 🔥 auto scale */
+    width: clamp(140px, 20vw, 200px); /* 🔥 auto scale */
     aspect-ratio: 1 / 1;             /* perfect circle */
     margin: clamp(12px, 3vw, 24px) auto;
     position: relative;

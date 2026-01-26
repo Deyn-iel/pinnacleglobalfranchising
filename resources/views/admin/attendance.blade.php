@@ -68,6 +68,17 @@
         </div>
     </form>
 
+    <form method="POST" action="{{ route('admin.attendance.location.update') }}">
+    @csrf
+
+    <input type="number" step="0.0000001" name="lat" value="{{ $setting->lat ?? '' }}" required>
+    <input type="number" step="0.0000001" name="lng" value="{{ $setting->lng ?? '' }}" required>
+    <input type="number" name="radius" value="{{ $setting->radius ?? 100 }}" required>
+
+    <button class="btn btn-primary mt-2">Save Location</button>
+</form>
+
+
     {{-- SUCCESS MESSAGE --}}
     @if(session('success'))
         <div class="alert alert-success alert-dismissible fade show">

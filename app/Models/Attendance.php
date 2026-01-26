@@ -19,6 +19,10 @@ class Attendance extends Model
         'afternoon_in_selfie',
         'afternoon_out',
         'afternoon_out_selfie',
+
+        'lat',
+        'lng',
+        'distance',
     ];
 
     protected $casts = [

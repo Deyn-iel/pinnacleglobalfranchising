@@ -164,71 +164,78 @@ messageTimer = setTimeout(() => {
 
 }
 
+function getLocation() {
+    return new Promise((resolve, reject) => {
+        if (!navigator.geolocation) {
+            reject('Geolocation not supported');
+            return;
+        }
+
+        navigator.geolocation.getCurrentPosition(
+            position => {
+                resolve({
+                    lat: position.coords.latitude,
+                    lng: position.coords.longitude,
+                    accuracy: position.coords.accuracy
+                });
+            },
+            error => reject(error.message),
+            {
+                enableHighAccuracy: true,
+                timeout: 10000,
+                maximumAge: 0
+            }
+        );
+    });
+}
+
+
 /* =========================
    📤 SUBMIT ATTENDANCE
 ========================= */
-function submitAttendance(type) {
+async function submitAttendance(type) {
     if (!capturedBlob) {
         alert('Capture selfie first');
+        return;
+    }
+
+    let location;
+    try {
+        location = await getLocation();
+    } catch (e) {
+        alert('Location permission is required');
         return;
     }
 
     const fd = new FormData();
     fd.append('type', type);
     fd.append('selfie', capturedBlob, 'selfie.jpg');
+    fd.append('lat', location.lat);
+    fd.append('lng', location.lng);
+    fd.append('accuracy', location.accuracy);
 
     fetch('/attendance/log', {
-        method: 'POST',
-        headers: {
-            'X-CSRF-TOKEN': document
-                .querySelector('meta[name="csrf-token"]').content
-        },
-        body: fd
-    })
-    .then(async res => {
-        const text = await res.text();
-
-        try {
-            const data = JSON.parse(text);
-            timeDisplay.innerText = data.message;
-
-// reset classes
-timeDisplay.classList.remove('success', 'error', 'show');
-
-// set color based on message
-if (data.message.includes('✓')) {
-    timeDisplay.classList.add('success');
-} else if (data.message.includes('!')) {
-    timeDisplay.classList.add('error');
-}
-
-// show
-requestAnimationFrame(() => {
-    timeDisplay.classList.add('show');
+    method: 'POST',
+    headers: {
+        'X-CSRF-TOKEN': document
+            .querySelector('meta[name="csrf-token"]').content
+    },
+    body: fd
+})
+.then(async res => {
+    const data = await res.json();
+    if (!res.ok) throw data;
+    return data;
+})
+.then(data => {
+    timeDisplay.innerText = data.message;
+})
+.catch(err => {
+    timeDisplay.innerText = err.message || 'Attendance failed';
 });
 
-// auto fade after 5 seconds
-clearTimeout(messageTimer);
-messageTimer = setTimeout(() => {
-    timeDisplay.classList.remove('show');
-}, 5000);
-
-
-        } catch (e) {
-            console.error('NON-JSON RESPONSE:', text);
-            alert('Server error. Check console.');
-        }
-
-        // reset
-        capturedBlob = null;
-        canvas.hidden = true;
-        video.style.display = 'block';
-    })
-    .catch(err => {
-        console.error(err);
-        alert('Failed to submit attendance');
-    });
 }
+
 </script>
 
 </body>
