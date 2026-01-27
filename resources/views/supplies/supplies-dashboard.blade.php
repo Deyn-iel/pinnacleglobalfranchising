@@ -96,7 +96,14 @@
       <div id="previewContent" style="font-size:14px;color:#0f172a"></div>
     </section>
   </div>
-
+<form method="POST" action="{{ route('custom.logout') }}" onsubmit="handleLogout()">
+                @csrf
+                <button type="submit" class="logout-btn">
+                    <i class="fas fa-arrow-right-from-bracket"></i>
+                    <span>Log out</span>
+                </button>
+            </form>
+  
   <script>
     const itemsTableBody = document.querySelector('#itemsTable tbody');
     const addRowBtn = document.getElementById('addRow');

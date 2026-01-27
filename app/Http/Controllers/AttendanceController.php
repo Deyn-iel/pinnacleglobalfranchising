@@ -59,14 +59,6 @@ class AttendanceController extends Controller
         $allowedLng
     );
 
-    return response()->json([
-    'distance' => round($distance),
-    'radius'   => $radius,
-    'accuracy' => $request->accuracy,
-    'lat'      => $request->lat,
-    'lng'      => $request->lng,
-]);
-
 
     // GPS DISTANCE CHECK
 if ($distance > $radius) {
@@ -102,8 +94,13 @@ if ($request->accuracy && $request->accuracy > ($radius * 1.5)) {
 
         // ✅ ONE ATTENDANCE PER USER PER DAY (PH DATE)
         $attendance = Attendance::where('user_id', $user->id)
-            ->whereDate('created_at', $today)
-            ->first();
+        ->whereBetween('created_at', [
+            Carbon::today('Asia/Manila')->startOfDay(),
+            Carbon::today('Asia/Manila')->endOfDay()
+        ])
+        ->first();
+
+
 
         if (!$attendance) {
             $attendance = Attendance::create([

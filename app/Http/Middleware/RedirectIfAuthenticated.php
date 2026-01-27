@@ -8,25 +8,25 @@ use Illuminate\Support\Facades\Auth;
 
 class RedirectIfAuthenticated
 {
-    /**
-     * Handle an incoming request.
-     */
     public function handle(Request $request, Closure $next, ...$guards)
     {
         foreach ($guards as $guard) {
             if (Auth::guard($guard)->check()) {
 
-                // Allow access to login route even if authenticated (prevents redirect loop)
                 if ($request->routeIs('login') || $request->routeIs('auth.login')) {
                     return $next($request);
                 }
 
-                // Admin goes to admin dashboard
-                if (Auth::user() && Auth::user()->usertype === 'admin') {
+                $user = Auth::user();
+
+                if ($user->usertype === 'admin') {
                     return redirect()->route('admin.dashboard');
                 }
 
-                // Regular user goes to normal dashboard
+                if ($user->usertype === 'supplies') {
+                    return redirect()->route('supplies.supplies-dashboard');
+                }
+
                 return redirect()->route('dashboard');
             }
         }

@@ -15,7 +15,7 @@ class RouteServiceProvider extends ServiceProvider
      *
      * After login, users are redirected here.
      */
-    public const HOME = '/home';
+    public const HOME = '/redirect-after-login';
 
     /**
      * Define your route model bindings, pattern filters, and other route config.

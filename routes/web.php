@@ -23,6 +23,7 @@ use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\AdminAttendanceController;
 use App\Http\Controllers\AdminDashboardController;
 use App\Http\Controllers\UserDashboardController;
+use App\Http\Controllers\SuppliesDashboardController;
 /*
 |--------------------------------------------------------------------------
 | PUBLIC PAGES
@@ -31,6 +32,27 @@ use App\Http\Controllers\UserDashboardController;
 
 Route::view('/', 'welcome')->name('home');
 
+Route::get('/redirect-after-login', function () {
+    $user = Auth::user();
+
+    if ($user->usertype === 'admin') {
+        return redirect()->route('admin.dashboard');
+    }
+
+    if ($user->usertype === 'supplies') {
+        return redirect()->route('supplies.supplies-dashboard');
+    }
+
+    return redirect()->route('dashboard'); // normal user
+})->middleware('auth');
+
+
+
+//suppliesss///////////////////////////////////////////////
+Route::middleware(['auth', 'role:supplies'])->group(function () {
+    Route::get('/supplies/dashboard', [SuppliesDashboardController::class, 'index'])
+        ->name('supplies.supplies-dashboard');
+});
 /* ABOUT */
 Route::prefix('about')->group(function () {
     Route::view('/pinnacle', 'about.pinnacle')->name('about.pinnacle');
@@ -75,10 +97,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     ->name('dashboard');
     
 
-    Route::view(
-        '/user-dashboard/a8afe8b8eaf9be675baugfiab67ta8fb87bfaigf',
-        'user-dashboard.ordering-supplies.ordering-supplies'
-    )->name('ordering.supplies');
+    
 
     Route::view(
         '/user-dashboard/uploading-requirements',
@@ -243,7 +262,6 @@ Route::get('/attendance', [AdminAttendanceController::class, 'index'])
 
         Route::view('/', 'admin.admin')->name('dashboard');
         Route::view('/application', 'admin.application')->name('application');
-        Route::view('/supplies', 'admin.supplies')->name('supplies');
 
         Route::get('/requirements', [RequirementController::class, 'index'])
     ->name('requirements');
@@ -251,6 +269,8 @@ Route::get('/attendance', [AdminAttendanceController::class, 'index'])
     Route::delete('/requirements/{id}', 
     [RequirementController::class, 'destroy']
 )->name('requirements.delete');
+
+
 
 
 
@@ -302,8 +322,7 @@ Route::post('/requirements', [RequirementController::class, 'store']);
         Route::get('/users-account', [UserManagementController::class, 'index'])
             ->name('users-account');
 
-        Route::delete('/users-account/{id}', [UserManagementController::class, 'destroy'])
-            ->name('users-account.destroy');
+        
 
            /* CONTACT LIST */
 Route::get('/contacts', function () {

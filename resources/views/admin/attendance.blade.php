@@ -43,42 +43,6 @@
         </span>
     </div>
 
-    {{-- DATE FILTER --}}
-    <form method="GET" class="row g-2 mb-4">
-        <div class="col-md-3">
-            <input
-                type="date"
-                name="date"
-                value="{{ $date ?? '' }}"
-                class="form-control"
-            >
-        </div>
-
-        <div class="col-md-2">
-            <button class="btn btn-dark w-100">
-                <i class="fas fa-filter me-1"></i> Filter
-            </button>
-        </div>
-
-        <div class="col-md-2">
-            <a href="{{ route('admin.attendance') }}"
-               class="btn btn-secondary w-100">
-                Reset
-            </a>
-        </div>
-    </form>
-
-    <form method="POST" action="{{ route('admin.attendance.location.update') }}">
-    @csrf
-
-    <input type="number" step="0.0000001" name="lat" value="{{ $setting->lat ?? '' }}" required>
-    <input type="number" step="0.0000001" name="lng" value="{{ $setting->lng ?? '' }}" required>
-    <input type="number" name="radius" value="{{ $setting->radius ?? 100 }}" required>
-
-    <button class="btn btn-primary mt-2">Save Location</button>
-</form>
-
-
     {{-- SUCCESS MESSAGE --}}
     @if(session('success'))
         <div class="alert alert-success alert-dismissible fade show">
@@ -86,6 +50,84 @@
             <button class="btn-close" data-bs-dismiss="alert"></button>
         </div>
     @endif
+    
+   <div class="card shadow-sm mb-4">
+    <div class="card-body">
+        <h6 class="fw-semibold mb-3">
+            <i class="fas fa-filter me-1"></i> Filters & Location
+        </h6>
+
+        <div class="row g-3 align-items-end">
+            {{-- DATE FILTER --}}
+            <div class="col-md-3">
+                <label class="form-label small">Filter by Date</label>
+                <input type="date"
+                       name="date"
+                       value="{{ $date ?? '' }}"
+                       form="filterForm"
+                       class="form-control">
+            </div>
+
+            <div class="col-md-2">
+                <button form="filterForm" class="btn btn-dark w-100">
+                    Filter
+                </button>
+            </div>
+
+            <div class="col-md-2">
+                <a href="{{ route('admin.attendance') }}"
+                   class="btn btn-secondary w-100">
+                    Reset
+                </a>
+            </div>
+        </div>
+
+        <hr>
+
+        {{-- LOCATION --}}
+        <form method="POST" action="{{ route('admin.attendance.location.update') }}">
+            @csrf
+            <div class="row g-3">
+                <div class="col-md-4">
+                    <label class="form-label small">Latitude</label>
+                    <input type="number" step="0.0000001"
+                           name="lat"
+                           value="{{ $setting->lat ?? '' }}"
+                           class="form-control"
+                           required>
+                </div>
+
+                <div class="col-md-4">
+                    <label class="form-label small">Longitude</label>
+                    <input type="number" step="0.0000001"
+                           name="lng"
+                           value="{{ $setting->lng ?? '' }}"
+                           class="form-control"
+                           required>
+                </div>
+
+                <div class="col-md-2">
+                    <label class="form-label small">Radius (m)</label>
+                    <input type="number"
+                           name="radius"
+                           value="{{ $setting->radius ?? 100 }}"
+                           class="form-control"
+                           required>
+                </div>
+
+                <div class="col-md-1 d-grid p-0 mt-5">
+                    <button class="btn btn-primary">
+                        Save
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<form id="filterForm" method="GET"></form>
+
+
 
     <form method="GET"
                     action="{{ route('admin.attendance.export') }}"

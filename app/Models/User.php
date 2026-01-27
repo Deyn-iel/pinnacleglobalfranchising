@@ -55,4 +55,9 @@ class User extends Authenticatable
     {
         return $this->usertype === 'user';
     }
+    
+    public function isSupplies()
+    {
+        return $this->usertype === 'supplies';
+    }
 }

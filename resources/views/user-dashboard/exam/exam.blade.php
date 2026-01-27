@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Secure Exam</title>
+<title>Exam</title>
 <link rel="icon" type="image/png" href="{{ asset('img/logo1-removebg-preview.png') }}">
 <style>
 /* ================= RESET ================= */
@@ -305,9 +305,9 @@ button:disabled {
         .result-friendly {
             text-align: center;
             animation: fadeInUp 0.5s ease;
-            padding: 40px 20px;
+            padding: 40px 20px !important;
             font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-            max-width: 420px;
+            max-width: 480px !important;
             width: 100%;
         }
 
@@ -317,26 +317,26 @@ button:disabled {
         }
 
         .result-friendly h2 {
-            font-size: 28px;
-            font-weight: 800;
-            color: #0f172a;
-            margin-bottom: 8px;
+            font-size: 28px !important;
+            font-weight: 800 !important;
+            color: #555555 !important;
+            margin-bottom: 8px !important;
         }
 
         .result-sub {
-            font-size: 16px;
-            color: #475569;
-            margin-bottom: 20px;
+            font-size: 16px !important;
+            color: #646464 !important;
+            margin-bottom: 20px !important;
         }
 
         .score-box {
-            background: linear-gradient(135deg, #0dcc73);
-            border-radius: 16px;
-            padding: 16px;
-            font-size: 18px;
-            font-weight: 700;
-            color: rgb(54, 54, 54);
-            margin-bottom: 20px;
+            background: linear-gradient(135deg, #008d4b) !important;
+            border-radius: 16px !important;
+            padding: 10px !important;
+            font-size: 18px !important;
+            font-weight: 600 !important;
+            color: rgb(255, 255, 255) !important;
+            margin-bottom: 20px !important;
         }
 
         .result-footer {
@@ -775,7 +775,7 @@ setTimeout(() => {
 
     setTimeout(() => {
         document.getElementById("submitForm").submit();
-    }, 3000);
+    }, 4000);
 }
 
 /* ===============================

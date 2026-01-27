@@ -9,7 +9,7 @@ class UserDashboardController extends Controller
     public function index()
     {
         // Active users EXCEPT admin
-        $activeUsers = User::where('role', '!=', 'admin')->count();
+        $activeUsers = User::where('usertype', '!=', 'admin')->count();
 
         return view('user-dashboard.dashboard', compact('activeUsers'));
     }

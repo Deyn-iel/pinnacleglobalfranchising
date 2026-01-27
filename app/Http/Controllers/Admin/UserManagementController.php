@@ -22,6 +22,7 @@ class UserManagementController extends Controller
         $request->validate([
             'name'  => 'required|string|max:255',
             'email' => 'required|email|unique:users,email',
+            'usertype' => 'required|in:admin,user,supplies',
         ]);
 
         // 🔐 AUTO-GENERATE PASSWORD
@@ -32,7 +33,7 @@ class UserManagementController extends Controller
             'email'         => $request->email,
             'password'      => Hash::make($plainPassword), // ✅ FIX
             'temp_password' => $plainPassword,              // ✅ FIX
-            'usertype'      => 'user',
+            'usertype' => $request->usertype,
         ]);
 
         return redirect()

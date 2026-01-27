@@ -19,7 +19,7 @@ class AdminUserController extends Controller
         $request->validate([
             'name'     => 'required|string|max:255',
             'email'    => 'required|email|unique:users,email',
-            'usertype' => 'required|in:admin,user',
+            'usertype' => 'required|in:admin,user,supplies',
         ], [
             'email.unique' => 'This email is already registered.',
         ]);

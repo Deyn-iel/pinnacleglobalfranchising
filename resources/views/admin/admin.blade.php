@@ -120,7 +120,7 @@ main {
                 </a>
             </div>
 
-            <!-- SUPPLIES -->
+            {{-- <!-- SUPPLIES -->
             <div class="col-md-4">
                 <a href="{{ route('admin.supplies') }}" class="text-decoration-none">
                     <div class="card shadow-sm p-4 dash-card">
@@ -129,7 +129,7 @@ main {
                         <p class="text-muted mb-0">Track orders and manage supply requests.</p>
                     </div>
                 </a>
-            </div>
+            </div> --}}
 
             <!-- Profile -->
             <div class="col-md-4">
