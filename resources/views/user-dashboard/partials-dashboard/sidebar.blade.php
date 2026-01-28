@@ -19,7 +19,7 @@
         <li class="{{ request()->routeIs('dashboard') ? 'active' : '' }}">
             <a href="{{ route('dashboard') }}">
                 <i class="fas fa-house"></i>
-                <span>Dashboard</span>
+                <span>Home</span>
             </a>
         </li>
 

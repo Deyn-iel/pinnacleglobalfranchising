@@ -120,16 +120,18 @@ main {
                 </a>
             </div>
 
-            {{-- <!-- SUPPLIES -->
+            <!-- SUPPLIES -->
             <div class="col-md-4">
                 <a href="{{ route('admin.supplies') }}" class="text-decoration-none">
                     <div class="card shadow-sm p-4 dash-card">
                         <div class="dash-icon mb-3"><i class="fas fa-boxes-stacked me-2"></i></div>
                         <h4 class="mb-1">Supplies Orders</h4>
                         <p class="text-muted mb-0">Track orders and manage supply requests.</p>
+                        <p class="text-muted mb-0">Total Supplies: 
+                            <strong>{{ \App\Models\Supply::count() }}</strong>
                     </div>
                 </a>
-            </div> --}}
+            </div>
 
             <!-- Profile -->
             <div class="col-md-4">

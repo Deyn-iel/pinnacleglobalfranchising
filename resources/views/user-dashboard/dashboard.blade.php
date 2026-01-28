@@ -53,6 +53,13 @@
                 </h2>
             </div>
 
+            <div class="card">
+                <h4>Attendance</h4>
+                <h2>
+                    <a href="{{ route('attendance') }}" style="text-decoration: none; color:#0d3553; font-size:20px;"><i class="fas fa-arrow-right"></i> Mark Attendance</a>
+                </h2>
+            </div>
+
                 <div class="card">
                     <h4>Status</h4>
                     <h2 class="status-online">

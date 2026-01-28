@@ -24,11 +24,16 @@ use App\Http\Controllers\AdminAttendanceController;
 use App\Http\Controllers\AdminDashboardController;
 use App\Http\Controllers\UserDashboardController;
 use App\Http\Controllers\SuppliesDashboardController;
+use App\Http\Controllers\Admin\SupplyController;
+use App\Http\Controllers\Admin\AdminSuppliesController;
+
+
 /*
 |--------------------------------------------------------------------------
 | PUBLIC PAGES
 |--------------------------------------------------------------------------
 */
+
 
 Route::view('/', 'welcome')->name('home');
 
@@ -198,6 +203,25 @@ Route::middleware(['auth', 'admin', 'admin.desktop'])
     ->prefix('admin')
     ->name('admin.')
     ->group(function () {
+    
+    // SUPPLIES MANAGEMENT 
+     Route::get('/supplies', [AdminSuppliesController::class, 'index'])
+            ->name('supplies');
+
+        Route::post('/supplies', [AdminSuppliesController::class, 'store'])
+            ->name('supplies.store');
+
+
+
+Route::get('/supplies/{supply}/edit', [AdminSuppliesController::class, 'edit'])
+    ->name('supplies.edit');
+
+Route::put('/supplies/{supply}', [AdminSuppliesController::class, 'update'])
+    ->name('supplies.update');
+
+Route::delete('/supplies/{supply}', [AdminSuppliesController::class, 'destroy'])
+    ->name('supplies.destroy');
+
 
 
     Route::post('/attendance/location', [AdminAttendanceController::class, 'updateLocation'])
@@ -253,7 +277,6 @@ Route::get('/attendance', [AdminAttendanceController::class, 'index'])
         // Handle register submit
         Route::post('/users/register', [AdminUserController::class, 'store'])
             ->name('users.store');
-
 
 
         /* ===============================

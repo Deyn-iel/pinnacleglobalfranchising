@@ -58,76 +58,100 @@
 
     <!-- MAIN CONTENT -->
     <main class="container mt-4" style="margin-left:260px;">
-        
-        <h2 class="mb-4"><i class="fas fa-box me-2"></i> Receiving Orders (Supplies)</h2>
-        <p class="text-muted">This page will display all incoming supply orders from users.</p>
 
-        <hr>
+<h2 class="mb-3"><i class="fas fa-boxes-stacked me-2"></i> Supplies Management</h2>
+<p class="text-muted">Add and manage supplies available to partners.</p>
 
-        <!-- SUCCESS MESSAGE -->
-        @if(session('success'))
-        <div class="alert alert-success alert-dismissible fade show" role="alert">
-            ✅ <strong>{{ session('success') }}</strong>
-            <button class="btn-close" data-bs-dismiss="alert"></button>
-        </div>
-        @endif
+@if(session('success'))
+<div class="alert alert-success">{{ session('success') }}</div>
+@endif
 
-        <!-- FORM: Record Received Order -->
-        <div class="card shadow-sm p-4 mb-4">
-            <h4><i class="fas fa-add me-2"></i> Record Received Supply Order</h4>
+<div class="card shadow-sm p-4 mb-4">
+<h4>Add New Supply</h4>
 
-            <form action="{{ route('admin.supplies') }}" method="POST">
-                @csrf
+<form action="{{ route('admin.supplies.store') }}" method="POST" enctype="multipart/form-data">
+@csrf
 
-                <label class="form-label">Customer Name *</label>
-                <input type="text" name="customer" class="form-control mb-3" required>
+<label class="form-label">Supply Name</label>
+<input type="text" name="name" class="form-control mb-3" required>
 
-                <label class="form-label">Item Ordered *</label>
-                <input type="text" name="item" class="form-control mb-3" required>
+<label class="form-label">Unit (pc / box / kg)</label>
+<input type="text" name="unit" class="form-control mb-3" required>
 
-                <label class="form-label">Quantity *</label>
-                <input type="number" name="quantity" class="form-control mb-3" required>
+<label class="form-label">Cost Price</label>
+<input type="number" step="0.01" name="cost_price" class="form-control mb-3" required>
 
-                <label class="form-label">Status *</label>
-                <select name="status" class="form-select mb-3" required>
-                    <option>Pending</option>
-                    <option>Processing</option>
-                    <option>Delivered</option>
-                    <option>Cancelled</option>
-                </select>
+<label class="form-label">Selling Price</label>
+<input type="number" step="0.01" name="selling_price" class="form-control mb-3" required>
 
-                <button class="btn btn-primary px-4">Save Order</button>
-            </form>
-        </div>
+<label class="form-label">Stock on Hand</label>
+<input type="number" name="stock" class="form-control mb-3" required>
 
-        <hr>
+<label class="form-label">Supply Image</label>
+<input type="file" name="image" class="form-control mb-3">
 
-        <!-- TABLE: Display Received Orders -->
-        <h4><i class="fas fa-file-lines me-2"></i> Supply Orders Received</h4>
+<button class="btn btn-primary">Save Supply</button>
+</form>
+</div>
 
-        <table class="table table-striped shadow-sm">
-            <thead class="table-dark">
-                <tr>
-                    <th>Customer</th>
-                    <th>Item</th>
-                    <th>Quantity</th>
-                    <th>Status</th>
-                    <th>Received At</th>
-                </tr>
-            </thead>
+<h4>Current Supplies</h4>
+<table class="table table-striped shadow-sm">
+<thead class="table-dark">
+<tr>
+  <th>Name</th>
+  <th>Unit</th>
+  <th>Stock</th>
+  <th>Selling Price</th>
+  <th>Date Added</th>
+  <th>Image</th>
+  <th>Actions</th>
+</tr>
+</thead>
+<tbody>
+@forelse($supplies as $supply)
+<tr>
+  <td>
+    @if($supply->image)
+  <img src="{{ Storage::url($supply->image) }}"
+       width="50" height="50"
+       style="object-fit:cover;border-radius:6px;">
+@else
+  <span class="text-muted">No image</span>
+@endif
 
-            <tbody>
-                <tr>
-                    <td class="text-muted">No orders yet...</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-            </tbody>
-        </table>
+  </td>
 
-    </main>
+  <td>{{ $supply->name }}</td>
+  <td>{{ $supply->unit }}</td>
+  <td>{{ $supply->stock }}</td>
+  <td>₱{{ number_format($supply->selling_price,2) }}</td>
+  <td>{{ $supply->created_at->format('M d, Y') }}</td>
+
+  <td class="d-flex gap-2">
+    <a href="{{ route('admin.supplies.edit', $supply) }}"
+       class="btn btn-sm btn-warning">
+       Edit
+    </a>
+    <form action="{{ route('admin.supplies.destroy', $supply) }}"
+          method="POST"
+          onsubmit="return confirm('Delete this supply?')">
+        @csrf
+        @method('DELETE')
+        <button class="btn btn-sm btn-danger">Delete</button>
+    </form>
+  </td>
+</tr>
+@empty
+<tr>
+  <td colspan="7" class="text-center text-muted">No supplies yet</td>
+</tr>
+@endforelse
+
+</tbody>
+</table>
+
+</main>
+
 
 </body>
 </html>
