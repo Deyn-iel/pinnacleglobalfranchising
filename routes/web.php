@@ -199,6 +199,13 @@ Route::middleware(['auth'])->group(function () {
 });
 
 
+//print exam result details
+Route::get(
+    '/admin/exam-results/{id}/export-doc',
+    [AdminExamController::class, 'exportDoc']
+)->name('admin.exam-results.export-doc');
+
+
 Route::middleware(['auth', 'admin', 'admin.desktop'])
     ->prefix('admin')
     ->name('admin.')

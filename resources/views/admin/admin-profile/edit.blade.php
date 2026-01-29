@@ -1,82 +1,75 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Admin · Profile</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<title>Admin · Profile</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <link rel="icon" type="image/png" href="{{ asset('img/logo1-removebg-preview.png') }}">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    @vite([
-    'resources/css/admin/app.css',
-])
-    <!-- Alpine.js (Sidebar Toggle) -->
-    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+<link rel="icon" type="image/png" href="{{ asset('img/logo1-removebg-preview.png') }}">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
 
+@vite(['resources/css/admin/app.css'])
 
-    <style>
-        body { background: #f5f6fa; }
-        .sidebar-link:hover { background: #1f2937 !important; }
-        .sidebar-link { text-decoration: none; }
-        aside { z-index: 999; }
-        main { transition: margin-left 0.3s; }
+<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 
-        /* Dashboard Cards */
-        .dash-card {
-            border-radius: 12px;
-            transition: transform .2s, box-shadow .2s;
-            cursor: pointer;
-        }
-        .dash-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 6px 20px rgba(0,0,0,0.15);
-        }
-        .dash-icon {
-            font-size: 40px;
-            opacity: .8;
-        }
-        .sidebar-link {
-    border-radius: 8px;
-    transition: background 0.25s ease, padding-left 0.25s ease;
+<style>
+body {
+    background: #f5f6fa;
+    font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+    additionally: hidden;
 }
 
-.sidebar-link:hover {
-    background: rgba(255,255,255,0.1);
+aside {
+    width: 260px;
+    z-index: 999;
 }
 
-.sidebar-link.active {
-    background: rgba(255,255,255,0.18);
-    border-left: 4px solid #0d6efd;
-    padding-left: 14px;
+/* ================= MAIN LAYOUT ================= */
+main {
+    margin-left: 260px;
+    padding: clamp(24px, 2vw, 36px);
+    max-width: calc(100vw - 260px);
+    transition: margin-left .3s ease;
 }
 
-.sidebar-link.active i {
-    color: #ffffff;
+/* ================= PAGE HEADER ================= */
+.page-header {
+    background: #ffffff;
+    border-radius: 18px;
+    padding: 26px 30px;
+    box-shadow: 0 18px 40px rgba(15,23,42,.08);
+    margin-bottom: 32px;
 }
 
-/* ================= PROFILE PAGE ================= */
+.page-header h2 {
+    font-weight: 800;
+    margin-bottom: 6px;
+}
 
+.page-header p {
+    margin-bottom: 0;
+    color: #64748b;
+}
+
+/* ================= PROFILE GRID ================= */
 .profile-grid {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 24px;
-    max-width: 720px;
+    max-width: 760px;
 }
 
-/* CARD */
+/* ================= PROFILE CARD ================= */
 .profile-card {
     background: #ffffff;
-    border-radius: 14px;
-    padding: 26px 28px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+    border-radius: 20px;
+    padding: 30px 32px;
+    box-shadow: 0 20px 45px rgba(15,23,42,.12);
 }
 
-/* CARD TITLE */
+/* TITLES INSIDE FORM */
 .profile-card h3,
 .profile-card h2 {
+    font-weight: 800;
     font-size: 18px;
-    font-weight: 700;
     margin-bottom: 6px;
     color: #0f172a;
 }
@@ -87,105 +80,100 @@
     margin-bottom: 18px;
 }
 
-/* FORM ELEMENTS (Jetstream override) */
+/* ================= FORM INPUTS ================= */
 .profile-card input[type="text"],
 .profile-card input[type="email"],
 .profile-card input[type="password"] {
     width: 100%;
     padding: 12px 14px;
-    border-radius: 10px;
+    border-radius: 12px;
     border: 1px solid #d1d5db;
     font-size: 14px;
     margin-top: 6px;
-    transition: all 0.2s ease;
+    transition: all .2s ease;
 }
 
 .profile-card input:focus {
     outline: none;
     border-color: #2563eb;
-    box-shadow: 0 0 0 3px rgba(37,99,235,0.2);
+    box-shadow: 0 0 0 4px rgba(37,99,235,.18);
 }
 
-/* LABEL */
+/* ================= LABELS ================= */
 .profile-card label {
     font-size: 13px;
-    font-weight: 600;
+    font-weight: 700;
     color: #374151;
 }
 
-/* BUTTONS */
+/* ================= BUTTONS ================= */
 .profile-card button,
 .profile-card .primary-button {
     background: linear-gradient(135deg, #2563eb, #1e40af);
     color: #ffffff;
     border: none;
-    padding: 11px 20px;
-    border-radius: 10px;
+    padding: 11px 22px;
+    border-radius: 12px;
     font-size: 14px;
     font-weight: 700;
-    cursor: pointer;
     margin-top: 14px;
-    transition: all 0.25s ease;
+    transition: all .25s ease;
 }
 
-.profile-card button:hover {
+.profile-card button:hover,
+.profile-card .primary-button:hover {
     transform: translateY(-1px);
-    box-shadow: 0 10px 25px rgba(37,99,235,0.4);
+    box-shadow: 0 12px 28px rgba(37,99,235,.4);
 }
 
-/* STATUS TEXT */
+/* ================= STATUS TEXT ================= */
 .profile-card .text-sm {
     font-size: 13px;
     margin-top: 8px;
 }
 
-/* SUCCESS TEXT */
 .profile-card .text-green-600 {
     color: #16a34a;
 }
 
-/* RESPONSIVE */
-@media (max-width: 768px) {
+/* ================= RESPONSIVE ================= */
+@media (max-width: 991px) {
     main {
-        margin-left: 0 !important;
-    }
-
-    .profile-grid {
+        margin-left: 0;
         max-width: 100%;
     }
 }
-
-    </style>
+</style>
 </head>
 
 <body>
 
 <!-- NAV -->
-    @include('admin-sidebar.navbar')
+@include('admin-sidebar.navbar')
 
-{{-- SIDEBAR --}}
+<!-- SIDEBAR -->
 @include('admin-sidebar.sidebar')
 
-{{-- MAIN CONTENT --}}
-<main class="admin-main" style="margin-left:260px; padding:30px">
+<!-- MAIN CONTENT -->
+<main>
 
-    <div class="page-title mb-4">
+    <!-- HEADER -->
+    <div class="page-header">
         <h2>
-            <i class="fas fa-user-gear"></i> Admin Profile Settings
+            <i class="fas fa-user-gear text-primary me-2"></i>
+            Admin Profile
         </h2>
-        <p>Manage your admin account information</p>
+        <p>Manage your account information and security settings</p>
     </div>
 
+    <!-- PROFILE CONTENT -->
     <div class="profile-grid">
 
-        {{-- PROFILE + PASSWORD (COMBINED FORM) --}}
         <div class="profile-card">
             @include('admin.admin-profile.partials.update-admin-profile-information-form', [
                 'user' => $user
             ])
         </div>
-
-        
 
     </div>
 

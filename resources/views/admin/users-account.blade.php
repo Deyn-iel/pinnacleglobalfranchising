@@ -1,173 +1,226 @@
 <!doctype html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin · Users</title>
-    <link rel="icon" type="image/png" href="{{ asset('img/logo1-removebg-preview.png') }}">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
-@vite([
-    'resources/css/admin/app.css',
-])
-    <style>
-        body { background: #f5f6fa; }
-        .sidebar-link { text-decoration: none; }
-        aside { z-index: 999; }
-        main { transition: margin-left 0.3s; }
-        .alert.auto-hide {
-    overflow: hidden;
-    will-change: opacity, max-height;
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin · Users</title>
 
-    transition:
-        opacity 0.65s cubic-bezier(0.25, 0.1, 0.25, 1),
-        max-height 0.6s cubic-bezier(0.25, 0.1, 0.25, 1),
-        margin 0.6s ease,
-        padding 0.6s ease;
-}
-.btn-primary {
-    background: black;
-    border: none;
-    font-weight: 600;
-}
+<link rel="icon" type="image/png" href="{{ asset('img/logo1-removebg-preview.png') }}">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
 
-.alert.hide {
-    opacity: 0;
-    max-height: 0;
-    margin-top: 0;
-    margin-bottom: 0;
-    padding-top: 0;
-    padding-bottom: 0;
-}
-.sidebar-link {
-    border-radius: 8px;
-    transition: background 0.25s ease, padding-left 0.25s ease;
-}
+@vite(['resources/css/admin/app.css'])
 
-.sidebar-link:hover {
-    background: rgba(255,255,255,0.1);
-}
+<style>
+    body {
+        background: #f5f6fa;
+        overflow-x: hidden;
+        font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+    }
 
-.sidebar-link.active {
-    background: rgba(255,255,255,0.18);
-    border-left: 4px solid #0d6efd;
-    padding-left: 14px;
-}
+    aside {
+        width: 260px;
+        z-index: 999;
+    }
 
-.sidebar-link.active i {
-    color: #ffffff;
-}
+    /* ================= MAIN ================= */
+    main {
+        margin-left: 260px;
+        padding: clamp(20px, 2.5vw, 34px);
+        max-width: calc(100vw - 260px);
+    }
 
-    </style>
+    /* ================= HEADER ================= */
+    .page-header {
+        background: #ffffff;
+        border-radius: 14px;
+        padding: 18px 22px;
+        box-shadow: 0 10px 30px rgba(15,23,42,.08);
+        margin-bottom: 22px;
+    }
+
+    /* ================= TABLE ================= */
+    .table-wrapper {
+        background: #ffffff;
+        border-radius: 14px;
+        box-shadow: 0 10px 28px rgba(15,23,42,.08);
+        overflow: hidden;
+    }
+
+    table {
+        width: 100%;
+        table-layout: fixed;
+        font-size: clamp(13px, 0.9vw, 14px);
+        margin-bottom: 0;
+    }
+
+    th, td {
+        vertical-align: middle;
+        word-break: break-word;
+        white-space: normal;
+    }
+
+    /* Column widths (desktop safe) */
+    th:nth-child(1) { width: 160px; }
+    th:nth-child(2) { width: 360px; }
+    th:nth-child(3) { width: 130px; }
+    th:nth-child(4) { width: 150px; }
+    th:nth-child(5) { width: 220px; }
+    th:nth-child(6) { width: 90px; }
+
+    /* ================= BADGES ================= */
+    .badge {
+        font-size: 12px;
+        padding: 6px 10px;
+        font-weight: 600;
+    }
+
+    /* ================= BUTTONS ================= */
+    .btn-primary {
+        background: #000;
+        border: none;
+        font-weight: 600;
+    }
+
+    .btn-primary:hover {
+        background: #333;
+    }
+
+    /* ================= ALERT ================= */
+    .alert.hide {
+        opacity: 0;
+        max-height: 0;
+        padding: 0;
+        margin: 0;
+        transition: all .4s ease;
+    }
+
+    /* ================= SAFETY ================= */
+    @media (max-width: 1280px) {
+        table {
+            font-size: 13px;
+        }
+    }
+</style>
 </head>
 
 <body>
 
-<!-- NAV -->
-    @include('admin-sidebar.navbar')
-@include('admin-sidebar.sidebar') {{-- reusable sidebar --}}
+@include('admin-sidebar.navbar')
+@include('admin-sidebar.sidebar')
 
-<main class="container mt-4" style="margin-left:260px;">
+<main>
 
-    <h2 class="mb-4"><i class="fas fa-user"></i>
- Users Accounts</h2>
+    <!-- HEADER -->
+    <div class="page-header">
+        <h4 class="fw-bold mb-1">
+            <i class="fas fa-users me-2"></i>User Accounts
+        </h4>
+        <p class="text-muted mb-0">
+            All registered users displayed in a single view.
+        </p>
+    </div>
 
+    <!-- ALERTS -->
     @if(session('success'))
-    <div class="alert alert-success alert-dismissible fade show" role="alert">
-        ✅ {{ session('success') }}
+        <div class="alert alert-success auto-hide">
+            ✅ {{ session('success') }}
+        </div>
+    @endif
+
+    @if(session('error'))
+        <div class="alert alert-danger auto-hide">
+            ❌ {{ session('error') }}
+        </div>
+    @endif
+
+    <!-- TABLE -->
+    <div class="table-wrapper">
+        <div class="table-responsive">
+            <table class="table table-hover table-bordered">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Role</th>
+                        <th>Registered</th>
+                        <th>Status / Temp Password</th>
+                        <th class="text-center">Actions</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @forelse($users as $user)
+                    <tr>
+                        <td>{{ $user->name }}</td>
+
+                        <td>{{ $user->email }}</td>
+
+                        <td>
+                            <span class="badge
+                                {{ $user->usertype === 'admin'
+                                    ? 'bg-primary'
+                                    : ($user->usertype === 'supplies'
+                                        ? 'bg-info'
+                                        : 'bg-secondary') }}">
+                                {{ ucfirst($user->usertype) }}
+                            </span>
+                        </td>
+
+                        <td>{{ $user->created_at->format('M d, Y') }}</td>
+
+                        <td>
+                            @if($user->temp_password)
+                                <span class="badge bg-warning text-dark">
+                                    {{ $user->temp_password }}
+                                </span>
+                            @else
+                                <span class="badge bg-success">
+                                    Active
+                                </span>
+                            @endif
+                        </td>
+
+                        <td class="text-center">
+                            <form action="{{ route('admin.users-account.destroy', $user->id) }}"
+                                  method="POST"
+                                  onsubmit="return confirm('Delete this user?')">
+                                @csrf
+                                @method('DELETE')
+                                <button class="btn btn-danger btn-sm">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                    @empty
+                    <tr>
+                        <td colspan="6" class="text-center text-muted py-4">
+                            No user accounts found.
+                        </td>
+                    </tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
     </div>
-@endif
 
-@if(session('error'))
-    <div class="alert alert-danger alert-dismissible fade show" role="alert">
-        ❌ {{ session('error') }}
-    </div>
-@endif
-
-
-        
-
-
-   <table class="table table-hover table-bordered shadow-sm bg-white">
-    <thead class="table-dark">
-        <tr>
-            <th>Name</th>
-            <th>Email</th>
-            <th>Role</th>
-            <th>Registered</th>
-            <th>Temp Password</th>
-            <th width="15%">Actions</th>
-        </tr>
-    </thead>
-
-    <tbody>
-        @foreach($users as $user)
-        <tr>
-            <td>{{ $user->name }}</td>
-
-            <td>{{ $user->email }}</td>
-
-            <td>
-                <span class="badge 
-                    {{ $user->usertype === 'admin' ? 'bg-primary' : 'bg-secondary' }}">
-                    {{ ucfirst($user->usertype) }}
-                </span>
-
-            </td>
-
-            <td>{{ $user->created_at->format('M d, Y') }}</td>
-
-            <!-- TEMP PASSWORD COLUMN -->
-            <td>
-                @if($user->temp_password)
-                    <span class="badge bg-warning text-dark">
-                        {{ $user->temp_password }}
-                    </span>
-                @else
-                    <span class="badge bg-success">
-                    Logged in / Password changed
-                </span>
-                @endif
-            </td>
-
-            <!-- ACTIONS -->
-            <td>
-                <form action="{{ route('admin.users-account.destroy', $user->id) }}" method="POST"
-                      onsubmit="return confirm('Are you sure you want to delete this user?')">
-                    @csrf
-                    @method('DELETE')
-                    <button class="btn btn-danger btn-sm">Delete</button>
-                </form>
-            </td>
-        </tr>
-        @endforeach
-    </tbody>
-</table>
-
-
-    {{ $users->links() }}
-
-    <a href="{{ route('admin.users.store') }}" 
-   class="btn btn-primary mt-3">
-    <i class="fas fa-add me-2"></i> Register a User
-</a>
-
+    <!-- REGISTER -->
+    <a href="{{ route('admin.users.register') }}"
+       class="btn btn-primary mt-4">
+        <i class="fas fa-user-plus me-2"></i>Register a User
+    </a>
 
 </main>
-    <script>
-        setTimeout(() => {
-    const alert = document.querySelector('.alert');
-    if (!alert) return;
 
-    // smooth hide
-    alert.classList.add('hide');
-
-    // remove element completely (fix layout)
+<script>
     setTimeout(() => {
-        alert.remove();
-    }, 400); // match CSS transition
-}, 3000);
-    </script>
+        document.querySelectorAll('.auto-hide').forEach(alert => {
+            alert.classList.add('hide');
+            setTimeout(() => alert.remove(), 400);
+        });
+    }, 3000);
+</script>
 
 </body>
 </html>

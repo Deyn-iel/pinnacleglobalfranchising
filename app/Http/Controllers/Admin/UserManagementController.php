@@ -12,10 +12,11 @@ use Illuminate\Support\Str;
 class UserManagementController extends Controller
 {
     public function index()
-    {
-        $users = User::latest()->paginate(10);
-        return view('admin.users-account', compact('users'));
-    }
+{
+    $users = \App\Models\User::orderBy('created_at', 'desc')->get(); // ❌ wag paginate()
+
+    return view('admin.users-account', compact('users'));
+}
 
     public function store(Request $request)
     {

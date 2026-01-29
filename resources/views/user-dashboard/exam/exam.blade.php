@@ -405,7 +405,7 @@ button:disabled {
             <h2>Exam Completed!</h2>
 
             <p class="result-sub">
-                Great job! You’ve successfully submitted your answers.
+                Great job! You’ve successfully submitted your answers. Essay questions will be reviewed by the instructor.
             </p>
 
             <div id="score-text" class="score-box">
@@ -775,7 +775,7 @@ setTimeout(() => {
 
     setTimeout(() => {
         document.getElementById("submitForm").submit();
-    }, 4000);
+    }, 5000);
 }
 
 /* ===============================

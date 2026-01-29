@@ -44,7 +44,7 @@
             <header class="page-header">
                 <h1>Video Tutorial</h1>
                 <p>
-                    Make sure to watch the full tutorial video. You will be able to proceed to the exam only after the video ends.
+                    Please watch the tutorial video carefully. If you are already familiar with the instructions or do not need the video, you may skip it and proceed directly to the exam.
                 </p>
             </header>
 

@@ -6,6 +6,17 @@ use Illuminate\Http\Request;
 use App\Models\Exam;
 use App\Models\ExamQuestion;
 use App\Models\ExamResult;
+use App\Models\ExamAnswer;
+use PhpOffice\PhpWord\PhpWord;
+use PhpOffice\PhpWord\IOFactory;
+use Carbon\Carbon;
+
+if (!function_exists('cleanText')) {
+    function cleanText($text) {
+        return htmlspecialchars($text ?? '', ENT_QUOTES, 'UTF-8');
+    }
+}
+
 
 class AdminExamController extends Controller
 {
@@ -235,4 +246,106 @@ if ($type === 'mcq' && isset($request->options[$qid])) {
             : 'Exam DISABLED'
     );
 }
+public function exportDoc($id)
+{
+    $result = ExamResult::with([
+        'user',
+        'exam.questions.options',
+    ])->findOrFail($id);
+
+    $answers = ExamAnswer::where('exam_id', $result->exam_id)
+        ->where('user_id', $result->user_id)
+        ->get()
+        ->keyBy('question_id');
+
+    // IMPORTANT: clear buffer
+    if (ob_get_length()) {
+        ob_end_clean();
+    }
+
+    $phpWord = new PhpWord();
+    $phpWord->setDefaultFontName('Arial');
+    $phpWord->setDefaultFontSize(11);
+
+    $section = $phpWord->addSection();
+
+    /* ===== HEADER ===== */
+    $section->addText(
+        cleanText("Exam Result"),
+        ['bold' => true, 'size' => 16]
+    );
+
+    $section->addText("User: " . cleanText($result->user->name));
+    $section->addText("Exam: " . cleanText($result->exam->title));
+    $section->addText("Score: {$result->score}");
+    $section->addText(
+    "Date: " .
+    $result->created_at
+        ->copy()
+        ->addHours(8)
+        ->format('M d, Y h:i A')
+);
+
+    $section->addTextBreak(1);
+
+    /* ===== QUESTIONS ===== */
+    foreach ($result->exam->questions as $i => $question) {
+
+        $answer = $answers[$question->id]->answer ?? null;
+
+        $section->addText(
+            ($i + 1) . ". " . cleanText($question->question),
+            ['bold' => true]
+        );
+
+        if ($question->type === 'mcq') {
+            $userOpt = $question->options->firstWhere('id', $answer);
+            $correctOpt = $question->options->firstWhere('id', $question->correct_option);
+
+            $section->addText("User Answer: " . cleanText($userOpt->option_text ?? 'No answer'));
+            $section->addText("Correct Answer: " . cleanText($correctOpt->option_text ?? 'Not set'));
+
+            $section->addText(
+                ((int)$answer === (int)$question->correct_option)
+                    ? "Status: CORRECT"
+                    : "Status: WRONG"
+            );
+        }
+
+        if ($question->type === 'true_false') {
+            $section->addText("User Answer: " . ($answer == 1 ? 'True' : 'False'));
+            $section->addText("Correct Answer: " . ($question->correct_option == 1 ? 'True' : 'False'));
+        }
+
+        if ($question->type === 'essay') {
+            $section->addText("User Answer:");
+            $section->addText(cleanText($answer ?: 'No answer submitted'));
+            $section->addText("Status: MANUAL CHECKING REQUIRED");
+        }
+
+        $section->addTextBreak(1);
+    }
+
+    // clean exam title
+$examTitle = preg_replace('/[^A-Za-z0-9_-]/', '_', $result->exam->title);
+
+// clean user name
+$userName = preg_replace('/[^A-Za-z0-9_-]/', '_', $result->user->name);
+
+// build file name
+$fileName = "Exam_Result_{$examTitle}_{$userName}.docx";
+
+// save path
+$tempPath = storage_path("app/{$fileName}");
+
+$writer = IOFactory::createWriter($phpWord, 'Word2007');
+$writer->save($tempPath);
+
+return response()
+    ->download($tempPath)
+    ->deleteFileAfterSend(true);
+
+}
+
+
 }
