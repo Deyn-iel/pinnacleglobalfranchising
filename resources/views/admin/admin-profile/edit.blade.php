@@ -47,6 +47,10 @@ main {
     margin-bottom: 6px;
 }
 
+.page-header i {
+    color: #000000 !important;
+}
+
 .page-header p {
     margin-bottom: 0;
     color: #64748b;

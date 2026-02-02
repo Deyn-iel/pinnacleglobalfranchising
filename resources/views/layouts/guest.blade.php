@@ -46,7 +46,7 @@
             <p>Log in to access your account and manage your services.</p>
         </div>
 
-        <p class="footer-text">© 2025 Pinnacle Global Franchising</p>
+        <p class="footer-text">© 2026 Pinnacle Global Franchising</p>
     </div>
     <!-- RIGHT SIDE (Laravel Breeze Slot) -->
     <div class="right">

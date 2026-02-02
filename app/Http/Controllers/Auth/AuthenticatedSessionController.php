@@ -44,6 +44,11 @@ class AuthenticatedSessionController extends Controller
         return redirect()->route('supplies.supplies-dashboard');
     }
 
+    if ($user->usertype === 'ticket') {
+        return redirect()->route('tickets.dashboard');
+    }
+
+
     return redirect()->route('dashboard'); // normal user
 }
 

@@ -24,9 +24,9 @@
 <body>
 
 @include('user-dashboard.partials-dashboard.sidebar')
-
-<div class="main">
 @include('user-dashboard.partials-dashboard.header')
+<div class="main">
+
 
 <div class="content fade-up">
 <div class="attendance-wrapper">

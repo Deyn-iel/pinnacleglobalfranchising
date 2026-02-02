@@ -158,13 +158,16 @@
 
                         <td>
                             <span class="badge
-                                {{ $user->usertype === 'admin'
-                                    ? 'bg-primary'
-                                    : ($user->usertype === 'supplies'
-                                        ? 'bg-info'
-                                        : 'bg-secondary') }}">
-                                {{ ucfirst($user->usertype) }}
-                            </span>
+    {{ $user->usertype === 'admin'
+        ? 'bg-primary'
+        : ($user->usertype === 'supplies'
+            ? 'bg-info'
+            : ($user->usertype === 'ticket'
+                ? 'bg-warning text-light'
+                : 'bg-secondary')) }}">
+    {{ ucfirst($user->usertype) }}
+</span>
+
                         </td>
 
                         <td>{{ $user->created_at->format('M d, Y') }}</td>

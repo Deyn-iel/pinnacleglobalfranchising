@@ -335,7 +335,7 @@ function toggleType(select, id) {
 function deleteExistingQuestion(btn, id) {
     if (!confirm('Delete this question?')) return;
 
-    btn.closest('.border').remove();
+    btn.closest('.question-box').remove();
 
     const input = document.createElement('input');
     input.type = 'hidden';

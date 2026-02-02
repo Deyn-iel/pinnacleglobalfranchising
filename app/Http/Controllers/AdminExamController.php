@@ -179,31 +179,36 @@ if ($request->has('new_questions')) {
 /* ===== MCQ (FINAL FIX — EXISTING QUESTIONS) ===== */
 if ($type === 'mcq' && isset($request->options[$qid])) {
 
-    // clear old options
-    $question->options()->delete();
-
+    $existingOptions = $question->options->values(); // keep order
     $correctOptionId = null;
-    $position = 1;
 
-    foreach ($request->options[$qid] as $opt) {
+    foreach ($request->options[$qid] as $index => $optText) {
 
-        if (trim($opt) === '') continue;
+        if (trim($optText) === '') continue;
 
-        $option = $question->options()->create([
-            'option_text' => $opt
-        ]);
-
-        if ((int)$correctIndex === $position) {
-            $correctOptionId = $option->id;
+        // ✅ update existing option if exists
+        if (isset($existingOptions[$index])) {
+            $option = $existingOptions[$index];
+            $option->update([
+                'option_text' => $optText
+            ]);
+        } else {
+            // ✅ create only if kulang
+            $option = $question->options()->create([
+                'option_text' => $optText
+            ]);
         }
 
-        $position++;
+        if ((int)$correctIndex === ($index + 1)) {
+            $correctOptionId = $option->id;
+        }
     }
 
     $question->update([
         'correct_option' => $correctOptionId
     ]);
 }
+
 
 
 

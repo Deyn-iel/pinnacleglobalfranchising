@@ -1,3 +1,10 @@
+/* ================= ROOT ================= */
+:root {
+    --sidebar-sm: 230px;
+    --sidebar-md: 250px;
+    --sidebar-lg: 280px;
+}
+
 /* ================= ADMIN SIDEBAR ================= */
 .admin-sidebar {
     width: 260px;
@@ -10,6 +17,18 @@
 
     background: linear-gradient(180deg, #0f172a, #020617);
     color: #cbd5f5;
+
+    height: 100dvh;
+    overflow-y: auto;
+}
+
+/* scrollbar */
+.admin-sidebar::-webkit-scrollbar {
+    width: 6px;
+}
+.admin-sidebar::-webkit-scrollbar-thumb {
+    background: rgba(255,255,255,0.15);
+    border-radius: 6px;
 }
 
 /* ================= BRAND ================= */
@@ -130,18 +149,6 @@
     user-select: none;
 }
 
-/* ================= MOBILE SIDEBAR ================= */
-@media (max-width: 992px) {
-    .admin-sidebar {
-        transform: translateX(-100%);
-        transition: transform 0.3s ease;
-    }
-
-    .admin-sidebar.show {
-        transform: translateX(0);
-    }
-}
-
 /* ================= ADMIN TOPBAR ================= */
 .admin-topbar {
     height: 64px;
@@ -234,9 +241,113 @@
     transform: translateY(-1px);
 }
 
-/* MOBILE TOPBAR */
-@media (max-width: 640px) {
-    .admin-user .name {
-        display: none;
+/* ================= MAIN CONTENT ================= */
+.admin-content {
+    margin-left: 260px;
+    padding: 26px;
+    min-height: 100dvh;
+    background: #f8fafc;
+    transition: margin-left 0.3s ease;
+}
+
+/* ================= DESKTOP & LAPTOP RESPONSIVE ================= */
+
+/* Small laptops (≤1366px) */
+@media (max-width: 1366px) {
+    .admin-sidebar {
+        width: var(--sidebar-sm);
     }
+    .admin-content {
+        margin-left: var(--sidebar-sm);
+    }
+    .sidebar-nav .nav-link {
+        font-size: 13.5px;
+        padding: 10px 18px;
+    }
+}
+
+/* Standard laptops (1367–1599px) */
+@media (min-width: 1367px) and (max-width: 1599px) {
+    .admin-sidebar {
+        width: var(--sidebar-md);
+    }
+    .admin-content {
+        margin-left: var(--sidebar-md);
+    }
+}
+
+/* Large desktops (≥1600px) */
+@media (min-width: 1600px) {
+    .admin-sidebar {
+        width: var(--sidebar-lg);
+    }
+    .admin-content {
+        margin-left: var(--sidebar-lg);
+    }
+    .sidebar-nav .nav-link {
+        font-size: 15px;
+        padding: 14px 26px;
+    }
+}
+
+/* ================= SIDEBAR DROPDOWN (SUPPLIES) ================= */
+
+/* dropdown container */
+.nav-item.dropdown .nav-link {
+    display: flex;
+    align-items: center;
+}
+
+/* arrow icon */
+.nav-item.dropdown .arrow {
+    margin-left: auto;
+    font-size: 12px;
+    transition: transform 0.25s ease;
+    opacity: 0.8;
+}
+
+/* rotate arrow kapag open */
+.nav-item.dropdown.open .arrow {
+    transform: rotate(180deg);
+}
+
+/* dropdown menu */
+.nav-item.dropdown .dropdown-menu {
+    list-style: none;
+    padding: 6px 0 6px 46px;
+    margin: 0;
+    display: none;
+}
+
+/* show dropdown */
+.nav-item.dropdown.open .dropdown-menu {
+    display: block;
+}
+
+/* dropdown links */
+.dropdown-menu li a {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    padding: 8px 12px;
+    margin: 4px 0;
+
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 600;
+
+    color: #cbd5f5;
+    text-decoration: none;
+    transition: background 0.2s ease, color 0.2s ease;
+}
+
+.dropdown-menu li a:hover {
+    background: rgba(56,189,248,0.12);
+    color: #ffffff;
+}
+
+.dropdown-menu li a.active {
+    background: rgba(56,189,248,0.25);
+    color: #ffffff;
 }

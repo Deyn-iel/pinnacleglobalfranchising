@@ -276,6 +276,7 @@ select:focus {
                     <option value="admin">Admin</option>
                     <option value="user">User</option>
                     <option value="supplies">Supplies</option>
+                    <option value="ticket">Ticket</option>
                 </select>
 
             </div>

@@ -26,13 +26,21 @@ use App\Http\Controllers\UserDashboardController;
 use App\Http\Controllers\SuppliesDashboardController;
 use App\Http\Controllers\Admin\SupplyController;
 use App\Http\Controllers\Admin\AdminSuppliesController;
+use App\Http\Controllers\TicketController;
+use App\Http\Controllers\Admin\AdminTicketController;
 
+Route::middleware(['auth'])->group(function () {
 
-/*
-|--------------------------------------------------------------------------
-| PUBLIC PAGES
-|--------------------------------------------------------------------------
-*/
+    Route::get('/tickets', [TicketController::class, 'index'])
+        ->name('tickets.dashboard');
+
+    Route::get('/tickets/create', [TicketController::class, 'create'])
+        ->name('tickets.create');
+
+    Route::post('/tickets', [TicketController::class, 'store'])
+        ->name('tickets.store');
+
+});
 
 
 Route::view('/', 'welcome')->name('home');
@@ -53,7 +61,7 @@ Route::get('/redirect-after-login', function () {
 
 
 
-//suppliesss///////////////////////////////////////////////
+//suppliesss/
 Route::middleware(['auth', 'role:supplies'])->group(function () {
     Route::get('/supplies/dashboard', [SuppliesDashboardController::class, 'index'])
         ->name('supplies.supplies-dashboard');
@@ -79,11 +87,6 @@ Route::prefix('franchisability')->group(function () {
     Route::view('/franchising_checklist', 'franchisability.franchising_checklist')->name('franchisability.checklist');
 });
 
-/*
-|--------------------------------------------------------------------------
-| USER DASHBOARD
-|--------------------------------------------------------------------------
-*/
 
 Route::middleware(['auth'])->group(function () {
     Route::post('/attendance/log', [AttendanceController::class, 'log'])
@@ -95,22 +98,15 @@ Route::post('/exam/save-progress', [ExamController::class, 'saveProgress'])
 
 Route::middleware(['auth', 'verified'])->group(function () {
 
-        
-
     Route::get('/dashboard', [UserDashboardController::class, 'index'])
     ->middleware(['auth', 'verified'])
     ->name('dashboard');
     
-
-    
-
     Route::view(
         '/user-dashboard/uploading-requirements',
         'user-dashboard.uploading-requirements.uploading-requirements'
     )->name('uploading.requirements');
     
-
-    /* ✅ EXAM – MUST USE CONTROLLER */
     Route::get('/I%2jdawh=adwIpkadLHiadw0476jhJ/{exam}', [ExamController::class, 'start'])
     ->name('exam.start');
 
@@ -124,7 +120,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
         'user-dashboard.attendance.attendance'
     )->name('attendance');
 
-    /* ✅ PROCEED – STATIC PAGE */
     Route::view(
         '/adw6daid7ad97w8ydawd3acr3rarvavr53a3',
         'user-dashboard.exam.proceed'
@@ -141,13 +136,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
     )->name('exam-done');
 });
 
-
-/*
-|--------------------------------------------------------------------------
-| FRANCHISE APPLICATION
-|--------------------------------------------------------------------------
-*/
-
 Route::view('/franchise-application-process', 'franchise-application-process.franchise-application-process')
     ->name('franchise.process');
 
@@ -157,21 +145,6 @@ Route::get('/franchise/application', fn() =>
 
 Route::post('/franchise/submit', [FranchiseController::class, 'store'])
     ->name('franchise.submit');
-
-/*
-|--------------------------------------------------------------------------
-| ADMIN PANEL (SINGLE LOGIN SYSTEM)
-|--------------------------------------------------------------------------
-|
-| Admin still logs in using /login (Breeze default)
-| After login: redirect admin users to /admin
-| Normal users → /user-dashboard
-|
-|--------------------------------------------------------------------------
-*/
-
-
-
 
 
 // show list of available exams
@@ -198,26 +171,32 @@ Route::middleware(['auth'])->group(function () {
     })->name('admin.admin-profile.edit');
 });
 
-
 //print exam result details
 Route::get(
     '/admin/exam-results/{id}/export-doc',
     [AdminExamController::class, 'exportDoc']
 )->name('admin.exam-results.export-doc');
 
-
 Route::middleware(['auth', 'admin', 'admin.desktop'])
     ->prefix('admin')
     ->name('admin.')
     ->group(function () {
+
+     Route::get('/tickets', [AdminTicketController::class, 'index'])
+            ->name('tickets.index');
+
+        Route::patch('/tickets/{ticket}', [AdminTicketController::class, 'update'])
+            ->name('tickets.update');
+
+        Route::delete('/tickets/{ticket}', [AdminTicketController::class, 'destroy'])
+            ->name('tickets.destroy');
     
-    // SUPPLIES MANAGEMENT 
-     Route::get('/supplies', [AdminSuppliesController::class, 'index'])
+// SUPPLIES MANAGEMENT 
+Route::get('/supplies', [AdminSuppliesController::class, 'index'])
             ->name('supplies');
 
-        Route::post('/supplies', [AdminSuppliesController::class, 'store'])
+Route::post('/supplies', [AdminSuppliesController::class, 'store'])
             ->name('supplies.store');
-
 
 
 Route::get('/supplies/{supply}/edit', [AdminSuppliesController::class, 'edit'])
@@ -229,18 +208,15 @@ Route::put('/supplies/{supply}', [AdminSuppliesController::class, 'update'])
 Route::delete('/supplies/{supply}', [AdminSuppliesController::class, 'destroy'])
     ->name('supplies.destroy');
 
-
-
-    Route::post('/attendance/location', [AdminAttendanceController::class, 'updateLocation'])
+Route::post('/attendance/location', [AdminAttendanceController::class, 'updateLocation'])
     ->name('attendance.location.update');
 
-    Route::patch(
+Route::patch(
     '/exams/{exam}/toggle',
     [AdminExamController::class, 'toggle']
 )->name('exams.toggle');
 
-
-    Route::get('/dashboard', [AdminDashboardController::class, 'index'])
+Route::get('/dashboard', [AdminDashboardController::class, 'index'])
     ->name('admin.dashboard');
 
     Route::put(
@@ -248,11 +224,10 @@ Route::delete('/supplies/{supply}', [AdminSuppliesController::class, 'destroy'])
     [AdminAttendanceController::class, 'update']
 )->name('attendance.update');
 
-
-    Route::get('/attendance/export', [AdminAttendanceController::class, 'exportRange'])
+Route::get('/attendance/export', [AdminAttendanceController::class, 'exportRange'])
     ->name('attendance.export');
 
-    Route::delete('/attendance/{id}', 
+Route::delete('/attendance/{id}', 
     [AdminAttendanceController::class, 'destroy']
 )->name('attendance.destroy');
 
@@ -260,101 +235,68 @@ Route::get('/attendance', [AdminAttendanceController::class, 'index'])
             ->name('attendance');
 
         // VIEW EXAM RESULT DETAILS
-    Route::get('/exam-results/{id}', [AdminExamResultController::class, 'show'])
+Route::get('/exam-results/{id}', [AdminExamResultController::class, 'show'])
         ->name('exam-results.view');
 
         // VIEW EXAM RESULTS
-        Route::get('/exam-results', [AdminExamResultController::class, 'results'])
+Route::get('/exam-results', [AdminExamResultController::class, 'results'])
             ->name('exam-results');
 
-        Route::delete('/exam-results/{id}', [AdminExamResultController::class, 'destroy'])
+Route::delete('/exam-results/{id}', [AdminExamResultController::class, 'destroy'])
             ->name('exam-results.delete');
 
         // User management
-        Route::get('/users-account', [UserManagementController::class, 'index'])
+Route::get('/users-account', [UserManagementController::class, 'index'])
             ->name('users-account');
 
-        Route::delete('/users-account/{id}', [UserManagementController::class, 'destroy'])
+Route::delete('/users-account/{id}', [UserManagementController::class, 'destroy'])
             ->name('users-account.destroy');
 
        // Show register form
-        Route::get('/users/register', [AdminUserController::class, 'create'])
+Route::get('/users/register', [AdminUserController::class, 'create'])
             ->name('users.register');
 
         // Handle register submit
-        Route::post('/users/register', [AdminUserController::class, 'store'])
+Route::post('/users/register', [AdminUserController::class, 'store'])
             ->name('users.store');
 
+Route::view('/', 'admin.admin')->name('dashboard');
 
-        /* ===============================
-         * ADMIN DASHBOARD STATIC PAGES
-         * =============================== */
+Route::view('/application', 'admin.application')->name('application');
 
-        Route::view('/', 'admin.admin')->name('dashboard');
-        Route::view('/application', 'admin.application')->name('application');
-
-        Route::get('/requirements', [RequirementController::class, 'index'])
+Route::get('/requirements', [RequirementController::class, 'index'])
     ->name('requirements');
 
     Route::delete('/requirements/{id}', 
     [RequirementController::class, 'destroy']
 )->name('requirements.delete');
 
-
-
-
-
 Route::post('/requirements', [RequirementController::class, 'store']);
 
-
-        /* ⚠️ IMPORTANT:
-           Removed the WRONG route:
-           Route::view('/uploading-exams', 'admin.uploading-exams')->name('uploading-exams');
-           (This caused $exams = undefined)
-        */
-
-
-        /* ===============================
-         * EXAM MANAGEMENT (CONTROLLER)
-         * =============================== */
-
         // Display Upload Exams Page
-        Route::get('/uploading-exams', [AdminExamController::class, 'index'])
+Route::get('/uploading-exams', [AdminExamController::class, 'index'])
             ->name('uploading-exams');
 
         // Save Exam
-        Route::post('/exams/store', [AdminExamController::class, 'store'])
+Route::post('/exams/store', [AdminExamController::class, 'store'])
             ->name('exams.store');
 
         // Delete Exam
-        Route::delete('/exams/delete/{id}', [AdminExamController::class, 'delete'])
+Route::delete('/exams/delete/{id}', [AdminExamController::class, 'delete'])
             ->name('exams.delete');
 
-
-        /* ===============================
-         * FRANCHISE APPLICATIONS
-         * =============================== */
-
-        Route::get('/applications', [FranchiseAdminController::class, 'index'])
+Route::get('/applications', [FranchiseAdminController::class, 'index'])
             ->name('applications');
 
-        Route::get('/applications/{id}', [FranchiseAdminController::class, 'show'])
+Route::get('/applications/{id}', [FranchiseAdminController::class, 'show'])
             ->name('applications.show');
 
-        Route::delete('/applications/{id}', [FranchiseAdminController::class, 'destroy'])
+Route::delete('/applications/{id}', [FranchiseAdminController::class, 'destroy'])
             ->name('applications.destroy');
 
-
-        /* ===============================
-         * USER ACCOUNT MANAGEMENT
-         * =============================== */
-
-        Route::get('/users-account', [UserManagementController::class, 'index'])
+Route::get('/users-account', [UserManagementController::class, 'index'])
             ->name('users-account');
 
-        
-
-           /* CONTACT LIST */
 Route::get('/contacts', function () {
     $contacts = \App\Models\Contact::latest()->get();
     return view('admin.contacts', compact('contacts'));
@@ -372,20 +314,11 @@ Route::delete('/contacts/delete-all', function () {
 /* DELETE SINGLE — MUST BE LAST */
 Route::delete('/contacts/{id}', [\App\Http\Controllers\ContactController::class, 'destroy'])
     ->name('contacts.delete');
-
-
-
     });
 
 //contact
 Route::post('/contact/send', [ContactController::class, 'store'])
     ->name('contact.send');
-/*
-|--------------------------------------------------------------------------
-| USER LOGOUT
-|--------------------------------------------------------------------------
-*/
-
 
 Route::post('/user/logout', function (Request $request) {
 
@@ -396,12 +329,6 @@ Route::post('/user/logout', function (Request $request) {
     return redirect('/login');
 
 })->name('custom.logout');
-
-/*
-|--------------------------------------------------------------------------
-| USER PROFILE SETTINGS
-|--------------------------------------------------------------------------
-*/
 
 Route::middleware('auth')->group(function () {
 
@@ -419,11 +346,9 @@ Route::middleware('auth')->group(function () {
     )->name('profile.update.all');
 
 });
-
 /*
 |--------------------------------------------------------------------------
 | AUTH ROUTES (Laravel Breeze)
 |--------------------------------------------------------------------------
 */
-
 require __DIR__.'/auth.php';

@@ -544,32 +544,32 @@ window.addEventListener("popstate", () => {
    iOS SWIPE-BACK DETECTION
 ================================ */
 
-let touchStartX = 0;
+// let touchStartX = 0;
 
-window.addEventListener(
-    "touchstart",
-    (e) => {
-        if (!examStarted || cheatTriggered) return;
-        touchStartX = e.touches[0].clientX;
-    },
-    { passive: true }
-);
+// window.addEventListener(
+//     "touchstart",
+//     (e) => {
+//         if (!examStarted || cheatTriggered) return;
+//         touchStartX = e.touches[0].clientX;
+//     },
+//     { passive: true }
+// );
 
-window.addEventListener(
-    "touchmove",
-    (e) => {
-        if (!examStarted || cheatTriggered) return;
+// window.addEventListener(
+//     "touchmove",
+//     (e) => {
+//         if (!examStarted || cheatTriggered) return;
 
-        const moveX = e.touches[0].clientX;
+//         const moveX = e.touches[0].clientX;
 
-        // iOS edge swipe (real back gesture)
-        if (touchStartX < 20 && moveX > 60) {
-            e.preventDefault();
-            triggerCheat("Swipe back gesture detected");
-        }
-    },
-    { passive: false }
-);
+//         // iOS edge swipe (real back gesture)
+//         if (touchStartX < 20 && moveX > 60) {
+//             e.preventDefault();
+//             triggerCheat("Swipe back gesture detected");
+//         }
+//     },
+//     { passive: false }
+// );
 
 
 
@@ -813,7 +813,7 @@ function triggerCheat(reason) {
         <div>
             <h2>⚠ EXAM TERMINATED</h2>
             <p style="margin-top:10px">
-                Cheating detected:<br><strong>${reason}</strong>
+                <strong>${reason}</strong>
             </p>
             <p style="opacity:.7;margin-top:15px">
                 Submitting exam…
@@ -920,19 +920,19 @@ window.addEventListener("beforeunload", function (e) {
    VIEWPORT CHANGE DETECTION
 ================================ */
 
-if (isMobile) {
-    let lastHeight = window.innerHeight;
+// if (isMobile) {
+//     let lastHeight = window.innerHeight;
 
-    window.addEventListener("resize", () => {
-        if (!examStarted || cheatTriggered) return;
+//     window.addEventListener("resize", () => {
+//         if (!examStarted || cheatTriggered) return;
 
-        if (Math.abs(window.innerHeight - lastHeight) > 120) {
-            triggerCheat("Screen overlay / notification shade detected");
-        }
+//         if (Math.abs(window.innerHeight - lastHeight) > 120) {
+//             triggerCheat("Screen overlay / notification shade detected");
+//         }
 
-        lastHeight = window.innerHeight;
-    });
-}
+//         lastHeight = window.innerHeight;
+//     });
+// }
 </script>
 
 

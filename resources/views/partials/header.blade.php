@@ -40,14 +40,13 @@
         OUR SERVICES
       </div>
       <div class="nav-submenu">
-        <a href="{{ url('our_service#services') }}"
-          class="{{ request()->is('our_service') ? 'submenu-active' : '' }}">
+        <a href="{{ url('our_service#services') }}">
           Services
         </a>
         <a href="{{ url('our_service#strategic-planning') }}">Strategic Planning</a>
-        <a href="{{ url('our_service#legal-documentation') }}">Legal Documentation</a>
-        <a href="{{ url('our_service#franchise-sales-training') }}">Franchise Sales Training</a>
-        <a href="{{ url('our_service#operations-services') }}">Operations Services</a>
+        <a href="{{ url('our_service#legal-docs') }}">Legal Documentation</a>
+        <a href="{{ url('our_service#franchise-training') }}">Franchise Sales Training</a>
+        <a href="{{ url('our_service#operations') }}">Operations Services</a>
         <a href="{{ url('our_service#franchise-marketing') }}">Franchise Marketing Ser.</a>
         <a href="{{ url('our_service#special-services') }}">Special Services</a>
       </div>

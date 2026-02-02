@@ -132,7 +132,7 @@
     <div class="dashboard-header">
         <h2>
             Welcome, {{ Auth::user()->name }}
-            <i class="fas fa-rocket text-primary ms-2"></i>
+            <i class="fas fa-rocket"></i>
         </h2>
         <p class="text-muted mb-0">
             Quick overview of your system modules
