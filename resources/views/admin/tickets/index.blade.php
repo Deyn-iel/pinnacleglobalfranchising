@@ -96,6 +96,13 @@ main {
     font-size: 13px;
 }
 
+.no-tickets {
+    background: #ffffff;
+    border-radius: 20px;
+    box-shadow: 0 18px 38px rgba(15,23,42,.08);
+    margin-bottom: 20px;
+}
+
 /* ===== RESPONSIVE ===== */
 @media (max-width: 1200px) {
     .description-box {
@@ -133,8 +140,8 @@ main {
     <!-- HEADER -->
     <div class="page-header">
         <div>
-            <h3>🎫 Support Tickets</h3>
-            <p class="text-muted mb-0">Grouped per user account</p>
+            <h3><i class="fa-solid fa-ticket"></i> Support Tickets</h3>
+            <p class="text-muted mb-0">View tickets by account</p>
         </div>
         <span class="text-muted small">
             Admin: <strong>{{ Auth::user()->name }}</strong>
@@ -143,10 +150,9 @@ main {
 
     {{-- SUCCESS --}}
     @if(session('success'))
-        <div class="alert alert-success alert-dismissible fade show">
+        <div class="alert alert-success alert-dismissible fade show" id="successAlert">
             <i class="fa-solid fa-circle-check me-1"></i>
             {{ session('success') }}
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
         </div>
     @endif
 
@@ -174,15 +180,16 @@ main {
 
             <!-- TABLE -->
             <div class="table-responsive">
-                <table class="table table-hover align-middle mb-0">
+                <table class="table table-hover align-middle mb-4">
                     <thead>
                         <tr>
                             <th>Ticket #</th>
-                            <th>Subject</th>
+                            <th>Branch</th>
                             <th>Concern</th>
                             <th>Dept</th>
                             <th>Priority</th>
                             <th>Status</th>
+                            <th>Date Submitted</th>
                             <th class="text-center">Actions</th>
                         </tr>
                     </thead>
@@ -204,52 +211,75 @@ main {
 
                             <td>
                                 <span class="badge
-                                    {{ $ticket->priority === 'high' ? 'bg-danger'
-                                        : ($ticket->priority === 'medium' ? 'bg-warning text-dark'
-                                        : 'bg-info') }}">
+                                    {{ $ticket->priority === 'high' ? 'bg-danger p-2'
+                                        : ($ticket->priority === 'medium' ? 'bg-warning text-light p-2'
+                                        : ($ticket->priority === 'low' ? 'bg-info p-2'
+                                        : 'bg-secondary')) }}">
                                     {{ ucfirst($ticket->priority) }}
                                 </span>
                             </td>
 
                             <td>
                                 <span class="badge
-                                    {{ $ticket->status === 'open' ? 'bg-danger'
-                                        : ($ticket->status === 'in_progress' ? 'bg-warning text-dark'
-                                        : 'bg-success') }}">
-                                    {{ ucwords(str_replace('_',' ', $ticket->status)) }}
-                                </span>
+                            {{ $ticket->status === 'pending' ? 'bg-danger text-light p-2'
+                                : ($ticket->status === 'in_progress' ? 'bg-primary text-light p-2'
+                                : ($ticket->status === 'resolved' ? 'bg-success text-light p-2'
+                                : 'bg-secondary')) }}">
+                            {{ ucwords(str_replace('_',' ', $ticket->status)) }}
+                        </span>
                             </td>
 
                             <td>
-                                <div class="action-wrap">
+                            <div class="small text-muted">
+                                {{ $ticket->created_at->format('M d, Y') }} <br>
+                                <span class="text-secondary">
+                                    {{ $ticket->created_at->format('h:i A') }}
+                                </span>
+                            </div>
+                        </td>
 
-                                    {{-- STATUS --}}
-                                    <form method="POST"
-                                          action="{{ route('admin.tickets.update', $ticket) }}">
-                                        @csrf
-                                        @method('PATCH')
-                                        <select name="status"
-                                                class="form-select form-select-sm"
-                                                onchange="this.form.submit()">
-                                            <option value="open" @selected($ticket->status==='open')>Open</option>
-                                            <option value="in_progress" @selected($ticket->status==='in_progress')>In Progress</option>
-                                            <option value="resolved" @selected($ticket->status==='resolved')>Resolved</option>
-                                        </select>
-                                    </form>
 
-                                    {{-- DELETE --}}
-                                    <form method="POST"
-                                          action="{{ route('admin.tickets.destroy', $ticket) }}"
-                                          onsubmit="return confirm('Delete this ticket permanently?')">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button class="btn btn-sm btn-danger">
-                                            <i class="fa-solid fa-trash"></i>
-                                        </button>
-                                    </form>
+                            <td class="text-center align-middle">
+                            <div class="action-wrap justify-content-center">
 
-                                </div>
-                            </td>
+                                {{-- STATUS --}}
+                                <form method="POST"
+                                    action="{{ route('admin.tickets.update', $ticket) }}">
+                                    @csrf
+                                    @method('PATCH')
+                                    <select name="status"
+                                        class="form-select form-select-sm"
+                                        onchange="this.form.submit()">
+
+                                    <option value="pending" @selected($ticket->status==='pending')>
+                                        Pending
+                                    </option>
+
+                                    <option value="in_progress" @selected($ticket->status==='in_progress')>
+                                        In Progress
+                                    </option>
+
+                                    <option value="resolved" @selected($ticket->status==='resolved')>
+                                        Resolved
+                                    </option>
+
+                                </select>
+
+                                </form>
+
+                                {{-- DELETE --}}
+                                <form method="POST"
+                                    action="{{ route('admin.tickets.destroy', $ticket) }}"
+                                    onsubmit="return confirm('Delete this ticket permanently?')">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button class="btn btn-sm btn-danger">
+                                        <i class="fa-solid fa-trash"></i>
+                                    </button>
+                                </form>
+
+                            </div>
+                        </td>
                         </tr>
                     @endforeach
                     </tbody>
@@ -259,14 +289,30 @@ main {
         </div>
 
     @empty
+    <div class="no-tickets">
         <div class="text-center py-5 text-muted">
             <i class="fa-solid fa-ticket fa-2x mb-2"></i><br>
             No support tickets available
+        </div>
         </div>
     @endforelse
 
 </main>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const alert = document.getElementById('successAlert');
+    if(alert){
+        setTimeout(() => {
+            alert.classList.remove('show');
+        }, 4000); // visible for 4s
+
+        setTimeout(() => {
+            alert.remove();
+        }, 3500);
+    }
+});
+</script>
 </body>
 </html>

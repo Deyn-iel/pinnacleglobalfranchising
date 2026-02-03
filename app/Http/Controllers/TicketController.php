@@ -54,7 +54,7 @@ class TicketController extends Controller
             'description' => $request->description,
             'department' => $request->department,
             'priority' => $request->priority,
-            'status' => 'open',
+            'status' => 'pending',
         ]);
     });
 

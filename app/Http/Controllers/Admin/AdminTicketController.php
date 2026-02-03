@@ -23,7 +23,7 @@ class AdminTicketController extends Controller
     public function update(Request $request, Ticket $ticket)
     {
         $request->validate([
-            'status' => 'required|in:open,in_progress,resolved,closed',
+            'status' => 'required|in:pending,in_progress,resolved',
         ]);
 
         $ticket->update([

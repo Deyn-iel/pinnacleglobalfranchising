@@ -48,6 +48,13 @@
             </a>
         </li>
 
+        <li class="{{ request()->routeIs('notification') ? 'active' : '' }}">
+            <a href="{{ route('notification') }}">
+                <i class="fas fa-bell"></i>
+                <span>Notifications</span>
+            </a>
+        </li>
+        
         <li class="{{ request()->routeIs('profile.*') ? 'active' : '' }}">
             <a href="{{ route('profile.edit') }}">
                 <i class="fas fa-user-gear"></i>

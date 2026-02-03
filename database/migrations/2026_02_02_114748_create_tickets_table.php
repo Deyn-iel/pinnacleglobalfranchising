@@ -17,7 +17,7 @@ return new class extends Migration {
             $table->text('description');
             $table->string('department');
             $table->enum('priority', ['low','medium','high'])->default('medium');
-            $table->enum('status', ['open','in_progress','resolved'])->default('open');
+            $table->enum('status', ['pending','in_progress','resolved'])->default('pending');
 
             $table->timestamps();
         });

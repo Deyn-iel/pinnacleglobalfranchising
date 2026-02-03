@@ -180,7 +180,7 @@
         <div class="summary-item">
             <span>Status</span>
             <strong>
-                {{ $result->score >= ($result->exam->questions->count() * 0.6) ? 'PASSED' : 'FAILED' }}
+                {{ $result->score >= ($result->exam->questions->count() * 0.9) ? 'PASSED' : 'FAILED' }}
             </strong>
         </div>
 
