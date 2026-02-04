@@ -12,104 +12,190 @@
 @vite(['resources/css/admin/app.css'])
 
 <style>
-    body {
-        background: #f5f6fa;
-        overflow-x: hidden;
-        font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
-    }
+  :root{
+    --sidebar-w: 260px;
 
-    aside {
-        width: 260px;
-        z-index: 999;
-    }
+    --bg: #f5f6fa;
+    --text: #0f172a;
+    --muted: #64748b;
+    --border: rgba(15,23,42,.10);
+    --card: rgba(255,255,255,.90);
 
-    /* ================= MAIN ================= */
-    main {
-        margin-left: 260px;
-        padding: clamp(20px, 2.5vw, 34px);
-        max-width: calc(100vw - 260px);
-    }
+    --shadow: 0 18px 45px rgba(15,23,42,.08);
+    --shadow-hover: 0 28px 80px rgba(15,23,42,.16);
+    --radius: 18px;
 
-    /* ================= HEADER ================= */
-    .page-header {
-        background: #ffffff;
-        border-radius: 14px;
-        padding: 18px 22px;
-        box-shadow: 0 10px 30px rgba(15,23,42,.08);
-        margin-bottom: 22px;
-    }
+    --danger: #dc2626;
+  }
 
-    /* ================= TABLE WRAPPER ================= */
-    .table-wrapper {
-        background: #ffffff;
-        border-radius: 14px;
-        box-shadow: 0 10px 28px rgba(15,23,42,.08);
-        overflow: hidden;
-    }
+  body{
+    background:
+      radial-gradient(1200px 650px at 18% 0%, rgba(13,110,253,.08), transparent 55%),
+      radial-gradient(900px 520px at 95% 10%, rgba(34,197,94,.07), transparent 55%),
+      var(--bg);
+    overflow-x: hidden;
+    color: var(--text);
+    font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+  }
 
-    table {
-        width: 100%;
-        table-layout: fixed;
-        font-size: clamp(13px, 0.9vw, 14px);
-        margin-bottom: 0;
-    }
+  aside{
+    width: var(--sidebar-w);
+    z-index: 999;
+  }
 
-    th, td {
-        vertical-align: middle;
-        word-break: break-word;
-        white-space: normal;
-    }
+  /* ================= MAIN ================= */
+  main{
+    margin-left: var(--sidebar-w);
+    padding: clamp(16px, 2.2vw, 34px);
+    max-width: calc(100vw - var(--sidebar-w));
+    min-width: 0;
+  }
 
-    /* Column widths (desktop safe) */
-    th:nth-child(1) { width: 160px; }
-    th:nth-child(2) { width: 260px; }
-    th:nth-child(3) { width: 40%; }
-    th:nth-child(4) { width: 160px; }
-    th:nth-child(5) { width: 90px; }
-
-    /* ================= BUTTONS ================= */
-    .btn-danger {
-        font-size: 13px;
-        padding: 5px 10px;
+  @media (max-width: 991.98px){
+    main{
+      margin-left: 0;
+      max-width: 100%;
+      padding: 16px;
     }
+  }
 
-    /* ================= SUCCESS MSG ================= */
-    .success-msg {
-        background: #dcfce7;
-        color: #166534;
-        border-left: 5px solid #22c55e;
-        padding: 12px 16px;
-        border-radius: 8px;
-        font-weight: 600;
-        transition: opacity .5s ease;
-    }
+  /* ================= HEADER ================= */
+  .page-header{
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: clamp(16px, 2vw, 22px);
+    box-shadow: var(--shadow);
+    margin-bottom: 16px;
+    position: relative;
+    overflow: hidden;
+    backdrop-filter: blur(10px);
+  }
 
-    /* ================= SIDEBAR LINK ================= */
-    .sidebar-link {
-        border-radius: 8px;
-        transition: background 0.25s ease, padding-left 0.25s ease;
-        text-decoration: none;
-    }
+  .page-header::after{
+    content:"";
+    position:absolute;
+    right:-90px; top:-90px;
+    width: 260px; height: 260px;
+    pointer-events:none;
+  }
 
-    .sidebar-link:hover {
-        background: rgba(255,255,255,0.1);
-    }
+  .page-header h4{
+    font-weight: 900;
+    margin-bottom: 4px;
+    letter-spacing: -.02em;
+  }
 
-    .sidebar-link.active {
-        background: rgba(255,255,255,0.18);
-        border-left: 4px solid #0d6efd;
-        padding-left: 14px;
-    }
+  .page-header p{
+    color: var(--muted);
+    margin: 0;
+  }
 
-    .sidebar-link.active i {
-        color: #ffffff;
-    }
+  .muted-pill{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    padding: 8px 12px;
+    border-radius: 999px;
+    background: rgba(15,23,42,.05);
+    border: 1px solid rgba(15,23,42,.06);
+    color: var(--muted);
+    font-size: 12px;
+    font-weight: 800;
+    white-space: nowrap;
+  }
 
-    /* ================= EMPTY ROW ================= */
-    .no-hover {
-        pointer-events: none;
-        background: transparent !important;
-    }
+  /* ================= SUCCESS MSG ================= */
+  .success-msg{
+    background: rgba(34,197,94,.12);
+    color: #166534;
+    border: 1px solid rgba(34,197,94,.25);
+    border-left: 6px solid #22c55e;
+    padding: 12px 14px;
+    border-radius: 14px;
+    font-weight: 800;
+    box-shadow: 0 12px 28px rgba(15,23,42,.08);
+    transition: opacity .5s ease, transform .5s ease;
+  }
+
+  /* ================= TABLE WRAPPER ================= */
+  .table-wrapper{
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+    backdrop-filter: blur(10px);
+  }
+
+  .table-responsive{
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  table{
+    width: 100%;
+    font-size: 14px;
+    margin-bottom: 0;
+    min-width: 920px; /* scroll on small screens */
+  }
+
+  th, td{
+    vertical-align: middle;
+  }
+
+  th{
+    white-space: nowrap;
+  }
+
+  td{
+    color: #0f172a;
+  }
+
+  .table-hover tbody tr{
+    transition: background .15s ease;
+  }
+  .table-hover tbody tr:hover{
+    background: rgba(13,110,253,.05);
+  }
+
+  /* Message cell: clamp lines to keep table tidy */
+  .msg-cell{
+    max-width: 520px;
+  }
+  .msg-clamp{
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    word-break: break-word;
+    white-space: normal;
+  }
+
+  /* ================= BUTTONS ================= */
+  .btn{
+    font-weight: 800;
+    border-radius: 999px;
+  }
+
+  .btn-danger{
+    background: var(--danger);
+    border: none;
+  }
+  .btn-danger:hover{
+    background: #b91c1c;
+  }
+
+  .btn-outline-danger{
+    border-radius: 999px;
+    font-weight: 800;
+  }
+
+  /* ================= EMPTY ROW ================= */
+  .no-hover{
+    pointer-events: none;
+    background: transparent !important;
+  }
 </style>
 </head>
 
@@ -120,100 +206,110 @@
 
 <main>
 
-    <!-- HEADER -->
-    <div class="page-header d-flex justify-content-between align-items-center">
-        <div>
-            <h4 class="fw-bold mb-1">
-                <i class="fas fa-envelope me-2"></i>Contact Messages
-            </h4>
-            <p class="text-muted mb-0">
-                Messages submitted through the contact form.
-            </p>
-        </div>
+  <!-- HEADER -->
+  <div class="page-header d-flex justify-content-between align-items-start flex-wrap gap-2">
+    <div>
+      <h4 class="fw-bold mb-1">
+        <i class="fas fa-envelope me-2"></i>Contact Messages
+      </h4>
+      <p>Messages submitted through the contact form.</p>
+    </div>
 
-        <div class="d-flex gap-2 align-items-center">
-            <span class="text-muted small">
-                Total: {{ $contacts->count() }}
-            </span>
+    <div class="d-flex gap-2 align-items-center flex-wrap">
+      <span class="muted-pill">
+        <i class="fa-solid fa-inbox"></i>
+        Total: <strong class="text-dark">{{ $contacts->count() }}</strong>
+      </span>
 
-            @if($contacts->count() > 0)
-            <form action="{{ route('admin.contacts.deleteAll') }}"
-                  method="POST"
-                  onsubmit="return confirm('⚠️ This will permanently delete ALL messages. Continue?')">
+      @if($contacts->count() > 0)
+      <form action="{{ route('admin.contacts.deleteAll') }}"
+            method="POST"
+            class="m-0"
+            onsubmit="return confirm('⚠️ This will permanently delete ALL messages. Continue?')">
+        @csrf
+        @method('DELETE')
+        <button class="btn btn-sm btn-danger">
+          <i class="fas fa-trash me-1"></i> Delete All
+        </button>
+      </form>
+      @endif
+    </div>
+  </div>
+
+  <!-- SUCCESS -->
+  @if(session('success'))
+    <div id="successMsg" class="success-msg mb-3">
+      <i class="fa-solid fa-circle-check me-1"></i>
+      {{ session('success') }}
+    </div>
+  @endif
+
+  <!-- TABLE -->
+  <div class="table-wrapper">
+    <div class="table-responsive">
+      <table class="table table-hover align-middle">
+        <thead class="table-dark">
+          <tr>
+            <th style="width: 180px;">Name</th>
+            <th style="width: 260px;">Email</th>
+            <th>Message</th>
+            <th style="width: 180px;">Date</th>
+            <th class="text-center" style="width: 110px;">Action</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          @forelse($contacts as $contact)
+          <tr>
+            <td class="fw-semibold">{{ $contact->name }}</td>
+            <td>{{ $contact->email }}</td>
+
+            <td class="msg-cell">
+              <div class="msg-clamp" title="{{ $contact->message }}">
+                {{ $contact->message }}
+              </div>
+            </td>
+
+            <td class="text-muted small">
+              {{ $contact->created_at->format('M d, Y · h:i A') }}
+            </td>
+
+            <td class="text-center">
+              <form action="{{ route('admin.contacts.delete', $contact->id) }}"
+                    method="POST"
+                    class="m-0"
+                    onsubmit="return confirm('Delete this message?')">
                 @csrf
                 @method('DELETE')
-                <button class="btn btn-sm btn-danger">
-                    <i class="fas fa-trash me-1"></i> Delete All
+                <button class="btn btn-sm btn-outline-danger" aria-label="Delete">
+                  <i class="fas fa-trash"></i>
                 </button>
-            </form>
-            @endif
-        </div>
+              </form>
+            </td>
+          </tr>
+          @empty
+          <tr>
+            <td colspan="5" class="text-center text-muted py-4 no-hover">
+              No messages received yet.
+            </td>
+          </tr>
+          @endforelse
+        </tbody>
+      </table>
     </div>
-
-    <!-- SUCCESS -->
-    @if(session('success'))
-        <div id="successMsg" class="success-msg mb-3">
-            ✔ {{ session('success') }}
-        </div>
-    @endif
-
-    <!-- TABLE -->
-    <div class="table-wrapper">
-        <div class="table-responsive">
-            <table class="table table-hover align-middle">
-                <thead class="table-dark">
-                    <tr>
-                        <th>Name</th>
-                        <th>Email</th>
-                        <th>Message</th>
-                        <th>Date</th>
-                        <th class="text-center">Action</th>
-                    </tr>
-                </thead>
-
-                <tbody>
-                    @forelse($contacts as $contact)
-                    <tr>
-                        <td class="fw-semibold">{{ $contact->name }}</td>
-                        <td>{{ $contact->email }}</td>
-                        <td>{{ $contact->message }}</td>
-                        <td class="text-muted small">
-                            {{ $contact->created_at->format('M d, Y · h:i A') }}
-                        </td>
-                        <td class="text-center">
-                            <form action="{{ route('admin.contacts.delete', $contact->id) }}"
-                                  method="POST"
-                                  onsubmit="return confirm('Delete this message?')">
-                                @csrf
-                                @method('DELETE')
-                                <button class="btn btn-sm btn-outline-danger">
-                                    <i class="fas fa-trash"></i>
-                                </button>
-                            </form>
-                        </td>
-                    </tr>
-                    @empty
-                    <tr>
-                        <td colspan="5" class="text-center text-muted py-4 no-hover">
-                            No messages received yet.
-                        </td>
-                    </tr>
-                    @endforelse
-                </tbody>
-            </table>
-        </div>
-    </div>
+  </div>
 
 </main>
 
 <script>
-    setTimeout(() => {
-        const msg = document.getElementById('successMsg');
-        if (msg) {
-            msg.style.opacity = '0';
-            setTimeout(() => msg.remove(), 500);
-        }
-    }, 3000);
+  setTimeout(() => {
+    const msg = document.getElementById('successMsg');
+    if (msg) {
+      msg.style.opacity = '0';
+      msg.style.transform = 'translateY(-6px)';
+      setTimeout(() => msg.remove(), 500);
+    }
+  }, 3000);
 </script>
 
 </body>

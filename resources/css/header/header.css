@@ -429,6 +429,164 @@ body.nav-open {
   }
 }
 
+/* ===============================
+   FORCE iPad = MOBILE NAV UI
+   (up to 1200px)
+================================ */
+
+/* 1) iPad + below: show hamburger, hide desktop spacing */
+@media (max-width: 1200px){
+  .menu-toggle{ display:flex !important; }
+}
+
+/* 2) iPad + below: make nav-menu overlay like mobile */
+@media (max-width: 1200px){
+
+  /* header height feels more "mobile" */
+  .header-container{
+    padding: 18px 20px !important;
+  }
+
+  /* ✅ overlay menu */
+  .nav-menu{
+    position: fixed !important;
+    left: 0 !important;
+    top: 76px !important;                 /* adjust if header taller */
+    width: 100% !important;
+    height: calc(100vh - 76px) !important;
+
+    background: #ffffff !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    justify-content: flex-start !important;
+
+    padding: 18px !important;
+    gap: 18px !important;
+    overflow-y: auto !important;
+
+    /* CLOSED */
+    opacity: 0 !important;
+    transform: translateY(-10px) !important;
+    pointer-events: none !important;
+    visibility: hidden !important;
+
+    transition: opacity .25s ease, transform .25s ease, visibility 0s linear .25s !important;
+  }
+
+  /* OPEN (support both classes) */
+  .nav-menu.show,
+  .nav-menu.open{
+    opacity: 1 !important;
+    transform: translateY(0) !important;
+    pointer-events: auto !important;
+    visibility: visible !important;
+    transition: opacity .25s ease, transform .25s ease, visibility 0s !important;
+  }
+
+  /* menu items look like mobile list */
+  .nav-menu a,
+  .nav-section-title{
+    width: 100% !important;
+    display:flex !important;
+    align-items:center !important;
+    gap: 12px !important;
+
+    color: #111 !important;
+    font-size: 16px !important;
+    font-weight: 600 !important;
+    padding: 12px 10px !important;
+    border-radius: 10px !important;
+  }
+
+  .nav-menu a:hover,
+  .nav-section-title:hover{
+    background: rgba(0,0,0,.06) !important;
+  }
+
+  /* dropdown inside overlay */
+  .nav-submenu{
+    position: static !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    padding-left: 20px !important;
+  }
+
+  .nav-submenu a{
+    padding: 10px 10px !important;
+    color: #222 !important;
+    border-radius: 10px !important;
+  }
+
+  /* CTA button full width like mobile */
+.btn-primary{
+  background: #ffffff !important;
+  color: #0d3553 !important;
+  border: none !important;
+
+  width: 100% !important;
+  padding: 14px 16px !important;
+  border-radius: 12px !important;
+
+  font-weight: 700;
+  letter-spacing: 0.3px;
+
+  /* 👇 premium depth */
+  box-shadow:
+    0 6px 14px rgba(0,0,0,0.14),
+    0 2px 4px rgba(0,0,0,0.08) !important;
+
+  transition:
+    transform 0.18s ease,
+    box-shadow 0.18s ease,
+    background 0.18s ease;
+}
+
+
+}
+
+/* ===============================
+   FIX: KEEP DROPDOWN ARROW + SUBMENU
+   ACTIVE = BOLD ONLY (mobile + tablet)
+================================ */
+
+/* 1) HUWAG i-hide yung ::after (arrow) */
+@media (max-width: 1200px){
+  .nav-section-title::after{
+    display: inline-block !important;
+  }
+
+  /* wag na wag galawin ::after, pero pwede alisin top-line ::before kung meron */
+  .nav-menu a::before,
+  .nav-section-title::before{
+    display: none !important;
+  }
+
+  /* 2) ACTIVE = bold lang */
+  .nav-menu a.nav-active{
+    font-weight: 800 !important;
+    color: #0d3553 !important;
+  }
+
+  .nav-section.active-parent > .nav-section-title{
+    font-weight: 800 !important;
+    color: #0d3553 !important;
+  }
+
+  .nav-submenu a.submenu-active{
+    font-weight: 800 !important;
+    color: #0d3553 !important;
+  }
+
+  /* 3) Safety: kung JS mo minsan sa submenu nilalagay yung .open instead of parent */
+  .nav-submenu.open,
+  .nav-submenu.show{
+    max-height: 600px !important;
+    opacity: 1 !important;
+    transform: translateY(0) !important;
+    pointer-events: auto !important;
+  }
+}
 
 
 

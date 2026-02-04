@@ -12,112 +12,225 @@
 @vite(['resources/css/admin/app.css'])
 
 <style>
-    body {
-        background: #f5f6fa;
-        overflow-x: hidden;
-        font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
-    }
+  :root{
+    --sidebar-w: 260px;
 
-    aside {
-        width: 260px;
-        z-index: 999;
-    }
+    --bg: #f5f6fa;
+    --text: #0f172a;
+    --muted: #64748b;
+    --border: rgba(15,23,42,.10);
+    --card: rgba(255,255,255,.90);
 
-    /* ================= MAIN ================= */
-    main {
-        margin-left: 260px;
-        padding: clamp(20px, 2.5vw, 34px);
-        max-width: calc(100vw - 260px);
-    }
+    --shadow: 0 18px 45px rgba(15,23,42,.08);
+    --shadow-hover: 0 28px 80px rgba(15,23,42,.16);
+    --radius: 18px;
 
-    /* ================= HEADER ================= */
-    .page-header {
-        background: #ffffff;
-        border-radius: 14px;
-        padding: 18px 22px;
-        box-shadow: 0 10px 28px rgba(15,23,42,.08);
-        margin-bottom: 22px;
-    }
+    --primary-dark: #0f172a;
+    --danger: #dc2626;
+    --warning: #f59e0b;
+  }
 
-    /* ================= CARD ================= */
-    .card {
-        border-radius: 14px;
-        border: none;
-        box-shadow: 0 10px 25px rgba(15,23,42,.08);
-    }
+  body{
+    background:
+      radial-gradient(1200px 650px at 18% 0%, rgba(13,110,253,.08), transparent 55%),
+      radial-gradient(900px 520px at 95% 10%, rgba(34,197,94,.07), transparent 55%),
+      var(--bg);
+    overflow-x: hidden;
+    color: var(--text);
+    font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+  }
 
-    /* ================= TABLE ================= */
-    .table-wrapper {
-        background: #ffffff;
-        border-radius: 14px;
-        box-shadow: 0 10px 28px rgba(15,23,42,.08);
-        overflow: hidden;
-    }
+  aside{
+    width: var(--sidebar-w);
+    z-index: 999;
+  }
 
-    table {
-        width: 100%;
-        table-layout: fixed;
-        font-size: clamp(13px, 0.9vw, 14px);
-        margin-bottom: 0;
-    }
+  /* ================= MAIN ================= */
+  main{
+    margin-left: var(--sidebar-w);
+    padding: clamp(16px, 2.2vw, 34px);
+    max-width: calc(100vw - var(--sidebar-w));
+    min-width: 0;
+  }
 
-    th, td {
-        vertical-align: middle;
-        word-break: break-word;
-        white-space: normal;
+  @media (max-width: 991.98px){
+    main{
+      margin-left: 0;
+      max-width: 100%;
+      padding: 16px;
     }
+  }
 
-    /* Column widths – desktop safe */
-    th:nth-child(1) { width: 80px; }
-    th:nth-child(2) { width: 220px; }
-    th:nth-child(3) { width: 120px; }
-    th:nth-child(4) { width: 100px; }
-    th:nth-child(5) { width: 140px; }
-    th:nth-child(6) { width: 140px; }
-    th:nth-child(7) { width: 150px; }
+  /* ================= HEADER ================= */
+  .page-header{
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: clamp(16px, 2vw, 22px);
+    box-shadow: var(--shadow);
+    margin-bottom: 16px;
+    position: relative;
+    overflow: hidden;
+    backdrop-filter: blur(10px);
+  }
 
-    /* ================= IMAGE ================= */
-    .supply-img {
-        width: 50px;
-        height: 50px;
-        object-fit: cover;
-        border-radius: 8px;
-        border: 1px solid #e5e7eb;
-    }
+  .page-header::after{
+    content:"";
+    position:absolute;
+    right:-90px; top:-90px;
+    width: 260px; height: 260px;
+    background: radial-gradient(circle, rgba(13,110,253,.18), transparent 60%);
+    pointer-events:none;
+  }
 
-    /* ================= BUTTONS ================= */
-    .btn-primary {
-        background: #000;
-        border: none;
-        font-weight: 600;
-    }
+  .page-header h4{
+    font-weight: 900;
+    margin-bottom: 4px;
+    letter-spacing: -.02em;
+  }
+  .page-header p{
+    color: var(--muted);
+    margin: 0;
+  }
 
-    .btn-warning,
-    .btn-danger {
-        font-size: 13px;
-        padding: 5px 10px;
-    }
+  /* ================= CARD ================= */
+  .card{
+    border-radius: 20px;
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow);
+    background: var(--card);
+    overflow: hidden;
+    backdrop-filter: blur(10px);
+  }
 
-    /* ================= SIDEBAR LINK ================= */
-    .sidebar-link {
-        border-radius: 8px;
-        transition: background 0.25s ease, padding-left 0.25s ease;
-        text-decoration: none;
-    }
+  .card-pad{
+    padding: clamp(14px, 1.6vw, 20px);
+  }
 
-    .sidebar-link:hover {
-        background: rgba(255,255,255,0.1);
-    }
+  .section-title{
+    font-weight: 900;
+    letter-spacing: -.01em;
+  }
 
-    .sidebar-link.active {
-        background: rgba(255,255,255,0.18);
-        border-left: 4px solid #0d6efd;
-        padding-left: 14px;
-    }
+  /* ================= FORM ================= */
+  .form-label{
+    font-weight: 800;
+    font-size: 12.5px;
+    color: #374151;
+    margin-bottom: 6px;
+  }
 
-    .sidebar-link.active i {
-        color: #ffffff;
-    }
+  .help-mini{
+    font-size: 12px;
+    color: var(--muted);
+    margin-top: 6px;
+  }
+
+  /* ================= TABLE ================= */
+  .table-wrapper{
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+    backdrop-filter: blur(10px);
+  }
+
+  .table-responsive{
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  table{
+    width: 100%;
+    font-size: 14px;
+    margin-bottom: 0;
+    min-width: 960px; /* scroll on small screens */
+  }
+
+  th{
+    white-space: nowrap;
+  }
+
+  th, td{
+    vertical-align: middle;
+  }
+
+  .table-hover tbody tr{
+    transition: background .15s ease;
+  }
+  .table-hover tbody tr:hover{
+    background: rgba(13,110,253,.05);
+  }
+
+  /* ================= IMAGE ================= */
+  .supply-img{
+    width: 54px;
+    height: 54px;
+    object-fit: cover;
+    border-radius: 12px;
+    border: 1px solid rgba(15,23,42,.10);
+    background: #fff;
+  }
+
+  .no-image{
+    width: 54px;
+    height: 54px;
+    border-radius: 12px;
+    display:grid;
+    place-items:center;
+    border: 1px dashed rgba(15,23,42,.18);
+    color: var(--muted);
+    font-size: 12px;
+    background: rgba(255,255,255,.8);
+  }
+
+  /* ================= BUTTONS ================= */
+  .btn{
+    font-weight: 800;
+    border-radius: 999px;
+  }
+
+  .btn-primary{
+    background: var(--primary-dark);
+    border: none;
+  }
+  .btn-primary:hover{
+    background: #111827;
+  }
+
+  .btn-warning{
+    background: rgba(245,158,11,.16);
+    border: 1px solid rgba(245,158,11,.25);
+    color: #92400e;
+  }
+  .btn-warning:hover{
+    background: rgba(245,158,11,.22);
+    border-color: rgba(245,158,11,.35);
+    color: #78350f;
+  }
+
+  .btn-danger{
+    background: rgba(220,38,38,.12);
+    border: 1px solid rgba(220,38,38,.22);
+    color: #991b1b;
+  }
+  .btn-danger:hover{
+    background: rgba(220,38,38,.18);
+    border-color: rgba(220,38,38,.32);
+    color: #7f1d1d;
+  }
+
+  .btn-sm{
+    padding: 6px 12px;
+  }
+
+  /* alert */
+  .alert{
+    border-radius: 14px;
+    border: 1px solid rgba(34,197,94,.25);
+    box-shadow: 0 12px 28px rgba(15,23,42,.08);
+  }
 </style>
 </head>
 
@@ -128,133 +241,144 @@
 
 <main>
 
-    <!-- HEADER -->
-    <div class="page-header">
-        <h4 class="fw-bold mb-1">
-            <i class="fas fa-boxes-stacked me-2"></i>Supplies Management
-        </h4>
-        <p class="text-muted mb-0">
-            Add and manage supplies available to partners.
-        </p>
-    </div>
+  <!-- HEADER -->
+  <div class="page-header">
+    <h4 class="fw-bold mb-1">
+      <i class="fas fa-boxes-stacked me-2"></i>Supplies Management
+    </h4>
+    <p class="text-muted mb-0">
+      Add and manage supplies available to partners.
+    </p>
+  </div>
 
-    @if(session('success'))
-        <div class="alert alert-success mb-3">
-            ✅ {{ session('success') }}
+  @if(session('success'))
+    <div class="alert alert-success mb-3 d-flex align-items-center gap-2">
+      <i class="fa-solid fa-circle-check"></i>
+      <div class="fw-semibold">✅ {{ session('success') }}</div>
+    </div>
+  @endif
+
+  <!-- ADD SUPPLY -->
+  <div class="card mb-4">
+    <div class="card-pad">
+      <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 mb-3">
+        <h5 class="section-title mb-0">Add New Supply</h5>
+        <div class="text-muted small">Fill in the details then click save.</div>
+      </div>
+
+      <form action="{{ route('admin.supplies.store') }}" method="POST" enctype="multipart/form-data">
+        @csrf
+
+        <div class="row g-3">
+          <div class="col-12 col-md-6">
+            <label class="form-label">Supply Name</label>
+            <input type="text" name="name" class="form-control" required>
+          </div>
+
+          <div class="col-12 col-md-3">
+            <label class="form-label">Unit</label>
+            <input type="text" name="unit" class="form-control" required>
+          </div>
+
+          <div class="col-12 col-md-3">
+            <label class="form-label">Stock</label>
+            <input type="number" name="stock" class="form-control" required>
+          </div>
+
+          <div class="col-12 col-md-3">
+            <label class="form-label">Cost Price</label>
+            <input type="number" step="0.01" name="cost_price" class="form-control" required>
+          </div>
+
+          <div class="col-12 col-md-3">
+            <label class="form-label">Selling Price</label>
+            <input type="number" step="0.01" name="selling_price" class="form-control" required>
+          </div>
+
+          <div class="col-12 col-md-6">
+            <label class="form-label">Supply Image</label>
+            <input type="file" name="image" class="form-control">
+            <div class="help-mini">Optional: upload a clear product image.</div>
+          </div>
         </div>
-    @endif
 
-    <!-- ADD SUPPLY -->
-    <div class="card p-4 mb-4">
-        <h5 class="fw-semibold mb-3">Add New Supply</h5>
-
-        <form action="{{ route('admin.supplies.store') }}" method="POST" enctype="multipart/form-data">
-            @csrf
-
-            <div class="row g-3">
-                <div class="col-md-6">
-                    <label class="form-label fw-semibold">Supply Name</label>
-                    <input type="text" name="name" class="form-control" required>
-                </div>
-
-                <div class="col-md-3">
-                    <label class="form-label fw-semibold">Unit</label>
-                    <input type="text" name="unit" class="form-control" required>
-                </div>
-
-                <div class="col-md-3">
-                    <label class="form-label fw-semibold">Stock</label>
-                    <input type="number" name="stock" class="form-control" required>
-                </div>
-
-                <div class="col-md-3">
-                    <label class="form-label fw-semibold">Cost Price</label>
-                    <input type="number" step="0.01" name="cost_price" class="form-control" required>
-                </div>
-
-                <div class="col-md-3">
-                    <label class="form-label fw-semibold">Selling Price</label>
-                    <input type="number" step="0.01" name="selling_price" class="form-control" required>
-                </div>
-
-                <div class="col-md-6">
-                    <label class="form-label fw-semibold">Supply Image</label>
-                    <input type="file" name="image" class="form-control">
-                </div>
-            </div>
-
-            <button class="btn btn-primary mt-3">
-                <i class="fas fa-save me-1"></i> Save Supply
-            </button>
-        </form>
+        <button class="btn btn-primary mt-3">
+          <i class="fas fa-save me-1"></i> Save Supply
+        </button>
+      </form>
     </div>
+  </div>
 
-    <!-- CURRENT SUPPLIES -->
-    <h5 class="fw-semibold mb-3">Current Supplies</h5>
+  <!-- CURRENT SUPPLIES -->
+  <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 mb-3">
+    <h5 class="section-title mb-0">Current Supplies</h5>
+    <div class="text-muted small">Manage stock and pricing.</div>
+  </div>
 
-    <div class="table-wrapper">
-        <div class="table-responsive">
-            <table class="table table-hover align-middle">
-                <thead class="table-dark">
-                    <tr>
-                        <th>Image</th>
-                        <th>Name</th>
-                        <th>Unit</th>
-                        <th>Stock</th>
-                        <th>Selling Price</th>
-                        <th>Date Added</th>
-                        <th class="text-center">Actions</th>
-                    </tr>
-                </thead>
+  <div class="table-wrapper">
+    <div class="table-responsive">
+      <table class="table table-hover align-middle">
+        <thead class="table-dark">
+          <tr>
+            <th style="width: 90px;">Image</th>
+            <th>Name</th>
+            <th style="width: 140px;">Unit</th>
+            <th style="width: 120px;">Stock</th>
+            <th style="width: 160px;">Selling Price</th>
+            <th style="width: 160px;">Date Added</th>
+            <th class="text-center" style="width: 160px;">Actions</th>
+          </tr>
+        </thead>
 
-                <tbody>
-                    @forelse($supplies as $supply)
-                    <tr>
-                        <td>
-                            @if($supply->image)
-                                <img src="{{ Storage::url($supply->image) }}"
-                                     class="supply-img">
-                            @else
-                                <span class="text-muted small">No image</span>
-                            @endif
-                        </td>
+        <tbody>
+          @forelse($supplies as $supply)
+          <tr>
+            <td>
+              @if($supply->image)
+                <img src="{{ Storage::url($supply->image) }}" class="supply-img" alt="Supply">
+              @else
+                <div class="no-image">No img</div>
+              @endif
+            </td>
 
-                        <td class="fw-semibold">{{ $supply->name }}</td>
-                        <td>{{ $supply->unit }}</td>
-                        <td>{{ $supply->stock }}</td>
-                        <td>₱{{ number_format($supply->selling_price, 2) }}</td>
-                        <td>{{ $supply->created_at->format('M d, Y') }}</td>
+            <td class="fw-semibold">{{ $supply->name }}</td>
+            <td>{{ $supply->unit }}</td>
+            <td>{{ $supply->stock }}</td>
+            <td class="fw-semibold">₱{{ number_format($supply->selling_price, 2) }}</td>
+            <td class="text-muted">{{ $supply->created_at->format('M d, Y') }}</td>
 
-                        <td class="text-center">
-                            <div class="d-flex justify-content-center gap-2">
-                                <a href="{{ route('admin.supplies.edit', $supply) }}"
-                                   class="btn btn-sm btn-warning">
-                                   <i class="fas fa-pen"></i>
-                                </a>
+            <td class="text-center">
+              <div class="d-inline-flex justify-content-center gap-2">
+                <a href="{{ route('admin.supplies.edit', $supply) }}"
+                   class="btn btn-sm btn-warning"
+                   aria-label="Edit">
+                  <i class="fas fa-pen"></i>
+                </a>
 
-                                <form action="{{ route('admin.supplies.destroy', $supply) }}"
-                                      method="POST"
-                                      onsubmit="return confirm('Delete this supply?')">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button class="btn btn-sm btn-danger">
-                                        <i class="fas fa-trash"></i>
-                                    </button>
-                                </form>
-                            </div>
-                        </td>
-                    </tr>
-                    @empty
-                    <tr>
-                        <td colspan="7" class="text-center text-muted py-4">
-                            No supplies added yet.
-                        </td>
-                    </tr>
-                    @endforelse
-                </tbody>
-            </table>
-        </div>
+                <form action="{{ route('admin.supplies.destroy', $supply) }}"
+                      method="POST"
+                      class="m-0"
+                      onsubmit="return confirm('Delete this supply?')">
+                  @csrf
+                  @method('DELETE')
+                  <button class="btn btn-sm btn-danger" aria-label="Delete">
+                    <i class="fas fa-trash"></i>
+                  </button>
+                </form>
+              </div>
+            </td>
+          </tr>
+          @empty
+          <tr>
+            <td colspan="7" class="text-center text-muted py-4">
+              No supplies added yet.
+            </td>
+          </tr>
+          @endforelse
+        </tbody>
+      </table>
     </div>
+  </div>
 
 </main>
 

@@ -35,6 +35,35 @@
             </a>
         </li> --}}
 
+        @php
+        $hrAccess = auth()->user()->hr_access ?? false;
+        @endphp
+
+        <li class="nav-item">
+        @if($hrAccess)
+            <a href="{{ route('hr.dashboard') }}" class="nav-link {{ request()->routeIs('hr.dashboard') ? 'active' : '' }}">
+            <i class="fas fa-user-tie"></i>
+            <span>HR-Folder</span>
+            </a>
+        @else
+            <a class="nav-link nav-disabled" href="javascript:void(0)" title="No access">
+            <i class="fas fa-user-tie"></i>
+            <span>HR-Folder</span>
+            <small class="soon">Hr access required</small>
+            </a>
+        @endif
+        </li>
+
+        <li class="nav-section">ACCOUNT</li>
+
+        <li class="nav-item">
+            <a href="{{ route('admin.admin-profile.edit') }}"
+               class="nav-link {{ request()->routeIs('admin.admin-profile.edit') ? 'active' : '' }}">
+                <i class="fas fa-user-gear"></i>
+                <span>My Profile</span>
+            </a>
+        </li>
+
         <li class="nav-section">MANAGEMENT</li>
 
         <li class="nav-item">
@@ -100,16 +129,6 @@
                class="nav-link {{ request()->routeIs('admin.uploading-exams') ? 'active' : '' }}">
                 <i class="fas fa-file-pen"></i>
                 <span>Upload Exams</span>
-            </a>
-        </li>
-
-        <li class="nav-section">ACCOUNT</li>
-
-        <li class="nav-item">
-            <a href="{{ route('admin.admin-profile.edit') }}"
-               class="nav-link {{ request()->routeIs('admin.admin-profile.edit') ? 'active' : '' }}">
-                <i class="fas fa-user-gear"></i>
-                <span>My Profile</span>
             </a>
         </li>
 

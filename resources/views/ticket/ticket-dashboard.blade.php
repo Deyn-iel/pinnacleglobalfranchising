@@ -12,7 +12,6 @@
 
   <style>
     :root{
-      /* Soft neutral palette (hindi masakit sa mata) */
       --bg:#c5c5c5;
       --card:#ffffff;
       --border:#e7e9ee;
@@ -24,16 +23,19 @@
       --greenBg:#eaf7ee;
     }
 
+    *{ box-sizing:border-box; }
     body{
       font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Inter, Arial;
       background: var(--bg);
       color: var(--text);
+      overflow-x: hidden;
     }
 
-    /* Page width */
     main.container{ max-width: 1100px; }
 
-    /* Header (responsive) */
+    /* ======================
+       HEADER (FIXED DESKTOP)
+       ====================== */
     .app-header{
       background: var(--card);
       border-bottom:1px solid var(--border);
@@ -49,12 +51,14 @@
       align-items:center;
       justify-content:space-between;
       gap: 12px;
+      flex-wrap: nowrap;           /* keep in one row on desktop */
     }
 
     .brand{
       display:flex;
       align-items:center;
       gap:10px;
+      flex: 0 0 auto;              /* IMPORTANT: wag lumaki para di itulak actions */
       min-width: 0;
     }
     .brand-badge{
@@ -68,15 +72,14 @@
       color: var(--black);
       flex: 0 0 auto;
     }
-    .brand-title{
-      min-width: 0;
-    }
+    .brand-title{ min-width:0; }
     .brand-title h1{
       margin:0;
       font-size: 14px;
       font-weight: 900;
       letter-spacing:.2px;
       line-height: 1.2;
+      white-space: nowrap;
     }
     .brand-title small{
       display:block;
@@ -85,14 +88,17 @@
       color: var(--muted);
       font-weight: 600;
       line-height: 1.2;
+      white-space: nowrap;
     }
 
     .top-actions{
       display:flex;
       align-items:center;
       gap:10px;
-      flex-wrap: wrap;
+      flex-wrap: nowrap;           /* IMPORTANT: magkakatabi sa desktop */
       justify-content:flex-end;
+      min-width: 0;
+      flex: 1 1 auto;              /* allow shrinking without wrapping */
     }
 
     .user-pill{
@@ -106,6 +112,15 @@
       font-weight: 700;
       font-size: 13px;
       white-space: nowrap;
+      min-width: 0;
+      max-width: 320px;
+    }
+    .user-pill span:last-child{
+      min-width: 0;
+      overflow:hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      max-width: 220px;
     }
     .avatar{
       width: 26px; height: 26px;
@@ -116,6 +131,7 @@
       background:#f3f4f6;
       font-weight: 900;
       font-size: 12px;
+      flex: 0 0 auto;
     }
 
     .btn-black{
@@ -125,6 +141,8 @@
       border-radius: 999px;
       font-weight: 850;
       padding: 9px 14px;
+      white-space: nowrap;
+      flex: 0 0 auto;
     }
     .btn-black:hover{ background:#000; color:#fff; }
 
@@ -135,10 +153,12 @@
       font-weight: 850;
       padding: 9px 12px;
       color: var(--text);
+      white-space: nowrap;
+      flex: 0 0 auto;
     }
     .btn-ghost:hover{ background:#f8fafc; }
 
-    /* Alert only when session exists */
+    /* Alert */
     .alert-green{
       background: var(--greenBg);
       border: 1px solid rgba(22,163,74,.20);
@@ -161,6 +181,7 @@
       font-size: 18px;
       font-weight: 950;
       letter-spacing:.2px;
+      word-break: break-word;
     }
     .page-head p{
       margin: 6px 0 0;
@@ -170,7 +191,7 @@
       line-height: 1.35;
     }
 
-    /* Summary - responsive grid */
+    /* Summary */
     .summary-grid{
       display:grid;
       grid-template-columns: repeat(4, minmax(0,1fr));
@@ -186,7 +207,8 @@
       justify-content:space-between;
       align-items:center;
       gap: 10px;
-      min-height: 70px; /* consistent height */
+      min-height: 70px;
+      min-width: 0;
     }
     .summary-card .label{
       color: var(--muted);
@@ -229,7 +251,9 @@
       gap: 10px;
       align-items:center;
       flex-wrap: wrap;
+      min-width: 0;
     }
+    .control-left{ flex: 1; }
 
     .search-wrap{
       position: relative;
@@ -268,6 +292,7 @@
       font-weight: 750;
       font-size: 13px;
       min-width: 160px;
+      max-width: 100%;
     }
 
     /* Tabs */
@@ -275,6 +300,8 @@
       display:flex;
       gap: 8px;
       flex-wrap: wrap;
+      justify-content: flex-end;
+      max-width: 100%;
     }
     .tab{
       border-radius: 999px;
@@ -286,6 +313,12 @@
       cursor:pointer;
       user-select:none;
       color:#111827;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap: 6px;
+      min-width: 0;
+      white-space: nowrap;
     }
     .tab.active{
       background:#111827;
@@ -293,12 +326,12 @@
       border-color:#111827;
     }
     .tab .count{
-      margin-left: 8px;
       padding: 2px 7px;
       border-radius: 999px;
       background: rgba(0,0,0,.06);
       font-weight: 900;
       font-size: 11px;
+      flex: 0 0 auto;
     }
     .tab.active .count{ background: rgba(255,255,255,.18); }
 
@@ -315,6 +348,7 @@
       border:1px solid var(--border);
       border-radius: 14px;
       overflow:hidden;
+      min-width: 0;
     }
     .panel-header{
       padding: 12px 14px;
@@ -331,7 +365,7 @@
       font-size: 12px;
     }
 
-    /* Ticket item (clean + responsive) */
+    /* Ticket item */
     .ticket-item{
       padding: 12px 14px;
       display:flex;
@@ -339,6 +373,7 @@
       gap: 12px;
       border-bottom:1px solid var(--border);
       cursor:pointer;
+      min-width: 0;
     }
     .ticket-item:last-child{ border-bottom:0; }
     .ticket-item:hover{ background:#fafafa; }
@@ -357,6 +392,10 @@
       background:#f8fafc;
       display:inline-block;
       margin-bottom: 6px;
+      max-width: 100%;
+      overflow:hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
     .ticket-title{
       margin: 0;
@@ -377,6 +416,7 @@
       -webkit-line-clamp: 2;
       -webkit-box-orient: vertical;
       overflow:hidden;
+      word-break: break-word;
     }
     .ticket-meta{
       margin-top: 10px;
@@ -386,12 +426,17 @@
       color: var(--muted);
       font-size: 12px;
       font-weight: 700;
+      min-width: 0;
     }
     .meta-pill{
       padding: 4px 10px;
       border-radius: 999px;
       border:1px solid var(--border);
       background:#fff;
+      max-width: 100%;
+      overflow:hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
 
     .badge-status{
@@ -407,6 +452,7 @@
       white-space: nowrap;
       flex: 0 0 auto;
       align-self: flex-start;
+      max-width: 100%;
     }
     .st-pending{ background:#fff7ed; border-color:#fed7aa; }
     .st-progress{ background:#eff6ff; border-color:#bfdbfe; }
@@ -421,10 +467,12 @@
     .side-row{
       display:flex;
       justify-content:space-between;
+      gap: 12px;
       padding: 10px 0;
       border-bottom:1px dashed var(--border);
       font-weight: 850;
       font-size: 13px;
+      min-width: 0;
     }
     .side-row:last-child{ border-bottom:0; }
     .side-row .k{ color: var(--muted); font-weight: 800; }
@@ -466,49 +514,66 @@
       font-weight: 650;
     }
 
-    /* RESPONSIVE FIXES (important) */
-    @media (max-width: 992px){
+    /* =========================
+       RESPONSIVE
+       ========================= */
+
+    @media (max-width: 1092px){
       .summary-grid{ grid-template-columns: repeat(2, minmax(0,1fr)); }
       .dashboard-grid{ grid-template-columns: 1fr; }
       .side{ position: static; }
+      .tabs{ justify-content: flex-start; }
     }
 
-    @media (max-width: 576px){
-      /* header becomes stacked (true mobile responsive) */
+    @media (max-width: 610px){
+      main.container{ padding-left: 12px; padding-right: 12px; }
+
       .app-header-inner{
         flex-direction: column;
         align-items: stretch;
+        flex-wrap: wrap;
       }
       .top-actions{
+        flex-direction: column;
         width: 100%;
-        justify-content: space-between;
+        gap: 8px;
+        flex-wrap: wrap;
       }
-      .user-pill{
-        flex: 1;
-        justify-content: center;
-      }
-      .btn-black, .btn-ghost{
-        width: 100%;
-      }
+
+      .user-pill{ width: 100%; }
+      .user-pill span:last-child{ max-width: 100%; }
+
+      .btn-black, .btn-ghost{ width: 100%; }
 
       .summary-grid{ grid-template-columns: 1fr; }
 
-      .controls{
-        padding: 10px;
-      }
-      .search-wrap{ min-width: 100%; }
-      .select{ min-width: 100%; }
-      .control-right, .tabs{ width: 100%; }
-      .tab{ flex: 1; text-align:center; }
+      .control-left, .control-right{ width: 100%; }
+      .search-wrap{ min-width: 100%; width: 100%; }
+      .select{ min-width: 100%; width: 100%; }
 
-      /* tickets: stack status under title if needed */
+      .tabs{ width: 100%; }
+      .tab{ flex: 1 1 calc(50% - 8px); }
+
       .ticket-item{
         flex-direction: column;
         align-items: flex-start;
       }
-      .badge-status{
-        margin-top: 10px;
+      .ticket-title{
+        white-space: normal;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
       }
+      .badge-status{ margin-top: 10px; }
+
+      .modal-dialog{ margin: .75rem; }
+      .modal-title{ font-size: 16px; }
+    }
+
+    @media (max-width: 360px){
+      .tab{ flex: 1 1 100%; }
+      .brand-title small{ display:none; }
     }
   </style>
 </head>
@@ -555,7 +620,6 @@
 
 <main class="container py-4">
 
-  {{-- ALERT appears ONLY when ticket submit success --}}
   @if(session('success'))
     <div class="alert alert-green py-2 px-3 mb-3 fade show" id="successAlert">
       <i class="bi bi-check-circle-fill me-2"></i>
@@ -711,14 +775,13 @@
   </div>
 </main>
 
-<!-- Ticket details modal (simple) -->
 <div class="modal fade" id="ticketDetailsModal" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog modal-dialog-scrollable modal-lg">
     <div class="modal-content">
       <div class="modal-header">
-        <div>
+        <div class="min-w-0">
           <span class="ticket-no" id="d_ticketNo">—</span>
-          <h5 class="modal-title mt-2 mb-0" id="d_subject">—</h5>
+          <h5 class="modal-title mt-2 mb-0" id="d_subject" style="word-break:break-word;">—</h5>
           <div class="text-muted mt-1" style="font-weight:650; font-size:13px;">
             <span id="d_department">—</span> • <span id="d_priority">—</span> • <span id="d_status">—</span>
           </div>
@@ -728,7 +791,7 @@
 
       <div class="modal-body">
         <div class="mb-2" style="font-weight:800; font-size:12px; color:#6b7280;">Description</div>
-        <div id="d_description" style="font-weight:650; line-height:1.6;">—</div>
+        <div id="d_description" style="font-weight:650; line-height:1.6; word-break:break-word;">—</div>
       </div>
 
       <div class="modal-footer">
@@ -744,7 +807,6 @@
 
 <script>
   document.addEventListener('DOMContentLoaded', () => {
-    // Tabs
     document.querySelectorAll('.tab').forEach(t => {
       t.addEventListener('click', () => {
         document.querySelectorAll('.tab').forEach(x => x.classList.remove('active'));
@@ -753,12 +815,10 @@
       });
     });
 
-    // Filters
     document.getElementById('searchInput')?.addEventListener('input', applyFilters);
     document.getElementById('departmentFilter')?.addEventListener('change', applyFilters);
     document.getElementById('priorityFilter')?.addEventListener('change', applyFilters);
 
-    // Alert auto hide ONLY if exists (submit success)
     const alert = document.getElementById('successAlert');
     if(alert){
       setTimeout(() => alert.classList.remove('show'), 3500);
@@ -806,7 +866,9 @@
   function openTicketDetails(el){
     document.getElementById('d_ticketNo').innerText = el.querySelector('.ticket-no')?.innerText || '—';
     document.getElementById('d_subject').innerText = el.querySelector('.ticket-title')?.innerText || '—';
-    document.getElementById('d_description').innerText = el.querySelector('.ticket-desc')?.innerText || '—';
+
+    const fullDesc = el.dataset.description || (el.querySelector('.ticket-desc')?.innerText || '—');
+    document.getElementById('d_description').innerText = fullDesc || '—';
 
     const dept = el.dataset.department || '—';
     const pri  = el.dataset.priority || '—';
@@ -814,7 +876,7 @@
 
     document.getElementById('d_department').innerText = cap(dept);
     document.getElementById('d_priority').innerText = cap(pri);
-    document.getElementById('d_status').innerText = st.replace('_',' ');
+    document.getElementById('d_status').innerText = st.replace(/_/g,' ');
 
     new bootstrap.Modal(document.getElementById('ticketDetailsModal')).show();
   }

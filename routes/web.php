@@ -28,6 +28,21 @@ use App\Http\Controllers\Admin\SupplyController;
 use App\Http\Controllers\Admin\AdminSuppliesController;
 use App\Http\Controllers\TicketController;
 use App\Http\Controllers\Admin\AdminTicketController;
+use App\Http\Controllers\HrDashboardController;
+use App\Http\Controllers\Hr\PayslipController;
+
+Route::middleware(['auth','hr.access'])
+  ->prefix('hr')
+  ->name('hr.')
+  ->group(function () {
+
+    Route::get('/dashboard', fn() => view('admin.hr.dashboard'))->name('dashboard');
+
+    Route::get('/payslips', [PayslipController::class, 'index'])->name('payslips.index');
+    Route::post('/payslips', [PayslipController::class, 'store'])->name('payslips.store');
+    Route::get('/payslips/{payslip}/download', [PayslipController::class, 'download'])->name('payslips.download');
+    Route::delete('/payslips/{payslip}', [PayslipController::class, 'destroy'])->name('payslips.destroy');
+});
 
 Route::middleware(['auth'])->group(function () {
 

@@ -4,6 +4,7 @@ use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use App\Http\Middleware\AdminDesktopOnly;
+use App\Http\Middleware\HrAccessMiddleware;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -16,6 +17,7 @@ return Application::configure(basePath: dirname(__DIR__))
         'admin' => \App\Http\Middleware\AdminMiddleware::class,
         'admin.desktop' => \App\Http\Middleware\AdminDesktopOnly::class,
         'role'           => \App\Http\Middleware\RoleMiddleware::class, // 👈 ADD THIS
+        'hr.access' => HrAccessMiddleware::class,
     ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
