@@ -61,4 +61,25 @@ class TicketController extends Controller
     return redirect()->route('tickets.dashboard')
         ->with('success', 'Ticket submitted successfully.');
 }
+
+public function updateStatus(Request $request, Ticket $ticket)
+{
+    if($ticket->status === 'resolved'){
+    return back()->with('success','Ticket is already resolved.');
+}
+
+    // ✅ owner lang pwede
+    abort_if($ticket->user_id !== Auth::id(), 403);
+
+    $request->validate([
+        'status' => 'required|in:pending,in_progress,resolved',
+    ]);
+
+    $ticket->update([
+        'status' => $request->status,
+    ]);
+
+    return back()->with('success', 'Ticket status updated successfully.');
+}
+
 }

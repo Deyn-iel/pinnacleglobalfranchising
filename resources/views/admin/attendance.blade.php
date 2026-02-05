@@ -38,10 +38,8 @@
     color: var(--text);
   }
 
-  aside{
-    width: var(--sidebar-w);
-    z-index: 999;
-  }
+  /* sidebar fixed but lower than modal */
+  aside{ width: var(--sidebar-w); z-index: 1000; }
 
   /* ================= MAIN LAYOUT ================= */
   main{
@@ -72,14 +70,6 @@
     backdrop-filter: blur(10px);
   }
 
-  .page-header::after{
-    content:"";
-    position:absolute;
-    right:-90px; top:-90px;
-    width: 260px; height: 260px;
-    pointer-events:none;
-  }
-
   .page-header h4{
     font-weight: 900;
     margin-bottom: 0;
@@ -101,9 +91,7 @@
     backdrop-filter: blur(10px);
   }
 
-  .card .card-body{
-    padding: clamp(14px, 1.6vw, 20px);
-  }
+  .card .card-body{ padding: clamp(14px, 1.6vw, 20px); }
 
   .section-title{
     font-weight: 900;
@@ -119,24 +107,9 @@
   }
 
   /* ================= BUTTONS ================= */
-  .btn{
-    font-weight: 700;
-    border-radius: 999px;
-  }
-  .btn-primary{
-    background: #0f172a;
-    border: none;
-  }
+  .btn{ font-weight: 700; border-radius: 999px; }
+  .btn-primary{ background: #0f172a; border: none; }
   .btn-primary:hover{ background:#111827; }
-  .btn-dark{
-    border-radius: 999px;
-  }
-  .btn-secondary{
-    border-radius: 999px;
-  }
-  .btn-success{
-    border-radius: 999px;
-  }
 
   /* ================= TABLE ================= */
   .table-wrap{
@@ -144,40 +117,21 @@
     overflow: hidden;
     border: 1px solid rgba(15,23,42,.08);
   }
-
-  .table-responsive{
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-  }
+  .table-responsive{ overflow-x: auto; -webkit-overflow-scrolling: touch; }
 
   table{
     font-size: 14px;
     margin-bottom: 0;
-    min-width: 980px; /* scroll on small screens */
+    min-width: 980px;
   }
 
-  thead{
-    background: #111827;
-    color: #fff;
-  }
+  thead{ background: #111827; color: #fff; }
+  thead th{ position: sticky; top: 0; z-index: 1; }
 
-  thead th{
-    position: sticky;
-    top: 0;
-    z-index: 1;
-  }
+  th, td{ vertical-align: middle; white-space: nowrap; }
 
-  th, td{
-    vertical-align: middle;
-    white-space: nowrap;
-  }
-
-  tbody tr{
-    transition: background .15s ease;
-  }
-  tbody tr:hover{
-    background: rgba(13,110,253,.05);
-  }
+  tbody tr{ transition: background .15s ease; }
+  tbody tr:hover{ background: rgba(13,110,253,.05); }
 
   /* ================= SELFIE BUTTONS ================= */
   .btn-selfie{
@@ -193,10 +147,12 @@
     color: var(--primary);
   }
 
-  /* modal image responsive */
   .selfie-img{
-    max-height: min(70vh, 520px);
-    width: auto;
+    width: 100%;
+    max-height: min(75vh, 620px);
+    object-fit: contain;
+    border-radius: 14px;
+    background: rgba(0,0,0,.03);
   }
 
   /* ================= ALERT ================= */
@@ -206,11 +162,8 @@
     box-shadow: 0 12px 30px rgba(15,23,42,.10);
   }
 
-  /* small improvements */
   .muted-pill{
-    display:inline-flex;
-    align-items:center;
-    gap:8px;
+    display:inline-flex; align-items:center; gap:8px;
     padding: 8px 12px;
     border-radius: 999px;
     background: rgba(15,23,42,.05);
@@ -220,9 +173,9 @@
     font-weight: 700;
   }
 
-  @media (max-width: 1200px){
-    main{ padding: 16px; }
-  }
+  /* ✅ FIX MODAL LAYERING */
+  .modal-backdrop{ z-index: 2000 !important; }
+  .modal{ z-index: 2005 !important; }
 </style>
 </head>
 
@@ -275,15 +228,11 @@
         </div>
 
         <div class="col-6 col-md-4 col-lg-2 d-grid">
-          <button class="btn btn-dark w-100">
-            Apply Filter
-          </button>
+          <button class="btn btn-dark w-100">Apply Filter</button>
         </div>
 
         <div class="col-6 col-md-4 col-lg-2 d-grid">
-          <a href="{{ route('admin.attendance') }}" class="btn btn-secondary w-100">
-            Reset
-          </a>
+          <a href="{{ route('admin.attendance') }}" class="btn btn-secondary w-100">Reset</a>
         </div>
       </form>
 
@@ -295,32 +244,25 @@
         <div class="row g-3 align-items-end">
           <div class="col-12 col-md-6 col-lg-4">
             <label class="form-label">Latitude</label>
-            <input type="number" step="0.0000001"
-                   name="lat"
-                   value="{{ $setting->lat ?? '' }}"
-                   class="form-control" required>
+            <input type="number" step="0.0000001" name="lat"
+                   value="{{ $setting->lat ?? '' }}" class="form-control" required>
           </div>
 
           <div class="col-12 col-md-6 col-lg-4">
             <label class="form-label">Longitude</label>
-            <input type="number" step="0.0000001"
-                   name="lng"
-                   value="{{ $setting->lng ?? '' }}"
-                   class="form-control" required>
+            <input type="number" step="0.0000001" name="lng"
+                   value="{{ $setting->lng ?? '' }}" class="form-control" required>
           </div>
 
           <div class="col-12 col-md-6 col-lg-2">
             <label class="form-label">Radius (meters)</label>
-            <input type="number"
-                   name="radius"
-                   value="{{ $setting->radius ?? 100 }}"
-                   class="form-control" required>
+            <input type="number" name="radius"
+                   value="{{ $setting->radius ?? 100 }}" class="form-control" required>
           </div>
 
           <div class="col-12 col-md-6 col-lg-2 d-grid">
             <button class="btn btn-primary">
-              <i class="fa-solid fa-floppy-disk me-1"></i>
-              Save
+              <i class="fa-solid fa-floppy-disk me-1"></i> Save
             </button>
           </div>
         </div>
@@ -365,8 +307,7 @@
 
         <div class="col-12 col-lg-2 d-grid">
           <button class="btn btn-success w-100">
-            <i class="fas fa-download me-1"></i>
-            Export
+            <i class="fas fa-download me-1"></i> Export
           </button>
         </div>
       </form>
@@ -401,49 +342,46 @@
 
             <tbody>
             @forelse($records as $a)
+              @php
+                $userName = optional($a->user)->name ?? 'Unknown';
+
+                // safe time formatter kahit string
+                $fmt = function ($t) {
+                  if(!$t) return '—';
+                  try { return \Carbon\Carbon::parse($t)->format('h:i A'); } catch (\Throwable $e) { return '—'; }
+                };
+              @endphp
+
               <tr>
                 <td>{{ $a->created_at->format('Y-m-d') }}</td>
-                <td class="fw-semibold">{{ $a->user->name }}</td>
+                <td class="fw-semibold">{{ $userName }}</td>
 
-                <td>{{ optional($a->morning_in)->format('h:i A') ?? '—' }}</td>
-                <td>{{ optional($a->morning_out)->format('h:i A') ?? '—' }}</td>
-                <td>{{ optional($a->afternoon_in)->format('h:i A') ?? '—' }}</td>
-                <td>{{ optional($a->afternoon_out)->format('h:i A') ?? '—' }}</td>
+                <td>{{ $fmt($a->morning_in) }}</td>
+                <td>{{ $fmt($a->morning_out) }}</td>
+                <td>{{ $fmt($a->afternoon_in) }}</td>
+                <td>{{ $fmt($a->afternoon_out) }}</td>
 
                 <td>
                   <div class="d-flex flex-wrap gap-2">
 
                     @foreach([
-                      'AM In' => $a->morning_in_selfie,
+                      'AM In'  => $a->morning_in_selfie,
                       'AM Out' => $a->morning_out_selfie,
-                      'PM In' => $a->afternoon_in_selfie,
+                      'PM In'  => $a->afternoon_in_selfie,
                       'PM Out' => $a->afternoon_out_selfie,
                     ] as $label => $selfie)
 
                       @if($selfie)
-                        <button class="btn btn-sm btn-selfie"
-                                data-bs-toggle="modal"
-                                data-bs-target="#view{{ md5($label.$a->id) }}">
+                        <button
+                          type="button"
+                          class="btn btn-sm btn-selfie js-open-selfie"
+                          data-bs-toggle="modal"
+                          data-bs-target="#selfieModal"
+                          data-title="{{ $userName }} – {{ $label }}"
+                          data-src="{{ asset('storage/'.$selfie) }}"
+                        >
                           {{ $label }}
                         </button>
-
-                        <div class="modal fade" id="view{{ md5($label.$a->id) }}" tabindex="-1" aria-hidden="true">
-                          <div class="modal-dialog modal-dialog-centered modal-lg">
-                            <div class="modal-content">
-                              <div class="modal-header">
-                                <h5 class="modal-title">
-                                  {{ $a->user->name }} – {{ $label }}
-                                </h5>
-                                <button class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                              </div>
-                              <div class="modal-body text-center">
-                                <img src="{{ asset('storage/'.$selfie) }}"
-                                     class="img-fluid rounded selfie-img"
-                                     alt="Selfie">
-                              </div>
-                            </div>
-                          </div>
-                        </div>
                       @endif
                     @endforeach
 
@@ -453,9 +391,7 @@
                           onsubmit="return confirm('Delete this record?')">
                       @csrf
                       @method('DELETE')
-                      <button class="btn btn-sm btn-danger">
-                        Delete
-                      </button>
+                      <button class="btn btn-sm btn-danger">Delete</button>
                     </form>
 
                   </div>
@@ -478,6 +414,44 @@
 
 </main>
 
+<!-- ✅ ONE REUSABLE MODAL -->
+<div class="modal fade" id="selfieModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-xl">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="selfieModalTitle">Selfie</h5>
+        <button class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body text-center">
+        <img id="selfieModalImg"src="{{ asset('storage/'.$selfie) }}"
+                                     class="img-fluid rounded selfie-img"
+                                     alt="Selfie">
+      </div>
+    </div>
+  </div>
+</div>
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+  // ✅ Single modal handler
+  document.addEventListener('click', function(e){
+    const btn = e.target.closest('.js-open-selfie');
+    if(!btn) return;
+
+    const title = btn.getAttribute('data-title') || 'Selfie';
+    const src   = btn.getAttribute('data-src') || '';
+
+    document.getElementById('selfieModalTitle').textContent = title;
+    document.getElementById('selfieModalImg').src = src;
+  });
+
+  // optional: clear image on close to avoid old flash
+  const selfieModalEl = document.getElementById('selfieModal');
+  selfieModalEl.addEventListener('hidden.bs.modal', () => {
+    document.getElementById('selfieModalImg').src = '';
+  });
+</script>
+
 </body>
 </html>

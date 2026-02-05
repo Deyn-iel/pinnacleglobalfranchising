@@ -46,6 +46,10 @@ Route::middleware(['auth','hr.access'])
 
 Route::middleware(['auth'])->group(function () {
 
+Route::patch('/tickets/{ticket}/status', [TicketController::class, 'updateStatus'])
+    ->name('tickets.updateStatus');
+
+
     Route::get('/tickets', [TicketController::class, 'index'])
         ->name('tickets.dashboard');
 
@@ -200,8 +204,8 @@ Route::middleware(['auth', 'admin', 'admin.desktop'])
      Route::get('/tickets', [AdminTicketController::class, 'index'])
             ->name('tickets.index');
 
-        Route::patch('/tickets/{ticket}', [AdminTicketController::class, 'update'])
-            ->name('tickets.update');
+        // Route::patch('/tickets/{ticket}', [AdminTicketController::class, 'update'])
+        //     ->name('tickets.update');
 
         Route::delete('/tickets/{ticket}', [AdminTicketController::class, 'destroy'])
             ->name('tickets.destroy');

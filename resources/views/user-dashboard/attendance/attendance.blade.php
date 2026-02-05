@@ -25,11 +25,13 @@
 
 @include('user-dashboard.partials-dashboard.sidebar')
 @include('user-dashboard.partials-dashboard.header')
+<div class="attendance-wrapper">
+    
 <div class="main">
 
 
 <div class="content fade-up">
-<div class="attendance-wrapper">
+
 <div class="attendance-container">
 
 <div class="attendance-info">

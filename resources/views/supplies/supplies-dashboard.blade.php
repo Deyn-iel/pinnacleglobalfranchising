@@ -30,7 +30,9 @@
   --pad: clamp(14px, 2.2vw, 22px);
   --gap: clamp(10px, 2vw, 18px);
   --topbarH: 68px;
+
   --sidebarW: 270px;
+  --sidebarCollapsed: 72px; /* ✅ NEW */
 }
 
 *{ box-sizing:border-box; }
@@ -67,10 +69,11 @@ body{
   font-weight: 800;
   letter-spacing: .2px;
 }
+
+/* ✅ toggle visible on desktop + mobile */
 .toggle-btn{
   font-size:20px;
   cursor:pointer;
-  display:none;
   width:42px;height:42px;
   border-radius:12px;
   border:1px solid var(--border);
@@ -84,7 +87,7 @@ body{
   background: #111827;
   border:none;
   color:#fff;
-  padding:10px 16px;
+  padding: 10px 16px;
   border-radius:999px;
   font-weight:700;
   cursor:pointer;
@@ -103,8 +106,9 @@ body{
   border-right:1px solid var(--border);
   padding: 14px;
   z-index: 999;
-  transition: transform .25s ease;
+  transition: transform .25s ease, width .25s ease, box-shadow .25s ease;
 }
+
 .sidebar .side-title{
   font-size: 12px;
   color: var(--muted);
@@ -113,6 +117,7 @@ body{
   text-transform: uppercase;
   letter-spacing: .08em;
 }
+
 .sidebar a{
   display:flex;
   align-items:center;
@@ -127,6 +132,7 @@ body{
 .sidebar a:hover{
   background: #f3f4f6;
 }
+
 .sidebar .closeRow{
   display:none;
   justify-content:space-between;
@@ -138,6 +144,29 @@ body{
   border-radius:12px;
   border:1px solid var(--border);
   background:#fff;
+}
+
+/* ✅ DESKTOP COLLAPSED STATE (icons only) */
+.sidebar.collapsed{
+  width: var(--sidebarCollapsed);
+  padding: 14px 8px;
+}
+.sidebar.collapsed .side-title,
+.sidebar.collapsed a span{
+  display:none;
+}
+.sidebar.collapsed a{
+  justify-content:center;
+  padding: 12px;
+}
+.sidebar.collapsed a i{
+  font-size:18px;
+}
+
+/* ✅ DESKTOP expanded overlay */
+.sidebar.desktop-open{
+  z-index: 1200; /* above content */
+  box-shadow: 0 18px 40px rgba(17,24,39,.25);
 }
 
 /* ================= OVERLAY ================= */
@@ -156,6 +185,10 @@ body{
   padding: calc(var(--topbarH) + var(--pad)) var(--pad) 40px;
   max-width: 1400px;
   margin-right:auto;
+  transition: margin-left .25s ease;
+}
+.main.collapsed{
+  margin-left: var(--sidebarCollapsed);
 }
 
 /* ================= SEARCH ================= */
@@ -294,11 +327,8 @@ body{
   border-radius:50%;
   background:#9ca3af;
 }
-.ok{ }
 .ok::before{ background: var(--success); }
-.low{ }
 .low::before{ background: var(--warning); }
-.out{ }
 .out::before{ background: var(--danger); }
 
 /* EMPTY STATES */
@@ -321,7 +351,7 @@ body{
 
 /* ================= RESPONSIVE ================= */
 @media (max-width: 1024px){
-  .toggle-btn{ display:grid; }
+  /* on mobile/tablet: use slide-in behavior */
   .sidebar{
     transform: translateX(-110%);
     width: min(320px, 86vw);
@@ -329,7 +359,11 @@ body{
   }
   .sidebar.open{ transform: translateX(0); }
   .sidebar .closeRow{ display:flex; }
-  .main{ margin-left:0; }
+
+  /* main should not reserve space for sidebar */
+  .main{ margin-left:0 !important; }
+  .main.collapsed{ margin-left:0 !important; }
+
   .analytics{ grid-template-columns: 1fr; }
   .kpis{ grid-template-columns: repeat(2, minmax(0,1fr)); }
 }
@@ -345,30 +379,10 @@ body{
 <body>
 
 <!-- TOPBAR -->
-<div class="topbar">
-  <div class="topbar-left">
-    <div class="toggle-btn" id="toggleBtn" aria-label="Open sidebar">
-      <i class="fas fa-bars"></i>
-    </div>
-    <h1><i class="fas fa-boxes-stacked me-2"></i>Supplies</h1>
-  </div>
-
-  <form method="POST" action="{{ route('custom.logout') }}">
-    @csrf
-    <button class="logout">Logout</button>
-  </form>
-</div>
+@include('supplies.supplies-partials.header')
 
 <!-- SIDEBAR -->
-<div class="sidebar" id="sidebar">
-  <div class="closeRow">
-    <div style="font-weight:900;">Menu</div>
-    <button class="closeBtn" id="closeBtn" aria-label="Close sidebar">✕</button>
-  </div>
-
-  <div class="side-title">Dashboard</div>
-  <a class="active"><i class="fas fa-boxes-stacked"></i> Supplies</a>
-</div>
+@include('supplies.supplies-partials.sidebar')
 
 <div class="overlay" id="overlay"></div>
 
@@ -382,9 +396,9 @@ body{
   </div>
 
   @php
-  $totalStock = $supplies->sum('stock');
-  $lowStock = $supplies->where('stock','<=',10)->count();
-  $outStock = $supplies->where('stock',0)->count();
+    $totalStock = $supplies->sum('stock');
+    $lowStock = $supplies->where('stock','<=',10)->count();
+    $outStock = $supplies->where('stock',0)->count();
   @endphp
 
   <!-- KPI -->
@@ -401,7 +415,7 @@ body{
       @php $state = $s->stock == 0 ? 'out' : ($s->stock <= 10 ? 'low' : 'ok'); @endphp
 
       <div class="card-item" data-name="{{ strtolower($s->name) }}">
-        <img src="{{ $s->image ? Storage::url($s->image) : 'https://via.placeholder.com/400x250' }}">
+        <img src="{{ $s->image ? Storage::url($s->image) : 'https://via.placeholder.com/400x250' }}" alt="Supply">
         <div class="card-body">
           <h3>{{ $s->name }}</h3>
           <div class="meta">{{ $s->unit }}</div>
@@ -444,29 +458,75 @@ body{
 
 <script>
   // Sidebar elements
-  const sidebar = document.getElementById('sidebar');
-  const overlay = document.getElementById('overlay');
+  const sidebar   = document.getElementById('sidebar');
+  const overlay   = document.getElementById('overlay');
   const toggleBtn = document.getElementById('toggleBtn');
-  const closeBtn = document.getElementById('closeBtn');
+  const closeBtn  = document.getElementById('closeBtn');
+  const main      = document.querySelector('.main');
 
-  function openSidebar(){
+  let isCollapsed = false;
+
+  function isMobile(){
+    return window.matchMedia('(max-width:1024px)').matches;
+  }
+
+  function openSidebarMobile(){
     sidebar.classList.add('open');
     overlay.classList.add('show');
     document.body.style.overflow = 'hidden';
   }
+
   function closeSidebar(){
-    sidebar.classList.remove('open');
+    sidebar.classList.remove('open','desktop-open');
     overlay.classList.remove('show');
     document.body.style.overflow = '';
   }
 
-  toggleBtn?.addEventListener('click', openSidebar);
+  // ✅ Toggle behavior:
+  // - Mobile: open slide-in with overlay
+  // - Desktop: collapse/expand (icons only vs full)
+  toggleBtn.addEventListener('click', () => {
+    if(isMobile()){
+      openSidebarMobile();
+    }else{
+      if(isCollapsed){
+        // expand (full)
+        sidebar.classList.remove('collapsed');
+        main.classList.remove('collapsed');
+        sidebar.classList.add('desktop-open'); // raise z-index + shadow
+        isCollapsed = false;
+      }else{
+        // collapse (icons only)
+        sidebar.classList.add('collapsed');
+        main.classList.add('collapsed');
+        sidebar.classList.remove('desktop-open');
+        isCollapsed = true;
+      }
+    }
+  });
+
   closeBtn?.addEventListener('click', closeSidebar);
   overlay?.addEventListener('click', closeSidebar);
   document.addEventListener('keydown', (e)=>{ if(e.key === 'Escape') closeSidebar(); });
 
+  // On resize:
+  // - if switching to mobile, reset desktop collapse state
+  window.addEventListener('resize', () => {
+    if(isMobile()){
+      sidebar.classList.remove('collapsed','desktop-open');
+      main.classList.remove('collapsed');
+      isCollapsed = false;
+      closeSidebar(); // ensure overlay closed
+    }else{
+      // ensure mobile open state removed when going back to desktop
+      sidebar.classList.remove('open');
+      overlay.classList.remove('show');
+      document.body.style.overflow = '';
+    }
+  });
+
   /* SEARCH */
-  document.getElementById('search').addEventListener('keyup', function(){
+  document.getElementById('search')?.addEventListener('keyup', function(){
     const q = this.value.toLowerCase();
     let visible = 0;
 
@@ -480,7 +540,7 @@ body{
       visible === 0 && q.length ? 'grid' : 'none';
   });
 
-  /* CHARTS (more responsive) */
+  /* CHARTS */
   const barCtx = document.getElementById('stockBarChart');
   const doughCtx = document.getElementById('stockStatusChart');
 
@@ -530,8 +590,7 @@ body{
     }
   });
 
-  // Make charts take height nicely
-  // (Chart.js needs container height when maintainAspectRatio:false)
+  // Chart.js needs container height when maintainAspectRatio:false
   barCtx.parentElement.style.height = '320px';
   doughCtx.parentElement.style.height = '320px';
   if (window.matchMedia('(max-width:520px)').matches){

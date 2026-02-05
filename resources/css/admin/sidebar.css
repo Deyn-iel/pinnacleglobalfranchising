@@ -240,7 +240,7 @@
   letter-spacing: .2px;
 }
 
-.topbar-left i { font-size: 18px; color: var(--sb-accent); }
+.topbar-left i { font-size: 18px; }
 
 /* TOPBAR RIGHT */
 .topbar-right {

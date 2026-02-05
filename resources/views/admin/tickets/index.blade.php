@@ -149,12 +149,14 @@
   .table-responsive{
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
+    
   }
 
   table{
     margin-bottom: 0;
     font-size: 14px;
     min-width: 1100px; /* scroll on small screens */
+    
   }
 
   .table thead{
@@ -168,6 +170,7 @@
     color: rgba(255,255,255,.9);
     white-space: nowrap;
     border-bottom: 0;
+    background: rgb(90, 90, 90);
   }
 
   .table tbody tr{
@@ -357,17 +360,14 @@
                 <div class="action-wrap">
 
                   {{-- STATUS --}}
-                  <form method="POST" action="{{ route('admin.tickets.update', $ticket) }}" class="m-0">
-                    @csrf
-                    @method('PATCH')
-                    <select name="status"
-                            class="form-select form-select-sm"
-                            onchange="this.form.submit()">
-                      <option value="pending" @selected($ticket->status==='pending')>Pending</option>
-                      <option value="in_progress" @selected($ticket->status==='in_progress')>In Progress</option>
-                      <option value="resolved" @selected($ticket->status==='resolved')>Resolved</option>
-                    </select>
-                  </form>
+                  <span class="badge
+  {{ $ticket->status === 'pending' ? 'bg-danger'
+      : ($ticket->status === 'in_progress' ? 'bg-primary'
+      : ($ticket->status === 'resolved' ? 'bg-success'
+      : 'bg-secondary')) }} p-2">
+  {{ ucwords(str_replace('_',' ', $ticket->status)) }}
+</span>
+
 
                   {{-- DELETE --}}
                   <form method="POST"
