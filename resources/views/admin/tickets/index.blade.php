@@ -22,10 +22,7 @@
     --card: rgba(255,255,255,.90);
 
     --shadow: 0 18px 45px rgba(15,23,42,.08);
-    --shadow-hover: 0 28px 80px rgba(15,23,42,.16);
     --radius: 18px;
-
-    --primary-dark: #0f172a;
   }
 
   body{
@@ -67,17 +64,7 @@
     align-items: flex-start;
     gap: 12px;
     flex-wrap: wrap;
-    position: relative;
-    overflow: hidden;
     backdrop-filter: blur(10px);
-  }
-
-  .page-header::after{
-    content:"";
-    position:absolute;
-    right:-90px; top:-90px;
-    width: 260px; height: 260px;
-    pointer-events:none;
   }
 
   .page-header h3{
@@ -134,9 +121,7 @@
     letter-spacing: -.01em;
   }
 
-  .user-header small{
-    color: var(--muted);
-  }
+  .user-header small{ color: var(--muted); }
 
   .count-badge{
     border-radius: 999px;
@@ -149,54 +134,94 @@
   .table-responsive{
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
-    
   }
 
-  table{
-    margin-bottom: 0;
-    font-size: 14px;
-    min-width: 1100px; /* scroll on small screens */
-    
-  }
+/* Force same width ng Concern column across rows */
+table{
+  table-layout: fixed; 
+}
 
-  .table thead{
-    background: #111827;
-  }
+/* Set fixed width for each column (adjust if you want) */
+th:nth-child(1), td:nth-child(1){ width: 140px; } /* Ticket # */
+th:nth-child(2), td:nth-child(2){ width: 120px; } /* Branch */
+th:nth-child(3), td:nth-child(3){ width: 560px; } 
+th:nth-child(4), td:nth-child(4){ width: 120px; } /* Dept */
+th:nth-child(5), td:nth-child(5){ width: 110px; } /* Priority */
+th:nth-child(6), td:nth-child(6){ width: 110px; } /* Status */
+th:nth-child(7), td:nth-child(7){ width: 160px; } /* Date */
+th:nth-child(8), td:nth-child(8){ width: 90px; }  /* Actions */
+
 
   .table thead th{
     font-size: 12px;
     text-transform: uppercase;
     letter-spacing: .06em;
-    color: rgba(255,255,255,.9);
+    color: rgba(255,255,255,.92);
     white-space: nowrap;
     border-bottom: 0;
     background: rgb(90, 90, 90);
   }
 
-  .table tbody tr{
-    transition: background .15s ease;
+  .table tbody tr{ transition: background .15s ease; }
+  .table-hover tbody tr:hover{ background: rgba(13,110,253,.05); }
+
+  /* ===== CONCERN + VIEW (SIDE BY SIDE) ===== */
+  .concern-cell{
+    min-width: 520px;
+    max-width: 760px;
   }
 
-  .table-hover tbody tr:hover{
-    background: rgba(13,110,253,.05);
+  .concern-row{
+    display:flex;
+    align-items:center; /* center button vertically */
+    gap: 10px;
+    min-width: 0; /* IMPORTANT for flex shrink */
   }
 
-  /* description clamp */
-  .description-box{
-    max-width: 420px;
-    font-size: 13px;
-    color: var(--muted);
-    line-height: 1.4;
+.description-box{
+  flex: 1 1 auto;
+  min-width: 0;               /* important for ellipsis inside flex */
+  width: 100%;
 
-    display: -webkit-box;
-    -webkit-line-clamp: 3;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-    word-break: break-word;
+  font-size: 14px;
+  color: #0f172a;
+  line-height: 1.45;
+  font-weight: 650;
+
+  padding: 10px 12px;
+  border-radius: 14px;
+  border: 1px solid rgba(15,23,42,.10);
+  background: rgba(15,23,42,.03);
+
+  /* ✅ ONE-LINE PREVIEW ONLY */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+
+  .btn-view{
+    flex: 0 0 auto;
+    border-radius: 999px;
+    font-weight: 900;
+    padding: 8px 12px;
+    border: 1px solid rgba(15,23,42,.12);
+    background: #fff;
+    white-space: nowrap;
+    min-width: 86px;
   }
+  .btn-view:hover{ background: rgba(15,23,42,.04); }
 
+  /* Keep clamp consistent (no conflicting overrides) */
   @media (max-width: 1200px){
-    .description-box{ max-width: 320px; }
+    .concern-cell{ min-width: 420px; }
+    .description-box{ -webkit-line-clamp: 2; }
+  }
+
+  @media (max-width: 768px){
+    table{ min-width: 980px; }
+    .concern-cell{ min-width: 380px; max-width: 520px; }
+    .description-box{ -webkit-line-clamp: 2; }
   }
 
   /* ===== ACTIONS ===== */
@@ -207,21 +232,8 @@
     justify-content: center;
   }
 
-  .form-select-sm{
-    border-radius: 999px;
-    font-size: 13px;
-    font-weight: 800;
-    padding-right: 2rem;
-  }
-
-  .btn{
-    font-weight: 900;
-    border-radius: 999px;
-  }
-
-  .btn-danger{
-    padding: 6px 12px;
-  }
+  .btn{ font-weight: 900; border-radius: 999px; }
+  .btn-danger{ padding: 6px 12px; }
 
   @media (max-width: 768px){
     .action-wrap{
@@ -229,13 +241,10 @@
       align-items: stretch;
     }
     .action-wrap form,
-    .action-wrap select,
-    .action-wrap button{
-      width: 100%;
-    }
+    .action-wrap button{ width: 100%; }
   }
 
-  /* ===== EMPTY STATE ===== */
+  /* ===== EMPTY ===== */
   .no-tickets{
     background: var(--card);
     border: 1px solid var(--border);
@@ -243,6 +252,51 @@
     box-shadow: var(--shadow);
     overflow: hidden;
     backdrop-filter: blur(10px);
+  }
+
+  /* ===== MODAL (CENTERED + RESPONSIVE) ===== */
+  .modal{ z-index: 2000; }
+  .modal-backdrop{ z-index: 1990; }
+
+  .modal-content{
+    border-radius: 18px !important;
+    border: 1px solid rgba(15,23,42,.12);
+    box-shadow: 0 18px 60px rgba(0,0,0,.25);
+    overflow: hidden;
+  }
+
+  .modal-header{
+    background: #fff;
+    border-bottom: 1px solid rgba(15,23,42,.08);
+  }
+
+  .modal-title{ font-weight: 900; }
+
+  .meta-badges .badge{
+    border-radius: 999px;
+    font-weight: 900;
+    padding: 8px 12px;
+  }
+
+  .concern-full{
+    white-space: pre-wrap;
+    font-weight:650;
+    line-height:1.75;
+    background: rgba(15,23,42,.03);
+    border: 1px solid rgba(15,23,42,.10);
+    border-radius: 16px;
+    padding: 14px;
+    min-height: 120px;
+
+    /* also handle super long no-space words in modal */
+    overflow-wrap: anywhere;
+    word-break: break-word;
+    word-break: break-all;
+  }
+
+  @media (max-width: 576px){
+    .modal-dialog{ margin: 0; }
+    .modal-content{ border-radius: 0 !important; }
   }
 </style>
 </head>
@@ -318,12 +372,32 @@
           @foreach($userTickets as $ticket)
             <tr>
               <td class="fw-semibold">{{ $ticket->ticket_no }}</td>
-
               <td class="fw-semibold">{{ $ticket->subject }}</td>
 
-              <td>
-                <div class="description-box" title="{{ $ticket->description }}">
-                  {{ $ticket->description }}
+              <!-- Concern + View (magkatabi + clamped preview) -->
+              <td class="concern-cell">
+                <div class="concern-row">
+                  <div class="description-box" title="{{ $ticket->description }}">
+                    {{ $ticket->description }}
+                  </div>
+
+                  <button
+                    type="button"
+                    class="btn btn-sm btn-view"
+                    data-bs-toggle="modal"
+                    data-bs-target="#concernModal"
+                    data-ticket="{{ $ticket->ticket_no }}"
+                    data-user="{{ $user->name ?? 'Unknown User' }}"
+                    data-branch="{{ $ticket->subject }}"
+                    data-dept="{{ ucfirst($ticket->department) }}"
+                    data-priority="{{ ucfirst($ticket->priority) }}"
+                    data-status="{{ ucwords(str_replace('_',' ', $ticket->status)) }}"
+                    data-date="{{ $ticket->created_at->format('M d, Y • h:i A') }}"
+                    data-concern="{{ $ticket->description }}"
+                    aria-label="View full concern"
+                  >
+                    <i class="fa-regular fa-eye me-1"></i> View
+                  </button>
                 </div>
               </td>
 
@@ -358,18 +432,6 @@
 
               <td class="text-center">
                 <div class="action-wrap">
-
-                  {{-- STATUS --}}
-                  <span class="badge
-  {{ $ticket->status === 'pending' ? 'bg-danger'
-      : ($ticket->status === 'in_progress' ? 'bg-primary'
-      : ($ticket->status === 'resolved' ? 'bg-success'
-      : 'bg-secondary')) }} p-2">
-  {{ ucwords(str_replace('_',' ', $ticket->status)) }}
-</span>
-
-
-                  {{-- DELETE --}}
                   <form method="POST"
                         action="{{ route('admin.tickets.destroy', $ticket) }}"
                         class="m-0"
@@ -380,7 +442,6 @@
                       <i class="fa-solid fa-trash"></i>
                     </button>
                   </form>
-
                 </div>
               </td>
             </tr>
@@ -400,21 +461,82 @@
     </div>
   @endforelse
 
+  <!-- MODAL (CENTERED + RESPONSIVE) -->
+  <div class="modal fade" id="concernModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg modal-fullscreen-sm-down modal-dialog-scrollable">
+      <div class="modal-content">
+
+        <div class="modal-header">
+          <div class="w-100">
+            <div class="d-flex align-items-center justify-content-between gap-2 flex-wrap">
+              <h5 class="modal-title mb-0">
+                Ticket <span id="m_ticket">—</span>
+              </h5>
+              <span class="badge bg-dark" id="m_status">—</span>
+            </div>
+
+            <div class="text-muted mt-1" style="font-weight:650;">
+              <span id="m_user">—</span> • <span id="m_date">—</span>
+            </div>
+
+            <div class="mt-2 d-flex gap-2 flex-wrap meta-badges">
+              <span class="badge bg-secondary" id="m_branch">—</span>
+              <span class="badge bg-secondary" id="m_dept">—</span>
+              <span class="badge bg-secondary" id="m_priority">—</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-body">
+          <div class="text-muted mb-2" style="font-weight:900; font-size:12px; letter-spacing:.06em; text-transform:uppercase;">
+            Concern Details
+          </div>
+          <div id="m_concern" class="concern-full">—</div>
+        </div>
+
+        <div class="modal-footer">
+          <button class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
 </main>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script>
 document.addEventListener('DOMContentLoaded', () => {
   const alert = document.getElementById('successAlert');
-  if (!alert) return;
+  if (alert){
+    setTimeout(() => alert.classList.remove('show'), 3500);
+    setTimeout(() => alert.remove(), 4200);
+  }
 
-  setTimeout(() => {
-    alert.classList.remove('show');
-  }, 3500);
+  document.addEventListener('click', (e) => {
+    const btn = e.target.closest('[data-bs-target="#concernModal"]');
+    if(!btn) return;
 
-  setTimeout(() => {
-    alert.remove();
-  }, 4200);
+    document.getElementById('m_ticket').innerText = btn.dataset.ticket || '—';
+    document.getElementById('m_user').innerText   = btn.dataset.user || '—';
+    document.getElementById('m_branch').innerText = 'Branch: ' + (btn.dataset.branch || '—');
+    document.getElementById('m_dept').innerText   = 'Dept: ' + (btn.dataset.dept || '—');
+    document.getElementById('m_priority').innerText = 'Priority: ' + (btn.dataset.priority || '—');
+    document.getElementById('m_date').innerText   = btn.dataset.date || '—';
+
+    const status = btn.dataset.status || '—';
+    const statusEl = document.getElementById('m_status');
+    statusEl.innerText = status;
+    
+    statusEl.className = 'badge';
+    const s = (status || '').toLowerCase();
+    if(s.includes('pending')) statusEl.classList.add('bg-danger');
+    else if(s.includes('progress')) statusEl.classList.add('bg-primary');
+    else if(s.includes('resolved')) statusEl.classList.add('bg-success');
+    else statusEl.classList.add('bg-dark');
+
+    document.getElementById('m_concern').innerText = btn.dataset.concern || '—';
+  });
 });
 </script>
 </body>

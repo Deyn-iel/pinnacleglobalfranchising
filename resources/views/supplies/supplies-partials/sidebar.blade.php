@@ -11,4 +11,17 @@
     <i class="fas fa-boxes-stacked"></i>
     <span>Supplies</span>
   </a>
+  <a href="#">
+    <i class="fas fa-truck"></i>
+    <span>Deliveries</span>
+  </a>
+  <a href="#">
+    <i class="fas fa-file-invoice"></i>
+    <span>Invoices</span>
+  </a>
+  <a href="#">
+    <i class="fas fa-chart-line"></i>
+    <span>Reports</span>
+  </a>
+  
 </div>

@@ -305,66 +305,62 @@
           </span>
         </div>
 
-        <form
-          action="{{ $hasStore ? route('hr.payslips.store') : '#' }}"
-          method="POST"
-          enctype="multipart/form-data"
-          @submit.prevent="{{ $hasStore ? 'null' : '' }}"
-        >
-          @csrf
+        <form action="{{ route('hr.payslips.store') }}"
+      method="POST"
+      enctype="multipart/form-data">
+  @csrf
 
-          <div class="row g-3">
-            <div class="col-6">
-              <label class="form-label">Month *</label>
-              <select name="month" class="form-select" x-model="month" required>
-                @foreach(range(1,12) as $m)
-                  <option value="{{ str_pad($m,2,'0',STR_PAD_LEFT) }}">
-                    {{ \Carbon\Carbon::create()->month($m)->format('F') }}
-                  </option>
-                @endforeach
-              </select>
-            </div>
+  <div class="row g-3">
+    <div class="col-6">
+      <label class="form-label">Month *</label>
+      <select name="month" class="form-select" required>
+        @foreach(range(1,12) as $m)
+          <option value="{{ $m }}">
+            {{ \Carbon\Carbon::create()->month($m)->format('F') }}
+          </option>
+        @endforeach
+      </select>
+    </div>
 
-            <div class="col-6">
-              <label class="form-label">Year *</label>
-              <select name="year" class="form-select" x-model="year" required>
-                @for($y = now()->year; $y >= now()->year - 6; $y--)
-                  <option value="{{ $y }}">{{ $y }}</option>
-                @endfor
-              </select>
-            </div>
+    <div class="col-6">
+      <label class="form-label">Year *</label>
+      <select name="year" class="form-select" required>
+        @for($y = now()->year; $y >= now()->year - 6; $y--)
+          <option value="{{ $y }}">{{ $y }}</option>
+        @endfor
+      </select>
+    </div>
 
-            <div class="col-12">
-              <label class="form-label">Payroll Batch Name (optional)</label>
-              <input type="text" name="batch_name" class="form-control"
-                     placeholder="e.g., Payroll - Branch A / Cutoff 1-15">
-            </div>
+    <div class="col-12">
+      <label class="form-label">Payroll Batch Name (optional)</label>
+      <input type="text" name="batch_name" class="form-control"
+             placeholder="e.g., Payroll - Branch A / Cutoff 1-15">
+    </div>
 
-            <div class="col-12">
-              <label class="form-label">Select Payslip Files *</label>
-              <input type="file"
-                     name="files[]"
-                     class="form-control"
-                     multiple
-                     accept=".pdf,.jpg,.jpeg,.png,.doc,.docx"
-                     {{ $hasStore ? 'required' : 'disabled' }}>
-              <div class="form-text">
-                Allowed: PDF / Images / DOC. You can upload multiple files.
-              </div>
-            </div>
-          </div>
+    <div class="col-12">
+      <label class="form-label">Select Payslip Files *</label>
+      <input type="file"
+             name="files[]"
+             class="form-control"
+             multiple
+             required
+             accept=".pdf,.jpg,.jpeg,.png,.doc,.docx">
+      <div class="form-text">
+        Allowed: PDF / Images / DOC. You can upload multiple files.
+      </div>
+    </div>
+  </div>
 
-          <div class="d-flex gap-2 flex-wrap mt-3">
-            <button class="btn btn-primary px-4" {{ $hasStore ? '' : 'disabled' }}>
-              <i class="fa-solid fa-upload me-1"></i> Upload to Folder
-            </button>
+  <div class="d-flex gap-2 flex-wrap mt-3">
+    <button class="btn btn-primary px-4" type="submit">
+      Upload to Folder
+    </button>
 
-            <a href="{{ $hasIndex ? route('hr.payslips.index') : '#' }}"
-               class="btn btn-outline-secondary px-4 {{ $hasIndex ? '' : 'disabled' }}">
-              <i class="fa-solid fa-folder-tree me-1"></i> View All Folders
-            </a>
-          </div>
-        </form>
+    <a href="{{ route('hr.payslips.index') }}" class="btn btn-outline-secondary px-4">
+      View All Folders
+    </a>
+  </div>
+</form>
 
         <hr class="my-4">
 
@@ -465,7 +461,7 @@
               <tr>
                 <td class="fw-semibold">{{ $p->folder_key ?? '—' }}</td>
                 <td>{{ $p->original_name ?? '—' }}</td>
-                <td class="text-muted">{{ $p->uploaded_by_name ?? (Auth::user()->name ?? '—') }}</td>
+                <td class="text-muted">{{ $p->uploader->name ?? '—' }}</td>
                 <td class="text-muted small">
                   {{ optional($p->created_at)->format('M d, Y · h:i A') ?? '—' }}
                 </td>

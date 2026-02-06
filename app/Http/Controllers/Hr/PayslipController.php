@@ -12,44 +12,39 @@ use Illuminate\Support\Str;
 class PayslipController extends Controller
 {
     public function index(Request $request)
-    {
-        $folder = $request->query('folder'); // optional: YYYY-MM
-        $q = $request->query('q');
+{
+    $q = $request->query('q');
 
-        $query = Payslip::query()->with('uploader')->latest();
+    $foldersQuery = Payslip::query()
+        ->selectRaw('folder_key, year, month, COUNT(*) as count, MAX(created_at) as latest')
+        ->groupBy('folder_key', 'year', 'month')
+        ->orderByDesc('folder_key');
 
-        if ($folder) {
-            $query->where('folder_key', $folder);
-        }
-
-        if ($q) {
-            $query->where(function ($sub) use ($q) {
-                $sub->where('original_name', 'like', "%{$q}%")
-                    ->orWhere('batch_name', 'like', "%{$q}%")
-                    ->orWhere('folder_key', 'like', "%{$q}%");
-            });
-        }
-
-        $payslips = $query->paginate(15)->withQueryString();
-
-        // folder summary for dashboard/cards
-        $folders = Payslip::query()
-            ->selectRaw('folder_key, year, month, COUNT(*) as count, MAX(created_at) as latest')
-            ->groupBy('folder_key', 'year', 'month')
-            ->orderByDesc('folder_key')
-            ->get()
-            ->map(function ($f) {
-                $label = \Carbon\Carbon::create($f->year, $f->month, 1)->format('M Y');
-                return [
-                    'key' => $f->folder_key,
-                    'label' => $label,
-                    'count' => (int)$f->count,
-                    'latest' => optional($f->latest)->format('M d, Y'),
-                ];
-            });
-
-        return view('admin.hr.payslips.index', compact('payslips', 'folders', 'folder', 'q'));
+    if ($q) {
+        $foldersQuery->where('folder_key', 'like', "%{$q}%");
     }
+
+    $folders = $foldersQuery->get()->map(function ($f) {
+        $label = \Carbon\Carbon::create($f->year, $f->month, 1)->format('M Y');
+        return [
+            'key' => $f->folder_key,
+            'label' => $label,
+            'count' => (int)$f->count,
+            'latest' => \Carbon\Carbon::parse($f->latest)->format('M d, Y'),
+        ];
+    });
+
+    $recentPayslips = Payslip::query()
+        ->with('uploader')
+        ->latest()
+        ->take(10)
+        ->get();
+
+    // optional stats
+    $payslipsCount = Payslip::count();
+
+    return view('admin.hr.dashboard', compact('folders', 'recentPayslips', 'payslipsCount', 'q'));
+}
 
     public function store(Request $request)
     {

@@ -6,6 +6,7 @@
     <h1><i class="fas fa-boxes-stacked me-2"></i>Supplies</h1>
   </div>
 
+  
   <form method="POST" action="{{ route('custom.logout') }}">
     @csrf
     <button class="logout" type="submit" aria-label="Logout">

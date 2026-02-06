@@ -63,12 +63,12 @@
                         <!-- ACTIONS -->
                         <div class="d-flex justify-content-between align-items-center">
                             <button type="button"
-                                    class="btn btn-primary btn-sm p-2"
-                                    data-bs-dismiss="modal">
-                                <i class="bi bi-x-lg"></i> Cancel
+                                    class="btn btn-dark btn-sm p-2 fw-semibold" 
+                                    style="border-radius: 15px;"
+                                    data-bs-dismiss="modal"> Cancel
                             </button>
 
-                            <button type="submit" class="btn btn-primary btn-sm p-2">
+                            <button type="submit" class="btn btn-dark btn-sm p-2 fw-semibold" style="border-radius: 15px;">
                                 <i class="bi bi-send"></i> Submit
                             </button>
                         </div>

@@ -37,6 +37,7 @@ Route::middleware(['auth','hr.access'])
   ->group(function () {
 
     Route::get('/dashboard', fn() => view('admin.hr.dashboard'))->name('dashboard');
+    Route::get('/hr/payslips', [PayslipController::class, 'index'])->name('hr.payslips.index');
 
     Route::get('/payslips', [PayslipController::class, 'index'])->name('payslips.index');
     Route::post('/payslips', [PayslipController::class, 'store'])->name('payslips.store');
