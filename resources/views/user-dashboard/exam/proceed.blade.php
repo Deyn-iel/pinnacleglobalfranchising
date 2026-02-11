@@ -27,6 +27,7 @@
     </div>
 
     <div class="rules">
+        <p>• The exam will be taken directly in your web browser (Chrome, Safari, etc.).</p>
         <p>• After the exam begins, pausing, exiting, or refreshing the page is not permitted.</p>
         <p>• Screenshots, screen recording, refreshing the page, and tab switching are not allowed.</p>
         <p>• Opening a new tab or attempting to switch tabs will automatically submit your exam.</p>

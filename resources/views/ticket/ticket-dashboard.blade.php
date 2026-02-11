@@ -4,6 +4,8 @@
   <meta charset="UTF-8">
   <title>Support Tickets</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="csrf-token" content="{{ csrf_token() }}">
+  <meta name="chat-target-user-id" content="{{ Auth::id() }}">
 
   <link rel="icon" type="image/png" href="{{ asset('img/logo1-removebg-preview.png') }}">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -751,6 +753,7 @@
           <option value="hr">HR</option>
           <option value="finance">Finance</option>
           <option value="admin">Admin</option>
+          <option value="operations">Operations</option>
         </select>
 
         <select id="priorityFilter" class="select">
@@ -899,7 +902,7 @@
         @method('PATCH')
 
         <div class="modal-body">
-          <div class="mb-2 fw-bold text-muted small">Description</div>
+          <div class="mb-2 fw-bold text-muted small">Concerns</div>
           <div id="d_description" style="font-weight:650; line-height:1.7;">—</div>
 
           <hr class="my-3">

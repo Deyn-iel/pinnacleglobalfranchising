@@ -4,12 +4,17 @@
 <meta charset="UTF-8">
 <title>Admin · Support Tickets</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="csrf-token" content="{{ csrf_token() }}">
 
 <link rel="icon" type="image/png" href="{{ asset('img/logo1-removebg-preview.png') }}">
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
 
-@vite(['resources/css/admin/app.css'])
+@vite(['resources/css/admin/app.css', 
+        'resources/css/chatbot/app.css',
+            
+            // js files
+            'resources/js/chatbot/app.js'])
 
 <style>
   :root{
@@ -342,14 +347,27 @@ th:nth-child(8), td:nth-child(8){ width: 90px; }  /* Actions */
         <div>
           <h5>
             <i class="fa-solid fa-user me-1 text-muted"></i>
-            {{ $user->name ?? 'Unknown User' }}
+            {{ $user->name ?? 'Unknown User' }}<button
+  type="button"
+  class="btn btn-sm btn-dark ms-2"
+  data-user-id="{{ $user->id }}"
+  data-user-name="{{ $user->name }}"
+  onclick="startAdminChat(this)"
+>
+  <i class="fa-solid fa-comments me-1"></i> Chat
+</button>
           </h5>
           <small>{{ $user->email ?? 'No email' }}</small>
         </div>
 
-        <span class="badge bg-primary count-badge">
-          {{ $userTickets->count() }} Ticket(s)
-        </span>
+        <div class="d-flex align-items-center gap-2">
+    <span class="badge bg-primary count-badge">
+      {{ $userTickets->count() }} Ticket(s)
+    </span>
+
+    <!-- ✅ REALTIME ONLINE/OFFLINE -->
+    <span class="badge bg-secondary" id="user-presence-{{ $user->id }}">Offline</span>
+  </div>
       </div>
 
       <!-- TABLE -->
@@ -386,8 +404,10 @@ th:nth-child(8), td:nth-child(8){ width: 90px; }  /* Actions */
                     class="btn btn-sm btn-view"
                     data-bs-toggle="modal"
                     data-bs-target="#concernModal"
+                    data-ticket-id="{{ $ticket->id }}"
                     data-ticket="{{ $ticket->ticket_no }}"
                     data-user="{{ $user->name ?? 'Unknown User' }}"
+                    data-user-id="{{ $user->id }}"
                     data-branch="{{ $ticket->subject }}"
                     data-dept="{{ ucfirst($ticket->department) }}"
                     data-priority="{{ ucfirst($ticket->priority) }}"
@@ -398,6 +418,7 @@ th:nth-child(8), td:nth-child(8){ width: 90px; }  /* Actions */
                   >
                     <i class="fa-regular fa-eye me-1"></i> View
                   </button>
+                  
                 </div>
               </td>
 
@@ -507,12 +528,57 @@ th:nth-child(8), td:nth-child(8){ width: 90px; }  /* Actions */
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script>
 document.addEventListener('DOMContentLoaded', () => {
+
+  // ✅ ADMIN: refresh online/offline badges every 5s
+const presenceEls = document.querySelectorAll('[id^="user-presence-"]');
+const userIds = Array.from(presenceEls)
+  .map(el => Number(el.id.replace('user-presence-','')))
+  .filter(n => Number.isFinite(n) && n > 0);
+
+async function refreshPresence(){
+  if(!userIds.length) return;
+
+  const url = new URL("/support/presence/status", window.location.origin);
+  url.searchParams.set("user_ids", userIds.join(","));
+
+  try{
+    const res = await fetch(url.toString(), {
+      method: "GET",
+      credentials: "same-origin",
+      headers: { "Accept": "application/json", "X-Requested-With": "XMLHttpRequest" }
+    });
+
+    if(!res.ok) return;
+    const data = await res.json();
+
+    (data.users || []).forEach(u => {
+      const el = document.getElementById(`user-presence-${u.id}`);
+      if(!el) return;
+
+      if(u.online){
+        el.textContent = "Online";
+        el.classList.remove("bg-secondary");
+        el.classList.add("bg-success");
+      }else{
+        el.textContent = "Offline";
+        el.classList.remove("bg-success");
+        el.classList.add("bg-secondary");
+      }
+    });
+  }catch(e){}
+}
+
+refreshPresence();
+setInterval(refreshPresence, 5000);
+
+  // success alert fade out
   const alert = document.getElementById('successAlert');
   if (alert){
     setTimeout(() => alert.classList.remove('show'), 3500);
     setTimeout(() => alert.remove(), 4200);
   }
 
+  // ✅ VIEW button only opens modal (NO CHAT HERE)
   document.addEventListener('click', (e) => {
     const btn = e.target.closest('[data-bs-target="#concernModal"]');
     if(!btn) return;
@@ -527,7 +593,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const status = btn.dataset.status || '—';
     const statusEl = document.getElementById('m_status');
     statusEl.innerText = status;
-    
+
+    // reset badge class then apply
     statusEl.className = 'badge';
     const s = (status || '').toLowerCase();
     if(s.includes('pending')) statusEl.classList.add('bg-danger');
@@ -536,8 +603,31 @@ document.addEventListener('DOMContentLoaded', () => {
     else statusEl.classList.add('bg-dark');
 
     document.getElementById('m_concern').innerText = btn.dataset.concern || '—';
+
+    // ❌ IMPORTANT: WALANG startAccountChat dito
   });
 });
+
+// ✅ CHAT button handler (global para gumana sa inline onclick)
+window.startAdminChat = function(btn){
+  const targetUserId = Number(btn?.dataset?.userId || 0);
+  const userName = btn?.dataset?.userName || "User";
+
+  if (!Number.isFinite(targetUserId) || targetUserId <= 0) {
+    alert("Invalid user selected.");
+    return;
+  }
+
+  if (typeof window.startAccountChat === "function") {
+    window.startAccountChat(targetUserId, "Chat with " + userName);
+  } else {
+    console.log("startAccountChat not found. Make sure chatbot/app.js is loaded.");
+    alert("Chat system not ready. Check if chatbot/app.js is loaded.");
+  }
+};
 </script>
+
+
+  @include('partials.chatbot')
 </body>
 </html>

@@ -30,6 +30,8 @@ use App\Http\Controllers\TicketController;
 use App\Http\Controllers\Admin\AdminTicketController;
 use App\Http\Controllers\HrDashboardController;
 use App\Http\Controllers\Hr\PayslipController;
+use App\Http\Controllers\SupportChatController;
+use App\Http\Controllers\SupportPresenceController;
 
 Route::middleware(['auth','hr.access'])
   ->prefix('hr')
@@ -46,6 +48,13 @@ Route::middleware(['auth','hr.access'])
 });
 
 Route::middleware(['auth'])->group(function () {
+
+Route::get('/support/chat',  [SupportChatController::class, 'fetch']);
+  Route::post('/support/chat', [SupportChatController::class, 'send']);
+
+  Route::post('/support/presence/ping', [SupportPresenceController::class, 'ping']);
+  Route::get('/support/presence/status', [SupportPresenceController::class, 'status']); 
+
 
 Route::patch('/tickets/{ticket}/status', [TicketController::class, 'updateStatus'])
     ->name('tickets.updateStatus');
