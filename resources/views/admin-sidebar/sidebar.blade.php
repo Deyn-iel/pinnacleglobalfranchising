@@ -90,13 +90,13 @@
             </a>
         </li>
 
-        <li class="nav-item">
+        {{-- <li class="nav-item">
             <a href="{{ route('admin.requirements') }}"
                class="nav-link {{ request()->routeIs('admin.requirements') ? 'active' : '' }}">
                 <i class="fas fa-file-lines"></i>
                 <span>Requirements</span>
             </a>
-        </li>
+        </li> --}}
 
         <li class="nav-item">
             <a href="{{ route('admin.contacts') }}"

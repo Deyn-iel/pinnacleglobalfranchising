@@ -22,7 +22,10 @@ export default defineConfig({
                 'resources/css/our_service/app.css',
                 'resources/css/contact/app.css',
 
-                
+                //ticket
+                'resources/css/chatbot/ticket.css',
+                'resources/js/chatbot/ticket.js',
+
                 'resources/js/header/app.js',
                 'resources/js/chatbot/app.js',
                 'resources/js/scroll/app.js',

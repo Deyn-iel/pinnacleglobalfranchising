@@ -331,7 +331,6 @@ th:nth-child(8), td:nth-child(8){ width: 90px; }  /* Actions */
     <div class="alert alert-success alert-dismissible fade show d-flex align-items-center gap-2" id="successAlert" role="alert">
       <i class="fa-solid fa-circle-check"></i>
       <div class="fw-semibold">{{ session('success') }}</div>
-      <button type="button" class="btn-close ms-auto" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
   @endif
 

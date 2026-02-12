@@ -115,4 +115,5 @@ return [
         'name' => env('MAIL_FROM_NAME', 'Example'),
     ],
 
+    'support_notify_emails' => array_filter(array_map('trim', explode(',', env('SUPPORT_NOTIFY_EMAILS', '')))),
 ];

@@ -6,6 +6,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use App\Models\Ticket;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\TicketSubmittedMail;
 
 class TicketController extends Controller
 {
@@ -32,7 +34,9 @@ class TicketController extends Controller
         'priority' => 'required',
     ]);
 
-    DB::transaction(function () use ($request) {
+    $ticket = null;
+
+    DB::transaction(function () use ($request, &$ticket) {
 
         $year = now()->year;
 
@@ -47,7 +51,7 @@ class TicketController extends Controller
 
         $ticketNo = 'TCK-' . $year . '-' . str_pad($nextNumber, 4, '0', STR_PAD_LEFT);
 
-        Ticket::create([
+        $ticket = Ticket::create([
             'ticket_no' => $ticketNo,
             'user_id' => Auth::id(),
             'subject' => $request->subject,
@@ -58,9 +62,19 @@ class TicketController extends Controller
         ]);
     });
 
+    // ✅ SEND EMAIL HERE (OUTSIDE TRANSACTION)
+    // ✅ SEND EMAIL HERE (OUTSIDE TRANSACTION)
+        $emails = config('mail.support_notify_emails', []);
+
+        if (!empty($emails)) {
+            Mail::to($emails)->send(new TicketSubmittedMail($ticket));
+        }
+
+
     return redirect()->route('tickets.dashboard')
         ->with('success', 'Ticket submitted successfully.');
 }
+
 
 public function updateStatus(Request $request, Ticket $ticket)
 {

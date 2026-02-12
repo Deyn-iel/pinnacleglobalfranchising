@@ -339,7 +339,32 @@ if (Number.isFinite(currentTargetUserId) && currentTargetUserId > 0) {
     setInputState(true);
 
     // load + poll
-    ticketBox.innerHTML = `<div class="ticket-empty"><div class="ticket-empty-title">Loading…</div></div>`;
+    ticketBox.innerHTML = `
+  <div class="ticket-loading">
+    <div class="ticket-loading-top">
+      <div class="ticket-loading-dot"></div>
+      <div class="ticket-loading-dot"></div>
+      <div class="ticket-loading-dot"></div>
+      <div class="ticket-loading-text">Loading messages…</div>
+    </div>
+
+    <div class="ticket-skel ticket-skel-left">
+      <div class="skel-line w-60"></div>
+      <div class="skel-line w-40"></div>
+    </div>
+
+    <div class="ticket-skel ticket-skel-right">
+      <div class="skel-line w-55"></div>
+      <div class="skel-line w-35"></div>
+    </div>
+
+    <div class="ticket-skel ticket-skel-left">
+      <div class="skel-line w-70"></div>
+      <div class="skel-line w-45"></div>
+    </div>
+  </div>
+`;
+
     fetchMessages();
 
     if(poller) clearInterval(poller);
