@@ -29,7 +29,6 @@ export default defineConfig({
                 'resources/js/header/app.js',
                 'resources/js/chatbot/app.js',
                 'resources/js/scroll/app.js',
-                'resources/js/app.js',
                 'resources/js/main/app.js',
                 'resources/js/contact/app.js',
 

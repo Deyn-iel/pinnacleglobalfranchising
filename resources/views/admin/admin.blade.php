@@ -183,14 +183,10 @@
   }
   .dash-pill strong{ font-weight: 900; }
 
-  /* ================= MOBILE OVERLAY ================= */
   .mobile-overlay{
     z-index: 998;
   }
 
-  /* ================= RESPONSIVE ================= */
-
-  /* Large desktops: center content nicely (optional) */
   @media (min-width: 1400px){
     main{
       padding-left: 34px;
@@ -198,7 +194,6 @@
     }
   }
 
-  /* Tablet & below: sidebar becomes off-canvas */
   @media (max-width: 991.98px) {
     main {
       margin-left: 0;
@@ -213,11 +208,6 @@
       box-shadow: 0 40px 90px rgba(15,23,42,.25);
     }
 
-    /* When Alpine open = true, we add a class on body via selector? We can't.
-       So we use x-bind on aside via attribute selector trick:
-       We'll just rely on your existing includes being inside the same body and
-       use this: [x-cloak] not needed. We'll apply with inline style below in HTML.
-    */
   }
 
   /* Small laptops: reduce spacing a bit */
@@ -233,11 +223,6 @@
 <!-- NAV (unchanged) -->
 @include('admin-sidebar.navbar')
 
-<!-- SIDEBAR (unchanged include) -->
-<!-- IMPORTANT: add ONE wrapper div around include? NO. So we will target the first <aside> inside include using this minimal inline attribute:
-     Since include renders <aside ...>, we can’t modify it here.
-     But we can still control via Alpine by adding a global style rule using attribute on body? Not possible.
-     Solution: use a small JS-free trick: place a <style> tag that reacts to [data-open="true"] on body. We'll set that attribute with Alpine. -->
 
 <script>
   document.addEventListener('alpine:init', () => {

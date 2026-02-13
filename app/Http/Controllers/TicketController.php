@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\Ticket;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Log;
 use App\Mail\TicketSubmittedMail;
 
 class TicketController extends Controller
@@ -64,11 +65,18 @@ class TicketController extends Controller
 
     // ✅ SEND EMAIL HERE (OUTSIDE TRANSACTION)
     // ✅ SEND EMAIL HERE (OUTSIDE TRANSACTION)
-        $emails = config('mail.support_notify_emails', []);
+        // ✅ SEND EMAIL HERE (OUTSIDE TRANSACTION)
+$emails = config('mail.support_notify_emails', []);
 
-        if (!empty($emails)) {
-            Mail::to($emails)->send(new TicketSubmittedMail($ticket));
-        }
+try {
+    if (!empty($emails)) {
+        Mail::to($emails)->send(new TicketSubmittedMail($ticket));
+    }
+} catch (\Throwable $e) {
+    Log::error('Ticket email failed: ' . $e->getMessage());
+    // wag i-stop ang ticket submission
+}
+
 
 
     return redirect()->route('tickets.dashboard')

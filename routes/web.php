@@ -73,6 +73,7 @@ Route::patch('/tickets/{ticket}/status', [TicketController::class, 'updateStatus
 
 
 Route::view('/', 'welcome')->name('home');
+Route::view('/maintenance', 'maintenance')->name('maintenance');
 
 Route::get('/redirect-after-login', function () {
     $user = Auth::user();
@@ -130,37 +131,42 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/dashboard', [UserDashboardController::class, 'index'])
     ->middleware(['auth', 'verified'])
     ->name('dashboard');
+
+     Route::view(
+        '/=akojf8IGL03-kaodoj7UJjfnUJnkla8afeef8909JIKkfa=aefeaj90-83registrationikjfe9fasej=akojf8IGL03-kaodoj7UJjfnUJnkla8afeef8909JIKkfa=aefeaj90-83registrationikjfe9fasej',
+        'user-dashboard.registration.registration'
+    )->name('registration');
     
     Route::view(
         '/user-dashboard/uploading-requirements',
         'user-dashboard.uploading-requirements.uploading-requirements'
     )->name('uploading.requirements');
     
-    Route::get('/I%2jdawh=adwIpkadLHiadw0476jhJ/{exam}', [ExamController::class, 'start'])
+    Route::get('/I%2jdawh=adwIpkadLHiadw0476jhJI%2jdawh=adwIpkadLHiadw0476jhJI%2jdawh=adwIpkadLHiadw0476jhJ/{exam}', [ExamController::class, 'start'])
     ->name('exam.start');
 
     Route::view(
-        '/dwajn0938UIHi&*65wauhunotificationawduhygy6wedag',
+        '/dwajn0938UIHi&*65wauhunotificationawduhygy6wedag=dwajn0938UIHi&*65wauhunotificationawduhygy6wedagdwajn0938UIHi&*65wauhunotificationawduhygy6wedag',
         'user-dashboard.notification.notification'
     )->name('notification');
 
     Route::view(
-        '/Pjaefiu=8yhbPFUaehu89fsaehui-jieafawdawd90)daiu',
+        '/Pjaefiu=8yhbPFUaehu89fsaehui-jieafawdawd90daiuPjaefiu=8yhbPFUaehu89fsaehui-jieafawdawd90daiuPjaefiu=8yhbPFUaehu89fsaehui-jieafawdawd90daiu',
         'user-dashboard.attendance.attendance'
     )->name('attendance');
 
     Route::view(
-        '/adw6daid7ad97w8ydawd3acr3rarvavr53a3',
+        '/adw6daid7ad97w8ydawd3acr3rarvavr53a3adw6daid7ad97w8ydawd3acr3rarvavr53a3adw6daid7ad97w8ydawd3acr3rarvavr53a3',
         'user-dashboard.exam.proceed'
     )->name('proceed');
 
     Route::view(
-        '/hauwdh9839j9ed9oIEJ8eh=videoefuj)jawd-iiadwjmo0PDJd',
+        '/hauwdh9839j9ed9oIEJ8eh=videoefuj)jawd-iiadwjmo0PDJdhauwdh9839j9ed9oIEJ8eh=videoefuj)jawd-iiadwjmo0PDJdhauwdh9839j9ed9oIEJ8eh=videoefuj)jawd-iiadwjmo0PDJd',
         'user-dashboard.exam.video'
     )->name('video');
 
     Route::view(
-        '/adw6daid7ad97w8ydawd3acr3rarvavr5dawda1=',
+        '/adw6daid7ad97w8ydawd3acr3rarvavr5dawda1=adw6daid7ad97w8ydawd3acr3rarvavr5dawda1=adw6daid7ad97w8ydawd3acr3rarvavr5dawda1=e',
         'user-dashboard.exam.exam-done'
     )->name('exam-done');
 });
@@ -177,7 +183,7 @@ Route::post('/franchise/submit', [FranchiseController::class, 'store'])
 
 
 // show list of available exams
-Route::get('/ihu$HIHdw08dahi=opOjdN@7UUHOOIAWDIjsfse', [ExamController::class, 'select'])
+Route::get('/ihu$HIHdw08dahi=opOjdN@7UUHOOIAWDIjsfse=ihu$HIHdw08dahi=opOjdN@7UUHOOIAWDIjsfse=ihu$HIHdw08dahi=opOjdN@7UUHOOIAWDIjsfse', [ExamController::class, 'select'])
     ->name('exam.select');
 
 
@@ -210,6 +216,10 @@ Route::middleware(['auth', 'admin', 'admin.desktop'])
     ->prefix('admin')
     ->name('admin.')
     ->group(function () {
+
+
+    Route::view('/user-registration', 'admin.user-registration.registration')->name('registration');
+
 
      Route::get('/tickets', [AdminTicketController::class, 'index'])
             ->name('tickets.index');

@@ -90,6 +90,14 @@
             </a>
         </li>
 
+        <li class="nav-item">
+            <a href="{{ route('admin.registration') }}"
+               class="nav-link {{ request()->routeIs('admin.registration') ? 'active' : '' }}">
+                <i class="fa-solid fa-pen-to-square"></i>
+                <span>Registration</span>
+            </a>
+        </li>
+
         {{-- <li class="nav-item">
             <a href="{{ route('admin.requirements') }}"
                class="nav-link {{ request()->routeIs('admin.requirements') ? 'active' : '' }}">

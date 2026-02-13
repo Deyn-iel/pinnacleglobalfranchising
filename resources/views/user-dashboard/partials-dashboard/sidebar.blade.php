@@ -48,6 +48,13 @@
             </a>
         </li>
 
+        <li class="{{ request()->routeIs('registration') ? 'active' : '' }}">
+            <a href="{{ route('registration') }}">
+                <i class="fa-solid fa-pen-to-square"></i>
+                <span>Register</span>
+            </a>
+        </li>
+
         <li class="{{ request()->routeIs('notification') ? 'active' : '' }}">
             <a href="{{ route('notification') }}">
                 <i class="fas fa-bell"></i>
