@@ -1,4 +1,4 @@
-<!-- Floating Chat Button -->
+
 <button id="chat-button" class="chat-fab" type="button" aria-label="Open chat">
   <span class="chat-icon" aria-hidden="true">
     <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 16 16">
@@ -9,13 +9,11 @@
   <span class="chat-label">Chat</span>
 </button>
 
-<!-- Chatbox Window -->
 <section id="chatbox" class="ticket-chatbox" aria-hidden="true" aria-label="Support chat">
   <header class="chat-header">
     <div class="chat-header-left">
   <div class="chat-title-row">
     <div class="chat-title">Support Chat</div>
-    <!-- ✅ ONLINE/OFFLINE BADGE -->
     <span id="chatPresenceBadge" class="presence-badge is-offline">Offline</span>
   </div>
 
@@ -29,7 +27,6 @@
     </div>
   </header>
 
-  <!-- Messages -->
   <div id="ticketChatBox" class="ticket-messages">
     <div class="ticket-empty">
       <div class="ticket-empty-title">No messages yet</div>
@@ -37,7 +34,6 @@
     </div>
   </div>
 
-  <!-- Input -->
   <footer class="ticket-inputbar">
     <input id="ticketChatInput" class="ticket-input" placeholder="Type your message..." disabled />
     <button id="ticketChatSend" class="ticket-send" type="button" disabled>Send</button>

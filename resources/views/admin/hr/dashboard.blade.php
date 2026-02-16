@@ -10,6 +10,7 @@
 <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
 
+
 @vite(['resources/css/admin/app.css'])
 
 <style>
@@ -169,6 +170,8 @@
     border: 1px solid rgba(15,23,42,.10);
     box-shadow: 0 12px 28px rgba(15,23,42,.08);
   }
+
+  
 </style>
 </head>
 
@@ -499,7 +502,6 @@
   </div>
 
 </main>
-
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

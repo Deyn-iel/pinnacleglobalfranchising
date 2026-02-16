@@ -36,23 +36,61 @@
         </li> --}}
 
         @php
-        $hrAccess = auth()->user()->hr_access ?? false;
-        @endphp
+  $hrAccess = auth()->user()->hr_access ?? false;
+@endphp
 
-        <li class="nav-item">
-        @if($hrAccess)
-            <a href="{{ route('hr.dashboard') }}" class="nav-link {{ request()->routeIs('hr.dashboard') ? 'active' : '' }}">
-            <i class="fas fa-user-tie"></i>
-            <span>HR-Folder</span>
-            </a>
-        @else
-            <a class="nav-link nav-disabled" href="javascript:void(0)" title="No access">
-            <i class="fas fa-user-tie"></i>
-            <span>HR-Folder</span>
-            <small class="soon">Hr access required</small>
-            </a>
-        @endif
-        </li>
+<li class="nav-item" x-data="{ open: true }">
+@if($hrAccess)
+
+  <!-- TOGGLE -->
+  <a href="#"
+     class="nav-link d-flex justify-content-between align-items-center"
+     @click.prevent="open = !open"
+     :aria-expanded="open.toString()">
+
+    <span>
+      <i class="fas fa-user-tie me-2"></i>
+      HR-Folder
+    </span>
+
+    <i class="fa-solid fa-chevron-down small"
+       :style="open
+          ? 'transform: rotate(180deg); transition: transform .25s ease;'
+          : 'transform: rotate(0deg); transition: transform .25s ease;'">
+    </i>
+  </a>
+
+  <!-- DROPDOWN (NO hardcoded is-open) -->
+  <div class="sb-dd" :class="open ? 'is-open' : ''">
+    <ul class="nav flex-column ms-4 mt-2">
+
+      <li class="nav-item">
+        <a href="{{ route('hr.dashboard') }}"
+           class="nav-link {{ request()->routeIs('hr.dashboard') ? 'active' : '' }}">
+          <i class="fa-solid fa-gauge-high me-2"></i>
+          HR Dashboard
+        </a>
+      </li>
+
+      <li class="nav-item">
+        <a href="{{ route('admin.registration') }}"
+           class="nav-link {{ request()->routeIs('admin.registration') ? 'active' : '' }}">
+          <i class="fa-solid fa-pen-to-square me-2"></i>
+          Registration
+        </a>
+      </li>
+
+    </ul>
+  </div>
+
+@else
+  <a class="nav-link nav-disabled" href="javascript:void(0)">
+    <i class="fas fa-user-tie me-2"></i>
+    HR-Folder
+    <small class="soon ms-1">Hr access required</small>
+  </a>
+@endif
+</li>
 
         <li class="nav-section">ACCOUNT</li>
 
@@ -90,13 +128,13 @@
             </a>
         </li>
 
-        <li class="nav-item">
+        {{-- <li class="nav-item">
             <a href="{{ route('admin.registration') }}"
                class="nav-link {{ request()->routeIs('admin.registration') ? 'active' : '' }}">
                 <i class="fa-solid fa-pen-to-square"></i>
                 <span>Registration</span>
             </a>
-        </li>
+        </li> --}}
 
         {{-- <li class="nav-item">
             <a href="{{ route('admin.requirements') }}"
@@ -149,5 +187,4 @@
             <small>© {{ date('Y') }}</small>
         </div>
     </div>
-
 </aside>

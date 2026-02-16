@@ -2,8 +2,9 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <!-- Desktop/Laptop only: responsive pa rin sa iba't ibang screen widths -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>User Registration</title>
+    <title>User Registration (Admin)</title>
 
     <link rel="icon" type="image/png" href="{{ asset('img/logo1-removebg-preview.png') }}">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -13,223 +14,88 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
 
     @vite(['resources/css/admin/app.css'])
+
     <style>
         :root{
-            --bg:#f6f8fb;
-            --card:#ffffff;
+            --sidebar-w: 260px;
+            --bg: #f5f6fa;
+            --card: rgba(255,255,255,.88);
             --text:#0f172a;
             --muted:#64748b;
-            --stroke:#e5e7eb;
+            --border: rgba(15,23,42,.10);
+            --shadow: 0 18px 45px rgba(15,23,42,.08);
+            --shadow-hover: 0 30px 80px rgba(15,23,42,.18);
+            --radius: 18px;
+            --primary: #0d3553;
+            --primary-soft: rgba(13,53,83,.12);
             --stroke-strong:#d1d5db;
-            --primary:#0d3553;
-            --primary-soft: rgba(13,53,83,.10);
-            --shadow: 0 10px 30px rgba(15,23,42,.08);
-            --radius: 16px;
-            --sidebar-w: 260px;
-            --topbar-h: 68px;
         }
 
         html,body{ height:100%; }
         body{
             margin:0;
-            background: var(--bg);
+            background:
+                radial-gradient(1200px 600px at 18% 0%, rgba(13,110,253,.08), transparent 55%),
+                radial-gradient(900px 500px at 95% 10%, rgba(34,197,94,.07), transparent 55%),
+                var(--bg);
             color: var(--text);
             font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+            overflow-x:hidden;
         }
 
-        /* Layout */
-        .adm-shell{
-            min-height: 100vh;
-            display:grid;
-            grid-template-columns: var(--sidebar-w) 1fr;
+        /* ✅ IMPORTANT FIX:
+           Sidebar include usually renders a top-level <aside>.
+           We target ONLY the top-level aside, NOT the Review Panel aside inside <main>. */
+        body > aside{
+            width: var(--sidebar-w);
+            z-index: 999;
         }
 
-        .adm-sidebar{
-            position: sticky;
-            top:0;
-            height: 100vh;
-            background: #0b2a42;
-            color: rgba(255,255,255,.92);
-            padding: 18px 14px;
-            border-right: 1px solid rgba(255,255,255,.06);
-        }
-
-        .adm-brand{
-            display:flex;
-            align-items:center;
-            gap: 10px;
-            padding: 10px 10px 14px;
-            border-bottom: 1px solid rgba(255,255,255,.10);
-            margin-bottom: 12px;
-        }
-
-        .adm-logo{
-            width:42px;height:42px;
-            border-radius: 14px;
-            background: rgba(255,255,255,.10);
-            border: 1px solid rgba(255,255,255,.14);
-            display:grid;
-            place-items:center;
-            overflow:hidden;
-            flex:0 0 auto;
-        }
-        .adm-logo img{ width:100%; height:100%; object-fit:contain; padding:7px; }
-
-        .adm-brand strong{ display:block; font-size:14px; letter-spacing:.2px; }
-        .adm-brand span{ display:block; font-size:12px; color: rgba(255,255,255,.70); }
-
-        .adm-nav{
-            display:flex;
-            flex-direction:column;
-            gap: 4px;
-            padding: 8px 6px;
-        }
-
-        .adm-link{
-            display:flex;
-            align-items:center;
-            gap: 10px;
-            padding: 10px 12px;
-            border-radius: 12px;
-            color: rgba(255,255,255,.86);
-            text-decoration:none;
-            border: 1px solid transparent;
-            transition: background .12s ease, border-color .12s ease, transform .12s ease;
-        }
-        .adm-link i{ width:18px; text-align:center; opacity:.95; }
-        .adm-link:hover{
-            background: rgba(255,255,255,.08);
-            border-color: rgba(255,255,255,.10);
-            transform: translateY(-1px);
-        }
-        .adm-link.active{
-            background: rgba(255,255,255,.12);
-            border-color: rgba(255,255,255,.14);
-            color:#fff;
-        }
-
-        .adm-sidefoot{
-            position:absolute;
-            left: 14px;
-            right: 14px;
-            bottom: 14px;
-            font-size: 12px;
-            color: rgba(255,255,255,.65);
-            border-top: 1px solid rgba(255,255,255,.10);
-            padding-top: 12px;
-        }
-
-        .adm-main{
+        /* Main content offset from sidebar */
+        main{
+            margin-left: var(--sidebar-w);
+            padding: clamp(16px, 2vw, 34px);
+            max-width: calc(100vw - var(--sidebar-w));
             min-width: 0;
-            display:flex;
-            flex-direction:column;
         }
 
-        .adm-topbar{
-            height: var(--topbar-h);
-            position: sticky;
-            top:0;
-            z-index: 5;
-            background: rgba(246,248,251,.92);
+        /* ===== Header card ===== */
+        .dashboard-header{
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: clamp(16px, 2vw, 26px);
+            box-shadow: var(--shadow);
+            margin-bottom: 18px;
+            position: relative;
+            overflow: hidden;
             backdrop-filter: blur(10px);
-            border-bottom: 1px solid var(--stroke);
         }
-
-        .adm-topinner{
-            height: 100%;
-            display:flex;
-            align-items:center;
-            justify-content:space-between;
-            gap: 12px;
-            padding: 0 20px;
-        }
-
-        .adm-search{
-            width: min(520px, 100%);
-            position:relative;
-        }
-        .adm-search i{
+        .dashboard-header::after{
+            content:"";
             position:absolute;
-            left:12px;
-            top:50%;
-            transform: translateY(-50%);
-            color: #94a3b8;
+            right:-90px; top:-90px;
+            width: 260px; height: 260px;
             pointer-events:none;
         }
-        .adm-search input{
-            width:100%;
-            border-radius: 999px;
-            border: 1px solid var(--stroke-strong);
-            background: #fff;
-            padding: 10px 12px 10px 36px;
-            outline:none;
+        .dashboard-header h2{
+            font-weight: 900;
+            margin-bottom: 6px;
+            letter-spacing: -.02em;
+            font-size: clamp(18px, 2vw, 26px);
         }
-        .adm-search input:focus{
-            border-color: rgba(13,53,83,.45);
-            box-shadow: 0 0 0 4px rgba(13,53,83,.10);
-        }
-
-        .adm-user{
-            display:flex;
-            align-items:center;
-            gap: 10px;
-        }
-        .adm-pill{
-            display:inline-flex;
-            align-items:center;
-            gap: 8px;
-            padding: 8px 10px;
-            border-radius: 999px;
-            border: 1px solid var(--stroke);
-            background: #fff;
-            font-size: 13px;
-            color: var(--text);
-        }
-        .adm-avatar{
-            width:34px;height:34px;
-            border-radius: 999px;
-            background: var(--primary-soft);
-            color: var(--primary);
-            display:grid;
-            place-items:center;
-            border: 1px solid rgba(13,53,83,.12);
-        }
-
-        .adm-content{
-            padding: 20px;
-        }
-
-        .adm-wrap{
-            width: min(1200px, 100%);
-            margin: 0 auto;
-        }
-
-        .adm-pagehead{
-            display:flex;
-            align-items:flex-start;
-            justify-content:space-between;
-            gap: 14px;
-            margin-bottom: 14px;
-        }
-
-        .adm-title{
-            margin:0;
-            font-size: clamp(20px, 2.2vw, 28px);
-            letter-spacing:-.3px;
-        }
-        .adm-subtitle{
-            margin:6px 0 0 0;
+        .dashboard-header p{
             color: var(--muted);
-            font-size: 13.5px;
-            line-height: 1.45;
+            margin: 0;
         }
 
-        .adm-actions{
+        /* Buttons */
+        .page-actions{
             display:flex;
-            flex-wrap:wrap;
             gap: 10px;
+            flex-wrap: wrap;
+            justify-content: flex-end;
         }
-
         .adm-btn{
             border-radius: 999px;
             border: 1px solid rgba(13,53,83,.22);
@@ -240,305 +106,559 @@
             color:#fff;
             box-shadow: 0 8px 18px rgba(13,53,83,.15);
             transition: transform .12s ease, filter .12s ease;
+            white-space: nowrap;
         }
         .adm-btn:hover{ transform: translateY(-1px); filter: brightness(1.05); }
         .adm-btn:active{ transform: translateY(0); }
-
         .adm-btn-ghost{
             background:#fff;
             color: var(--primary);
             border: 1px solid rgba(13,53,83,.25);
             box-shadow:none;
         }
-        .adm-btn-ghost:hover{ filter:none; background: rgba(13,53,83,.04); }
+        .adm-btn-ghost:hover{ background: rgba(13,53,83,.04); }
 
-        .adm-grid{
-            display:grid;
-            grid-template-columns: 1.1fr .9fr;
-            gap: 16px;
-            align-items:start;
-        }
-
-        .adm-card{
+        /* Cards */
+        .glass-card{
             background: var(--card);
-            border: 1px solid var(--stroke);
-            border-radius: var(--radius);
+            border: 1px solid var(--border);
+            border-radius: 22px;
             box-shadow: var(--shadow);
-            padding: 18px;
+            backdrop-filter: blur(10px);
+        }
+        .glass-card:hover{
+            box-shadow: var(--shadow-hover);
+            border-color: rgba(13,110,253,.22);
         }
 
-        .adm-cardhead{
+        .card-head{
             display:flex;
             align-items:center;
             justify-content:space-between;
-            gap: 10px;
-            margin-bottom: 12px;
+            gap: 12px;
+            padding: 18px 18px 0 18px;
         }
-
-        .adm-cardtitle{
-            margin:0;
-            font-size: 14px;
-            letter-spacing:.2px;
+        .card-title{
             display:flex;
             align-items:center;
-            gap: 8px;
+            gap: 10px;
+            margin:0;
+            font-weight: 900;
+            font-size: 15px;
+            letter-spacing: -.01em;
         }
-        .adm-cardtitle i{ color: var(--primary); }
-
-        .adm-badge{
+        .title-icon{
+            width: 44px;
+            height: 44px;
+            border-radius: 16px;
+            display:grid;
+            place-items:center;
+            background: var(--primary-soft);
+            color: var(--primary);
+            box-shadow: 0 14px 28px rgba(13,53,83,.10);
+            flex: 0 0 auto;
+        }
+        .badge-live{
             display:inline-flex;
             align-items:center;
             gap: 8px;
             padding: 7px 10px;
             border-radius: 999px;
-            border: 1px solid var(--stroke);
-            background: #fff;
+            background: rgba(15,23,42,.04);
+            border: 1px solid rgba(15,23,42,.06);
             font-size: 12px;
-            color: var(--text);
+            color: #0f172a;
+            white-space: nowrap;
         }
-        .adm-badge .dot{
+        .badge-live .dot{
             width:8px;height:8px;border-radius:999px;
             background:#22c55e;
             box-shadow: 0 0 0 6px rgba(34,197,94,.14);
         }
 
-        /* Form controls (Bootstrap + nice spacing) */
+        .card-body-pad{
+            padding: 14px 18px 18px 18px;
+        }
+
+        /* Table */
+        .table-wrap{
+            border: 1px solid rgba(15,23,42,.08);
+            border-radius: 16px;
+            overflow: hidden;
+            background: rgba(255,255,255,.85);
+        }
+        /* ✅ allow horizontal scroll on small laptops */
+        .table-scroll{
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+        .table{
+            margin:0;
+            min-width: 1120px; /* more columns now */
+        }
+        .table thead th{
+            background: rgba(248,250,252,.95);
+            color:#334155;
+            font-weight: 800;
+            font-size: 12.5px;
+            border-bottom: 1px solid rgba(15,23,42,.08) !important;
+            white-space: nowrap;
+        }
+        .table td{
+            font-size: 13px;
+            vertical-align: middle;
+            white-space: nowrap;
+        }
+
+        .pill-mini{
+            display:inline-flex;
+            align-items:center;
+            gap: 8px;
+            padding: 6px 10px;
+            border-radius:999px;
+            border: 1px solid rgba(15,23,42,.10);
+            background: rgba(255,255,255,.9);
+            font-size: 12px;
+            color: #0f172a;
+            white-space: nowrap;
+        }
+
+        .pill-status{
+            display:inline-flex;
+            align-items:center;
+            gap: 8px;
+            padding: 6px 10px;
+            border-radius:999px;
+            border: 1px solid rgba(15,23,42,.10);
+            background: rgba(255,255,255,.9);
+            font-size: 12px;
+            color: #0f172a;
+            white-space: nowrap;
+        }
+        .pill-status.pending{ border-color: rgba(234,179,8,.35); background: rgba(234,179,8,.10); }
+        .pill-status.approved{ border-color: rgba(34,197,94,.35); background: rgba(34,197,94,.10); }
+        .pill-status.rejected{ border-color: rgba(239,68,68,.35); background: rgba(239,68,68,.10); }
+        .pill-status.draft{ border-color: rgba(100,116,139,.35); background: rgba(100,116,139,.10); }
+
+        /* Form */
         .form-label{ color: var(--muted); font-size: 12.5px; }
         .form-control, .form-select{
-            border-radius: 12px !important;
+            border-radius: 14px !important;
             border-color: var(--stroke-strong) !important;
             padding: 10px 12px !important;
+            background: rgba(255,255,255,.92);
         }
         .form-control:focus, .form-select:focus{
             border-color: rgba(13,53,83,.45) !important;
             box-shadow: 0 0 0 4px rgba(13,53,83,.10) !important;
         }
 
-        .adm-note{
-            border: 1px solid var(--stroke);
-            background: #fafafa;
-            border-radius: 14px;
+        .note{
+            border: 1px solid rgba(15,23,42,.08);
+            background: rgba(255,255,255,.70);
+            border-radius: 16px;
             padding: 12px;
             color: var(--muted);
             font-size: 13px;
             line-height: 1.5;
         }
 
-        /* Table */
-        .adm-tablewrap{
-            border: 1px solid var(--stroke);
-            border-radius: 14px;
-            overflow:hidden;
-        }
-        .table{
-            margin:0;
-        }
-        .table thead th{
-            background:#f8fafc;
-            color: #334155;
-            font-weight: 600;
-            font-size: 12.5px;
-            border-bottom: 1px solid var(--stroke) !important;
-        }
-        .table td{
-            vertical-align: middle;
-            font-size: 13px;
-            color: #0f172a;
-        }
-        .adm-pill-mini{
-            display:inline-flex;
-            align-items:center;
-            padding: 5px 10px;
-            border-radius:999px;
-            border:1px solid var(--stroke);
-            background:#fff;
-            font-size: 12px;
-            color: #334155;
+        /* ✅ DESKTOP/LAPTOP RESPONSIVE GRID */
+        .adm-grid{
+            display:grid;
+            grid-template-columns: minmax(620px, 1fr) 460px;
+            gap: 16px;
+            align-items: start;
         }
 
-        /* Responsive (desktop/laptop focused; still ok on smaller) */
-        @media (max-width: 1100px){
-            :root{ --sidebar-w: 240px; }
-        }
-        @media (max-width: 980px){
-            .adm-shell{ grid-template-columns: 1fr; }
-            .adm-sidebar{
-                position: static;
-                height: auto;
-                border-right: 0;
-                border-bottom: 1px solid rgba(255,255,255,.08);
+        /* ====== Laptop 1366px and below ====== */
+        @media (max-width: 1366px){
+            :root{ --sidebar-w: 250px; }
+            main{
+                margin-left: var(--sidebar-w);
+                max-width: calc(100vw - var(--sidebar-w));
+                padding: 22px;
             }
-            .adm-sidefoot{ position: static; margin-top: 10px; }
-            .adm-grid{ grid-template-columns: 1fr; }
-            .adm-topinner{ padding: 0 14px; }
+            .adm-grid{
+                grid-template-columns: minmax(600px, 1fr) 420px;
+            }
         }
-        @media (max-width: 640px){
-            .adm-content{ padding: 14px; }
-            .adm-search{ display:none; }
+
+        /* ====== Laptop 1280px and below ====== */
+        @media (max-width: 1280px){
+            .adm-grid{
+                grid-template-columns: minmax(560px, 1fr) 390px;
+            }
+            .card-head{ padding: 16px 16px 0 16px; }
+            .card-body-pad{ padding: 12px 16px 16px 16px; }
         }
+
+        /* ====== Small laptop 1024px and below ====== */
+        @media (max-width: 1024px){
+            :root{ --sidebar-w: 240px; }
+            main{
+                margin-left: var(--sidebar-w);
+                max-width: calc(100vw - var(--sidebar-w));
+                padding: 18px;
+            }
+            .adm-grid{
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (min-width: 1600px){
+            main{ padding: 34px; }
+            .adm-grid{
+                grid-template-columns: minmax(820px, 1fr) 520px;
+            }
+        }
+
+        /* small helpers */
+        .text-truncate-1{
+            max-width: 280px;
+            overflow:hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            display:inline-block;
+            vertical-align: bottom;
+        }
+        /* ✅ smoother transitions (Alpine classes) */
+.adm-fade-enter,
+.adm-fade-leave{
+  transition-property: opacity, transform, filter;
+  transition-timing-function: cubic-bezier(.22,1,.36,1);
+  will-change: opacity, transform;
+}
+
+.adm-fade-enter{ transition-duration: 320ms; }
+.adm-fade-leave{ transition-duration: 900ms; } /* smoother fade-out */
+
+.adm-fade-enter-start{
+  opacity: 0;
+  transform: translateY(-8px);
+  filter: blur(2px);
+}
+.adm-fade-enter-end{
+  opacity: 1;
+  transform: translateY(0);
+  filter: blur(0);
+}
+
+.adm-fade-leave-start{
+  opacity: 1;
+  transform: translateY(0);
+  filter: blur(0);
+}
+.adm-fade-leave-end{
+  opacity: 0;
+  transform: translateY(-8px);
+  filter: blur(2px);
+}
+
+/* ✅ Alert Design */
+.adm-alert{
+  display:flex;
+  align-items:center;
+  gap: 10px;
+  border-radius: 14px;
+  padding: 12px 14px;
+  border: 1px solid rgba(15,23,42,.10);
+  background: rgba(255,255,255,.92);
+  box-shadow: 0 14px 35px rgba(15,23,42,.08);
+  backdrop-filter: blur(10px);
+  position: relative;
+}
+
+.adm-alert-success{
+  border-color: rgba(34,197,94,.30);
+  background: rgba(34,197,94,.10);
+  color: #166534;
+}
+
+.adm-alert-close{
+  margin-left: auto;
+  border: 0;
+  background: transparent;
+  color: rgba(15,23,42,.45);
+  padding: 6px 8px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background .15s ease, color .15s ease, transform .15s ease;
+}
+.adm-alert-close:hover{
+  background: rgba(15,23,42,.06);
+  color: rgba(15,23,42,.75);
+  transform: translateY(-1px);
+}
+
     </style>
 </head>
+
 <body>
+
     @include('admin-sidebar.navbar')
-    @include('admin-sidebar.sidebar')
+@include('admin-sidebar.sidebar')
 
-    <!-- Main -->
-        <div class="adm-main">
+<main>
+  @if(session('success'))
+  <div
+    x-data="{ show: true }"
+    x-init="setTimeout(() => show = false, 3000)"
+    x-show="show"
+    x-transition:enter="adm-fade-enter"
+    x-transition:enter-start="adm-fade-enter-start"
+    x-transition:enter-end="adm-fade-enter-end"
+    x-transition:leave="adm-fade-leave"
+    x-transition:leave-start="adm-fade-leave-start"
+    x-transition:leave-end="adm-fade-leave-end"
+    class="adm-alert adm-alert-success mb-3"
+    role="alert"
+  >
+    <i class="fa-solid fa-circle-check me-2"></i>
+    <span>{{ session('success') }}</span>
 
-            <!-- Content -->
-            <main class="adm-content">
-                <div class="adm-wrap">
-                    <div class="adm-pagehead">
-                        <div>
-                            <h1 class="adm-title">User Registration</h1>
-                            <p class="adm-subtitle">Design-only admin dashboard view for reviewing and managing registration submissions.</p>
-                        </div>
+  </div>
+@endif
 
-                        <div class="adm-actions">
-                            <button class="adm-btn adm-btn-ghost" type="button">
-                                <i class="fa-solid fa-download me-1"></i> Export
-                            </button>
-                            <button class="adm-btn" type="button">
-                                <i class="fa-solid fa-plus me-1"></i> New Entry
-                            </button>
-                        </div>
-                    </div>
 
-                    <div class="adm-grid">
-                        <!-- Left: Table/List -->
-                        <section class="adm-card">
-                            <div class="adm-cardhead">
-                                <h2 class="adm-cardtitle"><i class="fa-solid fa-list-check"></i> Recent Submissions</h2>
-                                <span class="adm-badge"><span class="dot"></span> Live</span>
-                            </div>
-
-                            <div class="adm-tablewrap">
-                                <table class="table table-hover align-middle">
-                                    <thead>
-                                        <tr>
-                                            <th style="width: 34%;">Applicant</th>
-                                            <th style="width: 28%;">Email</th>
-                                            <th style="width: 18%;">Status</th>
-                                            <th style="width: 20%;" class="text-end">Actions</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td>
-                                                <div class="d-flex align-items-center gap-2">
-                                                    <span class="adm-pill-mini"><i class="fa-regular fa-user me-1"></i> John Doe</span>
-                                                </div>
-                                            </td>
-                                            <td class="text-muted">john@example.com</td>
-                                            <td><span class="adm-pill-mini">Draft</span></td>
-                                            <td class="text-end">
-                                                <button class="btn btn-sm btn-outline-secondary rounded-pill">
-                                                    <i class="fa-regular fa-eye me-1"></i> View
-                                                </button>
-                                                <button class="btn btn-sm btn-outline-primary rounded-pill">
-                                                    <i class="fa-regular fa-pen-to-square me-1"></i> Edit
-                                                </button>
-                                            </td>
-                                        </tr>
-
-                                        <tr>
-                                            <td><span class="adm-pill-mini"><i class="fa-regular fa-user me-1"></i> Maria Santos</span></td>
-                                            <td class="text-muted">maria@sample.com</td>
-                                            <td><span class="adm-pill-mini">Pending</span></td>
-                                            <td class="text-end">
-                                                <button class="btn btn-sm btn-outline-secondary rounded-pill">
-                                                    <i class="fa-regular fa-eye me-1"></i> View
-                                                </button>
-                                                <button class="btn btn-sm btn-outline-primary rounded-pill">
-                                                    <i class="fa-regular fa-pen-to-square me-1"></i> Edit
-                                                </button>
-                                            </td>
-                                        </tr>
-
-                                        <tr>
-                                            <td><span class="adm-pill-mini"><i class="fa-regular fa-user me-1"></i> Daniel Cruz</span></td>
-                                            <td class="text-muted">daniel@sample.com</td>
-                                            <td><span class="adm-pill-mini">Approved</span></td>
-                                            <td class="text-end">
-                                                <button class="btn btn-sm btn-outline-secondary rounded-pill">
-                                                    <i class="fa-regular fa-eye me-1"></i> View
-                                                </button>
-                                                <button class="btn btn-sm btn-outline-primary rounded-pill">
-                                                    <i class="fa-regular fa-pen-to-square me-1"></i> Edit
-                                                </button>
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-
-                            <div class="d-flex justify-content-between align-items-center mt-3">
-                                <small class="text-muted">Showing 3 of 3 (UI sample)</small>
-                                <div class="d-flex gap-2">
-                                    <button class="btn btn-sm btn-outline-secondary rounded-pill">Prev</button>
-                                    <button class="btn btn-sm btn-outline-secondary rounded-pill">Next</button>
-                                </div>
-                            </div>
-                        </section>
-
-                        <!-- Right: Details / Review -->
-                        <aside class="adm-card">
-                            <div class="adm-cardhead">
-                                <h2 class="adm-cardtitle"><i class="fa-solid fa-file-lines"></i> Review Panel</h2>
-                                <span class="adm-pill-mini">Design only</span>
-                            </div>
-
-                            <div class="adm-note mb-3">
-                                <strong>Tip:</strong> Select a submission from the list to show details here (backend later).
-                            </div>
-
-                            <form action="javascript:void(0)" method="post" novalidate>
-                                <div class="row g-3">
-                                    <div class="col-md-6">
-                                        <label class="form-label" for="a_first">First name</label>
-                                        <input class="form-control" id="a_first" type="text" placeholder="John">
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label class="form-label" for="a_last">Last name</label>
-                                        <input class="form-control" id="a_last" type="text" placeholder="Doe">
-                                    </div>
-
-                                    <div class="col-md-12">
-                                        <label class="form-label" for="a_email">Email</label>
-                                        <input class="form-control" id="a_email" type="email" placeholder="john@example.com">
-                                    </div>
-
-                                    <div class="col-md-12">
-                                        <label class="form-label" for="a_status">Status</label>
-                                        <select class="form-select" id="a_status">
-                                            <option selected>Draft</option>
-                                            <option>Pending</option>
-                                            <option>Approved</option>
-                                            <option>Rejected</option>
-                                        </select>
-                                    </div>
-
-                                    <div class="col-12">
-                                        <label class="form-label" for="a_notes">Admin notes</label>
-                                        <textarea class="form-control" id="a_notes" rows="4" placeholder="Write notes here..."></textarea>
-                                    </div>
-
-                                    <div class="col-12 d-flex flex-wrap gap-2 justify-content-end">
-                                        <button class="adm-btn adm-btn-ghost" type="button">
-                                            <i class="fa-solid fa-xmark me-1"></i> Clear
-                                        </button>
-                                        <button class="adm-btn" type="button">
-                                            <i class="fa-solid fa-check me-1"></i> Update (UI only)
-                                        </button>
-                                    </div>
-                                </div>
-                            </form>
-                        </aside>
-                    </div>
-                </div>
-            </main>
-        </div>
+  <div class="dashboard-header d-flex justify-content-between align-items-center gap-3">
+    <div>
+      <h2 class="mb-1">Coffee Track Registrations</h2>
+      <p class="mb-0">Incoming submissions from users</p>
     </div>
+
+    <form class="d-flex gap-2" method="GET" action="{{ route('admin.coffee-registrations.index') }}">
+      <input class="form-control" name="search" value="{{ request('search') }}" placeholder="Search name/email/session">
+      <select class="form-select" name="status">
+        <option value="">All</option>
+        @foreach(['Pending','Approved','Rejected'] as $st)
+          <option value="{{ $st }}" @selected(request('status')===$st)>{{ $st }}</option>
+        @endforeach
+      </select>
+      <button class="btn btn-primary">Filter</button>
+    </form>
+  </div>
+
+  <div class="adm-grid">
+
+    <section class="glass-card">
+      <div class="card-head">
+        <h3 class="card-title">
+          <span class="title-icon"><i class="fa-solid fa-list-check"></i></span>
+          Submissions
+        </h3>
+        <span class="badge-live"><span class="dot"></span> Live</span>
+      </div>
+
+      <div class="card-body-pad">
+        <div class="table-wrap table-scroll">
+          <table class="table table-hover align-middle">
+            <thead>
+              <tr>
+                <th>Applicant</th>
+                <th>Email</th>
+                <th>Session</th>
+                <th>Package</th>
+                <th>Status</th>
+                <th class="text-end">Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              @forelse($regs as $r)
+                <tr>
+                  <td><span class="pill-mini">{{ $r->full_name }}</span></td>
+                  <td class="text-muted">{{ $r->email }}</td>
+                  <td class="text-muted">{{ $r->session_datetime }}</td>
+                  <td class="text-muted">{{ $r->rate_type }} (₱{{ number_format($r->rate_amount,2) }})</td>
+                  <td><span class="pill-mini">{{ $r->status }}</span></td>
+                  <td class="text-end">
+  <div class="d-inline-flex gap-2">
+    <a class="btn btn-sm btn-outline-secondary rounded-pill"
+       href="{{ route('admin.coffee-registrations.index', array_merge(request()->query(), ['selected'=>$r->id])) }}">
+      View
+    </a>
+
+    <form
+      method="POST"
+      action="{{ route('admin.coffee-registrations.destroy', $r->id) }}"
+      onsubmit="return confirm('Delete this registration? This cannot be undone.')"
+      class="d-inline"
+    >
+      @csrf
+      @method('DELETE')
+      <button type="submit" class="btn btn-sm btn-outline-danger rounded-pill">
+        <i class="fa-solid fa-trash me-1"></i> Delete
+      </button>
+    </form>
+  </div>
+</td>
+
+                </tr>
+              @empty
+                <tr><td colspan="6" class="text-center text-muted py-4">No registrations found.</td></tr>
+              @endforelse
+            </tbody>
+          </table>
+        </div>
+
+        <div class="mt-3">
+          {{ $regs->links() }}
+        </div>
+      </div>
+    </section>
+
+    <aside class="glass-card">
+  <div class="card-head">
+    <h3 class="card-title">
+      <span class="title-icon"><i class="fa-solid fa-file-lines"></i></span>
+      Review Panel
+    </h3>
+    <span class="pill-mini">Admin / HR</span>
+  </div>
+
+  <div class="card-body-pad">
+    @if($selected)
+
+      {{-- EVENT INFO --}}
+      <div class="note mb-3">
+        <strong>Event:</strong> {{ $selected->event_name }} <br>
+        <strong>Venue:</strong> {{ $selected->event_venue }} <br>
+        <strong>Date:</strong> {{ $selected->event_date_range }}
+      </div>
+
+      {{-- APPLICANT DETAILS --}}
+      <div class="mb-3">
+        <div><strong>Applicant:</strong> {{ $selected->full_name }}</div>
+        <div><strong>Email:</strong> {{ $selected->email }}</div>
+        <div><strong>Phone:</strong> {{ $selected->phone ?? '—' }}</div>
+        <hr>
+        <div><strong>Session:</strong> {{ $selected->session_title }}</div>
+        <div><strong>Speaker:</strong> {{ $selected->session_speaker }}</div>
+        <div><strong>Schedule:</strong> {{ $selected->session_datetime }}</div>
+        <hr>
+        <div><strong>Package:</strong> {{ $selected->rate_type }} (₱{{ number_format($selected->rate_amount,2) }})</div>
+        <div><strong>Payment:</strong> {{ $selected->payment_method ?? '—' }}</div>
+        <div><strong>Ref #:</strong> {{ $selected->reference_no ?? '—' }}</div>
+      </div>
+
+      {{-- STATUS UPDATE --}}
+      <form method="POST" action="{{ route('admin.coffee-registrations.update', $selected) }}">
+        @csrf
+        @method('PATCH')
+
+        <div class="mb-3">
+          <label class="form-label">Status</label>
+          <select class="form-select" name="status" required>
+            @foreach(['Pending','Approved','Rejected','Confirmed'] as $st)
+              <option value="{{ $st }}" @selected($selected->status===$st)>
+                {{ $st }}
+              </option>
+            @endforeach
+          </select>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">Admin notes</label>
+          <textarea class="form-control" name="admin_notes" rows="4">
+            {{ old('admin_notes', $selected->admin_notes) }}
+          </textarea>
+        </div>
+
+        <div class="d-flex justify-content-end gap-2 mb-3">
+          <button class="adm-btn" type="submit">
+            <i class="fa-solid fa-check me-1"></i> Update
+          </button>
+        </div>
+      </form>
+
+      {{-- DELETE BUTTON --}}
+      <form
+        method="POST"
+        action="{{ route('admin.coffee-registrations.destroy', $selected) }}"
+        onsubmit="return confirm('Delete this registration? This cannot be undone.')"
+        class="mb-4"
+      >
+        @csrf
+        @method('DELETE')
+        <button class="adm-btn adm-btn-ghost w-100"
+                style="border-color: rgba(239,68,68,.35); color:#b91c1c;">
+          <i class="fa-solid fa-trash me-1"></i> Delete Registration
+        </button>
+      </form>
+
+      {{-- ================= HR SECTION ================= --}}
+      @php $hrAccess = auth()->user()->hr_access ?? false; @endphp
+
+      @if($hrAccess)
+
+        <hr>
+
+        <h6 class="fw-bold mb-2">HR Requirements (3 documents)</h6>
+
+        @php
+          $count = 0;
+          if($selected->request_approval_path) $count++;
+          if($selected->travel_order_path) $count++;
+          if($selected->registration_ticket_path) $count++;
+        @endphp
+
+        <div class="note mb-3">
+          <strong>Progress:</strong> {{ $count }}/3 <br>
+
+          @if($selected->completed_at)
+            <span class="text-success fw-bold">
+              ✅ Completed ({{ \Carbon\Carbon::parse($selected->completed_at)->format('M d, Y h:i A') }})
+            </span>
+          @endif
+        </div>
+
+        <form method="POST"
+              action="{{ route('admin.coffee-registrations.documents', $selected) }}"
+              enctype="multipart/form-data">
+          @csrf
+
+          <div class="mb-2">
+            <label class="form-label">1) Request for Approval</label>
+            <input type="file" name="request_approval" class="form-control">
+            @if($selected->request_approval_path)
+              <small class="text-success">Uploaded ✓</small>
+            @endif
+          </div>
+
+          <div class="mb-2">
+            <label class="form-label">2) Travel Order</label>
+            <input type="file" name="travel_order" class="form-control">
+            @if($selected->travel_order_path)
+              <small class="text-success">Uploaded ✓</small>
+            @endif
+          </div>
+
+          <div class="mb-2">
+            <label class="form-label">3) Registration Ticket</label>
+            <input type="file" name="registration_ticket" class="form-control">
+            @if($selected->registration_ticket_path)
+              <small class="text-success">Uploaded ✓</small>
+            @endif
+          </div>
+
+          <button class="adm-btn mt-2 w-100" type="submit">
+            Upload / Update Documents
+          </button>
+        </form>
+
+      @endif
+      {{-- ================= END HR SECTION ================= --}}
+
+    @else
+      <div class="note">Select a submission to review.</div>
+    @endif
+  </div>
+</aside>
+
+
+  </div>
+</main>
+
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>

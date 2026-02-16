@@ -1,6 +1,4 @@
-<!-- =========================
-     SUBMIT TICKET MODAL
-========================= -->
+
 <div class="modal fade" id="submitTicketModal" tabindex="-1">
     <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
         <div class="modal-content border-0 rounded-4 shadow-lg">

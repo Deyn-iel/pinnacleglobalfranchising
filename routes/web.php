@@ -33,6 +33,11 @@ use App\Http\Controllers\Hr\PayslipController;
 use App\Http\Controllers\SupportChatController;
 use App\Http\Controllers\SupportPresenceController;
 
+use App\Http\Controllers\User\CoffeeRegistrationController as UserCoffeeReg;
+use App\Http\Controllers\Admin\CoffeeRegistrationController as AdminCoffeeReg;
+use App\Http\Controllers\Admin\CoffeeRegistrationController;
+
+
 Route::middleware(['auth','hr.access'])
   ->prefix('hr')
   ->name('hr.')
@@ -48,6 +53,14 @@ Route::middleware(['auth','hr.access'])
 });
 
 Route::middleware(['auth'])->group(function () {
+
+ // USER
+  Route::get('/user/coffee-registration', [UserCoffeeReg::class, 'create'])
+        ->name('user.coffee-registration.create');
+
+    Route::post('/user/coffee-registration', [UserCoffeeReg::class, 'store'])
+        ->name('user.coffee-registration.store');
+
 
 Route::get('/support/chat',  [SupportChatController::class, 'fetch']);
   Route::post('/support/chat', [SupportChatController::class, 'send']);
@@ -132,10 +145,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
     ->middleware(['auth', 'verified'])
     ->name('dashboard');
 
-     Route::view(
-        '/=akojf8IGL03-kaodoj7UJjfnUJnkla8afeef8909JIKkfa=aefeaj90-83registrationikjfe9fasej=akojf8IGL03-kaodoj7UJjfnUJnkla8afeef8909JIKkfa=aefeaj90-83registrationikjfe9fasej',
-        'user-dashboard.registration.registration'
-    )->name('registration');
+     Route::get(
+  '/=jf8IGL03-kaodoj7UJjfnUJnkla8afeef8909JIKkfa=aefeaj90-83registrationikjfe9fasej=aojf8IGL03-kaodoj7UJjfnUJnkla8afeef8909JIKkfa=aefeaj90-83registrationikjfe9fasej',
+  [UserCoffeeReg::class, 'create']
+)->name('registration');
+
     
     Route::view(
         '/user-dashboard/uploading-requirements',
@@ -216,9 +230,26 @@ Route::middleware(['auth', 'admin', 'admin.desktop'])
     ->prefix('admin')
     ->name('admin.')
     ->group(function () {
+        
+    Route::post('/coffee-registrations/{reg}/documents', [AdminCoffeeReg::class, 'uploadDocuments'])
+    ->name('coffee-registrations.documents');
+
+        // ✅ Coffee Registrations admin routes (moved here)
+        Route::get('/coffee-registrations', [AdminCoffeeReg::class, 'index'])
+        ->middleware('hr.access')
+            ->name('coffee-registrations.index');
+
+        Route::patch('/coffee-registrations/{reg}', [AdminCoffeeReg::class, 'update'])
+            ->name('coffee-registrations.update');
+
+        
+Route::delete('/coffee-registrations/{registration}', [AdminCoffeeReg::class, 'destroy'])
+    ->name('coffee-registrations.destroy');
 
 
-    Route::view('/user-registration', 'admin.user-registration.registration')->name('registration');
+    Route::get('/user-registration', [AdminCoffeeReg::class, 'index'])
+    ->name('registration'); 
+
 
 
      Route::get('/tickets', [AdminTicketController::class, 'index'])

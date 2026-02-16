@@ -114,20 +114,17 @@
     </div>
   </div>
 
-  <div class="controls">
-    <!-- Always-visible: Search + Mobile filter toggle -->
+  <div class="controls">  
     <div class="control-left w-100">
       <div class="search-wrap">
         <i class="bi bi-search"></i>
         <input id="searchInput" class="search" type="text" placeholder="Search ticket no, subject, description..." />
       </div>
 
-      <!-- Mobile: show/hide filters -->
       <button class="btn btn-ghost filters-toggle" type="button" data-bs-toggle="collapse" data-bs-target="#filtersCollapse" aria-expanded="false" aria-controls="filtersCollapse">
         <i class="bi bi-funnel me-1"></i> Filters
       </button>
 
-      <!-- Desktop filters (always visible) -->
       <div class="d-none d-md-flex gap-2 flex-wrap align-items-center">
         <select id="departmentFilter" class="select">
           <option value="">All Departments</option>
@@ -262,7 +259,6 @@
 </main>
 
 <!-- Details Modal -->
-<!-- Details Modal -->
 <div class="modal fade" id="ticketDetailsModal" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
     <div class="modal-content">
@@ -278,7 +274,6 @@
         </div>
       </div>
 
-      <!-- ✅ FORM WRAPS BODY + FOOTER -->
       <form id="statusForm" method="POST">
         @csrf
         @method('PATCH')
@@ -302,7 +297,6 @@
           </div>
         </div>
 
-        <!-- ✅ MAGKATABI NA -->
         <div class="modal-footer d-flex gap-2 justify-content-end">
           <button type="submit" class="btn btn-black px-4">
             Save

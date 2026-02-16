@@ -408,3 +408,16 @@
   font-size: 10px;
   opacity: .7;
 }
+.sb-dd{
+  max-height: 0;
+  overflow: hidden;
+  opacity: 0;
+  transition: max-height .35s ease, opacity .25s ease, transform .25s ease;
+  transform: translateY(-4px);
+}
+.sb-dd.is-open{
+  max-height: 220px;
+  opacity: 1;
+  transform: translateY(0);
+}
+
