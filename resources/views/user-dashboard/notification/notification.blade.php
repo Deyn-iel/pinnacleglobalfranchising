@@ -12,80 +12,98 @@
     'resources/css/notifications/app.css',
     'resources/js/user-dashboard/app.js'
 ])
-
 </head>
 
 <body>
 
-{{-- LOGIN OVERLAY --}}
-<div class="login-overlay" id="loginOverlay">
-    <div class="login-box">
-        <i class="fas fa-user-check"></i>
-        <h2>Welcome, {{ ucwords(strtolower(Auth::user()->name)) }}!</h2>
-        <p>Loading dashboard...</p>
-    </div>
-</div>
-
 <div class="wrapper">
+  @include('user-dashboard.partials-dashboard.sidebar')
 
-    {{-- ✅ SIDEBAR --}}
-    @include('user-dashboard.partials-dashboard.sidebar')
+  <div class="main">
+    @include('user-dashboard.partials-dashboard.header')
 
-    <div class="main">
+    <div class="content">
+      <div class="notification-container">
 
-        {{-- ✅ HEADER --}}
-        @include('user-dashboard.partials-dashboard.header')
+        <div class="notification-header">
+          <h2>Notifications</h2>
+          <span>{{ $items->total() }} total</span>
+        </div>
 
-        {{-- ✅ MAIN CONTENT (NOTIFICATIONS) --}}
-        <div class="content">
+        {{-- flash success --}}
+        @if(session('success'))
+          <div style="margin: 10px 0; padding: 12px; border-radius: 12px; background: #ecfdf5; border: 1px solid #bbf7d0; color:#166534;">
+            <i class="fa-solid fa-circle-check" style="margin-right:8px;"></i>
+            {{ session('success') }}
+          </div>
+        @endif
 
-            <div class="notification-container">
+        <div class="notification-list">
 
-                <div class="notification-header">
-                    <h2>Notifications</h2>
-                    <span>Design only for now</span>
+          @forelse($items as $n)
+            @php
+              $type = $n->type ?? 'info';
+              $icon = match($type){
+                'success' => 'fa-circle-check',
+                'warning' => 'fa-triangle-exclamation',
+                'danger'  => 'fa-circle-xmark',
+                default   => 'fa-circle-info',
+              };
+
+              $meta = $n->meta ?? [];
+            @endphp
+
+            <div class="notification-item {{ $n->read_at ? '' : 'unread' }}">
+              <div class="notification-icon icon-{{ $type }}">
+                <i class="fa-solid {{ $icon }}"></i>
+              </div>
+
+              <div class="notification-content">
+                <h4>{{ $n->title }}</h4>
+                <p>{{ $n->message }}</p>
+
+                {{-- ✅ Show file links if present --}}
+                <div style="margin-top:8px; display:flex; gap:10px; flex-wrap:wrap;  ">
+                  @if(!empty($meta['request_approval_url']))
+                    <a href="{{ $meta['request_approval_url'] }}" target="_blank" class="btn btn-sm btn-outline-secondary rounded-pill" style="text-decoration: none;">
+                      <i class="fa-solid fa-file-arrow-down me-1"></i> Request Approval
+                    </a>
+                  @endif
+
+                  @if(!empty($meta['travel_order_url']))
+                    <a href="{{ $meta['travel_order_url'] }}" target="_blank" class="btn btn-sm btn-outline-secondary rounded-pill" style="text-decoration: none;">
+                      <i class="fa-solid fa-file-arrow-down me-1"></i> Travel Order
+                    </a>
+                  @endif
+
+                  @if(!empty($meta['registration_ticket_url']))
+                    <a href="{{ $meta['registration_ticket_url'] }}" target="_blank" class="btn btn-sm btn-outline-secondary rounded-pill" style="text-decoration: none;">
+                      <i class="fa-solid fa-ticket me-1"></i> Registration Ticket
+                    </a>
+                  @endif
                 </div>
 
-                <div class="notification-list">
-
-                    <div class="notification-item unread">
-                        <div class="notification-icon icon-info">
-                            <i class="fas fa-info"></i>
-                        </div>
-                        <div class="notification-content">
-                            <h4>System Update</h4>
-                            <p>Your exam schedule has been updated. Please review the changes.</p>
-                            <div class="notification-time">5 minutes ago</div>
-                        </div>
-                    </div>
-
-                    <div class="notification-item">
-                        <div class="notification-icon icon-success">
-                            <i class="fas fa-check"></i>
-                        </div>
-                        <div class="notification-content">
-                            <h4>Submission Successful</h4>
-                            <p>Your project has been submitted successfully.</p>
-                            <div class="notification-time">2 hours ago</div>
-                        </div>
-                    </div>
-
-                    <div class="notification-item">
-                        <div class="notification-icon icon-warning">
-                            <i class="fas fa-exclamation"></i>
-                        </div>
-                        <div class="notification-content">
-                            <h4>Reminder</h4>
-                            <p>Your exam will start tomorrow at 9:00 AM.</p>
-                            <div class="notification-time">Yesterday</div>
-                        </div>
-                    </div>
-
+                <div class="notification-time">
+                  {{ $n->created_at->diffForHumans() }}
                 </div>
+              </div>
             </div>
 
+          @empty
+            <div style="padding: 14px; color:#64748b;">
+              No notifications yet.
+            </div>
+          @endforelse
+
         </div>
+
+        <div style="margin-top:14px;">
+          {{ $items->links() }}
+        </div>
+
+      </div>
     </div>
+  </div>
 </div>
 
 </body>

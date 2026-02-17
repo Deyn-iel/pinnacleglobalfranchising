@@ -355,7 +355,7 @@
     </div>
 
     <!-- Requirements -->
-    <div class="col-12 col-sm-6 col-xl-4">
+    {{-- <div class="col-12 col-sm-6 col-xl-4">
       <a href="{{ route('admin.requirements') }}" class="dash-link">
         <div class="dash-card">
           <div class="dash-top">
@@ -371,7 +371,7 @@
           </div>
         </div>
       </a>
-    </div>
+    </div> --}}
 
     <!-- Contacts -->
     <div class="col-12 col-sm-6 col-xl-4">

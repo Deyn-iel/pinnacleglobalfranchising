@@ -60,7 +60,6 @@
     </i>
   </a>
 
-  <!-- DROPDOWN (NO hardcoded is-open) -->
   <div class="sb-dd" :class="open ? 'is-open' : ''">
     <ul class="nav flex-column ms-4 mt-2">
 
@@ -143,7 +142,7 @@
                 <span>Requirements</span>
             </a>
         </li> --}}
-
+        
         <li class="nav-item">
             <a href="{{ route('admin.contacts') }}"
                class="nav-link {{ request()->routeIs('admin.contacts') ? 'active' : '' }}">
@@ -188,3 +187,6 @@
         </div>
     </div>
 </aside>
+
+
+

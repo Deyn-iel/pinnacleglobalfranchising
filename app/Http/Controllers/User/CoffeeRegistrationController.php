@@ -5,6 +5,7 @@ namespace App\Http\Controllers\User;
 use App\Http\Controllers\Controller;
 use App\Models\CoffeeRegistration;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class CoffeeRegistrationController extends Controller
 {
@@ -19,13 +20,34 @@ class CoffeeRegistrationController extends Controller
         $sessions = $this->sessions();
         $rates = $this->rates();
 
-        // ✅ MATCH sa filename mo:
-        // resources/views/user-dashboard/registration/registration.blade.php
-        return view('user-dashboard.registration.registration', compact('event', 'sessions', 'rates'));
+        // ✅ latest registration ng user (no auth()->id() underline issue)
+        $myReg = CoffeeRegistration::where('user_id', Auth::id())
+            ->latest()
+            ->first();
+
+        return view('user-dashboard.registration.registration', [
+            'event' => $event,
+            'sessions' => $sessions,
+            'rates' => $rates,
+            'myReg' => $myReg,
+        ]);
     }
 
     public function store(Request $request)
     {
+        $user = $request->user();
+        if (!$user) abort(403, 'Unauthorized');
+
+        // ✅ block kapag may pending na
+        $existingPending = CoffeeRegistration::where('user_id', $user->id)
+            ->where('status', 'Pending')
+            ->exists();
+
+        if ($existingPending) {
+            // mas bagay 'error' kaysa 'success'
+            return back()->with('error', 'You already have a pending application.');
+        }
+
         $data = $request->validate([
             'first_name' => ['required', 'string', 'max:80'],
             'last_name'  => ['required', 'string', 'max:80'],
@@ -39,11 +61,6 @@ class CoffeeRegistrationController extends Controller
             'reference_no'   => ['nullable', 'string', 'max:120'],
             'notes'          => ['nullable', 'string', 'max:2000'],
         ]);
-
-        $user = $request->user();
-        if (!$user) {
-            abort(403, 'Unauthorized');
-        }
 
         $event = $this->event();
         $sessions = $this->sessions();
@@ -73,8 +90,8 @@ class CoffeeRegistrationController extends Controller
 
             'payment_method' => $data['payment_method'] ?? null,
             'reference_no'   => $data['reference_no'] ?? null,
+            'notes'          => $data['notes'] ?? null,
 
-            'notes'  => $data['notes'] ?? null,
             'status' => 'Pending',
         ]);
 

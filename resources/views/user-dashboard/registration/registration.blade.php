@@ -55,6 +55,10 @@
 
       /* focus ring */
       --ring: 0 0 0 4px rgba(13,53,83,.12);
+
+      /* NEW: nicer responsive paddings */
+      --pad-card: 18px;
+      --pad-field: 12px;
     }
 
     *{ box-sizing:border-box; }
@@ -82,8 +86,6 @@
       opacity: 0;
       animation: fadeUp var(--anim-dur) var(--anim-ease) forwards;
     }
-    main.ud-main .ud-card:nth-of-type(1){ animation-delay: 120ms; }
-    main.ud-main .ud-card:nth-of-type(2){ animation-delay: 240ms; }
 
     @media (prefers-reduced-motion: reduce){
       main.ud-main .ud-container,
@@ -95,10 +97,9 @@
     }
 
     /* =========================================================
-       ✅ Layout
+       ✅ Layout (updated: better responsive grid + no hard min widths)
        ========================================================= */
     main.ud-main{
-      min-height: 100vh;
       padding: var(--content-pad);
       margin-left: var(--sidebar-w);
       max-width: calc(100vw - var(--sidebar-w));
@@ -121,6 +122,9 @@
       justify-content:space-between;
       gap: 14px;
       margin-bottom: 14px;
+      background: #ffffff;
+      padding: 15px;
+      border-radius: 20px;
     }
 
     .ud-title-wrap{
@@ -158,7 +162,7 @@
 
     .ud-grid{
       display:grid;
-      grid-template-columns: minmax(560px, 1fr) var(--right-col);
+      grid-template-columns: minmax(0, 1fr) minmax(0, var(--right-col));
       gap: var(--gap);
       align-items:start;
       min-width: 0;
@@ -169,7 +173,7 @@
       border: 1px solid var(--stroke);
       border-radius: var(--radius);
       box-shadow: var(--shadow);
-      padding: 18px;
+      padding: var(--pad-card);
       min-width: 0;
       transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease;
       position: relative;
@@ -178,14 +182,9 @@
 
     /* subtle top highlight */
     .ud-card::before{
-      content:"";
-      position:absolute;
-      top:0; left:0; right:0;
-      height: 3px;
-      background: linear-gradient(90deg, rgba(13,53,83,.55), rgba(2,132,199,.35), rgba(34,197,94,.22));
-      opacity: .35;
-      pointer-events:none;
-    }
+  display: none !important;
+}
+
 
     .ud-card:hover{
       transform: translateY(-3px);
@@ -199,6 +198,7 @@
       justify-content:space-between;
       gap: 10px;
       margin-bottom: 12px;
+      flex-wrap: wrap;
     }
 
     .ud-card-title{
@@ -220,12 +220,12 @@
     }
 
     /* =========================================================
-       ✅ Form (better UI + fully responsive)
+       ✅ Form (updated: more responsive + better spacing)
        ========================================================= */
     .ud-form .ud-row{
       display:grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: var(--pad-field);
       min-width: 0;
     }
 
@@ -271,8 +271,13 @@
       color: var(--text);
       padding: 11px 12px;
       outline: none;
-      transition: border-color .15s ease, box-shadow .15s ease, transform .12s ease;
+      transition: border-color .15s ease, box-shadow .15s ease, transform .12s ease, background .15s ease;
       appearance: none;
+    }
+
+    /* NEW: subtle input background on hover (not too much) */
+    .ud-input:hover, .ud-select:hover, .ud-textarea:hover{
+      background: #fbfdff;
     }
 
     /* when with icon */
@@ -334,6 +339,10 @@
       transition: transform .14s ease, filter .14s ease, box-shadow .14s ease;
       box-shadow: 0 10px 22px rgba(13,53,83,.18);
       white-space: nowrap;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap: 8px;
     }
     .ud-btn:hover{ transform: translateY(-2px); filter: brightness(1.05); }
     .ud-btn:active{ transform: translateY(0); }
@@ -346,8 +355,17 @@
     }
     .ud-btn-ghost:hover{ background: rgba(13,53,83,.04); filter:none; }
 
+    /* NEW: disabled button polish */
+    .ud-btn:disabled{
+      opacity:.6;
+      cursor:not-allowed;
+      transform:none !important;
+      filter:none !important;
+      box-shadow: none;
+    }
+
     /* =========================================================
-       ✅ Aside / Preview (nicer + mobile friendly)
+       ✅ Aside / Preview (updated for mobile readability)
        ========================================================= */
     .ud-sticky{ position: sticky; top: 16px; }
 
@@ -381,6 +399,7 @@
       color: var(--text);
       font-weight: 700;
       word-break: break-word;
+      max-width: 66%;
     }
 
     .ud-badge{
@@ -405,7 +424,7 @@
     }
 
     /* =========================================================
-       ✅ Alerts (kept + improved spacing)
+       ✅ Alerts
        ========================================================= */
     @keyframes alertIn { from{opacity:0; transform:translateY(-6px);} to{opacity:1; transform:translateY(0);} }
     @keyframes alertOut{ from{opacity:1; transform:translateY(0);} to{opacity:0; transform:translateY(-6px);} }
@@ -477,13 +496,79 @@
     }
 
     /* =========================================================
-       ✅ Mobile / Responsive (improved)
+       ✅ Nice small touches
+       ========================================================= */
+    .sr-only{
+      position:absolute;
+      width:1px;height:1px;
+      padding:0;margin:-1px;
+      overflow:hidden;clip:rect(0,0,0,0);
+      white-space:nowrap;border:0;
+    }
+
+    /* ✅ Status badge */
+    .ud-status{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding: 7px 10px;
+      border-radius: 999px;
+      border: 1px solid var(--stroke);
+      background:#fff;
+      font-size: 12px;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+    .ud-status::before{
+      content:"";
+      width:8px;height:8px;border-radius:999px;
+    }
+    .ud-status.pending{
+      border-color: rgba(234,179,8,.30);
+      background: rgba(234,179,8,.10);
+      color:#854d0e;
+    }
+    .ud-status.pending::before{
+      background: rgba(234,179,8,.95);
+      box-shadow: 0 0 0 3px rgba(234,179,8,.18);
+    }
+    .ud-status.approved{
+      border-color: rgba(34,197,94,.30);
+      background: rgba(34,197,94,.10);
+      color:#166534;
+    }
+    .ud-status.approved::before{
+      background: rgba(34,197,94,.95);
+      box-shadow: 0 0 0 3px rgba(34,197,94,.18);
+    }
+    .ud-status.rejected{
+      border-color: rgba(239,68,68,.30);
+      background: rgba(239,68,68,.10);
+      color:#991b1b;
+    }
+    .ud-status.rejected::before{
+      background: rgba(239,68,68,.95);
+      box-shadow: 0 0 0 3px rgba(239,68,68,.18);
+    }
+    .ud-status.confirmed{
+      border-color: rgba(59,130,246,.30);
+      background: rgba(59,130,246,.10);
+      color:#1e40af;
+    }
+    .ud-status.confirmed::before{
+      background: rgba(59,130,246,.95);
+      box-shadow: 0 0 0 3px rgba(59,130,246,.18);
+    }
+
+    /* =========================================================
+       ✅ Responsive (improved: collapses earlier + better on phones)
        ========================================================= */
     @media (min-width: 1600px){
       :root{
         --container-max: 1260px;
         --right-col: 460px;
         --content-pad: 34px;
+        --pad-card: 20px;
       }
     }
 
@@ -503,28 +588,30 @@
       :root{
         --right-col: 360px;
         --content-pad: 20px;
+        --pad-card: 16px;
       }
-      .ud-card{ padding: 16px; }
     }
 
-    @media (max-width: 1024px){
+    /* UPDATED: collapse to 1 column earlier for tablets */
+    @media (max-width: 1100px){
       :root{
-        --sidebar-w: 240px;
-        --content-pad: 18px;
-        --right-col: 360px;
-      }
-      main.ud-main{
-        margin-left: var(--sidebar-w);
-        max-width: calc(100vw - var(--sidebar-w));
+        --right-col: 100%;
       }
       .ud-grid{ grid-template-columns: 1fr; }
       .ud-sticky{ position: static; }
+      .ud-preview-value{ max-width: 100%; }
+      .ud-subtitle {font-size: 10px; }
     }
 
     @media (max-width: 768px){
       main.ud-main{
         margin-left: 0;
         max-width: 100%;
+      }
+      :root{
+        --content-pad: 16px;
+        --pad-card: 14px;
+        --pad-field: 10px;
       }
       .ud-form .ud-row{ grid-template-columns: 1fr; }
       .ud-pagehead{ flex-direction: column; align-items:flex-start; }
@@ -534,21 +621,11 @@
     }
 
     @media (max-width: 420px){
-      :root{ --content-pad: 14px; }
+      :root{ --content-pad: 12px; }
       .ud-actions{ justify-content: stretch; }
-      .ud-btn{ width: 100%; justify-content: center; }
-      .ud-card{ padding: 14px; }
-    }
-
-    /* =========================================================
-       ✅ Nice small touches
-       ========================================================= */
-    .sr-only{
-      position:absolute;
-      width:1px;height:1px;
-      padding:0;margin:-1px;
-      overflow:hidden;clip:rect(0,0,0,0);
-      white-space:nowrap;border:0;
+      .ud-btn{ width: 100%; }
+      .ud-card{ padding: 12px; }
+      .ud-card:hover{ transform:none; } /* less jumpy on small phones */
     }
   </style>
 </head>
@@ -619,7 +696,6 @@
       </header>
 
       <div class="ud-grid">
-
         <form class="ud-card ud-form" action="{{ route('user.coffee-registration.store') }}" method="POST">
           @csrf
 
@@ -755,11 +831,21 @@
 
           <div class="ud-actions">
             <button class="ud-btn ud-btn-ghost" type="reset">
-              <i class="fa-solid fa-rotate-left" style="margin-right:8px;"></i> Clear
+              <i class="fa-solid fa-rotate-left"></i> Clear
             </button>
-            <button class="ud-btn" type="submit">
-              <i class="fa-solid fa-paper-plane" style="margin-right:8px;"></i> Submit Registration
-            </button>
+
+            @if($myReg)
+  <button class="ud-btn" type="button" disabled>
+    <i class="fa-solid fa-lock"></i>
+    Registration Already Submitted
+  </button>
+@else
+  <button class="ud-btn" type="submit">
+    <i class="fa-solid fa-paper-plane"></i>
+    Submit Registration
+  </button>
+@endif
+
           </div>
         </form>
 
@@ -769,6 +855,7 @@
             <span class="ud-badge">Coffee Track</span>
           </div>
 
+          {{-- ✅ EVENT DETAILS --}}
           <div class="ud-preview">
             <div class="ud-preview-row">
               <span class="ud-preview-label">Event</span>
@@ -786,16 +873,98 @@
 
           <hr class="ud-hr" />
 
-          <div class="ud-preview" style="margin-top:10px;">
-            <div class="ud-preview-row">
-              <span class="ud-preview-label">Tip</span>
-              <span class="ud-preview-value" style="font-weight:600; color:#475569;">
-                Double-check your email before submitting.
+          {{-- ✅ YOUR SUBMISSION STATUS (latest) --}}
+          @if($myReg)
+            <div class="ud-card-head" style="margin-top:2px;">
+              <h2 class="ud-card-title"><i class="fa-solid fa-file-circle-check"></i> Your Submission</h2>
+
+              @php
+                $st = strtolower($myReg->status ?? 'Pending'); // pending/approved/rejected/confirmed
+                $st = in_array($st, ['pending','approved','rejected','confirmed']) ? $st : 'pending';
+              @endphp
+
+              <span class="ud-status {{ $st }}">
+                {{ ucfirst($st) }}
               </span>
             </div>
-          </div>
-        </aside>
 
+            <div class="ud-preview">
+              <div class="ud-preview-row">
+                <span class="ud-preview-label">Applicant</span>
+                <span class="ud-preview-value">{{ $myReg->full_name }}</span>
+              </div>
+
+              <div class="ud-preview-row">
+                <span class="ud-preview-label">Email</span>
+                <span class="ud-preview-value">{{ $myReg->email }}</span>
+              </div>
+
+              <div class="ud-preview-row">
+                <span class="ud-preview-label">Session</span>
+                <span class="ud-preview-value">
+                  {{ $myReg->session_title ?? $myReg->session_datetime }}
+                </span>
+              </div>
+
+              <div class="ud-preview-row">
+                <span class="ud-preview-label">Package</span>
+                <span class="ud-preview-value">
+                  {{ $myReg->rate_type }} (₱{{ number_format($myReg->rate_amount, 2) }})
+                </span>
+              </div>
+
+              <div class="ud-preview-row">
+                <span class="ud-preview-label">Ref #</span>
+                <span class="ud-preview-value">{{ $myReg->reference_no ?? '—' }}</span>
+              </div>
+
+              <div class="ud-preview-row">
+                <span class="ud-preview-label">Submitted</span>
+                <span class="ud-preview-value">
+                  {{ optional($myReg->created_at)->format('M d, Y h:i A') ?? '—' }}
+                </span>
+              </div>
+            </div>
+
+            <div class="ud-preview" style="margin-top:10px;">
+              <div class="ud-preview-row">
+                <span class="ud-preview-label">Next step</span>
+                <span class="ud-preview-value" 
+      style="font-weight:600; color:#475569; text-align:left; max-width:100%; display:flex; align-items:flex-start; gap:8px;">
+
+  @if(($myReg->status ?? 'Pending') === 'Pending')
+    <i class="fa-solid fa-hourglass-half text-warning" style="margin-top:3px;"></i>
+    <span>Please wait — your application is under review.</span>
+
+  @elseif(($myReg->status ?? '') === 'Approved')
+    <i class="fa-solid fa-circle-check text-success" style="margin-top:3px; color:#08a143;"></i>
+    <span>Approved — please wait for confirmation or final instructions.</span>
+
+  @elseif(($myReg->status ?? '') === 'Rejected')
+    <i class="fa-solid fa-circle-xmark text-danger" style="margin-top:3px; color:#eb4343;"></i>
+    <span>Rejected — you may submit again if allowed.</span>
+
+  @else
+    <i class="fa-solid fa-info-circle text-secondary" style="margin-top:3px;"></i>
+    <span>Status will update soon.</span>
+  @endif
+
+</span>
+
+              </div>
+            </div>
+          @else
+            {{-- If wala pang submission --}}
+            <div class="ud-preview" style="margin-top:10px;">
+              <div class="ud-preview-row">
+                <span class="ud-preview-label">Tip</span>
+                <span class="ud-preview-value" style="font-weight:600; color:#475569; text-align:left; max-width:100%;">
+                  After you submit, you’ll see your status here (Pending/Approved/Rejected).
+                </span>
+              </div>
+            </div>
+          @endif
+        </aside>
       </div>
     </section>
   </main>

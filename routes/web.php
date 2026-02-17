@@ -36,7 +36,7 @@ use App\Http\Controllers\SupportPresenceController;
 use App\Http\Controllers\User\CoffeeRegistrationController as UserCoffeeReg;
 use App\Http\Controllers\Admin\CoffeeRegistrationController as AdminCoffeeReg;
 use App\Http\Controllers\Admin\CoffeeRegistrationController;
-
+use App\Http\Controllers\User\NotificationController;
 
 Route::middleware(['auth','hr.access'])
   ->prefix('hr')
@@ -159,10 +159,15 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/I%2jdawh=adwIpkadLHiadw0476jhJI%2jdawh=adwIpkadLHiadw0476jhJI%2jdawh=adwIpkadLHiadw0476jhJ/{exam}', [ExamController::class, 'start'])
     ->name('exam.start');
 
-    Route::view(
-        '/dwajn0938UIHi&*65wauhunotificationawduhygy6wedag=dwajn0938UIHi&*65wauhunotificationawduhygy6wedagdwajn0938UIHi&*65wauhunotificationawduhygy6wedag',
-        'user-dashboard.notification.notification'
-    )->name('notification');
+    // Route::view(
+    //     '/dwajn0938UIHi&*65wauhunotificationawduhygy6wedag=dwajn0938UIHi&*65wauhunotificationawduhygy6wedagdwajn0938UIHi&*65wauhunotificationawduhygy6wedag',
+    //     'user-dashboard.notification.notification'
+    // )->name('notification');
+
+
+     Route::get('/notification', [NotificationController::class, 'index'])
+        ->name('notification');
+
 
     Route::view(
         '/Pjaefiu=8yhbPFUaehu89fsaehui-jieafawdawd90daiuPjaefiu=8yhbPFUaehu89fsaehui-jieafawdawd90daiuPjaefiu=8yhbPFUaehu89fsaehui-jieafawdawd90daiu',
