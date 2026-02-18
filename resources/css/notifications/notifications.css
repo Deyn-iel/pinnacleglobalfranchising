@@ -1,107 +1,298 @@
 /* ================= NOTIFICATION CONTENT ONLY ================= */
 
-.notification-container {
-    max-width: 100%;
-    margin: auto;
-    background: #ffffff;
-    border-radius: 20px;
-    box-shadow: 0 25px 60px rgba(15, 23, 42, 0.12);
-    overflow: hidden;
-    animation: fadeUp 0.5s ease;
+:root{
+  --n-bg:#ffffff;
+  --n-surface:linear-gradient(180deg,#ffffff,#f9fafb);
+  --n-border:#e5e7eb;
+  --n-text:#0f172a;
+  --n-muted:#6b7280;
+  --n-muted2:#9ca3af;
+
+  --n-primary:#2563eb;
+  --n-success:#16a34a;
+  --n-warning:#f59e0b;
+  --n-danger:#ef4444;
+
+  --n-radius:20px;
+  --n-radius2:16px;
+
+  --n-shadow:0 18px 45px rgba(15,23,42,.10);
+  --n-shadow2:0 10px 24px rgba(15,23,42,.08);
+
+  --n-pad: clamp(14px, 2.2vw, 22px);
+  --n-gap: clamp(10px, 1.5vw, 16px);
 }
 
-.notification-header {
-    padding: 24px 28px;
-    border-bottom: 1px solid #e5e7eb;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background: linear-gradient(180deg, #ffffff, #f9fafb);
+/* container */
+.notification-container{
+  width: 100%;
+  margin: 0 auto;
+  background: var(--n-bg);
+  border-radius: var(--n-radius);
+  box-shadow: var(--n-shadow);
+  overflow: hidden;
+  border: 1px solid rgba(15,23,42,.06);
+  animation: fadeUp .45s ease;
 }
 
-.notification-header h2 {
-    font-size: 22px;
-    font-weight: 700;
-    color: #0d3553;
+/* header */
+.notification-header{
+  padding: calc(var(--n-pad) + 4px) calc(var(--n-pad) + 6px);
+  border-bottom: 1px solid var(--n-border);
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-end;
+  gap: 10px;
+  background: var(--n-surface);
+  flex-wrap: wrap;
 }
 
-.notification-header span {
-    font-size: 13px;
-    color: #6b7280;
+.notification-header h2{
+  margin:0;
+  font-size: clamp(18px, 2vw, 24px);
+  font-weight: 900;
+  letter-spacing: -0.02em;
+  color: #0d3553;
 }
 
-.notification-list {
-    padding: 14px;
-    display: flex;
+.notification-header span{
+  font-size: 13px;
+  color: var(--n-muted);
+  font-weight: 800;
+}
+
+/* list */
+.notification-list{
+  padding: var(--n-pad);
+  display:flex;
+  flex-direction:column;
+  gap: 12px;
+}
+
+/* item */
+.notification-item{
+  display:flex;
+  gap: 14px;
+  padding: 16px;
+  border-radius: var(--n-radius2);
+  position: relative;
+  border: 1px solid rgba(15,23,42,.08);
+  transition: transform .18s ease, box-shadow .18s ease, background .18s ease, border-color .18s ease;
+}
+
+
+/* unread */
+.notification-item.unread{
+  background: rgba(37,99,235,.06);
+  border-color: rgba(37,99,235,.25);
+}
+
+.notification-item.unread::after{
+  content:'';
+  width: 9px;
+  height: 9px;
+  background: var(--n-primary);
+  border-radius: 999px;
+  position:absolute;
+  top: 16px;
+  right: 16px;
+  box-shadow: 0 0 0 6px rgba(37,99,235,.12);
+}
+
+/* icon */
+.notification-icon{
+  width: 46px;
+  height: 46px;
+  min-width: 46px;
+  border-radius: 16px;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  font-size: 18px;
+  color:#fff;
+  box-shadow: 0 10px 22px rgba(0,0,0,.12);
+}
+
+.icon-info{ background: linear-gradient(135deg, #2563eb, #3b82f6); }
+.icon-success{ background: linear-gradient(135deg, #16a34a, #22c55e); }
+.icon-warning{ background: linear-gradient(135deg, #f59e0b, #fbbf24); }
+.icon-danger{ background: linear-gradient(135deg, #ef4444, #fb7185); }
+
+/* content */
+.notification-content{
+  flex: 1;
+  min-width: 0;
+}
+
+.notification-content h4{
+  margin: 2px 0 6px;
+  font-size: 15px;
+  font-weight: 900;
+  color: var(--n-text);
+}
+
+.notification-content p{
+  font-size: 13.5px;
+  color: #475569;
+  line-height: 1.6;
+  margin: 0;
+  word-break: break-word;
+}
+
+.notification-time{
+  font-size: 12px;
+  color: var(--n-muted2);
+  margin-top: 10px;
+  font-weight: 800;
+}
+
+/* ================= ATTACHMENTS (buttons + previews) ================= */
+
+/* ✅ BUTTON ROW (your blade uses inline style flex-wrap; we override) */
+.notification-content div[style*="display:flex"][style*="flex-wrap"]{
+  align-items: center;
+  justify-content: flex-start;          /* ✅ not centered */
+  gap: 10px !important;
+}
+
+/* ✅ Make buttons look like premium chips */
+.notification-content .btn{
+  font-weight: 900;
+  border-radius: 999px !important;
+  padding: 9px 12px;
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid rgba(15,23,42,.12) !important;
+  background: #fff;
+  color: #0f172a;
+  box-shadow: 0 8px 18px rgba(15,23,42,.06);
+  transition: transform .16s ease, box-shadow .16s ease, background .16s ease;
+}
+
+.notification-content .btn:hover{
+  box-shadow: 0 14px 30px rgba(15,23,42,.10);
+  background: #f8fafc;
+}
+
+/* ✅ icons inside buttons (fontawesome) */
+.notification-content .btn i{
+  font-size: 14px;
+}
+
+/* ✅ PREVIEW ROW (your blade uses another inline flex wrap too) */
+.notification-content div[style*="margin-top:10px"][style*="display:flex"]{
+  width: 100%;
+  justify-content: flex-start;
+}
+
+/* ✅ Turn previews into a grid (desktop) */
+.notification-content div[style*="margin-top:10px"][style*="display:flex"]{
+  display: grid !important;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px !important;
+}
+
+/* ✅ preview anchor behaves like a card */
+.notification-content div[style*="margin-top:10px"][style*="display:flex"] a{
+  display:block;
+  border-radius: 14px;
+  overflow:hidden;
+  border: 1px solid rgba(15,23,42,.10);
+  background:#f8fafc;
+  box-shadow: 0 10px 22px rgba(15,23,42,.06);
+  transition: transform .16s ease, box-shadow .16s ease;
+}
+
+.notification-content div[style*="margin-top:10px"][style*="display:flex"] a:hover{
+  box-shadow: 0 16px 34px rgba(15,23,42,.10);
+}
+
+/* ✅ image inside preview: consistent height + crop nicely */
+.notification-content div[style*="margin-top:10px"][style*="display:flex"] img{
+  width: 100% !important;
+  height: 110px !important;            /* ✅ fixed height */
+  object-fit: cover !important;
+  display:block;
+  border-radius: 0 !important;         /* card already rounded */
+  border: none !important;
+  background:#f3f4f6;
+}
+
+/* ================= RESPONSIVE ================= */
+
+/* tablet */
+@media (max-width: 900px){
+  .notification-container{ border-radius: 18px; }
+  .notification-item{ padding: 14px; }
+  .notification-content div[style*="margin-top:10px"][style*="display:flex"]{
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .notification-content div[style*="margin-top:10px"][style*="display:flex"] img{
+    height: 120px !important;
+  }
+}
+
+/* mobile */
+@media (max-width: 640px){
+  .notification-header{ align-items: flex-start; }
+
+  /* stack icon + content */
+  .notification-item{
     flex-direction: column;
-    gap: 6px;
-}
+    gap: 10px;
+  }
 
-.notification-item {
-    display: flex;
-    gap: 16px;
-    padding: 18px;
-    border-radius: 16px;
-    transition: all 0.25s ease;
-    cursor: pointer;
-    position: relative;
-}
-
-.notification-item:hover {
-    background: #f9fafb;
-}
-
-.notification-item.unread {
-    background: #eef5ff;
-    border-left: 5px solid #2563eb;
-}
-
-.notification-item.unread::after {
-    content: '';
-    width: 8px;
-    height: 8px;
-    background: #2563eb;
-    border-radius: 50%;
-    position: absolute;
-    top: 22px;
-    right: 18px;
-}
-
-.notification-icon {
-    min-width: 44px;
+  .notification-icon{
+    width: 44px;
     height: 44px;
-    border-radius: 50%;
-    display: flex;
+    min-width: 44px;
+    border-radius: 14px;
+  }
+
+  /* ✅ buttons become full width stacked */
+  .notification-content div[style*="margin-top:8px"][style*="display:flex"]{
+    display: grid !important;
+    grid-template-columns: 1fr;
+    gap: 10px !important;
+  }
+
+  .notification-content .btn{
+    width: 100%;
     justify-content: center;
-    align-items: center;
-    font-size: 18px;
-    color: #fff;
-    box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+    padding: 12px 14px;
+  }
+
+  /* ✅ previews become 2-column grid on mobile */
+  .notification-content div[style*="margin-top:10px"][style*="display:flex"]{
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px !important;
+  }
+
+  .notification-content div[style*="margin-top:10px"][style*="display:flex"] img{
+    height: 100px !important;
+  }
+
+  /* unread dot */
+  .notification-item.unread::after{
+    top: 14px;
+    right: 14px;
+  }
 }
 
-.icon-info { background: linear-gradient(135deg, #2563eb, #3b82f6); }
-.icon-success { background: linear-gradient(135deg, #16a34a, #22c55e); }
-.icon-warning { background: linear-gradient(135deg, #f59e0b, #fbbf24); }
-
-.notification-content h4 {
-    font-size: 15px;
-    font-weight: 600;
-    margin-bottom: 4px;
+/* tiny phones */
+@media (max-width: 380px){
+  .notification-content div[style*="margin-top:10px"][style*="display:flex"]{
+    grid-template-columns: 1fr; /* ✅ 1 column if sobrang liit */
+  }
+  .notification-content div[style*="margin-top:10px"][style*="display:flex"] img{
+    height: 160px !important;
+  }
 }
 
-.notification-content p {
-    font-size: 14px;
-    color: #4b5563;
-    line-height: 1.45;
-}
-
-.notification-time {
-    font-size: 12px;
-    color: #9ca3af;
-    margin-top: 6px;
-}
-
-@keyframes fadeUp {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
+/* animation */
+@keyframes fadeUp{
+  from{ opacity:0; transform: translateY(14px); }
+  to{ opacity:1; transform: translateY(0); }
 }

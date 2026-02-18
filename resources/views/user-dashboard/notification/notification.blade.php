@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Notifications</title>
+
 <link rel="icon" type="image/png" href="{{ asset('img/logo1-removebg-preview.png') }}">
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
 
@@ -15,6 +16,47 @@
 </head>
 
 <body>
+
+@php
+  
+  $docRoot = realpath($_SERVER['DOCUMENT_ROOT'] ?? '') ?: '';
+  $laravelPublic = realpath(public_path()) ?: '';
+
+  $publicRel = '';
+  if ($docRoot && $laravelPublic && str_starts_with($laravelPublic, $docRoot)) {
+      $publicRel = trim(str_replace($docRoot, '', $laravelPublic), DIRECTORY_SEPARATOR);
+      $publicRel = $publicRel ? str_replace(DIRECTORY_SEPARATOR, '/', $publicRel) : '';
+  }
+
+  $storageBasePath = '/' . ($publicRel ? trim($publicRel, '/') . '/' : '') . 'storage';
+  $storageBasePath = rtrim($storageBasePath, '/');
+
+  $fixStorageUrl = function (?string $maybeUrl) use ($storageBasePath) {
+      if (!$maybeUrl) return null;
+
+      $path = parse_url($maybeUrl, PHP_URL_PATH) ?? $maybeUrl;
+
+      $needle = '/storage/';
+      $pos = strpos($path, $needle);
+
+      if ($pos !== false) {
+          $rest = substr($path, $pos + strlen($needle));
+          return $storageBasePath . '/' . ltrim($rest, '/');
+      }
+
+      return $maybeUrl; 
+  };
+
+  $fromPath = function (?string $path) use ($storageBasePath) {
+      return $path ? $storageBasePath . '/' . ltrim($path, '/') : null;
+  };
+
+  $isImage = function (?string $url) {
+      if (!$url) return false;
+      $p = strtolower(parse_url($url, PHP_URL_PATH) ?? '');
+      return preg_match('/\.(jpe?g|png|gif|webp)$/i', $p) === 1;
+  };
+@endphp
 
 <div class="wrapper">
   @include('user-dashboard.partials-dashboard.sidebar')
@@ -50,7 +92,16 @@
                 default   => 'fa-circle-info',
               };
 
-              $meta = $n->meta ?? [];
+              $meta = is_array($n->meta) ? $n->meta : [];
+
+              $requestApprovalUrl = $fixStorageUrl($meta['request_approval_url'] ?? null)
+                                  ?? $fromPath($meta['request_approval_path'] ?? null);
+
+              $travelOrderUrl     = $fixStorageUrl($meta['travel_order_url'] ?? null)
+                                  ?? $fromPath($meta['travel_order_path'] ?? null);
+
+              $ticketUrl          = $fixStorageUrl($meta['registration_ticket_url'] ?? null)
+                                  ?? $fromPath($meta['registration_ticket_path'] ?? null);
             @endphp
 
             <div class="notification-item {{ $n->read_at ? '' : 'unread' }}">
@@ -62,26 +113,51 @@
                 <h4>{{ $n->title }}</h4>
                 <p>{{ $n->message }}</p>
 
-                {{-- ✅ Show file links if present --}}
-                <div style="margin-top:8px; display:flex; gap:10px; flex-wrap:wrap;  ">
-                  @if(!empty($meta['request_approval_url']))
-                    <a href="{{ $meta['request_approval_url'] }}" target="_blank" class="btn btn-sm btn-outline-secondary rounded-pill" style="text-decoration: none;">
-                      <i class="fa-solid fa-file-arrow-down me-1"></i> Request Approval
-                    </a>
-                  @endif
+                @php
+  // ✅ find which doc exists in meta (ISA LANG dapat per notif)
+  $docUrl = null;
+  $docLabel = null;
+  $docIcon = null;
 
-                  @if(!empty($meta['travel_order_url']))
-                    <a href="{{ $meta['travel_order_url'] }}" target="_blank" class="btn btn-sm btn-outline-secondary rounded-pill" style="text-decoration: none;">
-                      <i class="fa-solid fa-file-arrow-down me-1"></i> Travel Order
-                    </a>
-                  @endif
+  if (!empty($requestApprovalUrl)) {
+      $docUrl = $requestApprovalUrl;
+      $docLabel = 'Request Approval';
+      $docIcon = 'fa-file-arrow-down';
+  } elseif (!empty($travelOrderUrl)) {
+      $docUrl = $travelOrderUrl;
+      $docLabel = 'Travel Order';
+      $docIcon = 'fa-file-arrow-down';
+  } elseif (!empty($ticketUrl)) {
+      $docUrl = $ticketUrl;
+      $docLabel = 'Registration Ticket';
+      $docIcon = 'fa-ticket';
+  }
+@endphp
 
-                  @if(!empty($meta['registration_ticket_url']))
-                    <a href="{{ $meta['registration_ticket_url'] }}" target="_blank" class="btn btn-sm btn-outline-secondary rounded-pill" style="text-decoration: none;">
-                      <i class="fa-solid fa-ticket me-1"></i> Registration Ticket
-                    </a>
-                  @endif
-                </div>
+@if($docUrl)
+  {{-- ✅ ONE button only --}}
+  <div style="margin-top:8px; display:flex; gap:10px; flex-wrap:wrap;">
+    <a href="{{ $docUrl }}" target="_blank"
+       class="btn btn-sm btn-outline-secondary rounded-pill"
+       style="text-decoration:none;">
+      <i class="fa-solid {{ $docIcon }} me-1"></i> {{ $docLabel }}
+    </a>
+  </div>
+
+  {{-- ✅ ONE preview only (if image) --}}
+  @if($isImage($docUrl))
+    <div style="margin-top:10px; display:flex; gap:12px; flex-wrap:wrap;">
+      <a href="{{ $docUrl }}" target="_blank" style="text-decoration:none;">
+        <img src="{{ $docUrl }}"
+             alt="{{ $docLabel }}"
+             style="width:180px; height:auto; border-radius:12px; border:1px solid #e5e7eb; background:#f8fafc; display:block;"
+             loading="lazy"
+             onerror="this.style.display='none';">
+      </a>
+    </div>
+  @endif
+@endif
+
 
                 <div class="notification-time">
                   {{ $n->created_at->diffForHumans() }}

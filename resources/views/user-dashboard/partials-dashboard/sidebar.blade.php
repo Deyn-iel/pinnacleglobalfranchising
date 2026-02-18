@@ -36,7 +36,7 @@
                 <i class="fas fa-calendar-check"></i>
                 <span>Attendance</span>
                 @if($disabled)
-                    <small>soon</small>
+                    <small>Disabled</small>
                 @endif
             </a>
         </li> --}}
@@ -47,6 +47,17 @@
                 <span>Exam</span>
             </a>
         </li>
+
+        {{-- @php $disabled = true; @endphp
+        <li class="{{ $disabled ? 'disabled' : '' }}">
+            <a href="{{ $disabled ? 'javascript:void(0)' : route('attendance') }}">
+                <i class="fas fa-file-pen"></i>
+                <span>Exam</span>
+                @if($disabled)
+                    <small>Disabled</small>
+                @endif
+            </a>
+        </li> --}}
 
         <li class="{{ request()->routeIs('registration') ? 'active' : '' }}">
             <a href="{{ route('registration') }}">

@@ -7,8 +7,8 @@ use App\Models\CoffeeRegistration;
 use Illuminate\Http\Request;
 
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\Notification;
-use App\Notifications\CoffeeRegistrationConfirmed;
+// use Illuminate\Support\Facades\Notification;
+// use App\Notifications\CoffeeRegistrationConfirmed;
 use App\Models\UserNotification; // ✅ add this if mag-notify ka (optional)
 
 class CoffeeRegistrationController extends Controller
@@ -79,13 +79,12 @@ public function uploadDocuments(Request $request, CoffeeRegistration $reg)
         'travel_order'        => ['nullable','file','mimes:pdf,jpg,jpeg,png','max:5120'],
         'registration_ticket' => ['nullable','file','mimes:pdf,jpg,jpeg,png','max:5120'],
     ], [
-        // ✅ kapag na-block ng PHP upload limits, lumalabas madalas ito:
         'request_approval.uploaded'    => 'Request for Approval failed to upload (check file size / PHP upload settings).',
         'travel_order.uploaded'        => 'Travel Order failed to upload (check file size / PHP upload settings).',
         'registration_ticket.uploaded' => 'Registration Ticket failed to upload (check file size / PHP upload settings).',
     ]);
 
-    // ✅ IMPORTANT: kung walang kahit isang file na dumating sa server
+    // ✅ IMPORTANT: kung walang file na dumating
     if (
         !$request->hasFile('request_approval') &&
         !$request->hasFile('travel_order') &&
@@ -97,20 +96,25 @@ public function uploadDocuments(Request $request, CoffeeRegistration $reg)
     }
 
     $folder = "coffee-registrations/{$reg->id}";
+    $uploadedNow = []; // ✅ track only uploaded in THIS request
 
+    // ✅ Save each file (and mark which was uploaded now)
     if ($request->hasFile('request_approval')) {
         if ($reg->request_approval_path) Storage::disk('public')->delete($reg->request_approval_path);
         $reg->request_approval_path = $request->file('request_approval')->store($folder, 'public');
+        $uploadedNow[] = 'request_approval_path';
     }
 
     if ($request->hasFile('travel_order')) {
         if ($reg->travel_order_path) Storage::disk('public')->delete($reg->travel_order_path);
         $reg->travel_order_path = $request->file('travel_order')->store($folder, 'public');
+        $uploadedNow[] = 'travel_order_path';
     }
 
     if ($request->hasFile('registration_ticket')) {
         if ($reg->registration_ticket_path) Storage::disk('public')->delete($reg->registration_ticket_path);
         $reg->registration_ticket_path = $request->file('registration_ticket')->store($folder, 'public');
+        $uploadedNow[] = 'registration_ticket_path';
     }
 
     $reg->save();
@@ -118,48 +122,56 @@ public function uploadDocuments(Request $request, CoffeeRegistration $reg)
     // ✅ completion logic
     $complete = $reg->request_approval_path && $reg->travel_order_path && $reg->registration_ticket_path;
 
+    // ✅ if naging complete ngayon (optional)
     if ($complete && !$reg->completed_at) {
         $reg->completed_at = now();
         $reg->save();
     }
 
-// ✅ create meta URLs para match sa blade keys
-$meta = [
-    'request_approval_url' => $reg->request_approval_path
-        ? Storage::url($reg->request_approval_path)
-        : null,
+    // ✅ map per document (ONE notif per uploaded doc)
+    $notifMap = [
+        'request_approval_path' => [
+            'url_key'  => 'request_approval_url',
+            'title'    => 'HR Docs Updated',
+            'message'  => 'Request Approval document was uploaded/updated.',
+            'type'     => 'info',
+        ],
+        'travel_order_path' => [
+            'url_key'  => 'travel_order_url',
+            'title'    => 'HR Docs Updated',
+            'message'  => 'Travel Order document was uploaded/updated.',
+            'type'     => 'info',
+        ],
+        'registration_ticket_path' => [
+            'url_key'  => 'registration_ticket_url',
+            'title'    => 'HR Docs Updated',
+            'message'  => 'Registration Ticket was uploaded/updated.',
+            'type'     => 'info',
+        ],
+    ];
 
-    'travel_order_url' => $reg->travel_order_path
-        ? Storage::url($reg->travel_order_path)
-        : null,
+    // ✅ Create notifications ONLY for uploaded docs in THIS request
+    foreach ($uploadedNow as $pathKey) {
+        $cfg = $notifMap[$pathKey];
 
-    'registration_ticket_url' => $reg->registration_ticket_path
-        ? Storage::url($reg->registration_ticket_path)
-        : null,
-];
+        UserNotification::create([
+            'user_id' => $reg->user_id,
+            'type' => $cfg['type'],
+            'title' => $cfg['title'],
+            'message' => $cfg['message'],
+            'coffee_registration_id' => $reg->id,
+            'meta' => [
+                $cfg['url_key'] => Storage::url($reg->{$pathKey}),
+            ],
+            'read_at' => null,
+        ]);
+    }
 
-// tanggalin null values
-$meta = array_filter($meta);
-
-// ✅ create notification for the applicant user
-UserNotification::create([
-    'user_id' => $reg->user_id,                      // IMPORTANT: applicant user
-    'type' => $complete ? 'success' : 'info',
-    'title' => $complete ? 'HR Docs Complete' : 'HR Docs Updated',
-    'message' => $complete
-        ? 'All HR documents are uploaded. Please wait for confirmation / final instructions.'
-        : 'Some HR documents were uploaded/updated. Please check the attachments.',
-    'coffee_registration_id' => $reg->id,
-    'meta' => $meta,
-    'read_at' => null,                               // para unread siya sa user
-]);
-
-
-    // ✅ better redirect: balik ka sa admin panel mo mismo
     return redirect()
         ->route('admin.coffee-registrations.index', ['selected' => $reg->id])
         ->with('success', 'Documents uploaded/updated successfully.');
 }
+
 
 
 }
