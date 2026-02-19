@@ -12,7 +12,7 @@
   @vite([
     'resources/css/user-dashboard/app.css',
     'resources/js/user-dashboard/app.js',
-    'resources/css/user-dashboard/registration.css'
+    'resources/css/registration/app.css'
   ])
 </head>
 

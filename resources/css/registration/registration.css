@@ -155,9 +155,9 @@
     .ud-card{
       background: var(--card);
       border: 1px solid var(--stroke);
-      border-radius: var(--radius);
+      border-radius: var(--radius) !important;
       box-shadow: var(--shadow);
-      padding: var(--pad-card);
+      padding: var(--pad-card) !important;
       min-width: 0;
       transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease;
       position: relative;

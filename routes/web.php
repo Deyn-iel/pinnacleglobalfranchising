@@ -37,6 +37,7 @@ use App\Http\Controllers\User\CoffeeRegistrationController as UserCoffeeReg;
 use App\Http\Controllers\Admin\CoffeeRegistrationController as AdminCoffeeReg;
 use App\Http\Controllers\Admin\CoffeeRegistrationController;
 use App\Http\Controllers\User\NotificationController;
+use App\Http\Controllers\Admin\UserEmailController;
 
 Route::middleware(['auth','hr.access'])
   ->prefix('hr')
@@ -235,6 +236,12 @@ Route::middleware(['auth', 'admin', 'admin.desktop'])
     ->prefix('admin')
     ->name('admin.')
     ->group(function () {
+
+     Route::get('/users-account-email', [UserEmailController::class, 'create'])
+        ->name('users.email');
+
+    Route::post('/users-account-email', [UserEmailController::class, 'send'])
+        ->name('users.email.send');
         
     Route::post('/coffee-registrations/{reg}/documents', [AdminCoffeeReg::class, 'uploadDocuments'])
     ->name('coffee-registrations.documents');

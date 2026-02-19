@@ -60,7 +60,8 @@
     <form method="GET" action="{{ route('proceed') }}">
         <button type="submit"
                 class="btn"
-                id="proceedBtn">
+                id="proceedBtn"
+                disabled>
             Proceed
         </button>
     </form>

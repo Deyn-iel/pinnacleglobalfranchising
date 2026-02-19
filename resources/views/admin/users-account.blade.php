@@ -213,6 +213,10 @@
        class="btn btn-primary mt-4">
         <i class="fas fa-user-plus me-2"></i>Register a User
     </a>
+    <a href="{{ route('admin.users.email') }}" class="btn btn-primary mt-4">
+  <i class="fa-solid fa-envelope me-2"></i>Email a User
+</a>
+
 
 </main>
 

@@ -102,7 +102,7 @@
 </div>
                       <!-- Meta -->
                       <div style="margin-top:14px; border-top:1px solid #e5e7eb; padding-top:12px; font-size:13px; color:#374151;">
-                        <div style="margin-bottom:4px;"><strong>Submitted By (User ID):</strong> {{ $ticket->user_id }}</div>
+                        {{-- <div style="margin-bottom:4px;"><strong>Submitted By (User ID):</strong> {{ $ticket->user_id }}</div> --}}
                         <div><strong>Submitted At:</strong> {{ optional($ticket->created_at)->format('M d, Y h:i A') }}</div>
                       <!-- Footer -->
                 <div style="text-align:center; color:#6b7280; font-size:12px; margin-top:14px; padding:0 8px;">
