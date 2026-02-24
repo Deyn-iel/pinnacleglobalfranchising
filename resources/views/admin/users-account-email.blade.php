@@ -116,7 +116,7 @@
                 <div class="col-12">
                     <label class="form-label fw-semibold">Email Type</label>
                     <select name="type" class="form-select">
-                        <option value="reset" {{ old('type') === 'reset' ? 'selected' : '' }}>Password Reset Link</option>
+                        <option value="reset" {{ old('type') === 'reset' ? 'selected' : '' }}>Password Activate Link</option>
                     </select>
                     <div class="form-text">
                         “Invite” is useful for newly created accounts. “Reset” is for existing users who forgot their password.

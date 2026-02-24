@@ -19,31 +19,27 @@ class UserManagementController extends Controller
 }
 
     public function store(Request $request)
-    {
-        dd($request->all());
-        
-        $request->validate([
-            'name'  => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email',
-            'usertype' => 'required|in:admin,user,supplies,ticket',
-        ]);
+{
+    $request->validate([
+        'name'     => 'required|string|max:255',
+        'email'    => 'required|email|unique:users,email',
+        'usertype' => 'required|in:admin,user,supplies,ticket,portal',
+    ]);
 
+    $plainPassword = Str::random(10);
 
-        // 🔐 AUTO-GENERATE PASSWORD
-        $plainPassword = Str::random(10);
+    User::create([
+        'name'          => $request->name,
+        'email'         => $request->email,
+        'password'      => Hash::make($plainPassword),
+        'temp_password' => $plainPassword,
+        'usertype'      => $request->usertype, // ✅ portal mase-save
+    ]);
 
-        User::create([
-            'name'          => $request->name,
-            'email'         => $request->email,
-            'password'      => Hash::make($plainPassword), // ✅ FIX
-            'temp_password' => $plainPassword,              // ✅ FIX
-            'usertype' => $request->usertype,
-        ]);
-
-        return redirect()
-            ->route('admin.users-account')
-            ->with('success', 'User registered successfully! Temporary Password: ' . $plainPassword);
-    }
+    return redirect()
+        ->route('admin.users-account')
+        ->with('success', 'User registered successfully! Temporary Password: ' . $plainPassword);
+}
 
     public function destroy($id)
     {

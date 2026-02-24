@@ -27,6 +27,14 @@ class RedirectIfAuthenticated
                     return redirect()->route('supplies.supplies-dashboard');
                 }
 
+                if ($user->usertype === 'ticket') {
+                    return redirect()->route('tickets.dashboard');
+                }
+
+                if ($user->usertype === 'portal') {
+                    return redirect()->route('portal.dashboard');
+                }
+
                 return redirect()->route('dashboard');
             }
         }

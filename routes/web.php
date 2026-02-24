@@ -39,6 +39,14 @@ use App\Http\Controllers\Admin\CoffeeRegistrationController;
 use App\Http\Controllers\User\NotificationController;
 use App\Http\Controllers\Admin\UserEmailController;
 
+
+Route::middleware(['auth', 'role:portal'])
+    ->prefix('portal')
+    ->name('portal.')
+    ->group(function () {
+        Route::view('/dashboard', 'universal-portal.portal')->name('dashboard');
+    });
+    
 Route::middleware(['auth','hr.access'])
   ->prefix('hr')
   ->name('hr.')
@@ -93,14 +101,18 @@ Route::get('/redirect-after-login', function () {
     $user = Auth::user();
 
     if ($user->usertype === 'admin') {
-        return redirect()->route('admin.dashboard');
-    }
+    return redirect()->route('admin.dashboard');
+}
 
-    if ($user->usertype === 'supplies') {
-        return redirect()->route('supplies.supplies-dashboard');
-    }
+if ($user->usertype === 'supplies') {
+    return redirect()->route('supplies.supplies-dashboard');
+}
 
-    return redirect()->route('dashboard'); // normal user
+if ($user->usertype === 'ticket') {
+    return redirect()->route('tickets.dashboard');
+}
+
+return redirect()->route('dashboard');
 })->middleware('auth');
 
 
@@ -143,7 +155,7 @@ Route::post('/exam/save-progress', [ExamController::class, 'saveProgress'])
 Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::get('/dashboard', [UserDashboardController::class, 'index'])
-    ->middleware(['auth', 'verified'])
+    ->middleware(['auth', 'verified', 'redirect.dashboard.role', 'noback'])
     ->name('dashboard');
 
      Route::get(
@@ -345,6 +357,8 @@ Route::post('/users/register', [AdminUserController::class, 'store'])
 Route::view('/', 'admin.admin')->name('dashboard');
 
 Route::view('/application', 'admin.application')->name('application');
+
+Route::view('/admin-universal-portal/admin-portal', 'admin.admin-universal-portal.admin-portal')->name('admin-portal');
 
 Route::get('/requirements', [RequirementController::class, 'index'])
     ->name('requirements');

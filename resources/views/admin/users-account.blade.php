@@ -164,7 +164,9 @@
             ? 'bg-info'
             : ($user->usertype === 'ticket'
                 ? 'bg-warning text-light'
-                : 'bg-secondary')) }}">
+                : ($user->usertype === 'portal'
+                    ? 'bg-success text-light'
+                    : 'bg-secondary'))) }}">
     {{ ucfirst($user->usertype) }}
 </span>
 

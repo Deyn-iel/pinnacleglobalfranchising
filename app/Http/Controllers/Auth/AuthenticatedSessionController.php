@@ -48,6 +48,10 @@ class AuthenticatedSessionController extends Controller
         return redirect()->route('tickets.dashboard');
     }
 
+    if ($user->usertype === 'portal') {
+    return redirect()->route('portal.dashboard');
+}
+
 
     return redirect()->route('dashboard'); // normal user
 }

@@ -349,6 +349,54 @@ body {
     border: 2px solid #0d3553;
 }
 
+.notification-icon{
+    position: relative;
+    width: 42px;
+    height: 42px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 14px; /* modern */
+    color: #0d3553;
+    text-decoration: none;
+    background: #f8fafc;
+    border: 1px solid rgba(13, 53, 83, 0.12);
+    box-shadow: 0 6px 16px rgba(15, 23, 42, 0.06);
+    transition: transform .18s ease, box-shadow .18s ease, background .18s ease;
+}
+
+.notification-icon i{
+    font-size: 18px;
+    transition: transform .18s ease;
+}
+
+.notification-icon:hover{
+    transform: translateY(-1px);
+    box-shadow: 0 10px 22px rgba(15, 23, 42, 0.10);
+    background: #ffffff;
+}
+
+.notification-icon:hover i{
+    transform: rotate(-10deg);
+}
+
+.notif-badge{
+    position: absolute;
+    top: -6px;
+    right: -6px;
+    background: #ef4444;
+    color: #fff;
+    font-size: 11px;
+    font-weight: 800;
+    padding: 4px 7px;
+    border-radius: 999px;
+    min-width: 20px;
+    text-align: center;
+    line-height: 1;
+    border: 2px solid #fff;
+    box-shadow: 0 10px 20px rgba(239, 68, 68, 0.35);
+}
+
 /* ================= CONTENT ================= */
 .content {
     padding: 25px;

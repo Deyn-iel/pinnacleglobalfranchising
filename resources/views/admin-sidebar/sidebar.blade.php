@@ -20,10 +20,10 @@
         </li>
 
         <li class="nav-item">
-            <a href="{{ route('admin.attendance') }}"
-               class="nav-link {{ request()->routeIs('admin.attendance') ? 'active' : '' }}">
-                <i class="fas fa-calendar-check"></i>
-                <span>Attendance</span>
+            <a href="{{ route('admin.admin-portal') }}"
+               class="nav-link {{ request()->routeIs('admin.admin-portal') ? 'active' : '' }}">
+                <i class="fas fa-building"></i>
+                <span>Third Party Admin</span>
             </a>
         </li>
 
@@ -102,6 +102,14 @@
         </li>
 
         <li class="nav-section">MANAGEMENT</li>
+
+        <li class="nav-item">
+            <a href="{{ route('admin.attendance') }}"
+               class="nav-link {{ request()->routeIs('admin.attendance') ? 'active' : '' }}">
+                <i class="fas fa-calendar-check"></i>
+                <span>Attendance</span>
+            </a>
+        </li>
 
         <li class="nav-item">
             <a href="{{ route('admin.application') }}"
