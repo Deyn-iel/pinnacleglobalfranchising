@@ -48,18 +48,29 @@
             </a>
         </li>
 
-        {{-- @php $disabled = true; @endphp
+        @php $disabled = true; @endphp
         <li class="{{ $disabled ? 'disabled' : '' }}">
             <a href="{{ $disabled ? 'javascript:void(0)' : route('attendance') }}">
-                <i class="fas fa-file-pen"></i>
-                <span>Exam</span>
+                <i class="fa-solid fa-pen-to-square"></i>
+                <span>Register</span>
                 @if($disabled)
                     <small>Disabled</small>
                 @endif
             </a>
-        </li> --}}
+        </li>
 
-        <li class="{{ request()->routeIs('registration') ? 'active' : '' }}">
+        @php $disabled = true; @endphp
+        <li class="{{ $disabled ? 'disabled' : '' }}">
+            <a href="{{ $disabled ? 'javascript:void(0)' : route('attendance') }}">
+                <i class="fas fa-bell"></i>
+                <span>Notifications</span>
+                @if($disabled)
+                    <small>Disabled</small>
+                @endif
+            </a>
+        </li>
+
+        {{-- <li class="{{ request()->routeIs('registration') ? 'active' : '' }}">
             <a href="{{ route('registration') }}">
                 <i class="fa-solid fa-pen-to-square"></i>
                 <span>Register</span>
@@ -71,7 +82,7 @@
                 <i class="fas fa-bell"></i>
                 <span>Notifications</span>
             </a>
-        </li>
+        </li> --}}
         
         <li class="{{ request()->routeIs('profile.*') ? 'active' : '' }}">
             <a href="{{ route('profile.edit') }}">

@@ -181,7 +181,7 @@
         </button>
         <button data-nav="analysis" class="navBtnMobile w-full px-3 py-3 rounded-xl text-left text-sm font-semibold border bg-white hover:bg-slate-50 dark:bg-slate-900 dark:border-slate-800 dark:hover:bg-slate-900/60">
           <i class="fa-solid fa-chart-column mr-2"></i> Analysis Sheet
-        </button>
+        </button> 
         <button data-nav="soa" class="navBtnMobile w-full px-3 py-3 rounded-xl text-left text-sm font-semibold border bg-white hover:bg-slate-50 dark:bg-slate-900 dark:border-slate-800 dark:hover:bg-slate-900/60">
           <i class="fa-solid fa-receipt mr-2"></i> Statement of Account
         </button>
@@ -894,7 +894,7 @@
                 <div class="md:col-span-1">
                   <label class="text-xs font-semibold text-slate-600 dark:text-slate-300">Claim Occurrence</label>
 
-                <input type="hidden" name="claimOccurrence" id="claimOccurrenceHidden" value="{{ old('claimOccurrence','1') }}">
+                
 
                 <select id="claimOccurrence" class="ui-select mt-1" disabled>
                   <option value="1" @selected(old('claimOccurrence')=='1')>1st time</option>
@@ -1231,939 +1231,826 @@
   </main>
 
   <script>
-(() => {
-  "use strict";
+/* =========================================================
+   HELPERS
+========================================================= */
+function peso(n){
+  return "₱ " + (Number(n||0)).toLocaleString(undefined,{minimumFractionDigits:2, maximumFractionDigits:2});
+}
 
-  /* =========================================================
-     HELPERS
-  ========================================================= */
-  function peso(n) {
-    return (
-      "₱ " +
-      Number(n || 0).toLocaleString(undefined, {
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2,
-      })
-    );
+function toast(msg){
+  const t = document.getElementById("toast");
+  const m = document.getElementById("toastMsg");
+  if(!t || !m) return;
+  m.textContent = msg;
+  t.classList.remove("hidden");
+  clearTimeout(window.__toastTimer);
+  window.__toastTimer = setTimeout(()=>t.classList.add("hidden"), 2200);
+}
+
+function yearsBetween(dateStr){
+  const d = new Date(dateStr);
+  const now = new Date();
+  let age = now.getFullYear() - d.getFullYear();
+  const m = now.getMonth() - d.getMonth();
+  if (m < 0 || (m===0 && now.getDate() < d.getDate())) age--;
+  return age;
+}
+
+function escapeHtml(str){
+  return String(str || "")
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;")
+    .replaceAll("'","&#039;");
+}
+
+/* =========================================================
+   PREMIUM THEME TOGGLE
+========================================================= */
+function setTheme(isDark){
+  document.documentElement.classList.toggle("dark", !!isDark);
+  localStorage.setItem("pg_theme", isDark ? "dark" : "light");
+  updateWatermark();
+}
+function toggleTheme(){
+  setTheme(!document.documentElement.classList.contains("dark"));
+}
+function initThemeToggles(){
+  const a = document.getElementById("themeToggle");
+  const b = document.getElementById("themeToggleMobile");
+  if(a) a.addEventListener("click", toggleTheme);
+  if(b) b.addEventListener("click", toggleTheme);
+}
+window.toggleTheme = toggleTheme;
+
+/* =========================================================
+   NAV + PREMIUM MOBILE DRAWER ANIMATION
+========================================================= */
+function toggleMobile(open){
+  const overlay = document.getElementById("mobileOverlay");
+  const panel = document.getElementById("mobilePanel");
+  if(!overlay || !panel) return;
+
+  if(open){
+    overlay.classList.remove("hidden");
+    requestAnimationFrame(()=>{
+      overlay.classList.add("opacity-100");
+      panel.classList.remove("-translate-x-full");
+      document.body.style.overflow = "hidden";
+    });
+  } else {
+    overlay.classList.remove("opacity-100");
+    panel.classList.add("-translate-x-full");
+    document.body.style.overflow = "";
+    setTimeout(()=> overlay.classList.add("hidden"), 200);
+  }
+}
+window.toggleMobile = toggleMobile;
+
+function go(page){
+  ["home","lodge","analysis","soa","company"].forEach(p=>{
+    const el = document.getElementById(`page-${p}`);
+    if(el) el.classList.toggle("hidden", p!==page);
+  });
+
+  document.querySelectorAll(".navBtn").forEach(btn=>{
+    const active = btn.dataset.nav === page;
+    btn.className =
+      "navBtn px-3 py-2 rounded-xl text-sm font-semibold transition " +
+      (active
+        ? "bg-slate-900 text-white dark:bg-white dark:text-slate-900"
+        : "bg-white/70 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 hover:bg-white dark:hover:bg-slate-900");
+  });
+
+  document.querySelectorAll(".navBtnMobile").forEach(btn=>{
+    const active = btn.dataset.nav === page;
+    btn.className =
+      "navBtnMobile w-full px-3 py-3 rounded-xl text-left text-sm font-semibold border transition " +
+      (active
+        ? "bg-slate-900 text-white dark:bg-white dark:text-slate-900 dark:border-white"
+        : "bg-white hover:bg-slate-50 dark:bg-slate-900 dark:border-slate-800 dark:hover:bg-slate-900/60");
+  });
+
+  toggleMobile(false);
+  window.scrollTo({top:0, behavior:"smooth"});
+}
+window.go = go;
+
+/* =========================================================
+   WEB COMPONENT: upload-field
+========================================================= */
+class UploadField extends HTMLElement {
+  connectedCallback(){
+    const label = this.getAttribute("label") || "Upload";
+    const req = this.hasAttribute("required");
+    const name = this.getAttribute("name") || "";
+    const multiple = this.hasAttribute("multiple");
+
+    this.innerHTML = `
+      <div class="rounded-2xl border border-slate-200 dark:border-slate-800 p-4 bg-white/60 dark:bg-slate-950/20 hover:bg-slate-50/70 dark:hover:bg-slate-900/30 transition">
+        <div class="flex items-start justify-between gap-3">
+          <div class="min-w-0">
+            <div class="text-sm font-semibold">
+              ${escapeHtml(label)} ${req?'<span class="text-rose-600 dark:text-rose-300">*</span>':''}
+            </div>
+            <div class="text-xs text-slate-500 dark:text-slate-400">${req?'Mandatory':'Optional'}</div>
+          </div>
+          <div class="h-10 w-10 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 grid place-items-center shrink-0">
+            <i class="fa-solid fa-paperclip text-slate-700 dark:text-slate-200"></i>
+          </div>
+        </div>
+
+        <input ${req?'required':''}
+               type="file"
+               ${multiple?'multiple':''}
+               name="${escapeHtml(name)}${multiple ? '[]' : ''}"
+               class="mt-3 w-full rounded-xl border border-slate-200 dark:border-slate-800 px-3 py-2.5 text-sm bg-white dark:bg-slate-900/60" />
+      </div>
+    `;
+  }
+}
+if(!customElements.get("upload-field")){
+  customElements.define("upload-field", UploadField);
+}
+
+/* =========================================================
+   WEB COMPONENT: info-tooltip (hover + tap-friendly)
+========================================================= */
+class InfoTooltip extends HTMLElement {
+  connectedCallback() {
+    const text = this.getAttribute("text") || "Reminder details here.";
+    const wide = this.getAttribute("wide") || "w-72";
+    const pos = (this.getAttribute("pos") || "right").toLowerCase();
+    const isRight = pos === "right";
+
+    const bubbleRight = `absolute left-full ml-2 top-1/2 -translate-y-1/2 ${wide}`;
+    const arrowRight  = `absolute left-[-6px] top-1/2 -translate-y-1/2 h-3 w-3 rotate-45 bg-slate-900 dark:bg-white`;
+
+    const bubbleBottom = `absolute left-1/2 -translate-x-1/2 top-full mt-2 ${wide}`;
+    const arrowBottom  = `absolute -top-1 left-1/2 -translate-x-1/2 h-2 w-2 rotate-45 bg-slate-900 dark:bg-white`;
+
+    this.innerHTML = `
+      <div class="relative inline-flex align-middle">
+        <button type="button"
+          class="h-8 w-8 rounded-full bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-xs font-extrabold text-slate-700 dark:text-slate-200
+                 hover:bg-slate-900 hover:text-white dark:hover:bg-white dark:hover:text-slate-900 transition"
+          aria-label="Info tooltip">
+          ?
+        </button>
+
+        <div class="tip ${isRight ? bubbleRight : bubbleBottom}
+                    p-3 rounded-xl bg-slate-900 text-white dark:bg-white dark:text-slate-900 text-xs leading-relaxed
+                    opacity-0 translate-y-1 pointer-events-none transition duration-200 z-50 shadow-xl">
+          <div class="${isRight ? arrowRight : arrowBottom}"></div>
+          ${text}
+        </div>
+      </div>
+    `;
+
+    const btn = this.querySelector("button");
+    const tip = this.querySelector(".tip");
+
+    const show = ()=>{ tip.classList.remove("opacity-0","translate-y-1","pointer-events-none"); tip.classList.add("opacity-100","translate-y-0","pointer-events-auto"); };
+    const hide = ()=>{ tip.classList.add("opacity-0","translate-y-1","pointer-events-none"); tip.classList.remove("opacity-100","translate-y-0","pointer-events-auto"); };
+
+    // hover for desktop
+    this.addEventListener("mouseenter", show);
+    this.addEventListener("mouseleave", hide);
+
+    // tap/click for mobile
+    btn.addEventListener("click", (e)=>{
+      e.stopPropagation();
+      const opened = tip.classList.contains("opacity-100");
+      opened ? hide() : show();
+    });
+    document.addEventListener("click", hide);
+  }
+}
+if(!customElements.get("info-tooltip")){
+  customElements.define("info-tooltip", InfoTooltip);
+}
+
+/* =========================================================
+   LODGE: Dependent toggle + rules text
+========================================================= */
+function initDependentBox(){
+  const depBox = document.getElementById("dependentBox");
+  if(!depBox) return;
+
+  function sync(){
+    const checked = document.querySelector("input[name='claimType']:checked");
+    const show = checked && checked.value === "Dependent's Claim";
+    depBox.classList.toggle("hidden", !show);
   }
 
-  function toast(msg) {
-    const t = document.getElementById("toast");
-    const m = document.getElementById("toastMsg");
-    if (!t || !m) return;
-    m.textContent = msg;
-    t.classList.remove("hidden");
-    clearTimeout(window.__toastTimer);
-    window.__toastTimer = setTimeout(() => t.classList.add("hidden"), 2200);
+  document.querySelectorAll("input[name='claimType']").forEach(r=>{
+    r.addEventListener("change", sync);
+  });
+
+  const depRel = document.getElementById("depRel");
+  const depRule = document.getElementById("depRule");
+  if(depRel && depRule){
+    depRel.addEventListener("change", ()=>{
+      depRule.textContent =
+        depRel.value==="Children"
+          ? "Accepted If children: 14–21 years old only"
+          : "Accepted If spouse/parent: 18–65 years old only";
+    });
   }
 
-  function yearsBetween(dateStr) {
-    const d = new Date(dateStr);
-    const now = new Date();
-    let age = now.getFullYear() - d.getFullYear();
-    const m = now.getMonth() - d.getMonth();
-    if (m < 0 || (m === 0 && now.getDate() < d.getDate())) age--;
-    return age;
+  sync();
+}
+
+/* =========================================================
+   LODGE: Major Medical box + duration compute
+========================================================= */
+function computeDuration(){
+  const tin = document.getElementById("timeIn")?.value;
+  const tout = document.getElementById("timeOut")?.value;
+
+  const dt = document.getElementById("durationText");
+  if(!tin || !tout){
+    if(dt) dt.textContent = "—";
+    return null;
   }
 
-  function escapeHtml(str) {
-    return String(str || "")
-      .replaceAll("&", "&amp;")
-      .replaceAll("<", "&lt;")
-      .replaceAll(">", "&gt;")
-      .replaceAll('"', "&quot;")
-      .replaceAll("'", "&#039;");
+  const [h1,m1] = tin.split(":").map(Number);
+  const [h2,m2] = tout.split(":").map(Number);
+
+  const mins1 = h1*60 + m1;
+  let mins2 = h2*60 + m2;
+
+  // ✅ support overnight (same as backend addDay)
+  if(mins2 <= mins1){
+    mins2 += 24*60;
   }
 
-  /* =========================================================
-     THEME (fix: init from localStorage + safe toggles)
-  ========================================================= */
-  function setTheme(isDark) {
-    document.documentElement.classList.toggle("dark", !!isDark);
-    localStorage.setItem("pg_theme", isDark ? "dark" : "light");
-    updateWatermark();
-  }
+  const diff = mins2 - mins1;
+  const hrs = Math.floor(diff/60);
+  const mins = diff%60;
 
-  function toggleTheme() {
-    setTheme(!document.documentElement.classList.contains("dark"));
-  }
+  if(dt) dt.textContent = `${hrs}h ${mins}m` + (mins2 >= 24*60 ? " (overnight)" : "");
+  return diff/60;
+}
 
-  function initTheme() {
-    const saved = localStorage.getItem("pg_theme");
-    if (saved === "dark") setTheme(true);
-    else if (saved === "light") setTheme(false);
-    // else keep default (light)
-  }
+function initMajorMedicalUI(){
+  const majorBox = document.getElementById("majorMedicalBox");
+  if(!majorBox) return;
 
-  function initThemeToggles() {
-    const desktop = document.getElementById("themeToggle"); // optional
-    const mobile = document.getElementById("themeToggleMobile");
-    if (desktop) desktop.addEventListener("click", toggleTheme);
-    if (mobile) mobile.addEventListener("click", toggleTheme);
-  }
-
-  window.toggleTheme = toggleTheme;
-
-  /* =========================================================
-     MOBILE DRAWER (fix: opacity classes)
-  ========================================================= */
-  function toggleMobile(open) {
-    const overlay = document.getElementById("mobileOverlay");
-    const panel = document.getElementById("mobilePanel");
-    if (!overlay || !panel) return;
-
-    if (open) {
-      overlay.classList.remove("hidden");
-      // ensure correct opacity
-      overlay.classList.remove("opacity-0");
-      requestAnimationFrame(() => {
-        overlay.classList.add("opacity-100");
-        panel.classList.remove("-translate-x-full");
-        document.body.style.overflow = "hidden";
-      });
+  function sync(){
+    const selected = document.querySelector("input[name='benefit']:checked")?.value || "";
+    majorBox.classList.toggle("hidden", selected !== "Major Medical");
+    if(selected !== "Major Medical"){
+      const dt = document.getElementById("durationText");
+      if(dt) dt.textContent = "—";
     } else {
-      overlay.classList.remove("opacity-100");
-      overlay.classList.add("opacity-0");
-      panel.classList.add("-translate-x-full");
-      document.body.style.overflow = "";
-      setTimeout(() => overlay.classList.add("hidden"), 200);
+      computeDuration();
     }
   }
-  window.toggleMobile = toggleMobile;
 
-  /* =========================================================
-     NAV
-  ========================================================= */
-  function go(page) {
-    ["home", "lodge", "analysis", "soa", "company"].forEach((p) => {
-      const el = document.getElementById(`page-${p}`);
-      if (el) el.classList.toggle("hidden", p !== page);
-    });
+  document.querySelectorAll("input[name='benefit']").forEach(r=>{
+    r.addEventListener("change", sync);
+  });
 
-    document.querySelectorAll(".navBtn").forEach((btn) => {
-      const active = btn.dataset.nav === page;
-      btn.className =
-        "navBtn px-3 py-2 rounded-xl text-sm font-semibold transition " +
-        (active
-          ? "bg-slate-900 text-white dark:bg-white dark:text-slate-900"
-          : "bg-white/70 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 hover:bg-white dark:hover:bg-slate-900");
-    });
+  ["timeIn","timeOut"].forEach(id=>{
+    const el = document.getElementById(id);
+    if(el) el.addEventListener("change", computeDuration);
+  });
 
-    document.querySelectorAll(".navBtnMobile").forEach((btn) => {
-      const active = btn.dataset.nav === page;
-      btn.className =
-        "navBtnMobile w-full px-3 py-3 rounded-xl text-left text-sm font-semibold border transition " +
-        (active
-          ? "bg-slate-900 text-white dark:bg-white dark:text-slate-900 dark:border-white"
-          : "bg-white hover:bg-slate-50 dark:bg-slate-900 dark:border-slate-800 dark:hover:bg-slate-900/60");
-    });
+  sync();
+}
 
-    toggleMobile(false);
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  }
-  window.go = go;
+/* =========================================================
+   LODGE: Receipt Lines + hidden JSON
+========================================================= */
+const receiptLines = [];
 
-  /* =========================================================
-     WEB COMPONENT: upload-field
-  ========================================================= */
-  class UploadField extends HTMLElement {
-    connectedCallback() {
-      const label = this.getAttribute("label") || "Upload";
-      const req = this.hasAttribute("required");
-      const name = this.getAttribute("name") || "";
-      const multiple = this.hasAttribute("multiple");
-
-      this.innerHTML = `
-        <div class="rounded-2xl border border-slate-200 dark:border-slate-800 p-4 bg-white/60 dark:bg-slate-950/20 hover:bg-slate-50/70 dark:hover:bg-slate-900/30 transition">
-          <div class="flex items-start justify-between gap-3">
-            <div class="min-w-0">
-              <div class="text-sm font-semibold">
-                ${escapeHtml(label)} ${req ? '<span class="text-rose-600 dark:text-rose-300">*</span>' : ""}
-              </div>
-              <div class="text-xs text-slate-500 dark:text-slate-400">${req ? "Mandatory" : "Optional"}</div>
-            </div>
-            <div class="h-10 w-10 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 grid place-items-center shrink-0">
-              <i class="fa-solid fa-paperclip text-slate-700 dark:text-slate-200"></i>
-            </div>
-          </div>
-
-          <input ${req ? "required" : ""}
-                type="file"
-                ${multiple ? "multiple" : ""}
-                name="${escapeHtml(name)}${multiple ? "[]" : ""}"
-                class="mt-3 w-full rounded-xl border border-slate-200 dark:border-slate-800 px-3 py-2.5 text-sm bg-white dark:bg-slate-900/60" />
-        </div>
-      `;
+function hydrateReceiptLinesFromHidden(){
+  const jsonEl = document.getElementById("receiptLinesJson");
+  if(!jsonEl) return;
+  try{
+    const arr = JSON.parse(jsonEl.value || "[]");
+    if(Array.isArray(arr)){
+      receiptLines.length = 0;
+      arr.forEach(x=>receiptLines.push(x));
+      const cnt = document.getElementById("receiptCount");
+      if(cnt) cnt.textContent = `${receiptLines.length} item(s)`;
     }
-  }
-  if (!customElements.get("upload-field")) {
-    customElements.define("upload-field", UploadField);
-  }
+  }catch(e){}
+}
 
-  /* =========================================================
-     WEB COMPONENT: info-tooltip
-  ========================================================= */
-  class InfoTooltip extends HTMLElement {
-    connectedCallback() {
-      const text = this.getAttribute("text") || "Reminder details here.";
-      const wide = this.getAttribute("wide") || "w-72";
-      const pos = (this.getAttribute("pos") || "right").toLowerCase();
-      const isRight = pos === "right";
+function addReceiptLine(){
+  const cat = document.getElementById("receiptCategory")?.value || "";
+  const desc = (document.getElementById("receiptDesc")?.value || "").trim();
+  const amt = Number(document.getElementById("receiptAmount")?.value || 0);
 
-      const bubbleRight = `absolute left-full ml-2 top-1/2 -translate-y-1/2 ${wide}`;
-      const arrowRight = `absolute left-[-6px] top-1/2 -translate-y-1/2 h-3 w-3 rotate-45 bg-slate-900 dark:bg-white`;
-
-      const bubbleBottom = `absolute left-1/2 -translate-x-1/2 top-full mt-2 ${wide}`;
-      const arrowBottom = `absolute -top-1 left-1/2 -translate-x-1/2 h-2 w-2 rotate-45 bg-slate-900 dark:bg-white`;
-
-      this.innerHTML = `
-        <div class="relative inline-flex align-middle">
-          <button type="button"
-            class="h-8 w-8 rounded-full bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-xs font-extrabold text-slate-700 dark:text-slate-200
-                  hover:bg-slate-900 hover:text-white dark:hover:bg-white dark:hover:text-slate-900 transition"
-            aria-label="Info tooltip">
-            ?
-          </button>
-
-          <div class="tip ${isRight ? bubbleRight : bubbleBottom}
-                      p-3 rounded-xl bg-slate-900 text-white dark:bg-white dark:text-slate-900 text-xs leading-relaxed
-                      opacity-0 translate-y-1 pointer-events-none transition duration-200 z-50 shadow-xl">
-            <div class="${isRight ? arrowRight : arrowBottom}"></div>
-            ${text}
-          </div>
-        </div>
-      `;
-
-      const btn = this.querySelector("button");
-      const tip = this.querySelector(".tip");
-
-      const show = () => {
-        tip.classList.remove("opacity-0", "translate-y-1", "pointer-events-none");
-        tip.classList.add("opacity-100", "translate-y-0", "pointer-events-auto");
-      };
-      const hide = () => {
-        tip.classList.add("opacity-0", "translate-y-1", "pointer-events-none");
-        tip.classList.remove("opacity-100", "translate-y-0", "pointer-events-auto");
-      };
-
-      this.addEventListener("mouseenter", show);
-      this.addEventListener("mouseleave", hide);
-
-      btn.addEventListener("click", (e) => {
-        e.stopPropagation();
-        const opened = tip.classList.contains("opacity-100");
-        opened ? hide() : show();
-      });
-
-      document.addEventListener("click", hide);
-    }
-  }
-  if (!customElements.get("info-tooltip")) {
-    customElements.define("info-tooltip", InfoTooltip);
+  if(!desc || amt <= 0){
+    toast("Enter receipt description and amount.");
+    return;
   }
 
-  /* =========================================================
-     LODGE: Dependent toggle + rules
-  ========================================================= */
-  function initDependentBox() {
-    const depBox = document.getElementById("dependentBox");
-    if (!depBox) return;
+  receiptLines.push({cat, desc, amt});
+  document.getElementById("receiptDesc").value = "";
+  document.getElementById("receiptAmount").value = "";
+  const cnt = document.getElementById("receiptCount");
+  if(cnt) cnt.textContent = `${receiptLines.length} item(s)`;
 
-    function sync() {
-      const checked = document.querySelector("input[name='claimType']:checked");
-      const show = checked && checked.value === "Dependent's Claim";
-      depBox.classList.toggle("hidden", !show);
-    }
+  const jsonEl = document.getElementById("receiptLinesJson");
+  if(jsonEl) jsonEl.value = JSON.stringify(receiptLines);
 
-    document.querySelectorAll("input[name='claimType']").forEach((r) => {
-      r.addEventListener("change", sync);
-    });
+  toast("Receipt line added.");
+}
+window.addReceiptLine = addReceiptLine;
 
-    const depRel = document.getElementById("depRel");
-    const depRule = document.getElementById("depRule");
-    if (depRel && depRule) {
-      depRel.addEventListener("change", () => {
-        depRule.textContent =
-          depRel.value === "Children"
-            ? "Accepted If children: 14–21 years old only"
-            : "Accepted If spouse/parent: 18–65 years old only";
-      });
-    }
 
-    sync();
-  }
+//SCHEDULE INIT
+let __dupState = { duplicate:false, eligible:true, suggested_occurrence:1, next_eligible_at:null };
+let __dupTimer = null;
 
-  /* =========================================================
-     LODGE: Major Medical duration
-  ========================================================= */
-  function computeDuration() {
-    const tin = document.getElementById("timeIn")?.value;
-    const tout = document.getElementById("timeOut")?.value;
-    const dt = document.getElementById("durationText");
+function scheduleDupCheck(){
+  clearTimeout(__dupTimer);
+  __dupTimer = setTimeout(checkDuplicateLive, 350);
+}
 
-    if (!tin || !tout) {
-      if (dt) dt.textContent = "—";
-      return null;
-    }
-
-    const [h1, m1] = tin.split(":").map(Number);
-    const [h2, m2] = tout.split(":").map(Number);
-
-    const mins1 = h1 * 60 + m1;
-    let mins2 = h2 * 60 + m2;
-
-    // overnight support
-    const overnight = mins2 <= mins1;
-    if (overnight) mins2 += 24 * 60;
-
-    const diff = mins2 - mins1;
-    const hrs = Math.floor(diff / 60);
-    const mins = diff % 60;
-
-    if (dt) dt.textContent = `${hrs}h ${mins}m${overnight ? " (overnight)" : ""}`;
-    return diff / 60;
-  }
-
-  function initMajorMedicalUI() {
-    const majorBox = document.getElementById("majorMedicalBox");
-    if (!majorBox) return;
-
-    function sync() {
-      const selected = document.querySelector("input[name='benefit']:checked")?.value || "";
-      majorBox.classList.toggle("hidden", selected !== "Major Medical");
-      if (selected !== "Major Medical") {
-        const dt = document.getElementById("durationText");
-        if (dt) dt.textContent = "—";
-      } else {
-        computeDuration();
-      }
-    }
-
-    document.querySelectorAll("input[name='benefit']").forEach((r) => r.addEventListener("change", sync));
-    ["timeIn", "timeOut"].forEach((id) => {
-      const el = document.getElementById(id);
-      if (el) el.addEventListener("change", computeDuration);
-    });
-
-    sync();
-  }
-
-  /* =========================================================
-     RECEIPT LINES
-  ========================================================= */
-  const receiptLines = [];
-
-  function hydrateReceiptLinesFromHidden() {
-    const jsonEl = document.getElementById("receiptLinesJson");
-    if (!jsonEl) return;
-    try {
-      const arr = JSON.parse(jsonEl.value || "[]");
-      if (Array.isArray(arr)) {
-        receiptLines.length = 0;
-        arr.forEach((x) => receiptLines.push(x));
-        const cnt = document.getElementById("receiptCount");
-        if (cnt) cnt.textContent = `${receiptLines.length} item(s)`;
-      }
-    } catch (_) {}
-  }
-
-  function addReceiptLine() {
-    const cat = document.getElementById("receiptCategory")?.value || "";
-    const desc = (document.getElementById("receiptDesc")?.value || "").trim();
-    const amt = Number(document.getElementById("receiptAmount")?.value || 0);
-
-    if (!desc || amt <= 0) {
-      toast("Enter receipt description and amount.");
-      return;
-    }
-
-    receiptLines.push({ cat, desc, amt });
-
-    const descEl = document.getElementById("receiptDesc");
-    const amtEl = document.getElementById("receiptAmount");
-    if (descEl) descEl.value = "";
-    if (amtEl) amtEl.value = "";
-
-    const cnt = document.getElementById("receiptCount");
-    if (cnt) cnt.textContent = `${receiptLines.length} item(s)`;
-
-    const jsonEl = document.getElementById("receiptLinesJson");
-    if (jsonEl) jsonEl.value = JSON.stringify(receiptLines);
-
-    toast("Receipt line added.");
-  }
-  window.addReceiptLine = addReceiptLine;
-
-  /* =========================================================
-     DUPLICATE CHECK (fix: define hidden + safe updates)
-  ========================================================= */
-  let __dupState = { duplicate: false, eligible: true, suggested_occurrence: 1, next_eligible_at: null };
-  let __dupTimer = null;
-
-  function scheduleDupCheck() {
-    clearTimeout(__dupTimer);
-    __dupTimer = setTimeout(checkDuplicateLive, 350);
-  }
-
-async function checkDuplicateLive() {
+async function checkDuplicateLive(){
   const form = document.getElementById("claimForm");
   const badge = document.getElementById("dupWarnBadge");
   const occEl = document.getElementById("claimOccurrence");
-  const hidden = document.getElementById("claimOccurrenceHidden");
-  if (!form || !badge || !occEl || !hidden) return;
+  if(!form || !badge || !occEl) return;
 
-  const given = (form.querySelector("[name='given']")?.value || "").trim();
+  const given  = (form.querySelector("[name='given']")?.value || "").trim();
   const middle = (form.querySelector("[name='middle']")?.value || "").trim();
-  const surname = (form.querySelector("[name='surname']")?.value || "").trim();
-  const dob = form.querySelector("[name='dob']")?.value || "";
+  const surname= (form.querySelector("[name='surname']")?.value || "").trim();
+  const dob    = form.querySelector("[name='dob']")?.value || "";
 
-  const benefit = document.querySelector("input[name='benefit']:checked")?.value || "";
-  const claimType = document.querySelector("input[name='claimType']:checked")?.value || "";
+  const benefit  = document.querySelector("input[name='benefit']:checked")?.value || "";
+  const claimType= document.querySelector("input[name='claimType']:checked")?.value || "";
 
-  const resetOccurrence = () => {
+  // require muna bago mag check
+  if(!given || !surname || !dob || !benefit || !claimType){
     badge.classList.add("hidden");
-    occEl.disabled = true;
-    occEl.value = "1";
-    hidden.value = "1";
-    __dupState = { duplicate: false, eligible: true, suggested_occurrence: 1, next_eligible_at: null };
-  };
-
-  // kulang fields -> reset
-  if (!given || !surname || !dob || !benefit || !claimType) {
-    resetOccurrence();
+    __dupState = { duplicate:false, eligible:true, suggested_occurrence:1, next_eligible_at:null };
     return;
   }
 
   const params = new URLSearchParams({ given, middle, surname, dob, benefit, claimType });
 
-  try {
+  try{
     const res = await fetch(`{{ url('/hr/claims/check-duplicate') }}?` + params.toString(), {
-      headers: { Accept: "application/json" },
-      credentials: "same-origin",
+      headers: { "Accept":"application/json" }
     });
-
-    if (!res.ok) {
-      console.error("check-duplicate not ok:", res.status);
-      return;
-    }
-
-    // ✅ IMPORTANT: ensure JSON talaga (hindi redirect/login page HTML)
-    const ct = res.headers.get("content-type") || "";
-    if (!ct.includes("application/json")) {
-      const text = await res.text();
-      console.error("check-duplicate returned NON-JSON:", res.status, text.slice(0, 300));
-      return;
-    }
+    if(!res.ok) return;
 
     const data = await res.json();
 
-    const prev = __dupState || {
-      duplicate: false,
-      eligible: true,
-      suggested_occurrence: 1,
-      next_eligible_at: null,
-    };
+// compare first
+const prev = __dupState || { duplicate:false, eligible:true, suggested_occurrence:1, next_eligible_at:null };
+const changed =
+  prev.duplicate !== data.duplicate ||
+  prev.eligible !== data.eligible ||
+  prev.next_eligible_at !== data.next_eligible_at ||
+  prev.suggested_occurrence !== data.suggested_occurrence;
 
-    const changed =
-      prev.duplicate !== data.duplicate ||
-      prev.eligible !== data.eligible ||
-      prev.next_eligible_at !== data.next_eligible_at ||
-      prev.suggested_occurrence !== data.suggested_occurrence;
+// update state ONCE
+__dupState = data;
 
-    __dupState = data;
+if (data.duplicate) {
+  badge.classList.remove("hidden");
 
-    // ✅ NOT duplicate -> hide + lock to 1
-    if (!data.duplicate) {
-      badge.classList.add("hidden");
-      occEl.disabled = true;
-      occEl.value = "1";
-      hidden.value = "1";
-      return;
-    }
+  if (data.eligible) {
+    occEl.disabled = true; // display-only
+    occEl.value = String(data.suggested_occurrence || 2);
+    if (hidden) hidden.value = occEl.value;
 
-    // ✅ duplicate -> show badge
-    badge.classList.remove("hidden");
-
-    // ✅ eligible -> enable + set suggested
-    if (data.eligible) {
-      occEl.disabled = false;
-
-      const occ = String(data.suggested_occurrence || 2);
-      occEl.value = occ;
-      hidden.value = occ;
-
-      if (changed) toast(`Duplicate detected. Eligible now. Auto-set to ${occ}x claim.`);
-      return;
-    }
-
-    // ❌ not eligible -> lock + set to 1
+    if (changed) toast(`Duplicate detected. Eligible now. Auto-set to ${occEl.options[occEl.selectedIndex].text}.`);
+  } else {
     occEl.disabled = true;
     occEl.value = "1";
-    hidden.value = "1";
+    if (hidden) hidden.value = "1";
 
     if (changed) toast(`Duplicate detected. Next eligible on ${data.next_eligible_at} (90-day rule).`);
-  } catch (e) {
-    console.error("checkDuplicateLive error:", e);
   }
+
+} else {
+  badge.classList.add("hidden");
+
+  occEl.disabled = true;
+  occEl.value = "1";
+  if (hidden) hidden.value = "1";
+
+  // optional toast on change only
+  // if (changed) toast("No duplicate detected.");
+}
+  }catch(e){}
 }
 
-  /* =========================================================
-     FORM VALIDATION
-  ========================================================= */
-  function initClaimFormValidation() {
-    const form = document.getElementById("claimForm");
-    if (!form) return;
+/* =========================================================
+   LODGE: Client-side validation before submit
+========================================================= */
+function initClaimFormValidation(){
+  const form = document.getElementById("claimForm");
+  if(!form) return;
 
-    form.addEventListener("submit", (e) => {
-      // receipts required
-      if (!Array.isArray(receiptLines) || receiptLines.length === 0) {
+  form.addEventListener("submit", (e)=>{
+
+    // ✅ receipts required: at least 1 line (match backend)
+if (!Array.isArray(receiptLines) || receiptLines.length === 0) {
+  e.preventDefault();
+  toast("Please add at least 1 receipt line.");
+  return;
+}
+
+    const dob = form.querySelector("[name='dob']")?.value;
+    if(dob){
+      const age = yearsBetween(dob);
+      if(age < 18 || age > 65){
         e.preventDefault();
-        toast("Please add at least 1 receipt line.");
+        toast("Employee DOB invalid: accepted 18–65 only.");
         return;
       }
+    }
 
-      const dob = form.querySelector("[name='dob']")?.value;
-      if (dob) {
-        const age = yearsBetween(dob);
-        if (age < 18 || age > 65) {
-          e.preventDefault();
-          toast("Employee DOB invalid: accepted 18–65 only.");
-          return;
-        }
-      }
-
-      const claimType = document.querySelector("input[name='claimType']:checked")?.value || "";
-      if (claimType === "Dependent's Claim") {
-        const rel = form.querySelector("[name='depRel']")?.value || "";
-        const depDob = form.querySelector("[name='depDob']")?.value || "";
-        if (!rel || !depDob) {
-          e.preventDefault();
-          toast("Dependent details required.");
-          return;
-        }
-        const a = yearsBetween(depDob);
-        if (rel === "Children") {
-          if (a < 14 || a > 21) {
-            e.preventDefault();
-            toast("Dependent child DOB invalid: 14–21 only.");
-            return;
-          }
-        } else {
-          if (a < 18 || a > 65) {
-            e.preventDefault();
-            toast("Dependent spouse/parent DOB invalid: 18–65 only.");
-            return;
-          }
-        }
-      }
-
-      const benefit = document.querySelector("input[name='benefit']:checked")?.value || "";
-      if (benefit === "Major Medical") {
-        const hrs = computeDuration();
-        if (hrs === null) {
-          e.preventDefault();
-          toast("Major Medical: please set Time In and Time Out.");
-          return;
-        }
-        if (hrs < 6) {
-          e.preventDefault();
-          toast("Major Medical: Duration must be at least 6 hours.");
-          return;
-        }
-      }
-    });
-  }
-
-  /* =========================================================
-     MODALS + AJAX (same logic, kept)
-  ========================================================= */
-  let selectedClaimDbId = null;
-
-  async function openModal(dbId) {
-    selectedClaimDbId = dbId;
-
-    try {
-      const res = await fetch(`{{ url('/hr/claims') }}/${dbId}`, {
-        headers: { Accept: "application/json" },
-      });
-
-      if (!res.ok) {
-        toast("Failed to load claim details.");
+    const claimType = document.querySelector("input[name='claimType']:checked")?.value || "";
+    if(claimType === "Dependent's Claim"){
+      const rel = form.querySelector("[name='depRel']")?.value || "";
+      const depDob = form.querySelector("[name='depDob']")?.value || "";
+      if(!rel || !depDob){
+        e.preventDefault();
+        toast("Dependent details required.");
         return;
       }
-
-      const c = await res.json();
-
-      document.getElementById("modalTitle").textContent = `${c.id} • ${c.name}`;
-      document.getElementById("modalSubtitle").textContent = `${c.benefit} • ${c.claimType} • Status: ${c.status}`;
-      document.getElementById("modalAging").textContent = `Aging: ${c.agingDays} day(s)${
-        (c.agingDays || 0) > 14 ? " • OVERDUE" : ""
-      }`;
-
-      const hist = Array.isArray(c.history) ? c.history : [];
-      document.getElementById("modalHistory").innerHTML = hist.length
-        ? hist
-            .map(
-              (h) =>
-                `<li class="flex gap-2"><span class="mt-2 h-1.5 w-1.5 rounded-full bg-slate-400"></span><span>${escapeHtml(
-                  h
-                )}</span></li>`
-            )
-            .join("")
-        : `<li class="text-slate-500 dark:text-slate-400">No history available.</li>`;
-
-      document.getElementById("modalAssessment").textContent = c.assessment || "—";
-      document.getElementById("modalRemarks").textContent = c.recomputationRemarks || c.remarks || "—";
-
-      loadAnalysis(c);
-
-      const modal = document.getElementById("claimModal");
-      modal.classList.remove("hidden");
-      modal.classList.add("flex");
-      document.body.style.overflow = "hidden";
-    } catch (_) {
-      toast("Error loading claim.");
-    }
-  }
-  window.openModal = openModal;
-
-  function closeModal() {
-    const m = document.getElementById("claimModal");
-    if (!m) return;
-    m.classList.add("hidden");
-    m.classList.remove("flex");
-    document.body.style.overflow = "";
-    selectedClaimDbId = null;
-  }
-  window.closeModal = closeModal;
-
-  function openAnalysisFromModal() {
-    if (!selectedClaimDbId) {
-      toast("No claim selected.");
-      return;
-    }
-    go("analysis");
-    closeModal();
-  }
-  window.openAnalysisFromModal = openAnalysisFromModal;
-
-  function openRecomputeModal() {
-    if (!selectedClaimDbId) {
-      toast("Open a claim first (Details).");
-      return;
+      const a = yearsBetween(depDob);
+      if(rel === "Children"){
+        if(a < 14 || a > 21){
+          e.preventDefault();
+          toast("Dependent child DOB invalid: 14–21 only.");
+          return;
+        }
+      } else {
+        if(a < 18 || a > 65){
+          e.preventDefault();
+          toast("Dependent spouse/parent DOB invalid: 18–65 only.");
+          return;
+        }
+      }
     }
 
-    document.getElementById("recomputeReason").value = "";
-    document.getElementById("recomputeRemarks").value = "";
-    document.getElementById("recomputeFeeNote").textContent = "2% applies if reason is not “Error in computation”.";
-
-    const m = document.getElementById("recomputeModal");
-    m.classList.remove("hidden");
-    m.classList.add("flex");
-  }
-  window.openRecomputeModal = openRecomputeModal;
-
-  function closeRecomputeModal() {
-    const m = document.getElementById("recomputeModal");
-    if (!m) return;
-    m.classList.add("hidden");
-    m.classList.remove("flex");
-  }
-  window.closeRecomputeModal = closeRecomputeModal;
-
-  async function submitRecompute() {
-    if (!selectedClaimDbId) return;
-
-    const reason = document.getElementById("recomputeReason")?.value || "";
-    const remarks = (document.getElementById("recomputeRemarks")?.value || "").trim();
-
-    if (!reason) {
-      toast("Select a recomputation reason.");
-      return;
-    }
-    if (reason === "Others" && !remarks) {
-      toast("Remarks required when reason is Others.");
-      return;
-    }
-
-    const token = document.querySelector('meta[name="csrf-token"]')?.getAttribute("content") || "";
-
-    try {
-      const res = await fetch(`{{ url('/hr/claims') }}/${selectedClaimDbId}/recompute`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "X-CSRF-TOKEN": token,
-          Accept: "application/json",
-        },
-        body: JSON.stringify({ reason, remarks }),
-      });
-
-      if (!res.ok) {
-        toast("Failed to submit recomputation.");
+    const benefit = document.querySelector("input[name='benefit']:checked")?.value || "";
+    if(benefit === "Major Medical"){
+      const hrs = computeDuration();
+      if(hrs === null){
+        e.preventDefault();
+        toast("Major Medical: please set Time In and Time Out.");
         return;
       }
-
-      toast("Recomputation requested.");
-      closeRecomputeModal();
-      closeModal();
-      window.location.reload();
-    } catch (_) {
-      toast("Network error submitting recomputation.");
+      if(hrs < 6){
+        e.preventDefault();
+        toast("Major Medical: Duration must be at least 6 hours.");
+        return;
+      }
     }
-  }
-  window.submitRecompute = submitRecompute;
+  });
+}
 
-  /* =========================================================
-     ANALYSIS VIEW
-  ========================================================= */
-  function loadAnalysis(c) {
-    const t = document.getElementById("analysisTitle");
-    const sub = document.getElementById("analysisSub");
-    const assess = document.getElementById("analysisAssessment");
+/* =========================================================
+   MODALS + AJAX
+========================================================= */
+let selectedClaimDbId = null;
 
-    if (t) t.textContent = `Analysis Sheet #${Math.max(1, c.occurrence || 1)}`;
-    if (sub) sub.textContent = `Claim: ${c.id} • ${c.benefit} • Employee: ${c.name}`;
-    if (assess) assess.textContent = c.assessment || "—";
+async function openModal(dbId){
+  selectedClaimDbId = dbId;
 
-    const rows = document.getElementById("analysisRows");
-    if (rows) {
-      rows.innerHTML = "";
-      const arr = Array.isArray(c.analysisRows) ? c.analysisRows : [];
-      arr.forEach((r) => {
-        rows.insertAdjacentHTML(
-          "beforeend",
-          `
-          <tr>
-            <td class="px-4 py-3">${escapeHtml(r.item ?? "")}</td>
-            <td class="px-4 py-3">${escapeHtml(r.cat ?? "")}</td>
-            <td class="px-4 py-3 text-right">${peso(r.amt ?? 0)}</td>
-          </tr>
-        `
-        );
-      });
-    }
-
-    const total = document.getElementById("analysisTotal");
-    const recomputed = document.getElementById("analysisRecomputed");
-    if (total) total.textContent = peso(c.total || 0);
-    if (recomputed) recomputed.textContent = c.recomputed != null ? peso(c.recomputed) : "₱ 0.00";
-
-    const info = document.getElementById("analysisInfo");
-    if (info) {
-      info.innerHTML = `
-        <div class="flex justify-between"><span class="text-slate-500 dark:text-slate-400">Date Submitted</span><span>${escapeHtml(
-          c.dateSubmitted || "—"
-        )}</span></div>
-        <div class="flex justify-between"><span class="text-slate-500 dark:text-slate-400">Aging</span><span class="${
-          (c.agingDays || 0) > 14 ? "text-rose-600 dark:text-rose-300 font-semibold" : ""
-        }">${escapeHtml(String(c.agingDays || 0))} day(s)</span></div>
-        <div class="flex justify-between"><span class="text-slate-500 dark:text-slate-400">Status</span><span class="font-semibold">${escapeHtml(
-          c.status || "—"
-        )}</span></div>
-        <div class="flex justify-between"><span class="text-slate-500 dark:text-slate-400">Occurrence</span><span>${escapeHtml(
-          String(c.occurrence || 1)
-        )}</span></div>
-        <div class="flex justify-between"><span class="text-slate-500 dark:text-slate-400">Recomp Reason</span><span>${escapeHtml(
-          c.recomputationReason || "—"
-        )}</span></div>
-      `;
-    }
-
-    lockDownload();
-  }
-
-  function updateWatermark() {
-    const email =
-      document.getElementById("mockEmail")?.textContent ||
-      document.getElementById("mockEmailMobile")?.textContent ||
-      "user@example.com";
-    const ts = new Date().toLocaleString();
-    const wm = document.getElementById("wmText");
-    if (wm) wm.textContent = `CONFIDENTIAL\n${email}\n${ts}`;
-  }
-
-  function lockDownload() {
-    const btnPrint = document.getElementById("btnPrint");
-    const btnDownload = document.getElementById("btnDownload");
-
-    if (btnPrint) {
-      btnPrint.disabled = true;
-      btnPrint.classList.add("opacity-50");
-    }
-    if (btnDownload) {
-      btnDownload.disabled = true;
-      btnDownload.classList.add("opacity-50");
-    }
-
-    const dlNote = document.getElementById("dlNote");
-    const viewMode = document.getElementById("viewMode");
-    if (dlNote) dlNote.textContent = "Locked until HR confirms computation is correct.";
-    if (viewMode) viewMode.textContent = "VIEW ONLY";
-  }
-
-  function unlockDownload() {
-    const btnPrint = document.getElementById("btnPrint");
-    const btnDownload = document.getElementById("btnDownload");
-
-    if (btnPrint) {
-      btnPrint.disabled = false;
-      btnPrint.classList.remove("opacity-50");
-    }
-    if (btnDownload) {
-      btnDownload.disabled = false;
-      btnDownload.classList.remove("opacity-50");
-    }
-
-    const dlNote = document.getElementById("dlNote");
-    const viewMode = document.getElementById("viewMode");
-    if (dlNote) dlNote.textContent = "Unlocked: You may now print/download.";
-    if (viewMode) viewMode.textContent = "UNLOCKED";
-    toast("Unlocked.");
-  }
-  window.unlockDownload = unlockDownload;
-
-  /* =========================================================
-     DELETE (kept)
-  ========================================================= */
-  async function deleteClaim(dbId) {
-    if (!dbId) return;
-
-    const ok = confirm("Delete this claim? This cannot be undone.");
-    if (!ok) return;
-
-    const token = document.querySelector('meta[name="csrf-token"]')?.getAttribute("content") || "";
-
+  try{
     const res = await fetch(`{{ url('/hr/claims') }}/${dbId}`, {
-      method: "DELETE",
-      credentials: "same-origin",
-      headers: {
-        "X-CSRF-TOKEN": token,
-        "X-Requested-With": "XMLHttpRequest",
-        Accept: "application/json",
-      },
+      headers: { "Accept": "application/json" }
     });
 
-    const ct = res.headers.get("content-type") || "";
-    if (!ct.includes("application/json")) {
-      const text = await res.text();
-      console.error("DELETE returned non-JSON:", res.status, text.slice(0, 300));
-      toast(`Delete failed (${res.status}). Check console.`);
+    if(!res.ok){
+      toast("Failed to load claim details.");
       return;
     }
 
-    const data = await res.json();
-    if (!res.ok) {
-      toast(data.message || "Failed to delete claim.");
-      return;
-    }
+    const c = await res.json();
 
-    toast(data.message || "Deleted.");
-    window.location.reload();
+    document.getElementById("modalTitle").textContent = `${c.id} • ${c.name}`;
+    document.getElementById("modalSubtitle").textContent = `${c.benefit} • ${c.claimType} • Status: ${c.status}`;
+    document.getElementById("modalAging").textContent = `Aging: ${c.agingDays} day(s)${(c.agingDays||0)>14 ? " • OVERDUE" : ""}`;
+
+    const hist = Array.isArray(c.history) ? c.history : [];
+    document.getElementById("modalHistory").innerHTML = hist.length
+      ? hist.map(h=>`<li class="flex gap-2"><span class="mt-2 h-1.5 w-1.5 rounded-full bg-slate-400"></span><span>${escapeHtml(h)}</span></li>`).join("")
+      : `<li class="text-slate-500 dark:text-slate-400">No history available.</li>`;
+
+    document.getElementById("modalAssessment").textContent = c.assessment || "—";
+    document.getElementById("modalRemarks").textContent = c.recomputationRemarks || c.remarks || "—";
+
+    loadAnalysis(c);
+
+    const modal = document.getElementById("claimModal");
+    modal.classList.remove("hidden");
+    modal.classList.add("flex");
+    document.body.style.overflow = "hidden";
+  }catch(err){
+    toast("Error loading claim.");
   }
-  window.deleteClaim = deleteClaim;
+}
+window.openModal = openModal;
 
-  /* =========================================================
-     INIT
-  ========================================================= */
-  document.addEventListener("DOMContentLoaded", () => {
+function closeModal(){
+  const m = document.getElementById("claimModal");
+  if(!m) return;
+  m.classList.add("hidden");
+  m.classList.remove("flex");
+  document.body.style.overflow = "";
+  selectedClaimDbId = null;
+}
+window.closeModal = closeModal;
 
-    const occEl = document.getElementById("claimOccurrence");
-const hiddenOcc = document.getElementById("claimOccurrenceHidden");
+function openAnalysisFromModal(){
+  if(!selectedClaimDbId){
+    toast("No claim selected.");
+    return;
+  }
+  go("analysis");
+  closeModal();
+}
+window.openAnalysisFromModal = openAnalysisFromModal;
 
-if (occEl && hiddenOcc) {
-  occEl.addEventListener("change", () => {
-    hiddenOcc.value = occEl.value;
-  });
+/* =========================================================
+   RECOMPUTE MODAL + SUBMIT (AJAX)
+========================================================= */
+function openRecomputeModal(){
+  if(!selectedClaimDbId){
+    toast("Open a claim first (Details).");
+    return;
+  }
+
+  document.getElementById("recomputeReason").value = "";
+  document.getElementById("recomputeRemarks").value = "";
+  document.getElementById("recomputeFeeNote").textContent = "2% applies if reason is not “Error in computation”.";
+
+  const m = document.getElementById("recomputeModal");
+  m.classList.remove("hidden");
+  m.classList.add("flex");
+}
+window.openRecomputeModal = openRecomputeModal;
+
+function closeRecomputeModal(){
+  const m = document.getElementById("recomputeModal");
+  if(!m) return;
+  m.classList.add("hidden");
+  m.classList.remove("flex");
+}
+window.closeRecomputeModal = closeRecomputeModal;
+
+async function submitRecompute(){
+  if(!selectedClaimDbId) return;
+
+  const reason = document.getElementById("recomputeReason")?.value || "";
+  const remarks = (document.getElementById("recomputeRemarks")?.value || "").trim();
+
+  if(!reason){ toast("Select a recomputation reason."); return; }
+  if(reason === "Others" && !remarks){ toast("Remarks required when reason is Others."); return; }
+
+  const token = document.querySelector('meta[name="csrf-token"]')?.getAttribute("content") || "";
+
+  try{
+    const res = await fetch(`{{ url('/hr/claims') }}/${selectedClaimDbId}/recompute`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-CSRF-TOKEN": token,
+        "Accept": "application/json"
+      },
+      body: JSON.stringify({ reason, remarks })
+    });
+
+    if(!res.ok){
+      toast("Failed to submit recomputation.");
+      return;
+    }
+
+    toast("Recomputation requested.");
+    closeRecomputeModal();
+    closeModal();
+    window.location.reload();
+  }catch(err){
+    toast("Network error submitting recomputation.");
+  }
+}
+window.submitRecompute = submitRecompute;
+
+/* =========================================================
+   ANALYSIS VIEW
+========================================================= */
+function loadAnalysis(c){
+  const t = document.getElementById("analysisTitle");
+  const sub = document.getElementById("analysisSub");
+  const assess = document.getElementById("analysisAssessment");
+
+  if(t) t.textContent = `Analysis Sheet #${Math.max(1, c.occurrence || 1)}`;
+  if(sub) sub.textContent = `Claim: ${c.id} • ${c.benefit} • Employee: ${c.name}`;
+  if(assess) assess.textContent = c.assessment || "—";
+
+  const rows = document.getElementById("analysisRows");
+  if(rows){
+    rows.innerHTML = "";
+    const arr = Array.isArray(c.analysisRows) ? c.analysisRows : [];
+    arr.forEach(r=>{
+      rows.insertAdjacentHTML("beforeend", `
+        <tr>
+          <td class="px-4 py-3">${escapeHtml(r.item ?? "")}</td>
+          <td class="px-4 py-3">${escapeHtml(r.cat ?? "")}</td>
+          <td class="px-4 py-3 text-right">${peso(r.amt ?? 0)}</td>
+        </tr>
+      `);
+    });
+  }
+
+  const total = document.getElementById("analysisTotal");
+  const recomputed = document.getElementById("analysisRecomputed");
+  if(total) total.textContent = peso(c.total || 0);
+  if(recomputed) recomputed.textContent = (c.recomputed !== null && c.recomputed !== undefined) ? peso(c.recomputed) : "₱ 0.00";
+
+  const info = document.getElementById("analysisInfo");
+  if(info){
+    info.innerHTML = `
+      <div class="flex justify-between"><span class="text-slate-500 dark:text-slate-400">Date Submitted</span><span>${escapeHtml(c.dateSubmitted || "—")}</span></div>
+      <div class="flex justify-between"><span class="text-slate-500 dark:text-slate-400">Aging</span><span class="${(c.agingDays||0)>14?'text-rose-600 dark:text-rose-300 font-semibold':''}">${escapeHtml(String(c.agingDays||0))} day(s)</span></div>
+      <div class="flex justify-between"><span class="text-slate-500 dark:text-slate-400">Status</span><span class="font-semibold">${escapeHtml(c.status || "—")}</span></div>
+      <div class="flex justify-between"><span class="text-slate-500 dark:text-slate-400">Occurrence</span><span>${escapeHtml(String(c.occurrence || 1))}</span></div>
+      <div class="flex justify-between"><span class="text-slate-500 dark:text-slate-400">Recomp Reason</span><span>${escapeHtml(c.recomputationReason || "—")}</span></div>
+    `;
+  }
+
+  lockDownload();
 }
 
-    initTheme();
-    initThemeToggles();
+function updateWatermark(){
+  const email = document.getElementById("mockEmail")?.textContent || document.getElementById("mockEmailMobile")?.textContent || "user@example.com";
+  const ts = new Date().toLocaleString();
+  const wm = document.getElementById("wmText");
+  if(wm) wm.textContent = `CONFIDENTIAL\n${email}\n${ts}`;
+}
 
-    document.querySelectorAll(".navBtn").forEach((btn) => btn.addEventListener("click", () => go(btn.dataset.nav)));
-    document.querySelectorAll(".navBtnMobile").forEach((btn) =>
-      btn.addEventListener("click", () => go(btn.dataset.nav))
-    );
+function lockDownload(){
+  const btnPrint = document.getElementById("btnPrint");
+  const btnDownload = document.getElementById("btnDownload");
+  if(btnPrint){ btnPrint.disabled = true; btnPrint.classList.add("opacity-50"); }
+  if(btnDownload){ btnDownload.disabled = true; btnDownload.classList.add("opacity-50"); }
 
-    const claimModal = document.getElementById("claimModal");
-    if (claimModal) {
-      claimModal.addEventListener("click", (e) => {
-        if (e.target.id === "claimModal") closeModal();
-      });
-    }
+  const dlNote = document.getElementById("dlNote");
+  const viewMode = document.getElementById("viewMode");
+  if(dlNote) dlNote.textContent = "Locked until HR confirms computation is correct.";
+  if(viewMode) viewMode.textContent = "VIEW ONLY";
+}
 
-    const recomputeModal = document.getElementById("recomputeModal");
-    if (recomputeModal) {
-      recomputeModal.addEventListener("click", (e) => {
-        if (e.target.id === "recomputeModal") closeRecomputeModal();
-      });
-    }
+function unlockDownload(){
+  const btnPrint = document.getElementById("btnPrint");
+  const btnDownload = document.getElementById("btnDownload");
+  if(btnPrint){ btnPrint.disabled = false; btnPrint.classList.remove("opacity-50"); }
+  if(btnDownload){ btnDownload.disabled = false; btnDownload.classList.remove("opacity-50"); }
 
-    const recomputeReason = document.getElementById("recomputeReason");
-    if (recomputeReason) {
-      recomputeReason.addEventListener("change", () => {
-        const note = document.getElementById("recomputeFeeNote");
-        if (!note) return;
-        const r = recomputeReason.value;
-        if (r === "Error in computation") note.textContent = "Fee: 0% (Error in computation).";
-        else if (r) note.textContent = "Fee: 2% applies (backend) for Change in Policy / Others.";
-        else note.textContent = "2% applies if reason is not “Error in computation”.";
-      });
-    }
+  const dlNote = document.getElementById("dlNote");
+  const viewMode = document.getElementById("viewMode");
+  if(dlNote) dlNote.textContent = "Unlocked: You may now print/download.";
+  if(viewMode) viewMode.textContent = "UNLOCKED";
+  toast("Unlocked.");
+}
+window.unlockDownload = unlockDownload;
 
-    initDependentBox();
-    initMajorMedicalUI();
-    hydrateReceiptLinesFromHidden();
+/* =========================================================
+   GLOBAL INIT
+========================================================= */
+document.addEventListener("DOMContentLoaded", () => {
+  initThemeToggles();
 
-    // live duplicate check hooks
-    ["surname", "given", "middle", "dob"].forEach((n) => {
-      const el = document.querySelector(`[name='${n}']`);
-      if (el) el.addEventListener("input", scheduleDupCheck);
+  document.querySelectorAll(".navBtn").forEach(btn=>{
+    btn.addEventListener("click", ()=>go(btn.dataset.nav));
+  });
+  document.querySelectorAll(".navBtnMobile").forEach(btn=>{
+    btn.addEventListener("click", ()=>go(btn.dataset.nav));
+  });
+
+  const claimModal = document.getElementById("claimModal");
+  if(claimModal){
+    claimModal.addEventListener("click", (e)=>{
+      if(e.target.id==="claimModal") closeModal();
     });
-    document.querySelectorAll("input[name='benefit']").forEach((r) => r.addEventListener("change", scheduleDupCheck));
-    document.querySelectorAll("input[name='claimType']").forEach((r) =>
-      r.addEventListener("change", scheduleDupCheck)
-    );
-    scheduleDupCheck();
+  }
 
-    initClaimFormValidation();
-
-    updateWatermark();
-    setInterval(updateWatermark, 5000);
-
-    document.addEventListener("contextmenu", (e) => {
-      const canvas = document.getElementById("analysisCanvas");
-      if (canvas && canvas.contains(e.target)) {
-        e.preventDefault();
-        toast("Right-click disabled.");
-      }
+  const recomputeModal = document.getElementById("recomputeModal");
+  if(recomputeModal){
+    recomputeModal.addEventListener("click", (e)=>{
+      if(e.target.id==="recomputeModal") closeRecomputeModal();
     });
+  }
 
-    @if($errors->any())
-      go('lodge');
-    @else
-      @if(session('success'))
-        go('home');
-      @else
-        go('home');
-      @endif
+  const recomputeReason = document.getElementById("recomputeReason");
+  if(recomputeReason){
+    recomputeReason.addEventListener("change", ()=>{
+      const note = document.getElementById("recomputeFeeNote");
+      if(!note) return;
+      const r = recomputeReason.value;
+      if(r === "Error in computation") note.textContent = "Fee: 0% (Error in computation).";
+      else if(r) note.textContent = "Fee: 2% applies (backend) for Change in Policy / Others.";
+      else note.textContent = "2% applies if reason is not “Error in computation”.";
+    });
+  }
+
+  initDependentBox();
+  initMajorMedicalUI();
+  hydrateReceiptLinesFromHidden();
+  
+  // live duplicate check hooks
+["surname","given","middle","dob"].forEach(n=>{
+  const el = document.querySelector(`[name='${n}']`);
+  if(el) el.addEventListener("input", scheduleDupCheck);
+});
+document.querySelectorAll("input[name='benefit']").forEach(r=> r.addEventListener("change", scheduleDupCheck));
+document.querySelectorAll("input[name='claimType']").forEach(r=> r.addEventListener("change", scheduleDupCheck));
+
+// run once
+scheduleDupCheck();
+
+  initClaimFormValidation();
+
+  updateWatermark();
+  setInterval(updateWatermark, 5000);
+
+  document.addEventListener("contextmenu", (e)=>{
+    const canvas = document.getElementById("analysisCanvas");
+    if(canvas && canvas.contains(e.target)){
+      e.preventDefault();
+      toast("Right-click disabled.");
+    }
+  });
+
+  @if($errors->any())
+    go('lodge');
+  @else
+    @if(session('success'))
+      go('home');
     @endif
-  });
+  @endif
+});
 
-  // ESC close
-  document.addEventListener("keydown", (e) => {
-    if (e.key === "Escape") {
-      const m1 = document.getElementById("claimModal");
-      if (m1 && !m1.classList.contains("hidden")) closeModal();
+// ESC close
+// ESC close lang dito
+document.addEventListener("keydown", (e)=>{
+  if(e.key === "Escape"){
+    const m1 = document.getElementById("claimModal");
+    if(m1 && !m1.classList.contains("hidden")) closeModal();
 
-      const m2 = document.getElementById("recomputeModal");
-      if (m2 && !m2.classList.contains("hidden")) closeRecomputeModal();
+    const m2 = document.getElementById("recomputeModal");
+    if(m2 && !m2.classList.contains("hidden")) closeRecomputeModal();
 
-      const mo = document.getElementById("mobileOverlay");
-      if (mo && !mo.classList.contains("hidden")) toggleMobile(false);
+    const mo = document.getElementById("mobileOverlay");
+    if(mo && !mo.classList.contains("hidden")) toggleMobile(false);
+  }
+});
+
+// ✅ DELETE (global scope)
+async function deleteClaim(dbId){
+  if(!dbId) return;
+
+  const ok = confirm("Delete this claim? This cannot be undone.");
+  if(!ok) return;
+
+  const token = document.querySelector('meta[name="csrf-token"]')?.getAttribute("content") || "";
+
+  const res = await fetch(`{{ url('/hr/claims') }}/${dbId}`, {
+    method: "DELETE",
+    credentials: "same-origin",
+    headers: {
+      "X-CSRF-TOKEN": token,
+      "X-Requested-With": "XMLHttpRequest",
+      "Accept": "application/json"
     }
   });
-})();
+
+  // if HTML ang balik, ito yung dahilan bakit nagfa-fail yung res.json()
+  const ct = res.headers.get("content-type") || "";
+  if(!ct.includes("application/json")){
+    const text = await res.text();
+    console.error("DELETE returned non-JSON:", res.status, text.slice(0, 300));
+    toast(`Delete failed (${res.status}). Check console.`);
+    return;
+  }
+
+  const data = await res.json();
+
+  if(!res.ok){
+    toast(data.message || "Failed to delete claim.");
+    return;
+  }
+
+  toast(data.message || "Deleted.");
+  window.location.reload();
+}
+window.deleteClaim = deleteClaim;
   </script>
 </body>
 </html>

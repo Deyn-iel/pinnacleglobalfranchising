@@ -60,12 +60,12 @@
                 </h2>
             </div>
 
-            <div class="card">
+            {{-- <div class="card">
                 <h4>Register</h4>
                 <h2>
                     <a href="{{ route('registration') }}" style="text-decoration: none; color:#0d3553; font-size:20px;"><i class="fas fa-arrow-right"></i> Register</a>
                 </h2>
-            </div>
+            </div> --}}
 
                 <div class="card">
                     <h4>Status</h4>

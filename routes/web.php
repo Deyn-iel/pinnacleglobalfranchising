@@ -28,7 +28,6 @@ use App\Http\Controllers\Admin\SupplyController;
 use App\Http\Controllers\Admin\AdminSuppliesController;
 use App\Http\Controllers\TicketController;
 use App\Http\Controllers\Admin\AdminTicketController;
-use App\Http\Controllers\HrDashboardController;
 use App\Http\Controllers\Hr\PayslipController;
 use App\Http\Controllers\SupportChatController;
 use App\Http\Controllers\SupportPresenceController;
@@ -39,14 +38,41 @@ use App\Http\Controllers\Admin\CoffeeRegistrationController;
 use App\Http\Controllers\User\NotificationController;
 use App\Http\Controllers\Admin\UserEmailController;
 
+use App\Http\Controllers\HR\ClaimController;
+use App\Http\Controllers\HR\ClaimController as HRClaimController;
+use App\Http\Controllers\Admin\ClaimInboxController;
 
-Route::middleware(['auth', 'role:portal'])
-    ->prefix('portal')
-    ->name('portal.')
-    ->group(function () {
-        Route::view('/dashboard', 'universal-portal.portal')->name('dashboard');
-    });
-    
+use App\Http\Controllers\Portal\HrDashboardController;
+
+
+Route::middleware(['web','auth','role:portal'])->group(function () {
+
+    // Dashboard page (THIS must pass $claims)
+    Route::get('/portal/dashboard', [HrDashboardController::class, 'index'])
+        ->name('portal.dashboard'); // keep same name para di ka mag-update sa blade
+
+    // JSON details for modal
+   Route::post('/hr/claims', [ClaimController::class, 'store'])->name('hr.claims.store');
+
+   Route::get('/hr/claims/check-duplicate', [ClaimController::class, 'checkDuplicate'])
+    ->name('hr.claims.checkDuplicate');
+
+    // Needed for JS modal fetch(`/hr/claims/${dbId}`)
+    Route::get('/hr/claims/{claim}', [ClaimController::class, 'show'])->name('hr.claims.show');
+
+    // Needed for href route('hr.claims.analysis', $c->id)
+    Route::get('/hr/claims/{claim}/analysis', [ClaimController::class, 'analysis'])->name('hr.claims.analysis');
+
+     // ✅ DELETE
+    Route::delete('/hr/claims/{claim}', [ClaimController::class, 'destroy'])
+        ->name('hr.claims.destroy');
+        
+        // ✅ missing recompute endpoint (used by JS)
+      Route::post('/claims/{claim}/recompute', [ClaimController::class, 'requestRecompute'])
+        ->name('claims.recompute');
+});
+
+
 Route::middleware(['auth','hr.access'])
   ->prefix('hr')
   ->name('hr.')
@@ -63,6 +89,9 @@ Route::middleware(['auth','hr.access'])
 
 Route::middleware(['auth'])->group(function () {
 
+ // HR submits claim
+  Route::post('/hr/claims', [HRClaimController::class, 'store'])->name('hr.claims.store');
+    
  // USER
   Route::get('/user/coffee-registration', [UserCoffeeReg::class, 'create'])
         ->name('user.coffee-registration.create');
@@ -249,6 +278,16 @@ Route::middleware(['auth', 'admin', 'admin.desktop'])
     ->name('admin.')
     ->group(function () {
 
+    Route::get('/inbox', [ClaimInboxController::class, 'index'])
+            ->name('inbox');
+
+        Route::get('/claims/{claim}', [ClaimInboxController::class, 'show'])
+            ->name('claims.show');
+
+        Route::get('/admin-universal-portal/admin-portal', function () {
+            return redirect()->route('admin.inbox');
+        })->name('admin-portal');
+
      Route::get('/users-account-email', [UserEmailController::class, 'create'])
         ->name('users.email');
 
@@ -358,7 +397,7 @@ Route::view('/', 'admin.admin')->name('dashboard');
 
 Route::view('/application', 'admin.application')->name('application');
 
-Route::view('/admin-universal-portal/admin-portal', 'admin.admin-universal-portal.admin-portal')->name('admin-portal');
+
 
 Route::get('/requirements', [RequirementController::class, 'index'])
     ->name('requirements');
