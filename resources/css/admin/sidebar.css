@@ -1,5 +1,9 @@
 /* ================= ROOT ================= */
 :root {
+  --sb-w: 260px;      /* default */
+  --sb-w-sm: 220px;   /* small laptop */
+  --sb-w-xs: 200px;   /* smaller laptop */
+
   --sidebar-sm: 230px;
   --sidebar-md: 250px;
   --sidebar-lg: 280px;
@@ -26,7 +30,7 @@
 
 /* ================= ADMIN SIDEBAR ================= */
 .admin-sidebar {
-  width: 260px;
+  width: var(--sb-w);
   position: fixed;
   inset: 0 auto 0 0;
   z-index: 1050;
@@ -311,7 +315,7 @@
 
 /* ================= MAIN CONTENT ================= */
 .admin-content {
-  margin-left: 260px;
+  margin-left: var(--sb-w);
   padding: 26px;
   min-height: 100dvh;
   background: #f8fafc;
@@ -419,5 +423,64 @@
   max-height: 220px;
   opacity: 1;
   transform: translateY(0);
+}
+
+/* ============ SMALL LAPTOP (<= 1366px) ============ */
+@media (max-width: 1366px) {
+  :root { --sb-w: var(--sb-w-sm); }
+
+  .sidebar-brand{
+    height: 64px;
+    padding: 0 14px;
+    font-size: 14px;
+  }
+  .sidebar-brand i{ font-size: 16px; }
+
+  .sidebar-nav{ padding: 12px 8px 14px; }
+
+  .nav-section{
+    margin: 14px 12px 6px;
+    font-size: 10px;
+    letter-spacing: 1px;
+  }
+
+  .sidebar-nav .nav-link{
+    padding: 9px 10px;
+    font-size: 13px;
+    gap: 10px;
+    border-radius: 11px;
+  }
+
+  .sidebar-nav .nav-link i{
+    font-size: 14px;
+    width: 18px;
+  }
+
+  /* dropdown inner list indent (HR-Folder) */
+  .sb-dd .nav{
+    margin-left: 22px !important;
+  }
+}
+
+/* ============ EXTRA SMALL LAPTOP (<= 1200px) ============ */
+@media (max-width: 1200px) {
+  :root { --sb-w: var(--sb-w-xs); }
+
+  .sidebar-nav .nav-link{
+    padding: 8px 9px;
+    font-size: 12.5px;
+  }
+
+  .sidebar-footer{
+    padding: 12px 12px 14px;
+    font-size: 11px;
+  }
+}
+
+/* ============ SAFETY: prevent sidebar items from breaking layout ============ */
+.sidebar-nav .nav-link span{
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 

@@ -10,6 +10,7 @@ document.addEventListener("DOMContentLoaded", function () {
   const chatButton = document.getElementById("chat-button");
   const chatBox = document.getElementById("chatbox");
   const closeChat = document.getElementById("close-chat");
+  const deleteChat = document.getElementById("delete-chat");
   const clearChat = document.getElementById("clear-chat");
 
   const ticketBox = document.getElementById("ticketChatBox");
@@ -18,7 +19,11 @@ document.addEventListener("DOMContentLoaded", function () {
   const ticketHint = document.getElementById("ticketChatHint");
   const typing = document.getElementById("ticketTyping");
 
+  
   let lastId = 0;
+  let lastRenderedMsg = null;
+  let lastRenderedRow = null;
+
   let poller = null;
   let currentTargetUserId = null;
   let isSending = false;
@@ -42,6 +47,71 @@ function setPresenceUI(isOnline){
     chatPresenceBadge.classList.remove("is-online");
   }
 }
+
+async function deleteConversation(){
+  // guard target user
+  if (!Number.isFinite(currentTargetUserId) || currentTargetUserId <= 0) {
+    alert("No target user selected.");
+    return;
+  }
+
+  const ok = confirm("Delete this conversation? This cannot be undone.");
+  if(!ok) return;
+
+  const token = document.querySelector('meta[name="csrf-token"]')?.getAttribute("content") || "";
+  
+  try{
+    const res = await fetch("/support/chat", {
+  method: "POST", // ✅ keep POST, spoof DELETE for Laravel
+  credentials: "same-origin",
+  headers: {
+    "Accept": "application/json",
+    "Content-Type": "application/json",
+    "X-CSRF-TOKEN": token,
+    "X-Requested-With": "XMLHttpRequest"
+  },
+  body: JSON.stringify({
+    _method: "DELETE",
+    target_user_id: currentTargetUserId
+  })
+});
+
+    const ct = res.headers.get("content-type") || "";
+    const raw = await res.text();
+
+    if(!res.ok){
+  console.log("DELETE STATUS:", res.status);
+  console.log("DELETE CT:", ct);
+  console.log("DELETE RAW:", raw.slice(0, 3000)); // preview
+  alert(`Delete failed: ${res.status}. Check console + Network.`);
+  return;
+}
+
+if(!ct.includes("application/json")){
+  console.log("DELETE NON-JSON RAW:", raw.slice(0, 3000));
+  alert("Delete returned non-JSON (possible redirect/CSRF). Check Network.");
+  return;
+}
+
+    // ✅ reset UI after delete
+    lastId = 0;
+    lastRenderedMsg = null;
+    lastRenderedRow = null;
+
+    ticketBox.innerHTML = `
+      <div class="ticket-empty">
+        <div class="ticket-empty-title">Conversation deleted</div>
+        <div class="ticket-empty-sub">Start a new chat by sending a message.</div>
+      </div>
+    `;
+
+  }catch(err){
+    console.log("DELETE EXCEPTION:", err);
+    alert("Delete exception. Check console.");
+  }
+}
+
+deleteChat?.addEventListener("click", deleteConversation);
 
 async function refreshChatPresence(){
   if (!Number.isFinite(currentTargetUserId) || currentTargetUserId <= 0) return;
@@ -118,43 +188,110 @@ document.addEventListener("visibilitychange", () => {
     ticketSend.disabled = ticketInput.value.trim() === "";
   });
 
-  function renderMessages(messages){
-    if(lastId === 0) ticketBox.innerHTML = "";
+  function getInitial(name){
+  const s = String(name || "").trim();
+  return s ? s.charAt(0).toUpperCase() : "?";
+}
 
-    messages.forEach(m => {
-      const row = document.createElement("div");
-      row.className = "ticket-row " + (m.mine ? "is-mine" : "is-other");
+function setHeaderPeer(name){
+  const peerNameEl = document.getElementById("chatPeerName");
+  const peerAvatarEl = document.getElementById("chatPeerAvatar");
 
-      const bubble = document.createElement("div");
-      bubble.className = "ticket-bubble";
+  const safeName = (name && String(name).trim()) ? String(name).trim() : "Support";
+  if(peerNameEl) peerNameEl.textContent = safeName;
+  if(peerAvatarEl) peerAvatarEl.textContent = getInitial(safeName);
+}
 
-      const head = document.createElement("div");
-      head.className = "ticket-meta";
-      head.innerHTML = `
-        <span class="ticket-name">${escapeHtml(m.name ?? 'Unknown')}</span>
-        <span class="ticket-role">(${escapeHtml(m.role ?? 'user')})</span>
-      `;
+function sameSender(a, b){
+  if(!a || !b) return false;
 
-      const body = document.createElement("div");
-      body.className = "ticket-text";
-      body.textContent = m.text ?? "";
+  // mine group
+  if(!!a.mine && !!b.mine) return true;
 
-      const time = document.createElement("div");
-      time.className = "ticket-time";
-      time.textContent = m.time ?? "";
-
-      bubble.appendChild(head);
-      bubble.appendChild(body);
-      bubble.appendChild(time);
-
-      row.appendChild(bubble);
-      ticketBox.appendChild(row);
-
-      lastId = Math.max(lastId, Number(m.id || 0));
-    });
-
-    ticketBox.scrollTop = ticketBox.scrollHeight;
+  // other group: same "name" (pwede mo palitan to user_id if meron kayo)
+  if(!a.mine && !b.mine){
+    return String(a.name || "").trim().toLowerCase() === String(b.name || "").trim().toLowerCase();
   }
+
+  return false;
+}
+
+function downgradePrevAvatarToGhost(){
+  if(!lastRenderedRow) return;
+  const a = lastRenderedRow.querySelector(".msg-avatar");
+  if(a){
+    a.className = "msg-avatar-ghost";
+    a.textContent = "";
+  }
+}
+
+function renderMessages(messages){
+  if(lastId === 0) ticketBox.innerHTML = "";
+
+  for(let i = 0; i < messages.length; i++){
+    const m = messages[i];
+    const next = messages[i + 1];
+
+    // header name
+    if(!m.mine && (m.name || m.role)){
+      setHeaderPeer(m.name || "Support");
+    }
+
+    // ✅ IMPORTANT FIX:
+    // if previous message exists and same sender (OTHER), previous should lose avatar
+    if(lastRenderedMsg && sameSender(lastRenderedMsg, m) && !lastRenderedMsg.mine){
+      downgradePrevAvatarToGhost();
+    }
+
+    const row = document.createElement("div");
+    row.className = "ticket-row " + (m.mine ? "is-mine" : "is-other");
+
+    // show avatar only if last in group (based on next in THIS batch)
+    const isLastInGroup = !next || !sameSender(m, next);
+
+    if(!m.mine){
+      if(isLastInGroup){
+        const avatar = document.createElement("div");
+        avatar.className = "msg-avatar";
+        avatar.textContent = getInitial(m.name || "Support");
+        row.appendChild(avatar);
+      }else{
+        const ghost = document.createElement("div");
+        ghost.className = "msg-avatar-ghost";
+        row.appendChild(ghost);
+      }
+    }
+
+    const bubbleWrap = document.createElement("div");
+    bubbleWrap.className = "msg-wrap";
+
+    const bubble = document.createElement("div");
+    bubble.className = "ticket-bubble";
+
+    const body = document.createElement("div");
+    body.className = "ticket-text";
+    body.textContent = m.text ?? "";
+
+    const time = document.createElement("div");
+    time.className = "msg-time";
+    time.textContent = m.time ?? "";
+
+    bubble.appendChild(body);
+    bubbleWrap.appendChild(bubble);
+    bubbleWrap.appendChild(time);
+
+    row.appendChild(bubbleWrap);
+    ticketBox.appendChild(row);
+
+    // update trackers
+    lastRenderedMsg = m;
+    lastRenderedRow = row;
+
+    lastId = Math.max(lastId, Number(m.id || 0));
+  }
+
+  ticketBox.scrollTop = ticketBox.scrollHeight;
+}
 
   async function fetchMessages() {
   try {
@@ -388,6 +525,7 @@ presenceWatchTimer = setInterval(refreshChatPresence, 5000);
 
   // hint title
   if(ticketHint) ticketHint.textContent = label;
+setHeaderPeer(label);
 
   // enable inputs
   setInputState(true);

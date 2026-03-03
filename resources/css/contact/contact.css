@@ -251,8 +251,9 @@ p {
 
 /* Section Layout */
 .contact-section {
-    margin-top: 50px;
-    margin-bottom: 70px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 /* Responsive Fix */
@@ -296,29 +297,37 @@ p {
     }
 }
 
-
-/* RESPONSIVE FIXES */
-@media (max-width: 1200px) {
+@media (max-width: 1520px) {
     .image {
         flex-wrap: wrap;
         margin-top: 20px;
     }
 
     .logo-item {
+        width: 80%;
+        height: 400px;
+    }
+}
+
+/* RESPONSIVE FIXES */
+@media (max-width: 1200px) {
+
+    
+    .logo-item {
         width: 95%;
-        height: 300px;
+        height: 350px;
     }
 }
 
 @media (max-width: 768px) {
     .logo-item {
-        height: 250px;
+        height: 280px;
     }
 }
 
 @media (max-width: 576px) {
     .logo-item {
-        height: 200px;
+        height: 220px;
     }
 }
 .success-msg {

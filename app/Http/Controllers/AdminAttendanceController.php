@@ -25,8 +25,9 @@ class AdminAttendanceController extends Controller
 
     $setting = AttendanceSetting::first();
 
-return view('admin.attendance', compact('records', 'date', 'setting'));
+    $selfie = null; // ✅ define para hindi "undefined variable"
 
+    return view('admin.attendance', compact('records', 'date', 'setting', 'selfie'));
 }
     public function destroy($id)
 {

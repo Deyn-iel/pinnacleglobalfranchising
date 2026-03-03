@@ -11,21 +11,29 @@
 
 <section id="chatbox" class="ticket-chatbox" aria-hidden="true" aria-label="Support chat">
   <header class="chat-header">
-    <div class="chat-header-left">
-  <div class="chat-title-row">
-    <div class="chat-title">Support Chat</div>
-    <span id="chatPresenceBadge" class="presence-badge is-offline">Offline</span>
+  <div class="chat-peer">
+    <div id="chatPeerAvatar" class="peer-avatar">S</div>
+
+    <div class="peer-meta">
+      <div id="chatPeerName" class="peer-name">Support</div>
+      <div class="peer-sub">
+        <span id="chatPresenceBadge" class="presence-badge is-offline">Offline</span>
+      </div>
+    </div>
   </div>
 
-  <div id="ticketChatHint" class="chat-subtitle">Support Chat</div>
-  
+  <div class="chat-header-actions">
+  <button id="delete-chat" class="chat-btn ghost" type="button" aria-label="Delete conversation">
+    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" 
+       viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+    <path stroke-linecap="round" stroke-linejoin="round" 
+          d="M3 6h18M9 6V4h6v2M6 6l1 14h10l1-14M10 11v6M14 11v6"/>
+  </svg>
+  </button>
+
+  <button id="close-chat" class="chat-btn ghost" type="button" aria-label="Close chat">✕</button>
 </div>
-
-
-    <div class="chat-header-actions">
-      <button id="close-chat" class="chat-btn ghost" type="button" aria-label="Close chat">✕</button>
-    </div>
-  </header>
+</header>
 
   <div id="ticketChatBox" class="ticket-messages">
     <div class="ticket-empty">

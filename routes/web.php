@@ -78,13 +78,13 @@ Route::middleware(['auth','hr.access'])
   ->name('hr.')
   ->group(function () {
 
-    Route::get('/dashboard', fn() => view('admin.hr.dashboard'))->name('dashboard');
-    Route::get('/hr/payslips', [PayslipController::class, 'index'])->name('hr.payslips.index');
+    Route::get('/dashboard', [PayslipController::class, 'index'])->name('dashboard');
 
     Route::get('/payslips', [PayslipController::class, 'index'])->name('payslips.index');
     Route::post('/payslips', [PayslipController::class, 'store'])->name('payslips.store');
     Route::get('/payslips/{payslip}/download', [PayslipController::class, 'download'])->name('payslips.download');
     Route::delete('/payslips/{payslip}', [PayslipController::class, 'destroy'])->name('payslips.destroy');
+
 });
 
 Route::middleware(['auth'])->group(function () {
@@ -102,6 +102,7 @@ Route::middleware(['auth'])->group(function () {
 
 Route::get('/support/chat',  [SupportChatController::class, 'fetch']);
   Route::post('/support/chat', [SupportChatController::class, 'send']);
+  Route::delete('/support/chat', [SupportChatController::class, 'destroy']);
 
   Route::post('/support/presence/ping', [SupportPresenceController::class, 'ping']);
   Route::get('/support/presence/status', [SupportPresenceController::class, 'status']); 

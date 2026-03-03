@@ -30,10 +30,6 @@
   }
 
   body {
-    background:
-      radial-gradient(1200px 600px at 18% 0%, rgba(13,110,253,.08), transparent 55%),
-      radial-gradient(900px 500px at 95% 10%, rgba(34,197,94,.07), transparent 55%),
-      var(--bg);
     color: var(--text);
     font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
     overflow-x: hidden;

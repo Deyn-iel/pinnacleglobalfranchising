@@ -19,11 +19,19 @@
             </a>
         </li>
 
-        <li class="nav-item">
+        {{-- <li class="nav-item">
             <a href="{{ route('admin.admin-portal') }}"
                class="nav-link {{ request()->routeIs('admin.admin-portal') ? 'active' : '' }}">
                 <i class="fas fa-building"></i>
                 <span>Third Party Admin</span>
+            </a>
+        </li> --}}
+
+        <li class="nav-item disabled">
+            <a href="javascript:void(0)" class="nav-link">
+                <i class="fas fa-building"></i>
+                <span>Third Party Admin</span>
+                <small>soon</small>
             </a>
         </li>
 
@@ -66,8 +74,8 @@
       <li class="nav-item">
         <a href="{{ route('hr.dashboard') }}"
            class="nav-link {{ request()->routeIs('hr.dashboard') ? 'active' : '' }}">
-          <i class="fa-solid fa-gauge-high me-2"></i>
-          HR Dashboard
+          <i class="fa-solid fa-file-invoice-dollar me-2"></i>  
+          Upload Payslip
         </a>
       </li>
 

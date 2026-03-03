@@ -14,164 +14,204 @@
 @vite(['resources/css/admin/app.css'])
 
 <style>
-  :root{
-    --sidebar-w: 260px;
-    --bg: #f5f6fa;
-    --text: #0f172a;
-    --muted: #64748b;
-    --border: rgba(15,23,42,.10);
-    --card: rgba(255,255,255,.90);
-    --shadow: 0 18px 45px rgba(15,23,42,.08);
-    --radius: 18px;
-  }
+:root{
+  --sidebar-w: 260px;
+  --bg: #f8fafc;
+  --card: #ffffff;
+  --text: #0f172a;
+  --muted: #6b7280;
+  --border: #e5e7eb;
+  --primary: #1e293b;
+  --accent: #2563eb;
+  --success: #16a34a;
+  --danger: #dc2626;
+  --radius: 14px;
+}
 
-  body{
-    background:
-      radial-gradient(1200px 650px at 18% 0%, rgba(13,110,253,.08), transparent 55%),
-      radial-gradient(900px 520px at 95% 10%, rgba(34,197,94,.07), transparent 55%),
-      var(--bg);
-    font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
-    overflow-x: hidden;
-    color: var(--text);
-  }
+body{
+  background: var(--bg);
+  font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+  color: var(--text);
+}
 
-  aside{ width: var(--sidebar-w); z-index: 999; }
+main{
+  margin-left: var(--sidebar-w);
+  padding: 28px;
+  max-width: calc(100vw - var(--sidebar-w));
+}
 
-  main{
-    margin-left: var(--sidebar-w);
-    padding: clamp(16px, 2.2vw, 34px);
-    max-width: calc(100vw - var(--sidebar-w));
-    min-width: 0;
-    transition: margin-left .3s ease;
-  }
+@media (max-width: 991.98px){
+  main{ margin-left:0; padding:16px; }
+}
 
-  @media (max-width: 991.98px){
-    main{ margin-left: 0; max-width: 100%; padding: 16px; }
-  }
+/* HEADER */
+.dashboard-header{
+  background: var(--card);
+  border:1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 22px;
+  margin-bottom: 24px;
+}
 
-  .dashboard-header{
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: clamp(16px, 2vw, 24px);
-    box-shadow: var(--shadow);
-    margin-bottom: 16px;
-    position: relative;
-    overflow: hidden;
-    backdrop-filter: blur(10px);
-  }
-  .dashboard-header::after{
-    content:"";
-    position:absolute;
-    right:-90px; top:-90px;
-    width: 260px; height: 260px;
-    background: radial-gradient(circle, rgba(13,110,253,.18), transparent 60%);
-    pointer-events:none;
-  }
-  .dashboard-header h2{
-    font-weight: 900;
-    letter-spacing: -.02em;
-    margin-bottom: 6px;
-  }
-  .dashboard-header p{ margin: 0; color: var(--muted); }
+.dashboard-header h2{
+  font-weight:700;
+  font-size:22px;
+}
 
-  .stat-card{
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 18px;
-    padding: 18px;
-    box-shadow: var(--shadow);
-    height: 100%;
-    backdrop-filter: blur(10px);
-  }
-  .stat-title{ font-size: 12.5px; font-weight: 800; color: var(--muted); }
-  .stat-value{ font-size: 28px; font-weight: 900; color: var(--text); }
-  .stat-icon{
-    width: 44px; height: 44px;
-    border-radius: 14px;
-    display:grid; place-items:center;
-    background: rgba(13,110,253,.10);
-    border: 1px solid rgba(13,110,253,.14);
-    color: #0f172a;
-  }
+.dashboard-header p{
+  font-size:14px;
+  color: var(--muted);
+}
 
-  .panel{
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 20px;
-    padding: clamp(16px, 2vw, 22px);
-    box-shadow: var(--shadow);
-    backdrop-filter: blur(10px);
-  }
+/* STAT CARDS */
+.stat-card{
+  background: var(--card);
+  border:1px solid var(--border);
+  border-radius: var(--radius);
+  padding:20px;
+  transition:.2s ease;
+}
 
-  .panel-title{
-    font-weight: 900;
-    letter-spacing: -.01em;
-    margin-bottom: 4px;
-  }
-  .panel-sub{ color: var(--muted); font-size: 13px; margin: 0; }
+.stat-card:hover{
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0,0,0,.05);
+}
 
-  .form-label{
-    font-weight: 800;
-    font-size: 12.5px;
-    color: #374151;
-    margin-bottom: 6px;
-  }
-  .form-control, .form-select{
-    border-radius: 14px;
-    border: 1px solid rgba(15,23,42,.12);
-    padding: 10px 12px;
-    font-size: 14px;
-  }
-  .form-control:focus, .form-select:focus{
-    border-color: rgba(13,110,253,.45);
-    box-shadow: 0 0 0 4px rgba(13,110,253,.14);
-  }
+.stat-title{
+  font-size:12px;
+  font-weight:600;
+  text-transform: uppercase;
+  color: var(--muted);
+  letter-spacing:.5px;
+}
 
-  .btn{ font-weight: 900; border-radius: 999px; }
+.stat-value{
+  font-size:26px;
+  font-weight:700;
+  margin-top:6px;
+}
 
-  .folder-card{
-    background: rgba(255,255,255,.85);
-    border: 1px solid rgba(15,23,42,.10);
-    border-radius: 18px;
-    padding: 16px;
-    box-shadow: 0 14px 34px rgba(15,23,42,.07);
-    transition: transform .15s ease, box-shadow .15s ease;
-    height: 100%;
-  }
-  .folder-card:hover{
-    transform: translateY(-2px);
-    box-shadow: 0 20px 48px rgba(15,23,42,.12);
-  }
-  .folder-top{ display:flex; align-items:flex-start; justify-content: space-between; gap: 10px; margin-bottom: 8px; }
-  .folder-ico{
-    width: 46px; height: 46px;
-    border-radius: 16px;
-    display:grid; place-items:center;
-    background: rgba(245,158,11,.14);
-    border: 1px solid rgba(245,158,11,.22);
-  }
-  .folder-name{ font-weight: 900; margin: 0; line-height: 1.15; }
-  .folder-meta{ color: var(--muted); font-size: 12.5px; margin: 0; }
+.stat-icon{
+  width:42px;
+  height:42px;
+  border-radius:10px;
+  display:grid;
+  place-items:center;
+  background:#f1f5f9;
+  color:var(--primary);
+}
 
-  .table-wrapper{
-    background: rgba(255,255,255,.85);
-    border: 1px solid rgba(15,23,42,.10);
-    border-radius: 18px;
-    overflow: hidden;
-  }
-  .table-responsive{ overflow-x:auto; -webkit-overflow-scrolling: touch; }
-  table{ margin-bottom:0; font-size: 14px; min-width: 880px; }
-  th{ white-space:nowrap; }
-  .table-hover tbody tr:hover{ background: rgba(13,110,253,.05); }
+/* PANELS */
+.panel{
+  background: var(--card);
+  border:1px solid var(--border);
+  border-radius: var(--radius);
+  padding:20px;
+}
 
-  .soft-alert{
-    border-radius: 14px;
-    border: 1px solid rgba(15,23,42,.10);
-    box-shadow: 0 12px 28px rgba(15,23,42,.08);
-  }
+.panel-title{
+  font-weight:700;
+  font-size:16px;
+}
 
-  
+.panel-sub{
+  font-size:13px;
+  color:var(--muted);
+}
+
+/* FORM */
+.form-label{
+  font-weight:600;
+  font-size:13px;
+}
+
+.form-control,
+.form-select{
+  border-radius:10px;
+  border:1px solid var(--border);
+  padding:10px 12px;
+}
+
+.form-control:focus,
+.form-select:focus{
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(37,99,235,.15);
+}
+
+/* BUTTONS */
+.btn{
+  border-radius:10px;
+  font-weight:600;
+}
+
+.btn-primary{
+  background: var(--accent);
+  border:none;
+}
+
+.btn-primary:hover{
+  background:#1d4ed8;
+}
+
+/* FOLDER CARDS */
+.folder-card{
+  border:1px solid var(--border);
+  border-radius: var(--radius);
+  padding:16px;
+  background:#fff;
+  transition:.2s ease;
+}
+
+.folder-card:hover{
+  box-shadow:0 8px 24px rgba(0,0,0,.05);
+}
+
+.folder-name{
+  font-weight:600;
+}
+
+.folder-meta{
+  font-size:12px;
+  color:var(--muted);
+}
+
+/* TABLE */
+.table-wrapper{
+  border:1px solid var(--border);
+  border-radius: var(--radius);
+  overflow:hidden;
+}
+
+table{
+  margin:0;
+}
+
+thead{
+  background:#f1f5f9;
+}
+
+th{
+  font-size:12px;
+  font-weight:600;
+  text-transform: uppercase;
+  letter-spacing:.5px;
+  color:var(--muted);
+}
+
+tbody td{
+  font-size:13px;
+  vertical-align:middle;
+}
+
+.table-hover tbody tr:hover{
+  background:#f8fafc;
+}
+
+/* ALERTS */
+.soft-alert{
+  border-radius:10px;
+  font-size:13px;
+}
 </style>
 </head>
 
@@ -213,7 +253,7 @@
         Welcome, {{ Auth::user()->name }}
         <i class="fas fa-user-check ms-1"></i>
       </h2>
-      <p class="text-muted mb-0">HR Dashboard — Payroll & Payslip Management</p>
+      <p class="text-muted mb-0">Payroll & Payslip Management Overview</p>
     </div>
 
     <div class="d-flex gap-2 flex-wrap">
@@ -242,7 +282,7 @@
     <div class="col-12 col-md-4">
       <div class="stat-card d-flex align-items-center justify-content-between gap-3">
         <div>
-          <div class="stat-title">Payslips (Example)</div>
+          <div class="stat-title">Total Payslips</div>
           <div class="stat-value">{{ $payslipsCount ?? '—' }}</div>
         </div>
         <div class="stat-icon"><i class="fa-solid fa-receipt"></i></div>
@@ -252,7 +292,7 @@
     <div class="col-12 col-md-4">
       <div class="stat-card d-flex align-items-center justify-content-between gap-3">
         <div>
-          <div class="stat-title">Employees (Example)</div>
+          <div class="stat-title">Total Employees</div>
           <div class="stat-value">{{ $employeesCount ?? '—' }}</div>
         </div>
         <div class="stat-icon"><i class="fa-solid fa-users"></i></div>
@@ -273,12 +313,22 @@
   @endif
 
   @if(session('success'))
-    <div class="alert alert-success soft-alert d-flex align-items-center gap-2 mb-3" role="alert" id="successAlert">
-      <i class="fa-solid fa-circle-check"></i>
-      <div class="fw-semibold">{{ session('success') }}</div>
-      <button type="button" class="btn-close ms-auto" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>
-  @endif
+  <div class="alert alert-success soft-alert d-flex align-items-center gap-2 mb-3" role="alert" id="successAlert">
+    <i class="fa-solid fa-circle-check"></i>
+    <div class="fw-semibold">{{ session('success') }}</div>
+  </div>
+@endif
+
+@if(session('skipped_files') && count(session('skipped_files')))
+  <div class="alert alert-warning soft-alert mb-3">
+    <div class="fw-bold mb-2">Skipped files (no matching email found):</div>
+    <ul class="mb-0 small">
+      @foreach(session('skipped_files') as $sf)
+        <li>{{ $sf }}</li>
+      @endforeach
+    </ul>
+  </div>
+@endif
 
   @if ($errors->any())
     <div class="alert alert-danger soft-alert mb-3">
@@ -301,14 +351,15 @@
               <i class="fa-solid fa-cloud-arrow-up me-2"></i>
               Upload Payslips
             </div>
-            <p class="panel-sub">Upload multiple payslip files under a Month/Year folder.</p>
+            <p class="panel-sub">Upload payslips individually or as a ZIP file for automatic distribution.</p>
           </div>
           <span class="badge rounded-pill text-bg-warning text-dark px-3 py-2">
             Folder: <span class="fw-bold" x-text="folderLabel"></span>
           </span>
         </div>
 
-        <form action="{{ route('hr.payslips.store') }}"
+        <form id="uploadForm"
+      action="{{ route('hr.payslips.store') }}"
       method="POST"
       enctype="multipart/form-data">
   @csrf
@@ -334,34 +385,35 @@
       </select>
     </div>
 
-    <div class="col-12">
+    {{-- <div class="col-12">
       <label class="form-label">Payroll Batch Name (optional)</label>
       <input type="text" name="batch_name" class="form-control"
              placeholder="e.g., Payroll - Branch A / Cutoff 1-15">
-    </div>
+    </div> --}}
 
     <div class="col-12">
       <label class="form-label">Select Payslip Files *</label>
+
       <input type="file"
              name="files[]"
              class="form-control"
              multiple
              required
-             accept=".pdf,.jpg,.jpeg,.png,.doc,.docx">
+             accept=".pdf,.jpg,.jpeg,.png,.doc,.docx,.zip">
       <div class="form-text">
-        Allowed: PDF / Images / DOC. You can upload multiple files.
+        Allowed: PDF / Images / DOC / ZIP. You can upload multiple files.
       </div>
     </div>
   </div>
 
   <div class="d-flex gap-2 flex-wrap mt-3">
-    <button class="btn btn-primary px-4" type="submit">
-      Upload to Folder
+    <button id="uploadBtn" class="btn btn-primary px-4" type="submit">
+      Upload
     </button>
 
-    <a href="{{ route('hr.payslips.index') }}" class="btn btn-outline-secondary px-4">
+    {{-- <a href="{{ route('hr.payslips.index') }}" class="btn btn-outline-secondary px-4">
       View All Folders
-    </a>
+    </a> --}}
   </div>
 </form>
 
@@ -398,8 +450,15 @@
         <div class="row g-3">
           @forelse($folders as $f)
             <div class="col-12 col-md-6">
-              <a href="{{ $hasIndex ? route('hr.payslips.index', ['folder' => $f['key']]) : '#' }}"
-                 class="text-decoration-none text-reset">
+             <a href="#"
+              class="text-decoration-none text-reset"
+              data-bs-toggle="modal"
+              data-bs-target="#folderModal"
+              data-folder="{{ $f['key'] }}"
+              data-label="{{ $f['label'] }}"
+              data-count="{{ $f['count'] }}"
+              data-latest="{{ $f['latest'] }}"
+              data-files='@json($f["files"])'>
                 <div class="folder-card">
                   <div class="folder-top">
                     <div class="folder-ico">
@@ -435,7 +494,7 @@
 
   </div>
 
-  <div class="panel">
+  {{-- <div class="panel">
     <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 mb-3">
       <div>
         <div class="panel-title">
@@ -499,9 +558,165 @@
         </table>
       </div>
     </div>
+  </div> --}}
+
+  <!-- Folder Details Modal -->
+<div class="modal fade" id="folderModal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content" style="border-radius:14px;">
+      
+      <div class="modal-header">
+        <h5 class="modal-title fw-semibold">
+          Folder Details
+        </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+
+      <div class="modal-body">
+
+  <div class="row mb-4">
+    <div class="col-md-6">
+      <small class="text-muted">Folder</small>
+      <div class="fw-semibold" id="modalFolderLabel"></div>
+    </div>
+    <div class="col-md-6">
+      <small class="text-muted">Total Files</small>
+      <div class="fw-semibold" id="modalFolderCount"></div>
+    </div>
   </div>
+
+  <div class="table-wrapper">
+    <div class="table-responsive">
+      <table class="table table-hover align-middle mb-0">
+        <thead>
+          <tr>
+            <th>File Name</th>
+            <th>Uploaded By</th>
+            <th>Date</th>
+            <th class="text-center">Action</th>
+          </tr>
+        </thead>
+        <tbody id="modalFileTable">
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div>
+
+    </div>
+  </div>
+</div>
+
+<!-- Upload Loading Overlay -->
+<div id="uploadLoading"
+     style="display:none;
+            position:fixed;
+            inset:0;
+            background:rgba(0,0,0,0.55);
+            z-index:2000;
+            backdrop-filter: blur(2px);
+            align-items:center;
+            justify-content:center;
+            flex-direction:column;
+            color:white;
+            font-weight:600;">
+            
+    <div class="spinner-border text-light mb-3" style="width:3rem;height:3rem;"></div>
+    <div>Uploading... Please wait.</div>
+</div>
 
 </main>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+  // ✅ Upload loading
+  const uploadForm = document.getElementById('uploadForm');
+  const uploadBtn = document.getElementById('uploadBtn');
+  const loadingOverlay = document.getElementById('uploadLoading');
+
+  if (uploadForm) {
+    uploadForm.addEventListener('submit', function () {
+      if (loadingOverlay) loadingOverlay.style.display = 'flex';
+      if (uploadBtn) {
+        uploadBtn.disabled = true;
+        uploadBtn.innerText = 'Uploading...';
+      }
+    });
+  }
+
+  // ✅ Success alert fade
+  const alert = document.getElementById("successAlert");
+  if (alert) {
+    setTimeout(() => {
+      alert.style.transition = "opacity 0.6s ease, transform 0.6s ease";
+      alert.style.opacity = "0";
+      alert.style.transform = "translateY(-5px)";
+      setTimeout(() => alert.remove(), 600);
+    }, 3000);
+  }
+
+  // ✅ Folder modal populate
+  const folderModal = document.getElementById('folderModal');
+  folderModal.addEventListener('show.bs.modal', function (event) {
+    const button = event.relatedTarget;
+
+    const label = button.getAttribute('data-label');
+    const count = button.getAttribute('data-count');
+    const rawFiles = button.getAttribute('data-files');
+    const files = rawFiles ? JSON.parse(rawFiles) : [];
+
+    document.getElementById('modalFolderLabel').innerText = label;
+    document.getElementById('modalFolderCount').innerText = count + " file(s)";
+
+    const tableBody = document.getElementById('modalFileTable');
+    tableBody.innerHTML = '';
+
+    if (files.length === 0) {
+      tableBody.innerHTML = `
+        <tr>
+          <td colspan="4" class="text-center text-muted py-4">
+            No files in this folder.
+          </td>
+        </tr>
+      `;
+      return;
+    }
+
+    files.forEach(file => {
+      const row = `
+        <tr>
+          <td>${file.original_name ?? '—'}</td>
+          <td>${file.uploader?.name ?? '—'}</td>
+          <td>${new Date(file.created_at).toLocaleString()}</td>
+          <td class="text-center">
+            <div class="d-inline-flex gap-2">
+
+              <a href="/hr/payslips/${file.id}/download"
+                 class="btn btn-sm btn-outline-primary">
+                 <i class="fa-solid fa-download"></i>
+              </a>
+
+              <form method="POST"
+                    action="/hr/payslips/${file.id}"
+                    onsubmit="return confirm('Delete this payslip file?')">
+                <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                <input type="hidden" name="_method" value="DELETE">
+                <button type="submit" class="btn btn-sm btn-outline-danger">
+                  <i class="fa-solid fa-trash"></i>
+                </button>
+              </form>
+
+            </div>
+          </td>
+        </tr>
+      `;
+      tableBody.innerHTML += row;
+    });
+  });
+
+});
+</script>
 </body>
 </html>

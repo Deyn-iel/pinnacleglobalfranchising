@@ -88,4 +88,23 @@ class SupportChatController extends Controller
 
         return response()->json(['ok' => true, 'id' => $msg->id]);
     }
+
+public function destroy(Request $request)
+{
+    $request->validate([
+        'target_user_id' => ['required','integer']
+    ]);
+
+    $me = (int) Auth::id();
+    $target = (int) $request->target_user_id;
+
+    // Delete all messages between the two users
+    SupportMessage::where(function($q) use ($me, $target){
+        $q->where('user_id', $me)->where('target_user_id', $target);
+    })->orWhere(function($q) use ($me, $target){
+        $q->where('user_id', $target)->where('target_user_id', $me);
+    })->delete();
+
+    return response()->json(['ok' => true]);
+}
 }
