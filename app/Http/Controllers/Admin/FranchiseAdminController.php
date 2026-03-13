@@ -46,4 +46,11 @@ class FranchiseAdminController extends Controller
         return redirect()->route('admin.application')
             ->with('success', 'Application deleted successfully!');
     }
+
+    public function modal($id)
+{
+    $application = \App\Models\FranchiseApplication::findOrFail($id);
+
+    return view('admin.applications.details-modal-content', compact('application'));
+}
 }

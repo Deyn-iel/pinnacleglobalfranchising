@@ -29,7 +29,7 @@ class TicketController extends Controller
     public function store(Request $request)
 {
     $request->validate([
-        'subject' => 'required|string|max:255',
+        'branch' => 'required|string|max:255',
         'description' => 'required|string',
         'department' => 'required',
         'priority' => 'required',
@@ -55,7 +55,7 @@ class TicketController extends Controller
         $ticket = Ticket::create([
             'ticket_no' => $ticketNo,
             'user_id' => Auth::id(),
-            'subject' => $request->subject,
+            'subject' => $request->branch,
             'description' => $request->description,
             'department' => $request->department,
             'priority' => $request->priority,

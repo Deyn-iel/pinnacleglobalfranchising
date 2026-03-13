@@ -404,12 +404,11 @@
 .nav-disabled{
   opacity: .35;
   cursor: not-allowed;
-  pointer-events: none;
   filter: grayscale(1);
 }
 .soon{
   margin-left: auto;
-  font-size: 10px;
+  font-size: 8px;
   opacity: .7;
 }
 .sb-dd{

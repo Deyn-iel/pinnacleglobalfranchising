@@ -129,6 +129,7 @@
         <select id="departmentFilter" class="select">
           <option value="">All Departments</option>
           <option value="it">IT</option>
+          <option value="smm">SMM</option>
           <option value="hr">HR</option>
           <option value="finance">Finance</option>
           <option value="admin">Admin</option>
@@ -150,6 +151,7 @@
         <select id="departmentFilter_m" class="select w-100">
           <option value="">All Departments</option>
           <option value="it">IT</option>
+          <option value="smm">SMM</option>
           <option value="hr">HR</option>
           <option value="finance">Finance</option>
           <option value="admin">Admin</option>
@@ -186,7 +188,7 @@
         @forelse($tickets as $ticket)
           @php
             $statusClass = match($ticket->status){
-              'pending' => 'st-pending',
+              'pending' => 'st-pending',  
               'in_progress' => 'st-progress',
               'resolved' => 'st-resolved',
               default => ''

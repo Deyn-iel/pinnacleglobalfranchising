@@ -47,7 +47,7 @@ class SupportPresenceController extends Controller
       ->whereIn('id', $ids)
       ->get();
 
-    $onlineWindowSeconds = 20; // ✅ adjust: 15-30 okay
+    $onlineWindowSeconds = 20; 
     $now = now();
 
     $users = $rows->map(function($u) use ($now, $onlineWindowSeconds) {

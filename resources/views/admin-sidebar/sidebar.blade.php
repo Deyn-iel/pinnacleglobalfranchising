@@ -94,7 +94,7 @@
   <a class="nav-link nav-disabled" href="javascript:void(0)">
     <i class="fas fa-user-tie me-2"></i>
     HR-Folder
-    <small class="soon ms-1">Hr access required</small>
+    <small class="soon">Hr access required</small>
   </a>
 @endif
 </li>

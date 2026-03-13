@@ -27,13 +27,12 @@
     --radius: 18px;
     --primary: #0d6efd;
     --primary-soft: rgba(13,110,253,.12);
+
+    /* Safe space para hindi tabunan ng top navbar/header */
+    --admin-top-safe: 76px;
   }
 
   body {
-    background:
-      radial-gradient(1200px 650px at 18% 0%, rgba(13,110,253,.08), transparent 55%),
-      radial-gradient(900px 520px at 95% 10%, rgba(34,197,94,.07), transparent 55%),
-      var(--bg);
     overflow-x: hidden;
     color: var(--text);
     font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
@@ -52,7 +51,6 @@
     min-width: 0;
   }
 
-  /* nicer centering on huge desktop */
   @media (min-width: 1400px){
     main{
       padding-left: 34px;
@@ -60,7 +58,6 @@
     }
   }
 
-  /* remove sidebar offset on tablets/phones */
   @media (max-width: 991.98px){
     main{
       margin-left: 0;
@@ -143,7 +140,10 @@
     flex: 0 0 auto;
     box-shadow: 0 14px 28px rgba(13,110,253,.10);
   }
-  .stat-icon i{ font-size: 18px; }
+
+  .stat-icon i{
+    font-size: 18px;
+  }
 
   .stat-title {
     font-size: 13px;
@@ -178,7 +178,6 @@
     backdrop-filter: blur(10px);
   }
 
-  /* responsive horizontal scroll when needed */
   .table-scroll{
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
@@ -187,7 +186,7 @@
   table {
     margin-bottom: 0;
     font-size: 14px;
-    min-width: 840px; /* ensures nice layout; scroll on small screens */
+    min-width: 840px;
   }
 
   th {
@@ -208,12 +207,13 @@
 
   /* ================= BUTTONS ================= */
   .btn-primary {
-    background: #0f172a; /* premium dark */
+    background: #0f172a;
     border: none;
     font-weight: 700;
     border-radius: 999px;
     padding: 6px 14px;
   }
+
   .btn-primary:hover{
     background: #111827;
   }
@@ -224,7 +224,6 @@
     padding: 6px 14px;
   }
 
-  /* action cell fix: allow wrap but keep aligned */
   .actions-cell{
     white-space: nowrap;
   }
@@ -236,9 +235,125 @@
     border: 1px solid rgba(34,197,94,.25);
     transition: opacity 0.6s ease, transform 0.6s ease;
   }
+
   .alert.fade:not(.show) {
     opacity: 0;
     transform: translateY(-10px);
+  }
+
+  /* ================= MODAL FIX ================= */
+  .app-details-modal{
+    z-index: 5000;
+  }
+
+  .modal-backdrop.show{
+    z-index: 4990;
+  }
+
+  #appDetailsModal{
+    padding: 16px !important;
+  }
+
+  #appDetailsModal.show{
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    padding-top: var(--admin-top-safe) !important;
+    padding-bottom: 24px !important;
+  }
+
+  #appDetailsModal .modal-dialog{
+    margin: 0 auto !important;
+    width: min(1100px, calc(100vw - 32px));
+    max-width: 1100px;
+  }
+
+  #appDetailsModal .modal-content{
+    border-radius: 18px;
+    overflow: hidden;
+    border: 0;
+    box-shadow: 0 24px 80px rgba(15,23,42,.25);
+    max-height: calc(100vh - var(--admin-top-safe) - 40px);
+    background: #fff;
+  }
+
+  #appDetailsModal .modal-header,
+  #appDetailsModal .modal-footer{
+    background: #fff;
+    position: relative;
+    z-index: 2;
+    flex: 0 0 auto;
+  }
+
+  #appDetailsModal .modal-header{
+    padding: 14px 18px;
+    border-bottom: 1px solid rgba(15,23,42,.08);
+  }
+
+  #appDetailsModal .modal-body{
+    padding: 18px;
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+
+  #appDetailsModal .modal-footer{
+    padding: 12px 18px;
+    border-top: 1px solid rgba(15,23,42,.08);
+  }
+
+  @media (max-width: 991.98px){
+    :root{
+      --admin-top-safe: 58px;
+    }
+
+    #appDetailsModal .modal-dialog{
+      width: min(100%, calc(100vw - 24px));
+    }
+  }
+
+  @media (max-width: 767.98px){
+    :root{
+      --admin-top-safe: 48px;
+    }
+
+    #appDetailsModal{
+      padding: 8px !important;
+    }
+
+    #appDetailsModal.show{
+      padding-top: var(--admin-top-safe) !important;
+      padding-bottom: 10px !important;
+    }
+
+    #appDetailsModal .modal-dialog{
+      width: calc(100vw - 16px);
+      max-width: none;
+    }
+
+    #appDetailsModal .modal-content{
+      border-radius: 14px;
+      max-height: calc(100vh - var(--admin-top-safe) - 16px);
+    }
+
+    #appDetailsModal .modal-header{
+      padding: 12px 14px;
+    }
+
+    #appDetailsModal .modal-body{
+      padding: 12px;
+    }
+
+    #appDetailsModal .modal-footer{
+      padding: 10px 14px;
+    }
+
+    #appDetailsModal .modal-title{
+      font-size: 16px;
+    }
+
+    #appDetailsModal .btn{
+      font-size: 14px;
+    }
   }
 </style>
 </head>
@@ -250,7 +365,6 @@
 
 <main>
 
-  <!-- HEADER -->
   <div class="page-header">
     <h3 class="fw-bold mb-1">
       <i class="fas fa-chart-line me-2"></i>Admin Dashboard
@@ -260,9 +374,7 @@
     </p>
   </div>
 
-  <!-- STATS -->
   <div class="row g-3 mb-4">
-
     <div class="col-12 col-md-6 col-xl-4">
       <div class="stat-card">
         <div class="stat-top">
@@ -303,7 +415,6 @@
         </div>
       </div>
     </div>
-
   </div>
 
   @if(session('success'))
@@ -315,7 +426,6 @@
     </div>
   @endif
 
-  <!-- RECENT APPLICATIONS -->
   <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 mb-3">
     <h4 class="fw-bold mb-0">Recent Applications</h4>
     <div class="text-muted small">Showing latest submissions</div>
@@ -343,10 +453,15 @@
             <td>{{ $app->created_at->format('M d, Y') }}</td>
             <td class="text-center actions-cell">
               <div class="d-inline-flex align-items-center gap-2">
-                <a href="{{ route('admin.applications.show', $app->id) }}"
-                   class="btn btn-primary btn-sm">
+                <button
+                  type="button"
+                  class="btn btn-primary btn-sm js-view-app"
+                  data-app-id="{{ $app->id }}"
+                  data-bs-toggle="modal"
+                  data-bs-target="#appDetailsModal"
+                >
                   View
-                </a>
+                </button>
 
                 <form action="{{ route('admin.applications.destroy', $app->id) }}"
                       method="POST"
@@ -375,6 +490,28 @@
 
 </main>
 
+<div class="modal fade app-details-modal" id="appDetailsModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title fw-bold mb-0">Application Details</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+
+      <div class="modal-body" id="appModalBody">
+        <div class="text-center py-5 text-muted">
+          <div class="spinner-border" role="status" aria-hidden="true"></div>
+          <div class="mt-2">Loading...</div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <script>
 document.addEventListener("DOMContentLoaded", () => {
   const alertBox = document.getElementById("uploadSuccessAlert");
@@ -385,8 +522,42 @@ document.addEventListener("DOMContentLoaded", () => {
       setTimeout(() => alertBox.remove(), 600);
     }, 2500);
   }
+
+  const modalBody = document.getElementById("appModalBody");
+
+  document.querySelectorAll(".js-view-app").forEach(btn => {
+    btn.addEventListener("click", async () => {
+      const id = btn.getAttribute("data-app-id");
+
+      modalBody.innerHTML = `
+        <div class="text-center py-5 text-muted">
+          <div class="spinner-border" role="status" aria-hidden="true"></div>
+          <div class="mt-2">Loading...</div>
+        </div>
+      `;
+
+      try {
+        const res = await fetch(`{{ url('/admin/applications') }}/${id}/modal`, {
+          headers: { "X-Requested-With": "XMLHttpRequest" }
+        });
+
+        if (!res.ok) throw new Error("Failed to load");
+
+        const html = await res.text();
+        modalBody.innerHTML = html;
+
+      } catch (e) {
+        modalBody.innerHTML = `
+          <div class="alert alert-danger mb-0">
+            Failed to load application details. Please try again.
+          </div>
+        `;
+      }
+    });
+  });
 });
 </script>
 
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

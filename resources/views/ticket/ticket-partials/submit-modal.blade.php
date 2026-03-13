@@ -13,14 +13,23 @@
 
                         <!-- SUBJECT -->
                         <div class="mb-3">
-                            <label class="form-label">Branch</label>
-                            <input type="text"
-                                   name="subject"
-                                   class="form-control"
-                                   placeholder="Enter the branch name"
-                                   value="{{ old('subject') }}"
-                                   required>
-                        </div>
+    <label class="form-label">Branch</label>
+    <select name="branch" class="form-select" required>
+        <option value="" disabled selected>Select branch</option>
+
+        <option value="Cauayan" {{ old('branch') == 'Cauayan' ? 'selected' : '' }}>KI Cauayan Branch</option>
+        <option value="Ilagan" {{ old('branch') == 'Ilagan' ? 'selected' : '' }}>KI Ilagan Branch</option>
+        <option value="San Mateo" {{ old('branch') == 'San Mateo' ? 'selected' : '' }}>KI San Mateo Branch</option>
+        <option value="Ramon" {{ old('branch') == 'Ramon' ? 'selected' : '' }}>KI Ramon Branch</option>
+        <option value="Capas" {{ old('branch') == 'Capas' ? 'selected' : '' }}>KI Capas Branch</option>
+        <option value="Aurora" {{ old('branch') == 'Aurora' ? 'selected' : '' }}>KI Aurora Branch</option>
+        <option value="Roxas" {{ old('branch') == 'Roxas' ? 'selected' : '' }}>KI Roxas Branch</option>
+        <option value="Cabagan" {{ old('branch') == 'Cabagan' ? 'selected' : '' }}>KI Cabagan Branch</option>
+        <option value="Tumauini" {{ old('branch') == 'Tumauini' ? 'selected' : '' }}>KI Tumauini Branch</option>
+        <option value="SMDC" {{ old('branch') == 'SMDC' ? 'selected' : '' }}>KI SMDC Branch</option>
+        <option value="Food Truck" {{ old('branch') == 'Food Truck' ? 'selected' : '' }}>KI Food Truck</option>
+    </select>
+</div>
 
                         <!-- DESCRIPTION -->
                         <div class="mb-3">
@@ -32,7 +41,7 @@
                                       required>{{ old('description') }}</textarea>
                         </div>
 
-                        <div class="divider"></div>
+                        {{-- <div class="divider"></div> --}}
 
                         <!-- DEPARTMENT -->
                         <div class="mb-3">

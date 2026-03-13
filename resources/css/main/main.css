@@ -295,20 +295,20 @@ body{
 
 /* hover description */
 .circle-desc{
-  position:absolute;
-  inset:0;
-  background: rgba(0,0,0,0.60);
-  color:#fff;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  text-align:center;
-  padding: 20px;
+  position:absolute !important;
+  inset:0 !important;
+  background: rgba(0,0,0,0.60) !important;
+  color:#fff !important;
+  display:flex !important;
+  justify-content:center !important;
+  align-items:center  !important;
+  text-align:center !important;
+  padding: 20px !important;
   opacity:0;
-  font-size: clamp(12px, 2.6vw, 22px);
-  font-family: 'Lovelo', system-ui, sans-serif;
-  line-height:1.4;
-  transition: opacity .22s ease;
+  font-size: clamp(12px, 2.6vw, 22px) !important;
+  font-family: 'Lovelo', system-ui, sans-serif !important;
+  line-height:1.4 !important;
+  transition: opacity .22s ease !important;
 }
 
 .circle-box:hover .circle-desc{ opacity:1; }

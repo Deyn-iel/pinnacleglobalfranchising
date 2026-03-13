@@ -46,7 +46,7 @@
 <!--FRANCHISE NOW SECTION-->
 <section class="franchise-section text-center mt-5">
 
-    <h2 class="franchise-title">Our CLIENTS</h2>
+    <h2 class="franchise-title">OUR CLIENTS</h2>
     <div class="underline"></div>
 
     <div class="container mt-5">

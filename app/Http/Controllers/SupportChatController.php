@@ -68,9 +68,12 @@ class SupportChatController extends Controller
     public function send(Request $request)
     {
         $request->validate([
-            'message' => ['required','string','max:2000'],
-            'target_user_id' => [$this->isStaff() ? 'required' : 'nullable','integer'],
-        ]);
+    'target_user_id' => [$this->isStaff() ? 'required' : 'nullable', 'integer']
+]);
+        // $request->validate([
+        //     'message' => ['required','string','max:2000'],
+        //     'target_user_id' => [$this->isStaff() ? 'required' : 'nullable','integer'],
+        // ]);
 
         $targetUserId = $this->isStaff()
             ? (int) $request->target_user_id
@@ -91,20 +94,19 @@ class SupportChatController extends Controller
 
 public function destroy(Request $request)
 {
-    $request->validate([
-        'target_user_id' => ['required','integer']
-    ]);
+    // staff: pwedeng mag delete ng kahit sinong thread (by target_user_id)
+    // normal user: sarili lang ang pwedeng i-delete
+    $target = $this->isStaff()
+        ? (int) $request->input('target_user_id', 0)
+        : (int) Auth::id();
 
-    $me = (int) Auth::id();
-    $target = (int) $request->target_user_id;
+    if ($target <= 0) {
+        return response()->json(['ok' => false, 'error' => 'Invalid target user'], 422);
+    }
 
-    // Delete all messages between the two users
-    SupportMessage::where(function($q) use ($me, $target){
-        $q->where('user_id', $me)->where('target_user_id', $target);
-    })->orWhere(function($q) use ($me, $target){
-        $q->where('user_id', $target)->where('target_user_id', $me);
-    })->delete();
+    // ✅ delete buong thread (lahat ng chats, kahit sino sender)
+    $deleted = SupportMessage::where('target_user_id', $target)->delete();
 
-    return response()->json(['ok' => true]);
+    return response()->json(['ok' => true, 'deleted' => $deleted]);
 }
 }

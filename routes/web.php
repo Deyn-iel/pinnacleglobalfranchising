@@ -47,27 +47,21 @@ use App\Http\Controllers\Portal\HrDashboardController;
 
 Route::middleware(['web','auth','role:portal'])->group(function () {
 
-    // Dashboard page (THIS must pass $claims)
     Route::get('/portal/dashboard', [HrDashboardController::class, 'index'])
-        ->name('portal.dashboard'); // keep same name para di ka mag-update sa blade
+        ->name('portal.dashboard'); 
 
-    // JSON details for modal
    Route::post('/hr/claims', [ClaimController::class, 'store'])->name('hr.claims.store');
 
    Route::get('/hr/claims/check-duplicate', [ClaimController::class, 'checkDuplicate'])
     ->name('hr.claims.checkDuplicate');
 
-    // Needed for JS modal fetch(`/hr/claims/${dbId}`)
     Route::get('/hr/claims/{claim}', [ClaimController::class, 'show'])->name('hr.claims.show');
 
-    // Needed for href route('hr.claims.analysis', $c->id)
     Route::get('/hr/claims/{claim}/analysis', [ClaimController::class, 'analysis'])->name('hr.claims.analysis');
 
-     // ✅ DELETE
     Route::delete('/hr/claims/{claim}', [ClaimController::class, 'destroy'])
         ->name('hr.claims.destroy');
         
-        // ✅ missing recompute endpoint (used by JS)
       Route::post('/claims/{claim}/recompute', [ClaimController::class, 'requestRecompute'])
         ->name('claims.recompute');
 });
@@ -89,10 +83,8 @@ Route::middleware(['auth','hr.access'])
 
 Route::middleware(['auth'])->group(function () {
 
- // HR submits claim
   Route::post('/hr/claims', [HRClaimController::class, 'store'])->name('hr.claims.store');
     
- // USER
   Route::get('/user/coffee-registration', [UserCoffeeReg::class, 'create'])
         ->name('user.coffee-registration.create');
 
@@ -147,12 +139,11 @@ return redirect()->route('dashboard');
 
 
 
-//suppliesss/
 Route::middleware(['auth', 'role:supplies'])->group(function () {
     Route::get('/supplies/dashboard', [SuppliesDashboardController::class, 'index'])
         ->name('supplies.supplies-dashboard');
 });
-/* ABOUT */
+
 Route::prefix('about')->group(function () {
     Route::view('/pinnacle', 'about.pinnacle')->name('about.pinnacle');
     Route::view('/why', 'about.why')->name('about.why');
@@ -160,13 +151,11 @@ Route::prefix('about')->group(function () {
     Route::view('/clients', 'about.clients')->name('about.clients');
 });
 
-/* OUR SERVICES */
 Route::view('/our_service', 'our_service.our_service')->name('our_service');
 
-/* CONTACT */
 Route::view('/contact', 'contact.contact')->name('contact');
 
-/* FRANCHISABILITY */
+
 Route::prefix('franchisability')->group(function () {
     Route::view('/8_keys', 'franchisability.8_keys')->name('franchisability.keys');
     Route::view('/franchise_test', 'franchisability.franchise_test')->name('franchisability.test');
@@ -244,7 +233,6 @@ Route::post('/franchise/submit', [FranchiseController::class, 'store'])
     ->name('franchise.submit');
 
 
-// show list of available exams
 Route::get('/ihu$HIHdw08dahi=opOjdN@7UUHOOIAWDIjsfse=ihu$HIHdw08dahi=opOjdN@7UUHOOIAWDIjsfse=ihu$HIHdw08dahi=opOjdN@7UUHOOIAWDIjsfse', [ExamController::class, 'select'])
     ->name('exam.select');
 
@@ -268,7 +256,6 @@ Route::middleware(['auth'])->group(function () {
     })->name('admin.admin-profile.edit');
 });
 
-//print exam result details
 Route::get(
     '/admin/exam-results/{id}/export-doc',
     [AdminExamController::class, 'exportDoc']
@@ -298,7 +285,6 @@ Route::middleware(['auth', 'admin', 'admin.desktop'])
     Route::post('/coffee-registrations/{reg}/documents', [AdminCoffeeReg::class, 'uploadDocuments'])
     ->name('coffee-registrations.documents');
 
-        // ✅ Coffee Registrations admin routes (moved here)
         Route::get('/coffee-registrations', [AdminCoffeeReg::class, 'index'])
         ->middleware('hr.access')
             ->name('coffee-registrations.index');
@@ -368,29 +354,24 @@ Route::delete('/attendance/{id}',
 Route::get('/attendance', [AdminAttendanceController::class, 'index'])
             ->name('attendance');
 
-        // VIEW EXAM RESULT DETAILS
 Route::get('/exam-results/{id}', [AdminExamResultController::class, 'show'])
         ->name('exam-results.view');
 
-        // VIEW EXAM RESULTS
 Route::get('/exam-results', [AdminExamResultController::class, 'results'])
             ->name('exam-results');
 
 Route::delete('/exam-results/{id}', [AdminExamResultController::class, 'destroy'])
             ->name('exam-results.delete');
 
-        // User management
 Route::get('/users-account', [UserManagementController::class, 'index'])
             ->name('users-account');
 
 Route::delete('/users-account/{id}', [UserManagementController::class, 'destroy'])
             ->name('users-account.destroy');
 
-       // Show register form
 Route::get('/users/register', [AdminUserController::class, 'create'])
             ->name('users.register');
 
-        // Handle register submit
 Route::post('/users/register', [AdminUserController::class, 'store'])
             ->name('users.store');
 
@@ -409,15 +390,12 @@ Route::get('/requirements', [RequirementController::class, 'index'])
 
 Route::post('/requirements', [RequirementController::class, 'store']);
 
-        // Display Upload Exams Page
 Route::get('/uploading-exams', [AdminExamController::class, 'index'])
             ->name('uploading-exams');
 
-        // Save Exam
 Route::post('/exams/store', [AdminExamController::class, 'store'])
             ->name('exams.store');
 
-        // Delete Exam
 Route::delete('/exams/delete/{id}', [AdminExamController::class, 'delete'])
             ->name('exams.delete');
 
@@ -426,6 +404,9 @@ Route::get('/applications', [FranchiseAdminController::class, 'index'])
 
 Route::get('/applications/{id}', [FranchiseAdminController::class, 'show'])
             ->name('applications.show');
+
+            Route::get('/applications/{id}/modal', [FranchiseAdminController::class, 'modal'])
+  ->name('applications.modal');
 
 Route::delete('/applications/{id}', [FranchiseAdminController::class, 'destroy'])
             ->name('applications.destroy');
@@ -438,7 +419,6 @@ Route::get('/contacts', function () {
     return view('admin.contacts', compact('contacts'));
 })->name('contacts');
 
-/* ✅ DELETE ALL — MUST BE FIRST */
 Route::delete('/contacts/delete-all', function () {
     \App\Models\Contact::truncate();
 
@@ -447,7 +427,6 @@ Route::delete('/contacts/delete-all', function () {
         ->with('success', 'All contact messages have been deleted.');
 })->name('contacts.deleteAll');
 
-/* DELETE SINGLE — MUST BE LAST */
 Route::delete('/contacts/{id}', [\App\Http\Controllers\ContactController::class, 'destroy'])
     ->name('contacts.delete');
     });
