@@ -50,7 +50,7 @@
                                 <option value="">Select department</option>
                                 <option value="it">IT</option>
                                 <option value="operations">Operations</option>
-                                <option value="finance">Admin</option>
+                                <option value="admin">Admin</option>
                                 <option value="hr">HR</option>
                                 <option value="smm">SMM</option>
                             </select>

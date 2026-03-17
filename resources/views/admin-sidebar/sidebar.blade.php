@@ -43,7 +43,7 @@
             </a>
         </li> --}}
 
-        @php
+        {{-- @php
   $hrAccess = auth()->user()->hr_access ?? false;
 @endphp
 
@@ -97,7 +97,7 @@
     <small class="soon">Hr access required</small>
   </a>
 @endif
-</li>
+</li> --}}
 
         <li class="nav-section">ACCOUNT</li>
 

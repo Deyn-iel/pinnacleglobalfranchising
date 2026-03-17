@@ -163,10 +163,22 @@
         : ($user->usertype === 'supplies'
             ? 'bg-info'
             : ($user->usertype === 'ticket'
-                ? 'bg-warning text-light'
+                ? 'bg-warning text-dark'
                 : ($user->usertype === 'portal'
-                    ? 'bg-success text-light'
-                    : 'bg-secondary'))) }}">
+                    ? 'bg-success'
+                    : ($user->usertype === 'it'
+                        ? 'bg-dark'
+                        : ($user->usertype === 'smm'
+                            ? 'bg-danger'
+                            : ($user->usertype === 'od'
+                                ? 'bg-secondary'
+                                : ($user->usertype === 'om'
+                                    ? 'bg-light text-dark'
+                                    : ($user->usertype === 'hr'
+                                        ? 'bg-primary-subtle text-dark'
+                                        : ($user->usertype === 'admin-secretary'
+                                            ? 'bg-info-subtle text-dark'
+                                            : 'bg-secondary'))))))))) }}">
     {{ ucfirst($user->usertype) }}
 </span>
 

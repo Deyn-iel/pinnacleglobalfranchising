@@ -278,6 +278,12 @@ select:focus {
                     <option value="supplies">Supplies</option>
                     <option value="ticket">Ticket</option>
                     <option value="portal">Portal</option>
+                    <option value="smm">SMM</option>
+                    <option value="hr">HR</option>
+                    <option value="om">Operation Manager</option>
+                    <option value="od">Operation Director</option>
+                    <option value="it">IT</option>
+                    <option value="admin-secretary">Admin Secretary</option>
                 </select>
 
             </div>

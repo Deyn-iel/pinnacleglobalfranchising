@@ -304,8 +304,7 @@ th:nth-child(8), td:nth-child(8){ width: 90px; }  /* Actions */
 
 <body>
 
-@include('admin-sidebar.navbar')
-@include('admin-sidebar.sidebar')
+@include('admin.headoffice-portals.hr.hr-partials.sidebar')
 
 <main>
 

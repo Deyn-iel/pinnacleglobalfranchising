@@ -49,7 +49,31 @@ class AuthenticatedSessionController extends Controller
     }
 
     if ($user->usertype === 'portal') {
-    return redirect()->route('portal.dashboard');
+        return redirect()->route('portal.dashboard');
+    }
+
+    if ($user->usertype === 'smm') {
+    return redirect()->route('admin.portals.smm');
+}
+
+if ($user->usertype === 'hr') {
+    return redirect()->route('admin.portals.hr');
+}
+
+if ($user->usertype === 'om') {
+    return redirect()->route('admin.portals.om');
+}
+
+if ($user->usertype === 'od') {
+    return redirect()->route('admin.portals.od');
+}
+
+if ($user->usertype === 'it') {
+    return redirect()->route('admin.portals.it');
+}
+
+if ($user->usertype === 'admin-secretary') {
+    return redirect()->route('admin.portals.admin-secretary');
 }
 
 

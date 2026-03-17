@@ -131,7 +131,6 @@
           <option value="it">IT</option>
           <option value="smm">SMM</option>
           <option value="hr">HR</option>
-          <option value="finance">Finance</option>
           <option value="admin">Admin</option>
           <option value="operations">Operations</option>
         </select>
@@ -181,7 +180,15 @@
     <div class="panel">
       <div class="panel-header">
         <div class="hint"><i class="bi bi-info-circle me-1"></i> Click a ticket to view details</div>
-        <div class="hint">Showing <span id="visibleCount">0</span> ticket(s)</div>
+        <div class="hint">
+Showing <span id="visibleCount">0</span> ticket(s)
+@if($tickets->count())
+<span class="text-muted ms-2">
+<i class="bi bi-clock"></i>
+{{ $tickets->first()->created_at->diffForHumans() }}
+</span>
+@endif
+</div>
       </div>
 
       <div id="ticketList">
@@ -205,6 +212,7 @@
             data-department="{{ strtolower($ticket->department) }}"
             data-priority="{{ strtolower($ticket->priority) }}"
             data-status="{{ strtolower($ticket->status) }}"
+            data-time="{{ $ticket->created_at->diffForHumans() }}"
             onclick="openTicketDetails(this)"
             aria-label="Open ticket {{ $ticket->ticket_no }} details"
           >
@@ -217,7 +225,10 @@
                 <div class="ticket-meta">
                   <span class="meta-pill"><i class="bi bi-building me-1"></i>{{ ucfirst($ticket->department) }}</span>
                   <span class="meta-pill"><i class="bi bi-flag me-1"></i>{{ ucfirst($ticket->priority) }}</span>
-                  <span class="meta-pill"><i class="bi bi-clock me-1"></i>{{ $ticket->created_at->format('M d, Y • h:i A') }}</span>
+                  <span class="meta-pill">
+<i class="bi bi-clock me-1"></i>
+{{ $ticket->created_at->diffForHumans() }}
+</span>
                 </div>
               </div>
 
@@ -269,10 +280,11 @@
           <span class="ticket-no" id="d_ticketNo">—</span>
           <h5 class="modal-title mt-2 mb-0" id="d_subject">—</h5>
           <div class="text-muted mt-1" style="font-weight:650; font-size:13px;">
-            <span id="d_department">—</span> •
-            <span id="d_priority">—</span> •
-            <span id="d_statusText">—</span>
-          </div>
+<span id="d_department">—</span> •
+<span id="d_priority">—</span> •
+<span id="d_statusText">—</span> •
+<span id="d_time">—</span>
+</div>
         </div>
       </div>
 
@@ -290,12 +302,9 @@
             <div class="fw-bold text-muted small">Update Status</div>
 
             <select name="status" id="d_statusSelect"
-              class="form-select"
-              style="max-width:220px; border-radius:999px; font-weight:800;">
-              <option value="pending">Pending</option>
-              <option value="in_progress">In Progress</option>
-              <option value="resolved">Resolved</option>
-            </select>
+class="form-select"
+style="max-width:220px; border-radius:999px; font-weight:800;">
+</select>
           </div>
         </div>
 

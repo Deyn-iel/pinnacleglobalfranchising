@@ -293,33 +293,53 @@ body{
   border-radius:0;
 }
 
+@font-face {
+  font-family: 'Lovelo';
+  src: url('path/to/lovelo.woff2') format('woff2'),
+       url('path/to/lovelo.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
+
 /* hover description */
-.circle-desc{
-  position:absolute !important;
-  inset:0 !important;
-  background: rgba(0,0,0,0.60) !important;
-  color:#fff !important;
-  display:flex !important;
-  justify-content:center !important;
-  align-items:center  !important;
-  text-align:center !important;
+.circle-desc {
+  position: absolute !important;
+  inset: 0 !important;
+  background: rgba(0, 0, 0, 0.6) !important;
+  color: #fff !important;
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  text-align: center !important;
   padding: 20px !important;
-  opacity:0;
+  opacity: 0;
   font-size: clamp(12px, 2.6vw, 22px) !important;
   font-family: 'Lovelo', system-ui, sans-serif !important;
-  line-height:1.4 !important;
-  transition: opacity .22s ease !important;
+  line-height: 1.4 !important;
+  transition: opacity 0.22s ease !important;
 }
 
-.circle-box:hover .circle-desc{ opacity:1; }
-
-@media (max-width: 768px){
-  .circle-box{ width: 70%; }
-  .circle-desc{ font-size: 12px; }
+.circle-box:hover .circle-desc {
+  opacity: 1;
 }
-@media (max-width: 576px){
-  .circle-box{ width: 90%; padding: 20px; }
-  .circle-desc{ font-size: 18px; }
+
+@media (max-width: 768px) {
+  .circle-box {
+    width: 70%;
+  }
+  .circle-desc {
+    font-size: 12px !important;
+  }
+}
+
+@media (max-width: 576px) {
+  .circle-box {
+    width: 90%;
+    padding: 20px;
+  }
+  .circle-desc {
+    font-size: 18px !important;
+  }
 }
 
 /* =========================

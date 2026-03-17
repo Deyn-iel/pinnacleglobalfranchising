@@ -96,7 +96,7 @@ window.openTicketDetails = function openTicketDetails(el){
   const ticketId = el.dataset.id;
   const dept = el.dataset.department || '';
   const pri  = el.dataset.priority || '';
-  const st   = el.dataset.status || 'pending';
+  const st = (el.dataset.status || 'pending').toLowerCase();
 
   document.getElementById('d_ticketNo').innerText = noEl?.innerText || '—';
   document.getElementById('d_subject').innerText = subjEl?.innerText || '—';
@@ -107,10 +107,36 @@ window.openTicketDetails = function openTicketDetails(el){
   document.getElementById('d_department').innerText = cap(dept);
   document.getElementById('d_priority').innerText = cap(pri);
   document.getElementById('d_statusText').innerText = (st || '').replace(/_/g,' ');
+  document.getElementById('d_time').innerText = el.dataset.time || '';
 
   // ✅ set dropdown
-  const statusSelect = document.getElementById('d_statusSelect');
-  if(statusSelect) statusSelect.value = st;
+const statusSelect = document.getElementById('d_statusSelect');
+
+if(statusSelect){
+
+  statusSelect.innerHTML = '';
+
+  if(st === "pending"){
+  statusSelect.innerHTML = `
+    <option value="pending" selected>Pending</option>
+    <option value="resolved">Resolved</option>
+  `;
+}
+
+else if(st === "in_progress"){
+  statusSelect.innerHTML = `
+    <option value="in_progress" selected>In Progress</option>
+    <option value="resolved">Resolved</option>
+  `;
+}
+
+else{
+  statusSelect.innerHTML = `
+    <option value="resolved" selected>Resolved</option>
+  `;
+}
+
+}
 
   // ✅ set form action route (Vite-safe)
   const form = document.getElementById('statusForm');
@@ -128,3 +154,5 @@ window.openTicketDetails = function openTicketDetails(el){
     if(!s) return '';
     return s.replace(/_/g,' ').replace(/\b\w/g, c => c.toUpperCase());
   }
+
+  

@@ -40,6 +40,29 @@ class AdminTicketController extends Controller
 
         return back()->with('success', 'Ticket deleted successfully.');
     }
+
+    public function markViewed(Ticket $ticket)
+{
+    // ❌ do nothing if already resolved
+    if ($ticket->status === 'resolved') {
+        return response()->json([
+            'success' => false,
+            'message' => 'Ticket already resolved'
+        ]);
+    }
+
+    // change only if pending
+    if ($ticket->status === 'pending') {
+        $ticket->update([
+            'status' => 'in_progress'
+        ]);
+    }
+
+    return response()->json([
+        'success' => true,
+        'status' => $ticket->status
+    ]);
+}
 }
 
 // <?php

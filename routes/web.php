@@ -67,19 +67,19 @@ Route::middleware(['web','auth','role:portal'])->group(function () {
 });
 
 
-Route::middleware(['auth','hr.access'])
-  ->prefix('hr')
-  ->name('hr.')
-  ->group(function () {
+// Route::middleware(['auth','hr.access'])
+//   ->prefix('hr')
+//   ->name('hr.')
+//   ->group(function () {
 
-    Route::get('/dashboard', [PayslipController::class, 'index'])->name('dashboard');
+//     Route::get('/dashboard', [PayslipController::class, 'index'])->name('dashboard');
 
-    Route::get('/payslips', [PayslipController::class, 'index'])->name('payslips.index');
-    Route::post('/payslips', [PayslipController::class, 'store'])->name('payslips.store');
-    Route::get('/payslips/{payslip}/download', [PayslipController::class, 'download'])->name('payslips.download');
-    Route::delete('/payslips/{payslip}', [PayslipController::class, 'destroy'])->name('payslips.destroy');
+//     Route::get('/payslips', [PayslipController::class, 'index'])->name('payslips.index');
+//     Route::post('/payslips', [PayslipController::class, 'store'])->name('payslips.store');
+//     Route::get('/payslips/{payslip}/download', [PayslipController::class, 'download'])->name('payslips.download');
+//     Route::delete('/payslips/{payslip}', [PayslipController::class, 'destroy'])->name('payslips.destroy');
 
-});
+// });
 
 Route::middleware(['auth'])->group(function () {
 
@@ -261,11 +261,41 @@ Route::get(
     [AdminExamController::class, 'exportDoc']
 )->name('admin.exam-results.export-doc');
 
-Route::middleware(['auth', 'admin', 'admin.desktop'])
+Route::middleware(['auth', 'admin.desktop'])
     ->prefix('admin')
     ->name('admin.')
     ->group(function () {
 
+    // HEADOFFICE PORTALS
+Route::prefix('headoffice-portals')->name('portals.')->group(function () {
+
+    Route::view('/smm', 'admin.headoffice-portals.smm.dashboard')
+        ->name('smm');
+
+    Route::view('/admin-secretary', 'admin.headoffice-portals.admin-secretary.dashboard')
+        ->name('admin-secretary');
+    //hr
+    Route::view('/hr', 'admin.headoffice-portals.hr.dashboard')
+        ->name('hr');
+
+    Route::get('/hr/tickets', [AdminTicketController::class, 'index'])
+    ->name('hr.tickets');
+    
+
+    Route::view('/om', 'admin.headoffice-portals.om.dashboard')
+        ->name('om');
+
+    Route::view('/od', 'admin.headoffice-portals.od.dashboard')
+        ->name('od');
+
+    Route::view('/it', 'admin.headoffice-portals.it.dashboard')
+        ->name('it');
+
+});
+
+    Route::patch('/tickets/{ticket}/view', [AdminTicketController::class, 'markViewed'])
+    ->name('tickets.viewed');
+    
     Route::get('/inbox', [ClaimInboxController::class, 'index'])
             ->name('inbox');
 

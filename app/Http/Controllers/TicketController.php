@@ -64,20 +64,41 @@ class TicketController extends Controller
     });
 
     // ✅ SEND EMAIL HERE (OUTSIDE TRANSACTION)
-    // ✅ SEND EMAIL HERE (OUTSIDE TRANSACTION)
-        // ✅ SEND EMAIL HERE (OUTSIDE TRANSACTION)
-$emails = config('mail.support_notify_emails', []);
 
-try {
-    if (!empty($emails)) {
-        Mail::to($emails)->send(new TicketSubmittedMail($ticket));
+    if($ticket){
+
+        $mainEmails = explode(',', env('SUPPORT_NOTIFY_EMAILS'));
+
+        // department email mapping
+        $departmentMap = [
+            'it' => env('IT_SUPPORT_EMAIL'),
+            'hr' => env('HR_SUPPORT_EMAIL'),
+            'smm' => env('SMM_SUPPORT_EMAIL'),
+            'finance' => env('FINANCE_SUPPORT_EMAIL'),
+            'admin' => env('ADMIN_SUPPORT_EMAIL'),
+            'operations' => env('OPERATIONS_SUPPORT_EMAIL'),
+        ];
+
+        $departmentEmail = $departmentMap[$ticket->department] ?? null;
+
+        $emails = $mainEmails;
+
+        if($departmentEmail){
+            $emails[] = $departmentEmail;
+        }
+
+        try {
+
+            if (!empty($emails)) {
+                Mail::to($emails)->send(new TicketSubmittedMail($ticket));
+            }
+
+        } catch (\Throwable $e) {
+
+            Log::error('Ticket email failed: ' . $e->getMessage());
+
+        }
     }
-} catch (\Throwable $e) {
-    Log::error('Ticket email failed: ' . $e->getMessage());
-    // wag i-stop ang ticket submission
-}
-
-
 
     return redirect()->route('tickets.dashboard')
         ->with('success', 'Ticket submitted successfully.');
@@ -87,21 +108,23 @@ try {
 public function updateStatus(Request $request, Ticket $ticket)
 {
     if($ticket->status === 'resolved'){
-    return back()->with('success','Ticket is already resolved.');
-}
-
-    // ✅ owner lang pwede
-    abort_if($ticket->user_id !== Auth::id(), 403);
+        return back()->with('success','Ticket is already resolved.');
+    }
 
     $request->validate([
         'status' => 'required|in:pending,in_progress,resolved',
     ]);
 
+    // ❌ users cannot set in_progress
+    if($request->status === 'in_progress'){
+        return back()->with('success','Only admin can set ticket to In Progress.');
+    }
+
     $ticket->update([
         'status' => $request->status,
     ]);
 
-    return back()->with('success', 'Ticket status updated successfully.');
+    return back()->with('success', 'Ticket resolved successfully.');
 }
 
 }
