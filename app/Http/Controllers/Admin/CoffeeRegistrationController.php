@@ -44,7 +44,7 @@ if (!$selected) {
     $selected = $regs->first(); // could still be null kung 0 records talaga
 }
 
-return view('admin.user-registration.registration', compact('regs', 'selected'));
+return view('admin.headoffice-portals.hr.registration', compact('regs', 'selected'));
 
     }
 

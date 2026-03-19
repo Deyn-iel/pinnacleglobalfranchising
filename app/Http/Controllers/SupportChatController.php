@@ -20,7 +20,7 @@ class SupportChatController extends Controller
 
         $role = strtolower(trim((string)$rawRole));
 
-        return in_array($role, ['admin','hr','it','support','staff']);
+        return in_array($role, ['admin-secretary','hr','it','support','staff', 'om', 'od','smm']);
     }
 
     // GET: fetch messages

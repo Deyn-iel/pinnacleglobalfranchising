@@ -8,7 +8,11 @@
 <link rel="icon" type="image/png" href="{{ asset('img/logo1-removebg-preview.png') }}">
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
-
+@vite(['resources/css/admin/app.css', 
+        'resources/css/chatbot/app.css',
+            
+            // js files
+            'resources/js/chatbot/app.js'])
 <style>
 
 :root{
@@ -292,7 +296,7 @@ left:0;
 <div class="stat-card">
 <div>
 <div class="stat-title">Employees</div>
-<div class="stat-value">120</div>
+<div class="stat-value">{{ \App\Models\User::count() }}</div>
 </div>
 <div class="stat-icon">
 <i class="fa-solid fa-users"></i>
@@ -328,7 +332,7 @@ left:0;
 <div class="stat-card">
 <div>
 <div class="stat-title">Tickets</div>
-<div class="stat-value">8</div>
+<div class="stat-value">{{ \App\Models\Ticket::where('department', 'hr')->count() }}</div>
 </div>
 <div class="stat-icon">
 <i class="fa-solid fa-ticket"></i>
@@ -359,31 +363,55 @@ Recent Support Tickets
 </tr>
 </thead>
 
+@php
+use App\Models\Ticket;
+
+$tickets = Ticket::with('user')
+    ->where('department','hr')
+    ->latest()
+    ->take(5)
+    ->get();
+@endphp
 <tbody>
 
-<tr>
-<td>#TCK-001</td>
-<td>John Doe</td>
-<td>IT</td>
-<td><span class="badge bg-warning text-dark">Pending</span></td>
-<td>Mar 17 2026</td>
-</tr>
+@forelse($tickets as $ticket)
 
 <tr>
-<td>#TCK-002</td>
-<td>Maria Cruz</td>
-<td>HR</td>
-<td><span class="badge bg-primary">In Progress</span></td>
-<td>Mar 16 2026</td>
+<td>{{ $ticket->ticket_no }}</td>
+
+<td>
+{{ $ticket->user->name ?? 'Unknown' }}
+</td>
+
+<td>
+{{ strtoupper($ticket->department) }}
+</td>
+
+<td>
+<span class="badge
+{{ $ticket->status === 'pending' ? 'bg-warning text-dark'
+: ($ticket->status === 'in_progress' ? 'bg-primary'
+: ($ticket->status === 'resolved' ? 'bg-success'
+: 'bg-secondary')) }}">
+{{ ucwords(str_replace('_',' ',$ticket->status)) }}
+</span>
+</td>
+
+<td>
+{{ $ticket->created_at->format('M d Y') }}
+</td>
+
 </tr>
 
+@empty
+
 <tr>
-<td>#TCK-003</td>
-<td>Kevin Santos</td>
-<td>Admin</td>
-<td><span class="badge bg-success">Resolved</span></td>
-<td>Mar 15 2026</td>
+<td colspan="5" class="text-center text-muted">
+No tickets found
+</td>
 </tr>
+
+@endforelse
 
 </tbody>
 

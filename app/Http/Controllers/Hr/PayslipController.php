@@ -51,15 +51,22 @@ class PayslipController extends Controller
 });
 
     $recentPayslips = Payslip::query()
-        ->with('uploader')
-        ->latest()
-        ->take(10)
-        ->get();
+    ->with('uploader')
+    ->latest()
+    ->take(10)
+    ->get();
 
-    // optional stats
-    $payslipsCount = Payslip::count();
+// ⭐ ito ang missing
+$payslips = Payslip::with('uploader')
+    ->latest()
+    ->paginate(10);
 
-    return view('admin.hr.dashboard', compact('folders', 'recentPayslips', 'payslipsCount', 'q'));
+$payslipsCount = Payslip::count();
+
+return view(
+    'admin.headoffice-portals.hr.payslip',
+    compact('folders', 'recentPayslips', 'payslipsCount', 'payslips', 'q')
+);
 }
 
     public function store(Request $request)

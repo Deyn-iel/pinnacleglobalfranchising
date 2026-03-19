@@ -8,7 +8,7 @@
                     <h5 class="mb-0 fw-semibold"><i class="bi bi-life-preserver"></i> Submit a Support Concern</h5>
                 </div>
 
-                <form method="POST" action="{{ route('tickets.store') }}">
+                <form id="ticketForm" method="POST" action="{{ route('tickets.store') }}">
                         @csrf
 
                         <!-- SUBJECT -->
@@ -49,8 +49,9 @@
                             <select name="department" class="form-select" required>
                                 <option value="">Select department</option>
                                 <option value="it">IT</option>
-                                <option value="operations">Operations</option>
-                                <option value="admin">Admin</option>
+                                <option value="od">Operations Director</option>
+                                <option value="om">Operations Manager</option>
+                                <option value="admin-secretary">Admin</option>
                                 <option value="hr">HR</option>
                                 <option value="smm">SMM</option>
                             </select>
@@ -75,7 +76,7 @@
                                     data-bs-dismiss="modal"> Cancel
                             </button>
 
-                            <button type="submit" class="btn btn-dark btn-sm p-2 fw-semibold" style="border-radius: 15px;">
+                            <button id="submitBtn" type="submit" class="btn btn-dark btn-sm p-2 fw-semibold" style="border-radius: 15px;">
                                 <i class="bi bi-send"></i> Submit
                             </button>
                         </div>

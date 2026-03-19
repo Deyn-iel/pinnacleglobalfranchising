@@ -2,7 +2,7 @@
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
 <meta charset="UTF-8">
-<title>Admin · Support Tickets</title>
+<title>HR · Support Tickets</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="csrf-token" content="{{ csrf_token() }}">
 
@@ -377,6 +377,7 @@ th:nth-child(8), td:nth-child(8){ width: 90px; }  /* Actions */
               <th>Status</th>
               <th>Date Submitted</th>
               <th class="text-center">Actions</th>
+              <th>Request for Resolve</th>
             </tr>
           </thead>
 

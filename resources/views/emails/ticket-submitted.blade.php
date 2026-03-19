@@ -35,7 +35,7 @@
 <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#f5f5f5;border-radius:6px;">
 <tr>
 <td style="padding:12px;">
-{{ $ticket->description }}
+{{-- {{ $ticket->description }} --}}.........
 </td>
 </tr>
 </table>
@@ -57,7 +57,7 @@
 <td align="center" bgcolor="#000000" style="border-radius:6px;">
 <a href="{{ url('/login') }}"
 style="display:inline-block;padding:12px 24px;color:#ffffff;text-decoration:none;font-weight:bold;">
-Login to View Ticket
+Log in to view tickets <br>(desktop/laptop only).
 </a>
 </td>
 </tr>

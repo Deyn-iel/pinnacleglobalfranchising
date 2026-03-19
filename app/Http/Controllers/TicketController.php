@@ -75,8 +75,9 @@ class TicketController extends Controller
             'hr' => env('HR_SUPPORT_EMAIL'),
             'smm' => env('SMM_SUPPORT_EMAIL'),
             'finance' => env('FINANCE_SUPPORT_EMAIL'),
-            'admin' => env('ADMIN_SUPPORT_EMAIL'),
-            'operations' => env('OPERATIONS_SUPPORT_EMAIL'),
+            'admin-secretary' => env('ADMIN_SUPPORT_EMAIL'),
+            'od' => env('OPERATIONS_DIRECTOR_SUPPORT_EMAIL'),
+            'om' => env('OPERATIONS_MANAGER_SUPPORT_EMAIL'),
         ];
 
         $departmentEmail = $departmentMap[$ticket->department] ?? null;

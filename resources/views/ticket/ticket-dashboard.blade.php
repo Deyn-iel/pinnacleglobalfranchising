@@ -131,8 +131,9 @@
           <option value="it">IT</option>
           <option value="smm">SMM</option>
           <option value="hr">HR</option>
-          <option value="admin">Admin</option>
-          <option value="operations">Operations</option>
+          <option value="admin-secretary">Admin</option>
+          <option value="od">Operations Director</option>
+          <option value="om">Operations Manager</option>
         </select>
 
         <select id="priorityFilter" class="select">
@@ -153,7 +154,9 @@
           <option value="smm">SMM</option>
           <option value="hr">HR</option>
           <option value="finance">Finance</option>
-          <option value="admin">Admin</option>
+          <option value="admin-secretary">Admin</option>
+          <option value="od">Operations Director</option>
+          <option value="om">Operations Manager</option>
         </select>
 
         <select id="priorityFilter_m" class="select w-100">
@@ -232,7 +235,7 @@ Showing <span id="visibleCount">0</span> ticket(s)
                 </div>
               </div>
 
-              <span class="badge-status {{ $statusClass }}">
+              <span class="badge-status {{ $statusClass }}" id="status-{{ $ticket->id }}">
                 {{ str_replace('_',' ', $ticket->status) }}
               </span>
             </div>
@@ -329,5 +332,47 @@ style="max-width:220px; border-radius:999px; font-weight:800;">
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
 @include('partials.chatbot')
+
+<script>
+function updateTicketsRealtime() {
+    fetch('/tickets/user')
+        .then(res => res.json())
+        .then(data => {
+
+            data.forEach(ticket => {
+                let el = document.getElementById('status-' + ticket.id);
+
+                if (el) {
+
+                    el.innerText = ticket.status.replace('_', ' ');
+
+                    el.classList.remove('st-pending','st-progress','st-resolved');
+
+                    if (ticket.status === 'pending') {
+                        el.classList.add('st-pending');
+                    } 
+                    else if (ticket.status === 'in_progress') {
+                        el.classList.add('st-progress');
+                    } 
+                    else if (ticket.status === 'resolved') {
+                        el.classList.add('st-resolved');
+                    }
+                }
+            });
+
+        })
+        .catch(err => console.log(err));
+}
+
+setInterval(updateTicketsRealtime, 5000);
+
+document.getElementById('ticketForm').addEventListener('submit', function () {
+    let btn = document.getElementById('submitBtn');
+
+    btn.disabled = true;
+
+    btn.innerHTML = '<i class="bi bi-hourglass-split"></i> Submitting...';
+});
+</script>
 </body>
 </html>
