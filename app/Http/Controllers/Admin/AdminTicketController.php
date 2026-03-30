@@ -41,9 +41,8 @@ class AdminTicketController extends Controller
         return back()->with('success', 'Ticket deleted successfully.');
     }
 
-    public function markViewed(Ticket $ticket)
+public function markViewed(Ticket $ticket)
 {
-    // ❌ do nothing if already resolved
     if ($ticket->status === 'resolved') {
         return response()->json([
             'success' => false,
@@ -51,16 +50,26 @@ class AdminTicketController extends Controller
         ]);
     }
 
-    // change only if pending
     if ($ticket->status === 'pending') {
-        $ticket->update([
-            'status' => 'in_progress'
-        ]);
+
+    $ticket->status = 'in_progress';
+
+    // ✅ IMPORTANT: make sure hindi kapareho ng created_at
+    $now = now();
+
+    if (!$ticket->in_progress_at || $ticket->in_progress_at == $ticket->created_at) {
+        $ticket->in_progress_at = $now;
     }
+
+    $ticket->save();
+    $ticket->refresh();
+}
 
     return response()->json([
         'success' => true,
-        'status' => $ticket->status
+        'status' => $ticket->status,
+        'in_progress_at' => $ticket->in_progress_at,
+        'resolved_at' => $ticket->resolved_at,
     ]);
 }
 }

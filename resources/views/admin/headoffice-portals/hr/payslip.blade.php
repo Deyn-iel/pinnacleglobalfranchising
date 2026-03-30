@@ -3,64 +3,126 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>HR • Payslips</title>
+<title>HR • Payslip Manager</title>
 
-<link rel="icon" type="image/png" href="{{ asset('img/logo1-removebg-preview.png') }}">
+<link rel="icon" href="{{ asset('img/logo1-removebg-preview.png') }}">
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
 
 <style>
+:root{
+  --bg:#f8fafc;
+  --card:#fff;
+  --border:#e5e7eb;
+  --text:#0f172a;
+  --muted:#6b7280;
+  --accent:#2563eb;
+  --radius:14px;
+}
 
 body{
-font-family:system-ui;
-background:#f3f4f6;
+  background:var(--bg);
+  font-family:Inter, system-ui;
 }
 
+/* HEADER */
+.page-header{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  padding:20px;
+  margin-bottom:20px;
+}
+
+.page-header h4{
+  font-weight:700;
+}
+.page-header small{
+  color:var(--muted);
+}
+
+/* PANEL */
 .panel{
-background:#fff;
-border:1px solid #e5e7eb;
-border-radius:14px;
-margin-bottom:20px;
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  padding:18px;
 }
 
-.panel-h{
-padding:14px;
-border-bottom:1px solid #e5e7eb;
-font-weight:700;
+.panel-title{
+  font-weight:700;
+  font-size:15px;
 }
 
-.panel-b{
-padding:16px;
+.panel-sub{
+  font-size:13px;
+  color:var(--muted);
 }
 
-.folder-item{
-display:flex;
-justify-content:space-between;
-padding:10px 12px;
-border:1px solid #e5e7eb;
-border-radius:10px;
-margin-bottom:8px;
-text-decoration:none;
-color:#111;
+/* FORM */
+.form-control, .form-select{
+  border-radius:10px;
+  border:1px solid var(--border);
 }
 
-.folder-item:hover{
-background:#f9fafb;
-}
-
-.pill{
-padding:4px 8px;
-border-radius:20px;
-background:#f1f5f9;
-font-size:12px;
-font-weight:600;
-}
-
+/* UPLOAD BOX */
 .upload-box{
-border:2px dashed #d1d5db;
-border-radius:12px;
-padding:20px;
-text-align:center;
+  border:2px dashed var(--border);
+  border-radius:12px;
+  padding:25px;
+  text-align:center;
+  transition:.2s;
+}
+.upload-box:hover{
+  border-color:var(--accent);
+  background:#f1f5ff;
+}
+
+/* FOLDER */
+.folder-card{
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:14px;
+  transition:.2s;
+}
+.folder-card:hover{
+  box-shadow:0 8px 20px rgba(0,0,0,.05);
+}
+
+.folder-name{
+  font-weight:600;
+}
+
+/* TABLE */
+.table-wrapper{
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  overflow:hidden;
+}
+
+thead{
+  background:#f1f5f9;
+}
+
+th{
+  font-size:12px;
+  color:var(--muted);
+  text-transform:uppercase;
+}
+
+td{
+  font-size:13px;
+  vertical-align:middle;
+}
+
+/* BUTTON */
+.btn{
+  border-radius:10px;
+}
+
+/* MOBILE */
+@media(max-width:768px){
+  .panel{ padding:14px; }
 }
 
 </style>
@@ -72,35 +134,40 @@ text-align:center;
 
 <div class="container py-4">
 
-<div class="d-flex justify-content-between align-items-center mb-3">
+<!-- HEADER -->
+<div class="page-header d-flex justify-content-between align-items-center flex-wrap gap-2">
+  <div>
+    <h4>Payslip Manager</h4>
+    <small>Manage payroll files and employee payslips</small>
+  </div>
 
-<div>
-<h4 class="mb-0 fw-bold">Payslip Manager</h4>
-<small class="text-muted">Upload and manage employee payslips</small>
+  <span class="badge bg-dark">
+    {{ now()->format('M d, Y') }}
+  </span>
 </div>
 
+<div class="row g-3">
+
+<!-- LEFT PANEL (UPLOAD + FOLDERS) -->
+<div class="col-lg-4">
+
+<!-- UPLOAD -->
+<div class="panel mb-3">
+
+<div class="panel-title mb-2">
+<i class="fa fa-upload me-2"></i>Upload Payslips
 </div>
 
-
-{{-- ================= UPLOAD SECTION ================= --}}
-<div class="panel">
-
-<div class="panel-h">
-<i class="fa fa-upload"></i> Upload Payslips
-</div>
-
-<div class="panel-b">
-
-<form method="POST"
+<form id="uploadForm"
+method="POST"
 action="{{ route('admin.portals.hr.payslip.upload') }}"
 enctype="multipart/form-data">
 
 @csrf
 
-<div class="row g-3">
+<div class="row g-2 mb-2">
 
-<div class="col-md-3">
-<label class="form-label">Month</label>
+<div class="col-4">
 <select name="month" class="form-select" required>
 @for($m=1;$m<=12;$m++)
 <option value="{{ $m }}">{{ date('F',mktime(0,0,0,$m,1)) }}</option>
@@ -108,96 +175,64 @@ enctype="multipart/form-data">
 </select>
 </div>
 
-<div class="col-md-3">
-<label class="form-label">Year</label>
-<input type="number"
-name="year"
-class="form-control"
-value="{{ date('Y') }}"
-required>
+<div class="col-4">
+<input type="number" name="year" class="form-control" value="{{ date('Y') }}" required>
 </div>
 
-<div class="col-md-6">
-<label class="form-label">Batch Name</label>
-<input type="text"
-name="batch_name"
-class="form-control"
-placeholder="Example: Payroll Batch 1">
-</div>
-
-<div class="col-12">
-
-<div class="upload-box">
-
-<i class="fa fa-file-arrow-up fa-2x mb-2 text-muted"></i>
-
-<p class="mb-2 fw-semibold">
-Upload multiple payslips or ZIP file
-</p>
-
-<input
-type="file"
-name="files[]"
-multiple
-class="form-control"
-required>
-
-<small class="text-muted">
-Supported: PDF, DOC, DOCX, JPG, PNG, ZIP
-</small>
-
+<div class="col-4">
+<select name="cutoff" class="form-select" required>
+<option value="1">10 - 25</option>
+<option value="2">26 - 10</option>
+</select>
 </div>
 
 </div>
 
-<div class="col-12 text-end">
-<button class="btn btn-dark">
-<i class="fa fa-upload"></i> Upload Payslips
+
+
+
+<div class="upload-box mb-2">
+<i class="fa fa-cloud-upload fa-lg mb-2 text-muted"></i>
+<input type="file" name="files[]" multiple class="form-control" required>
+<small class="text-muted">Allowed: PDF / Images / DOC / ZIP. You can upload multiple files.</small>
+</div>
+
+<button id="uploadBtn" class="btn btn-primary w-100">
+<i class="fa fa-upload"></i> Upload
 </button>
-</div>
-
-</div>
 
 </form>
 
 </div>
-</div>
 
-
-{{-- ================= MAIN GRID ================= --}}
-<div class="row g-3">
-
-
-{{-- ===== LEFT FOLDERS ===== --}}
-<div class="col-lg-4">
-
+<!-- FOLDERS -->
 <div class="panel">
 
-<div class="panel-h">
-<i class="fa fa-folder"></i> Payslip Folders
+<div class="panel-title mb-3">
+<i class="fa fa-folder me-2"></i>Folders
 </div>
 
-<div class="panel-b">
-
-<a href="{{ route('admin.portals.hr.payslip') }}"
-class="folder-item">
-All Folders
-</a>
+<div class="row g-2">
 
 @foreach($folders as $f)
 
-<a
-href="{{ route('admin.portals.hr.payslip') }}?folder={{ $f['key'] }}"
-class="folder-item">
+<div class="col-12">
+<a href="{{ route('admin.portals.hr.payslip') }}?folder={{ $f['key'] }}"
+class="text-decoration-none text-dark">
+
+<div class="folder-card d-flex justify-content-between align-items-center">
 
 <div>
-<strong>{{ $f['label'] }}</strong><br>
+<div class="folder-name">{{ $f['label'] }}</div>
 <small class="text-muted">{{ $f['key'] }}</small>
 </div>
 
-<span class="pill">{{ $f['count'] }}</span>
+<span class="badge bg-light text-dark">{{ $f['count'] }}</span>
+
+</div>
 
 </a>
+</div>
 
 @endforeach
 
@@ -207,58 +242,31 @@ class="folder-item">
 
 </div>
 
-
-
-{{-- ===== RIGHT FILE LIST ===== --}}
+<!-- RIGHT PANEL (FILES) -->
 <div class="col-lg-8">
 
 <div class="panel">
 
-<div class="panel-h d-flex justify-content-between">
+<div class="d-flex justify-content-between align-items-center mb-3">
+<div class="panel-title">
+<i class="fa fa-file me-2"></i>Payslip Files
+</div>
 
-<span>
-<i class="fa fa-file"></i>
-Payslip Files
-</span>
-
-<span class="text-muted">
+<small class="text-muted">
 {{ $payslips->total() }} files
-</span>
-
+</small>
 </div>
 
-<div class="panel-b p-0">
-
-<div class="p-3 border-bottom">
-
-<form method="GET"
-action="{{ route('admin.portals.hr.payslip') }}"
-class="d-flex gap-2">
-
-<input
-type="text"
-name="q"
-value="{{ $q }}"
-placeholder="Search payslip..."
-class="form-control">
-
-<button class="btn btn-dark">
-<i class="fa fa-search"></i>
-</button>
-
-</form>
-
-</div>
+<div class="table-wrapper">
 
 <div class="table-responsive">
 
-<table class="table table-hover align-middle mb-0">
+<table class="table table-hover mb-0">
 
 <thead>
 <tr>
 <th>File</th>
 <th>Folder</th>
-<th>Uploader</th>
 <th>Date</th>
 <th class="text-end">Action</th>
 </tr>
@@ -273,34 +281,25 @@ class="form-control">
 <td>
 <strong>{{ $p->original_name }}</strong><br>
 <small class="text-muted">
-Batch: {{ $p->batch_name ?? '-' }}
 </small>
 </td>
 
 <td>
-<span class="pill">{{ $p->folder_key }}</span>
+<span class="badge bg-light text-dark">
+{{ $p->folder_key }}
+</span>
 </td>
 
-<td>
-{{ $p->uploader->name ?? '-' }}
-</td>
-
-<td>
-{{ $p->created_at->format('M d Y') }}
-</td>
+<td>{{ $p->created_at->format('M d Y') }}</td>
 
 <td class="text-end">
 
-<a
-href="{{ route('admin.portals.hr.payslip.download',$p->id) }}"
-class="btn btn-sm btn-outline-dark">
-
+<a href="{{ route('admin.portals.hr.payslip.download',$p->id) }}"
+class="btn btn-sm btn-outline-primary">
 <i class="fa fa-download"></i>
-
 </a>
 
-<form
-method="POST"
+<form method="POST"
 action="{{ route('admin.portals.hr.payslip.delete',$p->id) }}"
 class="d-inline">
 
@@ -320,8 +319,8 @@ class="d-inline">
 @empty
 
 <tr>
-<td colspan="5" class="text-center text-muted p-4">
-No payslips uploaded yet
+<td colspan="4" class="text-center text-muted p-4">
+No payslips uploaded
 </td>
 </tr>
 
@@ -335,10 +334,8 @@ No payslips uploaded yet
 
 </div>
 
-<div class="p-3">
-
+<div class="mt-3">
 {{ $payslips->links() }}
-
 </div>
 
 </div>
@@ -348,6 +345,24 @@ No payslips uploaded yet
 </div>
 
 </div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function(){
+
+    const form = document.getElementById('uploadForm');
+    const btn = document.getElementById('uploadBtn');
+
+    if(form){
+        form.addEventListener('submit', function(){
+
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fa fa-spinner fa-spin"></i> Uploading';
+
+        });
+    }
+
+});
+</script>
 
 </body>
 </html>

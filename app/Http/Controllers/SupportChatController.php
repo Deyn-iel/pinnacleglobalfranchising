@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\SupportMessage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Log;
 
 class SupportChatController extends Controller
 {
@@ -20,7 +22,7 @@ class SupportChatController extends Controller
 
         $role = strtolower(trim((string)$rawRole));
 
-        return in_array($role, ['admin-secretary','hr','it','support','staff', 'om', 'od','smm']);
+        return in_array($role, ['admin','admin-secretary','hr','it','support','staff', 'om', 'od','smm']);
     }
 
     // GET: fetch messages
@@ -49,6 +51,7 @@ class SupportChatController extends Controller
                 return [
                     'id'   => $m->id,
                     'text' => $m->message,
+                    'type' => $m->type ?? 'text',
                     'name' => $m->user->name ?? 'Unknown',
                     'role' => $m->user->usertype ?? 'user',
                     'time' => optional($m->created_at)->format('M d, Y h:i A') ?? '',
@@ -66,31 +69,151 @@ class SupportChatController extends Controller
 
     // POST: send message
     public function send(Request $request)
-    {
-        $request->validate([
-    'target_user_id' => [$this->isStaff() ? 'required' : 'nullable', 'integer']
-]);
-        // $request->validate([
-        //     'message' => ['required','string','max:2000'],
-        //     'target_user_id' => [$this->isStaff() ? 'required' : 'nullable','integer'],
-        // ]);
+{
+    $request->validate([
+        'message' => 'required|string',
+        'department' => 'nullable|string'
+    ]);
 
-        $targetUserId = $this->isStaff()
-            ? (int) $request->target_user_id
-            : (int) Auth::id();
+    $authUser = Auth::user();
 
-        if ($targetUserId <= 0) {
-            return response()->json(['ok' => false, 'error' => 'Invalid target user'], 422);
+    $targetUserId = $this->isStaff()
+        ? (int) $request->target_user_id
+        : (int) $authUser->id;
+
+    // ✅ KUHA DEPARTMENT (IMPORTANT 🔥)
+    $department = strtolower($request->input('department', 'general'));
+
+    // ✅ SAVE MESSAGE
+    $msg = SupportMessage::create([
+        'user_id'        => (int) $authUser->id,
+        'target_user_id' => $targetUserId,
+        'message'        => $request->message,
+        'department'     => $department, // ✅ ADD THIS COLUMN
+    ]);
+
+    // ✅ PREVENT EMAIL SPAM
+    $alreadyUnread = SupportMessage::where('target_user_id', $targetUserId)
+        ->where('notified', true)
+        ->where('id', '!=', $msg->id)
+        ->exists();
+
+    if (!$alreadyUnread) {
+
+        // ✅ SAME AS TICKET CONTROLLER
+        $mainEmails = explode(',', env('SUPPORT_NOTIFY_EMAILS'));
+
+        $departmentMap = [
+            'it' => env('IT_SUPPORT_EMAIL'),
+            'hr' => env('HR_SUPPORT_EMAIL'),
+            'smm' => env('SMM_SUPPORT_EMAIL'),
+            'finance' => env('FINANCE_SUPPORT_EMAIL'),
+            'admin-secretary' => env('ADMIN_SUPPORT_EMAIL'),
+            'od' => env('OPERATIONS_DIRECTOR_SUPPORT_EMAIL'),
+            'om' => env('OPERATIONS_MANAGER_EMAIL'),
+        ];
+
+        $departmentEmail = $departmentMap[$department] ?? null;
+
+        $emails = $mainEmails;
+
+        if ($departmentEmail) {
+            $emails[] = $departmentEmail;
         }
 
-        $msg = SupportMessage::create([
-            'user_id'        => (int) Auth::id(),
-            'target_user_id' => $targetUserId,
-            'message'        => $request->message,
-        ]);
+        try {
 
-        return response()->json(['ok' => true, 'id' => $msg->id]);
+            if (!empty($emails)) {
+
+                $url = url('/login');
+
+                Mail::html("
+                <div style='font-family: Arial, sans-serif; background:#f4f6f9; padding:30px;'>
+
+    <!-- ✅ EMAIL PREVIEW FIX -->
+    <div style='display:none; max-height:0; overflow:hidden; opacity:0;'>
+        You have a new support message. Open your dashboard to view it.
+    </div>
+
+    <div style='
+        max-width:500px;
+        margin:auto;
+        background:#ffffff;
+        border-radius:12px;
+        overflow:hidden;
+        box-shadow:0 5px 20px rgba(0,0,0,0.08);
+    '>
+
+        <div style='
+            background:#0d3553;
+            padding:20px;
+            color:#fff;
+            text-align:center;
+            font-size:18px;
+            font-weight:bold;
+        '>
+            💬 New Support Message
+        </div>
+
+        <div style='padding:25px; color:#333;'>
+
+            <p style='margin-bottom:10px; font-size:15px;'>
+                Hello,
+            </p>
+
+            <p style='margin-bottom:15px; font-size:15px;'>
+                You have received a new message.
+            </p>
+
+            <div style='text-align:center;'>
+                <a href='{$url}' 
+                   style='
+                     display:inline-block;
+                     padding:12px 25px;
+                     background:#0d3553;
+                     color:#fff;
+                     text-decoration:none;
+                     border-radius:8px;
+                     font-size:14px;
+                     font-weight:bold;
+                   '>
+                   Open Chat
+                </a>
+            </div>
+
+        </div>
+
+        <div style='
+            text-align:center;
+            font-size:12px;
+            color:#888;
+            padding:15px;
+            border-top:1px solid #eee;
+        '>
+            This is an automated message from Pinnacle Support.
+        </div>
+
+    </div>
+</div>
+                ", function ($mail) use ($emails) {
+                    $mail->to($emails)
+                         ->subject("New Chat Message");
+                });
+            }
+
+            // ✅ MARK AS NOTIFIED
+            $msg->update(['notified' => true]);
+
+        } catch (\Throwable $e) {
+            Log::error('Chat email failed: ' . $e->getMessage());
+        }
     }
+
+    return response()->json([
+        'ok' => true,
+        'id' => $msg->id
+    ]);
+}
 
 public function destroy(Request $request)
 {
@@ -109,4 +232,50 @@ public function destroy(Request $request)
 
     return response()->json(['ok' => true, 'deleted' => $deleted]);
 }
+
+public function upload(Request $request)
+{
+    $request->validate([
+        'file' => 'required|file|max:10240', // 10MB
+    ]);
+
+    $authUser = Auth::user();
+
+    $targetUserId = $this->isStaff()
+        ? (int) $request->target_user_id
+        : (int) $authUser->id;
+
+    if (!$request->hasFile('file')) {
+        return response()->json(['error' => 'No file'], 400);
+    }
+
+    $file = $request->file('file');
+
+    // ✅ STORE FILE
+    $path = $file->store('chat_files', 'public');
+
+    // ✅ DETERMINE TYPE
+    $mime = $file->getMimeType();
+
+    $type = 'file';
+    if (str_starts_with($mime, 'image/')) $type = 'image';
+    elseif (str_starts_with($mime, 'video/')) $type = 'video';
+    elseif ($mime === 'application/pdf') $type = 'pdf';
+
+    // ✅ SAVE AS MESSAGE
+    $msg = SupportMessage::create([
+        'user_id'        => (int) $authUser->id,
+        'target_user_id' => $targetUserId,
+        'message'        => $path, // file path
+        'type'           => $type, // ⚠️ NEED COLUMN
+    ]);
+
+    return response()->json([
+        'ok'   => true,
+        'id'   => $msg->id,
+        'path' => $path,
+        'type' => $type
+    ]);
+}
+
 }

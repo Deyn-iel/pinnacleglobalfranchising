@@ -248,7 +248,8 @@
 .ticket-inputbar{
   padding:12px;
   display:flex;
-  gap:10px;
+  flex-direction:column; /* 🔥 THIS FIXES EVERYTHING */
+  gap:8px;
   background:#fff;
   border-top:1px solid var(--bw-border);
 }
@@ -261,9 +262,13 @@
   outline:none;
   font-weight:650;
 }
-
+.input-row{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
 .ticket-send{
-  padding:0 16px;
+  padding:10px 16px;
   border-radius:14px;
   border:1px solid rgba(255,255,255,.10);
   background:var(--bw-bg);
@@ -274,6 +279,96 @@
 .ticket-send:disabled{
   opacity:.45;
   cursor:not-allowed;
+}
+.ticket-text {
+  word-break: break-all;   /* 🔥 para hindi humaba */
+}
+.file-send {
+  font-size: 20px;
+  color: #000000;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 50%;
+  transition: 0.2s;
+}
+
+.file-send:hover {
+  background: rgba(0, 132, 255, 0.1);
+}
+.file-preview-container {
+  display: flex;
+  gap: 8px;
+  padding: 5px 10px;
+}
+
+.file-preview {
+  position: relative;
+}
+
+.file-preview img,
+.file-preview video {
+  width: 60px;
+  height: 60px;
+  object-fit: cover;
+  border-radius: 10px;
+}
+
+.file-remove {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  background: red;
+  color: white;
+  border-radius: 50%;
+  font-size: 12px;
+  cursor: pointer;
+  padding: 2px 5px;
+}
+
+.upload-status{
+  font-size:12px;
+  font-weight:600;
+  color:#0d3553;
+  padding:4px 10px;
+  margin-bottom:4px;
+  animation: blink 1s infinite;
+}
+
+@keyframes blink{
+  0%{opacity:0.3;}
+  50%{opacity:1;}
+  100%{opacity:0.3;}
+}
+
+.file-bubble{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  text-decoration:none;
+  color:inherit;
+  padding:10px;
+  border-radius:12px;
+}
+
+
+.file-icon{
+  font-size:24px;
+}
+
+.file-info{
+  display:flex;
+  flex-direction:column;
+}
+
+.file-name{
+  font-size:13px;
+  font-weight:700;
+  word-break:break-all;
+}
+
+.file-action{
+  font-size:11px;
+  opacity:0.6;
 }
 
 /* ✅ Less gap between messages */

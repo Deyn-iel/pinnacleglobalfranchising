@@ -10,7 +10,7 @@
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
 <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
-@vite(['resources/css/admin/app.css', 
+@vite([
         'resources/css/chatbot/app.css',
             
             // js files
@@ -299,11 +299,56 @@ th:nth-child(8), td:nth-child(8){ width: 90px; }  /* Actions */
     .modal-dialog{ margin: 0; }
     .modal-content{ border-radius: 0 !important; }
   }
+    .global-loader{
+  position: fixed;
+  inset: 0;
+  background: rgba(15,23,42,0.55);
+  backdrop-filter: blur(6px);
+  z-index: 9999;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.loader-content{
+  text-align: center;
+  color: #fff;
+  font-size: 14px;
+  letter-spacing: .3px;
+}
+
+.toast-custom{
+  min-width: 260px;
+  border-radius: 12px;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 10px 30px rgba(0,0,0,.15);
+  font-weight: 600;
+  animation: fadeInUp 0.4s ease;
+}
+
+@keyframes fadeInUp{
+  from{
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to{
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
 </style>
 </head>
 
 <body>
-
+  <div id="toastContainer" class="toast-container position-fixed top-0 end-0 p-3" style="z-index:9999;"></div>
+<!-- FULLSCREEN LOADING -->
+<div id="globalLoader" class="global-loader d-none">
+  <div class="loader-content">
+    <div class="spinner-border text-light" role="status"></div>
+    <div class="mt-3 fw-semibold">Sending approval request...</div>
+  </div>
+</div>
 @include('admin.headoffice-portals.hr.hr-partials.sidebar')
 
 <main>
@@ -377,7 +422,6 @@ th:nth-child(8), td:nth-child(8){ width: 90px; }  /* Actions */
               <th>Status</th>
               <th>Date Submitted</th>
               <th class="text-center">Actions</th>
-              <th>Request for Resolve</th>
             </tr>
           </thead>
 
@@ -442,29 +486,38 @@ th:nth-child(8), td:nth-child(8){ width: 90px; }  /* Actions */
               <td>
 <div class="small text-muted">
 
-{{ $ticket->created_at->format('M d, Y') }} <br>
-
-<span class="text-secondary">
-{{ $ticket->created_at->diffForHumans(['parts'=>2]) }}
-</span>
+{{ $ticket->created_at->format('M d, Y') }} 
 
 </div>
 </td>
 
               <td class="text-center">
-                <div class="action-wrap">
-                  <form method="POST"
-                        action="{{ route('admin.tickets.destroy', $ticket) }}"
-                        class="m-0"
-                        onsubmit="return confirm('Delete this ticket permanently?')">
-                    @csrf
-                    @method('DELETE')
-                    <button class="btn btn-sm btn-danger" aria-label="Delete">
-                      <i class="fa-solid fa-trash"></i>
-                    </button>
-                  </form>
-                </div>
-              </td>
+  <div class="action-wrap">
+
+    <!-- ✅ REQUEST APPROVAL (PER TICKET) -->
+    <button
+      type="button"
+      class="btn btn-sm btn-warning request-approval"
+      data-ticket-id="{{ $ticket->id }}"
+      title="Request user confirmation"
+    >
+      <i class="fa-solid fa-paper-plane"></i>
+    </button>
+
+    <!-- DELETE -->
+    <form method="POST"
+          action="{{ route('admin.tickets.destroy', $ticket) }}"
+          class="m-0"
+          onsubmit="return confirm('Delete this ticket permanently?')">
+      @csrf
+      @method('DELETE')
+      <button class="btn btn-sm btn-danger" aria-label="Delete">
+        <i class="fa-solid fa-trash"></i>
+      </button>
+    </form>
+
+  </div>
+</td>
             </tr>
           @endforeach
           </tbody>
@@ -646,31 +699,122 @@ document.addEventListener('click', async function(e){
 
     if(response.ok){
 
-  const currentStatus = btn.dataset.status.toLowerCase();
+      const currentStatus = (btn.dataset.status || '').toLowerCase();
 
-  // ❌ do nothing if resolved
-  if(currentStatus.includes('resolved')){
-    return;
-  }
+      if(currentStatus.includes('resolved')) return;
 
-  const row = btn.closest('tr');
-  const badge = row.querySelector('td:nth-child(6) .badge');
+      const row = btn.closest('tr');
+      const badge = row.querySelector('td:nth-child(6) .badge');
 
-  if(badge){
-    badge.classList.remove('bg-danger');
-    badge.classList.add('bg-primary');
-    badge.textContent = 'In Progress';
-  }
+      if(badge){
+        badge.classList.remove('bg-danger');
+        badge.classList.add('bg-primary');
+        badge.textContent = 'In Progress';
+      }
 
-  btn.dataset.status = "In Progress";
+      btn.dataset.status = "In Progress";
 
-}
+      const modalStatus = document.getElementById('m_status');
+      if(modalStatus){
+        modalStatus.innerText = "In Progress";
+        modalStatus.className = 'badge bg-primary';
+      }
+    }
 
   }catch(err){
     console.log(err);
   }
 
 });
+
+document.addEventListener('click', async function(e){
+
+  const btn = e.target.closest('.request-approval');
+  if(!btn) return;
+
+  const ticketId = btn.dataset.ticketId;
+
+  if(!confirm("Send approval request to this user?")) return;
+
+  const loader = document.getElementById('globalLoader');
+
+  try{
+
+    // ✅ SHOW FULLSCREEN LOADER
+    loader.classList.remove('d-none');
+
+    const res = await fetch(`/admin/headoffice-portals/tickets/${ticketId}/request-approval`, {
+      method: "POST",
+      headers:{
+        "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').content,
+        "Accept": "application/json",
+        "Content-Type": "application/json",
+        "X-Requested-With": "XMLHttpRequest"
+      }
+    });
+
+    const data = await res.json().catch(() => null);
+
+    if(res.ok){
+
+      showToast("Approval request sent successfully.");
+
+    }else{
+
+      console.error(data);
+      showToast("Failed to send request.", "error");
+
+    }
+
+  }catch(err){
+
+    console.log(err);
+    showToast("Network error. Please try again.", "error");
+
+  }finally{
+
+    // ✅ HIDE LOADER ALWAYS
+    loader.classList.add('d-none');
+
+  }
+
+});
+
+function showToast(message, type = "success"){
+
+  const container = document.getElementById('toastContainer');
+
+  const toast = document.createElement('div');
+
+  const bg = type === "success" ? "bg-success" : "bg-danger";
+  const icon = type === "success"
+    ? "fa-circle-check"
+    : "fa-circle-xmark";
+
+  toast.className = `toast align-items-center text-white ${bg} border-0 show toast-custom mb-2`;
+
+  toast.innerHTML = `
+    <div class="d-flex align-items-center">
+      <div class="toast-body">
+        <i class="fa-solid ${icon} me-2"></i> ${message}
+      </div>
+      <button type="button" class="btn-close btn-close-white me-2 m-auto"></button>
+    </div>
+  `;
+
+  container.appendChild(toast);
+
+  // auto remove
+  setTimeout(() => {
+    toast.classList.remove('show');
+    setTimeout(() => toast.remove(), 300);
+  }, 3000);
+
+  // manual close
+  toast.querySelector('.btn-close').onclick = () => {
+    toast.remove();
+  };
+}
 </script>
 
 

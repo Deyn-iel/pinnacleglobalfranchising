@@ -72,17 +72,32 @@ return view(
     public function store(Request $request)
     {
         $request->validate([
-            'month' => ['required', 'integer', 'min:1', 'max:12'],
-            'year'  => ['required', 'integer', 'min:2000', 'max:' . now()->year],
-            'batch_name' => ['nullable', 'string', 'max:120'],
+    'month' => ['required', 'integer', 'min:1', 'max:12'],
+    'year'  => ['required', 'integer', 'min:2000', 'max:' . now()->year],
+    'cutoff' => ['required', 'in:1,2'], 
+    'batch_name' => ['nullable', 'string', 'max:120'],
 
-            'files' => ['required', 'array', 'min:1'],
-            'files.*' => ['file', 'max:10240', 'mimes:pdf,doc,docx,jpg,jpeg,png,zip'], // 10MB each (adjust if needed)
-        ]);
+    'files' => ['required', 'array', 'min:1'],
+    'files.*' => ['file', 'max:10240', 'mimes:pdf,doc,docx,jpg,jpeg,png,zip'],
+]);
 
         $month = (int)$request->month;
         $year  = (int)$request->year;
-        $folderKey = sprintf('%04d-%02d', $year, $month);
+        $cutoff = $request->cutoff;
+
+// cutoff label
+if ($cutoff == 1) {
+    $folderKey = sprintf('%04d-%02d-10_25', $year, $month);
+} else {
+    // next month handling
+    $nextMonth = $month == 12 ? 1 : $month + 1;
+    $nextYear = $month == 12 ? $year + 1 : $year;
+
+    $folderKey = sprintf('%04d-%02d-26_%04d-%02d-10',
+        $year, $month,
+        $nextYear, $nextMonth
+    );
+}
 
         $baseDir = "payslips/{$year}/" . str_pad((string)$month, 2, '0', STR_PAD_LEFT);
 

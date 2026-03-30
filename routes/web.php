@@ -87,6 +87,8 @@ Route::middleware(['auth'])->group(function () {
 
   Route::post('/hr/claims', [HRClaimController::class, 'store'])->name('hr.claims.store');
 
+  
+
   // ✅ ADD THIS HERE (REALTIME FETCH)
     Route::get('/tickets/user', function () {
         return \App\Models\Ticket::where('user_id', Auth::id())
@@ -101,7 +103,7 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/user/coffee-registration', [UserCoffeeReg::class, 'store'])
         ->name('user.coffee-registration.store');
 
-
+Route::post('/support/chat/upload', [SupportChatController::class, 'upload']);
 Route::get('/support/chat',  [SupportChatController::class, 'fetch']);
   Route::post('/support/chat', [SupportChatController::class, 'send']);
   Route::delete('/support/chat', [SupportChatController::class, 'destroy']);
@@ -298,6 +300,7 @@ Route::prefix('headoffice-portals')->name('portals.')->group(function () {
 
     Route::delete('/hr/payslip/{payslip}', [PayslipController::class,'destroy'])
         ->name('hr.payslip.delete');
+        
 
         // HR REGISTRATION
     Route::get('/hr/registration', [AdminCoffeeReg::class, 'index'])
@@ -310,6 +313,10 @@ Route::prefix('headoffice-portals')->name('portals.')->group(function () {
     Route::get('/it/tickets', [HeadOfficeTicketController::class, 'index'])
         ->defaults('department', 'it')
         ->name('it.tickets');
+    
+        Route::post('/tickets/{ticket}/request-approval', 
+    [TicketController::class, 'requestApproval'])
+    ->name('admin.tickets.requestApproval');
 
     // OM
     Route::view('/om', 'admin.headoffice-portals.om.dashboard')->name('om');

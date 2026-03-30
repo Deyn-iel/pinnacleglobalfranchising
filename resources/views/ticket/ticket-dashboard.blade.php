@@ -49,6 +49,7 @@
         <span>{{ ucwords(strtolower(Auth::user()->name)) }}</span>
       </div>
     </div>
+    
 
       <button class="btn btn-black" data-bs-toggle="modal" data-bs-target="#submitTicketModal">
         <i class="bi bi-plus-circle me-1"></i> New Ticket
@@ -244,7 +245,7 @@ Showing <span id="visibleCount">0</span> ticket(s)
           <div class="empty">
             <div class="icon"><i class="bi bi-inbox fs-3"></i></div>
             <h6>No tickets yet</h6>
-            <p>Submit a concern to get started.</p>
+            <p>Submit a concern first to start chatting.</p>
             <button class="btn btn-black mt-2" data-bs-toggle="modal" data-bs-target="#submitTicketModal">
               <i class="bi bi-plus-circle me-1"></i> Create Ticket
             </button>

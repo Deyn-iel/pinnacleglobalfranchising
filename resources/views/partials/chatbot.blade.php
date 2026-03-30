@@ -42,8 +42,23 @@
     </div>
   </div>
 
-  <footer class="ticket-inputbar">
+<footer class="ticket-inputbar">
+  <div id="uploadStatus" class="upload-status" style="display:none;">
+  Uploading...
+</div>
+  <div id="filePreviewContainer" class="file-preview-container"></div>
+
+  <!-- 🔥 NEW WRAPPER -->
+  <div class="input-row">
+    <label class="file-send">
+      <i class="fa-solid fa-paperclip"></i>
+      <input type="file" id="fileInput" hidden>
+    </label>
+
     <input id="ticketChatInput" class="ticket-input" placeholder="Type your message..." disabled />
+
     <button id="ticketChatSend" class="ticket-send" type="button" disabled>Send</button>
-  </footer>
+  </div>
+
+</footer>
 </section>

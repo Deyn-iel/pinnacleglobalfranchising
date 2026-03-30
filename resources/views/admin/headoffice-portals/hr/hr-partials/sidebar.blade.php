@@ -79,6 +79,24 @@ display:none;
 .sidebar-overlay.active{
 display:block;
 }
+.logout-btn{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  padding:12px 14px;
+  border-radius:10px;
+  background:none;
+  border:none;
+  color:#cbd5f5;
+  font-weight:500;
+  width:100%;
+  transition:0.2s;
+}
+
+.logout-btn:hover{
+  background:#ef4444;
+  color:white;
+}
 </style>
 
 <div class="sidebar-overlay" id="overlay"></div>
@@ -121,6 +139,11 @@ class="nav-link {{ request()->routeIs('admin.portals.hr.registration') ? 'active
 <i class="fa-solid fa-bell"></i>
 Notifications
 </a>
+
+<a href="#">
+                <i class="fas fa-calendar-check"></i>
+                <span>Attendance</span>
+            </a>
 
 <a href="{{ route('admin.portals.hr.tickets') }}"
 class="nav-link {{ request()->routeIs('admin.portals.hr.tickets') ? 'active' : '' }}">

@@ -18,6 +18,66 @@ document.addEventListener("DOMContentLoaded", function () {
   const ticketSend = document.getElementById("ticketChatSend");
   const ticketHint = document.getElementById("ticketChatHint");
   const typing = document.getElementById("ticketTyping");
+  const uploadStatus = document.getElementById("uploadStatus");
+  let selectedFile = null;
+
+const previewContainer = document.getElementById("filePreviewContainer");
+const fileInput = document.getElementById("fileInput");
+
+// ✅ safe check (important)
+if (fileInput && previewContainer) {
+
+fileInput.addEventListener("change", function () {
+    const file = this.files[0];
+    if (!file) return;
+
+    const maxSize = 10 * 1024 * 1024;
+
+    if (file.size > maxSize) {
+        alert("Max 10MB only!");
+        this.value = "";
+        return;
+    }
+
+    selectedFile = file;
+    ticketSend.disabled = false;
+    previewContainer.innerHTML = "";
+
+    const div = document.createElement("div");
+    div.className = "file-preview";
+
+    if (file.type.startsWith("image/")) {
+        const img = document.createElement("img");
+        img.src = URL.createObjectURL(file);
+        div.appendChild(img);
+
+    } else if (file.type.startsWith("video/")) {
+        const vid = document.createElement("video");
+        vid.src = URL.createObjectURL(file);
+        vid.muted = true; // ✅ para di maingay
+        div.appendChild(vid);
+
+    } else {
+        div.textContent = file.name;
+    }
+
+    const remove = document.createElement("div");
+    remove.className = "file-remove";
+    remove.textContent = "✕";
+
+    remove.onclick = () => {
+    selectedFile = null;
+    previewContainer.innerHTML = "";
+    fileInput.value = "";
+
+    ticketSend.disabled = ticketInput.value.trim() === "";
+};
+
+    div.appendChild(remove);
+    previewContainer.appendChild(div);
+});
+
+}
 
   
   let lastId = 0;
@@ -180,12 +240,12 @@ document.addEventListener("visibilitychange", () => {
 
   function setInputState(enabled){
     ticketInput.disabled = !enabled;
-    ticketSend.disabled = !enabled || ticketInput.value.trim() === "";
+    ticketSend.disabled = !enabled || (ticketInput.value.trim() === "" && !selectedFile);
   }
 
   ticketInput?.addEventListener("input", () => {
     if(ticketInput.disabled) return;
-    ticketSend.disabled = ticketInput.value.trim() === "";
+    ticketSend.disabled = ticketInput.value.trim() === "" && !selectedFile;
   });
 
   function getInitial(name){
@@ -229,6 +289,8 @@ function renderMessages(messages){
   if(lastId === 0) ticketBox.innerHTML = "";
 
   for(let i = 0; i < messages.length; i++){
+    if (Number(messages[i].id) <= lastId) continue;
+    
     const m = messages[i];
     const next = messages[i + 1];
 
@@ -270,7 +332,62 @@ function renderMessages(messages){
 
     const body = document.createElement("div");
     body.className = "ticket-text";
-    body.textContent = m.text ?? "";
+    body.innerHTML = "";
+
+const fileUrl = "/storage/" + m.text;
+const fileName = m.text.split('/').pop();
+const ext = fileName.split('.').pop().toLowerCase();
+
+// 🔥 AUTO DETECT IMAGE
+if (m.type === "image" || ["jpg","jpeg","png","gif","webp"].includes(ext)) {
+
+    const img = document.createElement("img");
+    img.src = fileUrl;
+    img.style.maxWidth = "200px";
+    img.style.borderRadius = "10px";
+    img.style.cursor = "pointer";
+
+    // click to open full
+    img.onclick = () => window.open(fileUrl, "_blank");
+
+    body.appendChild(img);
+
+} 
+// 🔥 VIDEO
+else if (m.type === "video" || ["mp4","webm"].includes(ext)) {
+
+    const vid = document.createElement("video");
+    vid.src = fileUrl;
+    vid.controls = true;
+    vid.style.maxWidth = "200px";
+
+    body.appendChild(vid);
+
+} 
+// 🔥 FILES (docx, xlsx, etc.)
+else {
+
+    let icon = "📄";
+
+    if(ext === "docx") icon = "📝";
+    else if(ext === "xlsx") icon = "📊";
+    else if(ext === "pdf") icon = "📕";
+
+    const link = document.createElement("a");
+    link.href = fileUrl;
+    link.target = "_blank";
+    link.className = "file-bubble";
+
+    link.innerHTML = `
+        <div class="file-icon">${icon}</div>
+        <div class="file-info">
+            <div class="file-name">${fileName}</div>
+            <div class="file-action">Click to open</div>
+        </div>
+    `;
+
+    body.appendChild(link);
+}
 
     const time = document.createElement("div");
     time.className = "msg-time";
@@ -354,16 +471,21 @@ if (Number.isFinite(currentTargetUserId) && currentTargetUserId > 0) {
     console.log("SUPPORT CHAT DATA:", data);
 
     if (Array.isArray(data.messages) && data.messages.length > 0) {
-      renderMessages(data.messages);
-      return;
-    }
+
+  const newMessages = data.messages.filter(m => Number(m.id) > lastId);
+
+  if (newMessages.length > 0) {
+    renderMessages(newMessages);
+  }
+
+  return; 
+}
 
     // ✅ no messages — replace loading on first load
     if (lastId === 0) {
       ticketBox.innerHTML = `
         <div class="ticket-empty">
           <div class="ticket-empty-title">No messages yet</div>
-          <div class="ticket-empty-sub">Create a ticket to start the chat.</div>
         </div>
       `;
     }
@@ -383,81 +505,82 @@ if (Number.isFinite(currentTargetUserId) && currentTargetUserId > 0) {
 
 
 
-  async function sendMessage() {
+async function sendMessage() {
 
-  // ✅ prevent double send
   if (isSending) return;
   isSending = true;
 
   const msg = ticketInput.value.trim();
-  if (!msg) {
+
+  if (!msg && !selectedFile) {
     isSending = false;
     return;
   }
 
-  // ✅ guard target user
-  if (!Number.isFinite(currentTargetUserId) || currentTargetUserId <= 0) {
-    alert("No target user selected.");
-    isSending = false;
-    return;
-  }
-
-  const token = document
-    .querySelector('meta[name="csrf-token"]')
-    ?.getAttribute("content") || "";
-
-  // disable button habang sending
-  ticketSend.disabled = true;
+  const token = document.querySelector('meta[name="csrf-token"]')?.getAttribute("content") || "";
 
   try {
-    const res = await fetch(`/support/chat`, {
-      method: "POST",
-      credentials: "same-origin",
-      headers: {
-        "Accept": "application/json",
-        "Content-Type": "application/json",
-        "X-CSRF-TOKEN": token,
-        "X-Requested-With": "XMLHttpRequest"
-      },
-      body: JSON.stringify({
-        message: msg,
-        target_user_id: currentTargetUserId
-      })
-    });
 
-    const ct = res.headers.get("content-type") || "";
-    const raw = await res.text();
+    // ✅ IF MAY FILE → UPLOAD FIRST
+    if (selectedFile) {
 
-    console.log("SEND STATUS:", res.status);
-    console.log("SEND RAW:", raw);
+    // ✅ SHOW LOADING
+    if(uploadStatus) uploadStatus.style.display = "block";
 
-    if (!res.ok) {
-      alert(`Send failed: ${res.status}. Check Network → Response`);
-      return;
+    ticketSend.disabled = true;
+
+    const formData = new FormData();
+    formData.append("file", selectedFile);
+    formData.append("target_user_id", currentTargetUserId);
+
+    try{
+        await fetch("/support/chat/upload", {
+            method: "POST",
+            headers: { "X-CSRF-TOKEN": token },
+            body: formData
+        });
+
+    } catch(e){
+        alert("Upload failed");
     }
 
-    if (ct.includes("application/json")) {
-      const data = JSON.parse(raw);
-      console.log("SEND JSON:", data);
-    } else {
-      alert("Send returned NON-JSON. Possible redirect/session issue.");
-      return;
+    // ✅ RESET FILE
+    selectedFile = null;
+    previewContainer.innerHTML = "";
+    document.getElementById("fileInput").value = "";
+
+    // ✅ HIDE LOADING
+    if(uploadStatus) uploadStatus.style.display = "none";
+}
+
+    // ✅ TEXT MESSAGE
+    if (msg) {
+        await fetch(`/support/chat`, {
+            method: "POST",
+            credentials: "same-origin",
+            headers: {
+                "Accept": "application/json",
+                "Content-Type": "application/json",
+                "X-CSRF-TOKEN": token,
+                "X-Requested-With": "XMLHttpRequest"
+            },
+            body: JSON.stringify({
+                message: msg,
+                target_user_id: currentTargetUserId
+            })
+        });
+
+        ticketInput.value = "";
     }
-
-    // ✅ clear input
-    ticketInput.value = "";
-
-    // ❌ HUWAG NA MAG fetchMessages() DITO
-    // Hayaan si poller ang mag refresh
-    // await fetchMessages();   ← DELETE THIS
 
   } catch (err) {
-    console.log("SEND EXCEPTION:", err);
-    alert("Send exception. Check console.");
+    console.log(err);
   } finally {
-    isSending = false;
-    ticketSend.disabled = ticketInput.value.trim() === "";
-  }
+  isSending = false;
+
+  // ✅ FIX: reset send button state
+  ticketSend.disabled = ticketInput.value.trim() === "" && !selectedFile;
+}
 }
 
 

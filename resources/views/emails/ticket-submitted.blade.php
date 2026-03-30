@@ -57,7 +57,7 @@
 <td align="center" bgcolor="#000000" style="border-radius:6px;">
 <a href="{{ url('/login') }}"
 style="display:inline-block;padding:12px 24px;color:#ffffff;text-decoration:none;font-weight:bold;">
-Log in to view tickets <br>(desktop/laptop only).
+Log in to view tickets
 </a>
 </td>
 </tr>

@@ -10,6 +10,8 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Log;
 use App\Mail\TicketSubmittedMail;
 
+use App\Mail\TicketApprovalRequestMail;
+
 class TicketController extends Controller
 {
     public function index()
@@ -60,6 +62,7 @@ class TicketController extends Controller
             'department' => $request->department,
             'priority' => $request->priority,
             'status' => 'pending',
+            'pending_at' => now(), // ✅ ADD THIS
         ]);
     });
 
@@ -121,11 +124,33 @@ public function updateStatus(Request $request, Ticket $ticket)
         return back()->with('success','Only admin can set ticket to In Progress.');
     }
 
-    $ticket->update([
-        'status' => $request->status,
-    ]);
+if($request->status === 'resolved'){
+
+    // ❗ IMPORTANT: make sure may in_progress muna
+    if(!$ticket->in_progress_at){
+        return back()->with('error','Ticket must be in progress first.');
+    }
+
+    // ✅ STOP IN PROGRESS TIMER
+    $ticket->resolved_at = now();
+}
+
+    $ticket->status = $request->status;
+    $ticket->save();
 
     return back()->with('success', 'Ticket resolved successfully.');
+}
+
+public function requestApproval($id)
+{
+    $ticket = Ticket::with('user')->findOrFail($id);
+
+    Log::info("Sending approval email to: " . $ticket->user->email);
+
+    Mail::to($ticket->user->email)
+        ->send(new TicketApprovalRequestMail($ticket));
+
+    return response()->json(['success' => true]);
 }
 
 }

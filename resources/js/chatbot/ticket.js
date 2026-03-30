@@ -96,7 +96,8 @@ window.openTicketDetails = function openTicketDetails(el){
   const ticketId = el.dataset.id;
   const dept = el.dataset.department || '';
   const pri  = el.dataset.priority || '';
-  const st = (el.dataset.status || 'pending').toLowerCase();
+  const badge = el.querySelector('.badge-status');
+const st = badge ? badge.innerText.trim().replace(' ', '_').toLowerCase() : 'pending';
 
   document.getElementById('d_ticketNo').innerText = noEl?.innerText || '—';
   document.getElementById('d_subject').innerText = subjEl?.innerText || '—';

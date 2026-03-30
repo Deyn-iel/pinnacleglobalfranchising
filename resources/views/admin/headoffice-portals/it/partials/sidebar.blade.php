@@ -79,6 +79,33 @@ display:none;
 .sidebar-overlay.active{
 display:block;
 }
+/* ===== FIX LOGOUT BUTTON ===== */
+.logout-btn{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  padding:12px 14px;
+  border-radius:10px;
+  background:none;
+  border:none;
+  color:#cbd5f5;
+  font-weight:500;
+  width:100%;
+  margin-bottom:6px; /* ✅ para same spacing */
+}
+
+.logout-btn:hover{
+  background:#ef4444;
+  color:white;
+}
+
+.sidebar form{
+  margin:0;
+}
+
+.sidebar form button{
+  text-align:left;
+}
 </style>
 
 <div class="sidebar-overlay" id="overlay"></div>
@@ -103,6 +130,11 @@ class="nav-link {{ request()->routeIs('admin.portals.it') ? 'active' : '' }}">
 Notifications
 </a>
 
+<a href="#">
+                <i class="fas fa-calendar-check"></i>
+                <span>Attendance</span>
+            </a>
+            
 <a href="{{ route('admin.portals.it.tickets') }}"
 class="nav-link {{ request()->routeIs('admin.portals.it.tickets') ? 'active' : '' }}">
 
@@ -116,11 +148,11 @@ class="nav-link {{ request()->routeIs('admin.portals.it.tickets') ? 'active' : '
                 <span>Profile</span>
             </a>
 
-<form method="POST" action="{{ route('custom.logout') }}">
+<form method="POST" action="{{ route('custom.logout') }}" class="m-0">
 @csrf
-<button class="logout-btn w-100 text-start">
-<i class="fas fa-right-from-bracket me-2"></i>
-Logout
+<button type="submit" class="logout-btn">
+<i class="fa-solid fa-right-from-bracket"></i>
+<span>Logout</span>
 </button>
 </form>
 

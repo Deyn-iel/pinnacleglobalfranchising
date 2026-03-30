@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,7 +8,8 @@
 <link rel="icon" type="image/png" href="{{ asset('img/logo1-removebg-preview.png') }}">
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
-@vite(['resources/css/admin/app.css', 
+<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+@vite([
         'resources/css/chatbot/app.css',
             
             // js files
@@ -206,25 +207,6 @@ tbody td{
 font-size:13px;
 }
 
-/* LOGOUT */
-
-.logout-btn{
-display:flex;
-align-items:center;
-gap:12px;
-padding:12px 14px;
-border-radius:10px;
-background:none;
-border:none;
-color:#cbd5f5;
-font-weight:500;
-width:100%;
-}
-
-.logout-btn:hover{
-background:#ef4444;
-color:white;
-}
 
 /* TABLE RESPONSIVE */
 
@@ -254,7 +236,25 @@ left:0;
 }
 
 }
+/* ===== FIX LOGOUT BUTTON ===== */
+.logout-btn{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  padding:12px 14px;
+  border-radius:10px;
+  background:none;
+  border:none;
+  color:#cbd5f5;
+  font-weight:500;
+  width:100%;
+  transition:0.2s;
+}
 
+.logout-btn:hover{
+  background:#ef4444;
+  color:white;
+}
 </style>
 </head>
 
@@ -290,9 +290,9 @@ left:0;
 </div>
 
 
-<div class="row g-3 mb-4">
+<div class="row g-3 mb-4 row-cols-1 row-cols-md-2 row-cols-lg-2">
 
-<div class="col-lg-3 col-md-6">
+<div class="col">
 <div class="stat-card">
 <div>
 <div class="stat-title">Employees</div>
@@ -305,7 +305,7 @@ left:0;
 </div>
 
 
-<div class="col-lg-3 col-md-6">
+<div class="col">
 <div class="stat-card">
 <div>
 <div class="stat-title">Tickets</div>

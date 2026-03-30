@@ -408,6 +408,9 @@ th:nth-child(8), td:nth-child(8){ width: 90px; }  /* Actions */
                     data-priority="{{ ucfirst($ticket->priority) }}"
                     data-status="{{ ucwords(str_replace('_',' ', $ticket->status)) }}"
                     data-date="{{ $ticket->created_at->format('M d, Y • h:i A') }}"
+                    data-pending="{{ $ticket->pending_at ?? $ticket->created_at }}"
+                    data-inprogress="{{ $ticket->in_progress_at }}"
+                    data-resolved="{{ $ticket->resolved_at }}"
                     data-concern="{{ $ticket->description }}"
                     aria-label="View full concern"
                   >
@@ -442,11 +445,7 @@ th:nth-child(8), td:nth-child(8){ width: 90px; }  /* Actions */
               <td>
 <div class="small text-muted">
 
-{{ $ticket->created_at->format('M d, Y') }} <br>
-
-<span class="text-secondary">
-{{ $ticket->created_at->diffForHumans(['parts'=>2]) }}
-</span>
+{{ $ticket->created_at->format('M d, Y') }} 
 
 </div>
 </td>
@@ -497,8 +496,11 @@ th:nth-child(8), td:nth-child(8){ width: 90px; }  /* Actions */
             </div>
 
             <div class="text-muted mt-1" style="font-weight:650;">
-              <span id="m_user">—</span> • <span id="m_date">—</span>
+              <span id="m_user">—</span> • 
+              <span id="m_date">—</span> 
             </div>
+
+            <div id="m_timeline" class="fw-bold mt-2"></div>
 
             <div class="mt-2 d-flex gap-2 flex-wrap meta-badges">
               <span class="badge bg-secondary" id="m_branch">—</span>
@@ -579,33 +581,143 @@ setInterval(refreshPresence, 5000);
   }
 
   // ✅ VIEW button only opens modal (NO CHAT HERE)
-  document.addEventListener('click', (e) => {
-    const btn = e.target.closest('[data-bs-target="#concernModal"]');
-    if(!btn) return;
+  document.addEventListener('click', async (e) => {
 
-    document.getElementById('m_ticket').innerText = btn.dataset.ticket || '—';
-    document.getElementById('m_user').innerText   = btn.dataset.user || '—';
-    document.getElementById('m_branch').innerText = 'Branch: ' + (btn.dataset.branch || '—');
-    document.getElementById('m_dept').innerText   = 'Dept: ' + (btn.dataset.dept || '—');
-    document.getElementById('m_priority').innerText = 'Priority: ' + (btn.dataset.priority || '—');
-    document.getElementById('m_date').innerText   = btn.dataset.date || '—';
+  const btn = e.target.closest('[data-bs-target="#concernModal"]');
+  if(!btn) return;
 
-    const status = btn.dataset.status || '—';
-    const statusEl = document.getElementById('m_status');
-    statusEl.innerText = status;
+  const ticketId = btn.dataset.ticketId;
 
-    // reset badge class then apply
-    statusEl.className = 'badge';
-    const s = (status || '').toLowerCase();
-    if(s.includes('pending')) statusEl.classList.add('bg-danger');
-    else if(s.includes('progress')) statusEl.classList.add('bg-primary');
-    else if(s.includes('resolved')) statusEl.classList.add('bg-success');
-    else statusEl.classList.add('bg-dark');
+  // ✅ WAIT muna sa update
+  try{
+    const res = await fetch(`/admin/tickets/${ticketId}/view`, {
+  method: "PATCH",
+  headers:{
+    "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').content,
+    "Accept": "application/json",
+    "X-Requested-With": "XMLHttpRequest"
+  }
+});
 
-    document.getElementById('m_concern').innerText = btn.dataset.concern || '—';
+const data = await res.json();
 
-    // ❌ IMPORTANT: WALANG startAccountChat dito
-  });
+// ✅ FIX
+if(data.success){
+  btn.dataset.inprogress = data.in_progress_at ?? "";
+  btn.dataset.resolved = data.resolved_at ?? "";
+}
+  }catch(err){}
+
+  // ✅ UPDATE TABLE BADGE AGAD
+  const row = btn.closest('tr');
+  const badge = row.querySelector('td:nth-child(6) .badge');
+
+  if(badge && badge.innerText.toLowerCase().includes('pending')){
+    badge.classList.remove('bg-danger');
+    badge.classList.add('bg-primary');
+    badge.textContent = 'In Progress';
+  }
+
+  // ✅ NOW OPEN MODAL WITH UPDATED STATUS
+  const status = badge ? badge.innerText.trim() : (btn.dataset.status || '—');
+
+  document.getElementById('m_ticket').innerText = btn.dataset.ticket || '—';
+  document.getElementById('m_user').innerText   = btn.dataset.user || '—';
+  document.getElementById('m_branch').innerText = 'Branch: ' + (btn.dataset.branch || '—');
+  document.getElementById('m_dept').innerText   = 'Dept: ' + (btn.dataset.dept || '—');
+  document.getElementById('m_priority').innerText = 'Priority: ' + (btn.dataset.priority || '—');
+  document.getElementById('m_date').innerText   = btn.dataset.date || '—';
+
+function diffTime(start, end){
+  if(!start || !end) return "-";
+
+  const diff = Math.floor((new Date(end) - new Date(start)) / 1000);
+
+  const m = Math.floor(diff / 60);
+  const h = Math.floor(diff / 3600);
+  const d = Math.floor(diff / 86400);
+
+  if(d > 0) return d + " day(s)";
+  if(h > 0) return h + " hour(s)";
+  if(m > 0) return m + " min(s)";
+  return "1 min(s)"; // ✅ FIX ZERO ISSUE
+}
+
+  const statusEl = document.getElementById('m_status');
+  statusEl.innerText = status;
+
+  statusEl.className = 'badge';
+  const s = status.toLowerCase();
+  if(s.includes('pending')) statusEl.classList.add('bg-danger');
+  else if(s.includes('progress')) statusEl.classList.add('bg-primary');
+  else if(s.includes('resolved')) statusEl.classList.add('bg-success');
+  else statusEl.classList.add('bg-dark');
+
+  document.getElementById('m_concern').innerText = btn.dataset.concern || '—';
+
+const created = btn.dataset.pending;
+
+const rawInProgress = btn.dataset.inprogress;
+
+const inProgress = (
+  rawInProgress &&
+  rawInProgress !== "null" &&
+  rawInProgress !== created // ✅ KEY FIX
+) ? rawInProgress : null;
+
+const resolved = btn.dataset.resolved && btn.dataset.resolved !== "null"
+  ? btn.dataset.resolved
+  : null;
+
+const now = new Date();
+
+
+// 🟥 PENDING
+let pendingTime = "-";
+
+if (created) {
+  if (inProgress && inProgress !== created) {
+    // ✅ STOP kapag nag in progress na
+    pendingTime = diffTime(created, inProgress);
+  } else {
+    // still pending
+    pendingTime = diffTime(created, now);
+  }
+}
+
+// 🟦 IN PROGRESS
+let progressTime = "-";
+
+if (inProgress) {
+  if (resolved) {
+    // ✅ STOP kapag resolved na
+    progressTime = diffTime(inProgress, resolved);
+  } else {
+    // still in progress
+    progressTime = diffTime(inProgress, now);
+  }
+}
+
+let resolvedTime = resolved ? "Done" : "-";
+
+document.getElementById('m_timeline').innerHTML = `
+  <div class="d-flex align-items-center gap-2 text-danger">
+    <i class="fa-solid fa-hourglass-half"></i>
+    <span>Pending: ${pendingTime}</span>
+  </div>
+
+  <div class="d-flex align-items-center gap-2 text-primary">
+    <i class="fa-solid fa-gear"></i>
+    <span>In Progress: ${progressTime}</span>
+  </div>
+
+  <div class="d-flex align-items-center gap-2 text-success">
+    <i class="fa-solid fa-circle-check"></i>
+    <span>Resolved: ${resolvedTime}</span>
+  </div>
+`;
+
+});
 });
 
 // ✅ CHAT button handler (global para gumana sa inline onclick)
@@ -626,51 +738,9 @@ window.startAdminChat = function(btn){
   }
 };
 
-document.addEventListener('click', async function(e){
 
-  const btn = e.target.closest('.view-ticket');
-  if(!btn) return;
 
-  const ticketId = btn.dataset.ticketId;
 
-  try{
-
-    const response = await fetch(`/admin/tickets/${ticketId}/view`, {
-      method: "PATCH",
-      headers:{
-        "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').content,
-        "Accept": "application/json",
-        "X-Requested-With": "XMLHttpRequest"
-      }
-    });
-
-    if(response.ok){
-
-  const currentStatus = btn.dataset.status.toLowerCase();
-
-  // ❌ do nothing if resolved
-  if(currentStatus.includes('resolved')){
-    return;
-  }
-
-  const row = btn.closest('tr');
-  const badge = row.querySelector('td:nth-child(6) .badge');
-
-  if(badge){
-    badge.classList.remove('bg-danger');
-    badge.classList.add('bg-primary');
-    badge.textContent = 'In Progress';
-  }
-
-  btn.dataset.status = "In Progress";
-
-}
-
-  }catch(err){
-    console.log(err);
-  }
-
-});
 </script>
 
 

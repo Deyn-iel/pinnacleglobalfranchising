@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,7 +8,8 @@
 <link rel="icon" type="image/png" href="{{ asset('img/logo1-removebg-preview.png') }}">
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
-@vite(['resources/css/admin/app.css', 
+<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+@vite([
         'resources/css/chatbot/app.css',
             
             // js files
@@ -308,7 +309,7 @@ left:0;
 <div class="stat-card">
 <div>
 <div class="stat-title">Payslips</div>
-<div class="stat-value">350</div>
+<div class="stat-value">{{ \App\Models\Payslip::count() }}</div>
 </div>
 <div class="stat-icon">
 <i class="fa-solid fa-file-invoice"></i>
@@ -342,7 +343,7 @@ left:0;
 
 </div>
 
-
+{{-- tickets --}}
 <div class="panel mb-4">
 
 <div class="panel-title">
@@ -421,7 +422,84 @@ No tickets found
 
 </div>
 
+{{-- payslips --}}
+<div class="panel mb-4">
 
+<div class="panel-title">
+Recent Payslips
+</div>
+
+<div class="table-responsive">
+
+<table class="table table-hover align-middle">
+
+<thead>
+<tr>
+<th>File</th>
+<th>Folder</th>
+<th>Uploaded By</th>
+<th>Date</th>
+</tr>
+</thead>
+
+@php
+use App\Models\Payslip;
+
+$payslips = Payslip::with('uploader')
+    ->latest()
+    ->take(5)
+    ->get();
+@endphp
+
+<tbody>
+
+@forelse($payslips as $p)
+
+<tr>
+
+<td>
+<strong>{{ $p->original_name }}</strong><br>
+<small class="text-muted">
+{{ $p->batch_name ?? '-' }}
+</small>
+</td>
+
+<td>
+<span class="badge bg-light text-dark">
+{{ $p->folder_key }}
+</span>
+</td>
+
+<td>
+{{ $p->uploader->name ?? 'Unknown' }}
+</td>
+
+<td>
+{{ $p->created_at->format('M d Y') }}
+</td>
+
+</tr>
+
+@empty
+
+<tr>
+<td colspan="4" class="text-center text-muted">
+No payslips found
+</td>
+</tr>
+
+@endforelse
+
+</tbody>
+
+</table>
+
+</div>
+
+</div>
+
+
+{{-- registrations --}}
 <div class="panel">
 
 <div class="panel-title">
