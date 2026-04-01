@@ -33,16 +33,31 @@ fileInput.addEventListener("change", function () {
 
     const maxSize = 10 * 1024 * 1024;
 
+    // ✅ 1. SIZE CHECK
     if (file.size > maxSize) {
         alert("Max 10MB only!");
         this.value = "";
+        selectedFile = null;
+
+        ticketSend.disabled = ticketInput.value.trim() === "";
         return;
     }
 
-    selectedFile = file;
-    ticketSend.disabled = false;
-    previewContainer.innerHTML = "";
+    // ✅ 2. VIDEO BLOCK (IMPORTANT: BEFORE SETTING FILE)
+    if (file.type.startsWith("video/")) {
+        alert("Video is not allowed!");
+        this.value = "";
+        selectedFile = null;
 
+        // 🔥 FIX: ibalik sa tamang state
+        ticketSend.disabled = ticketInput.value.trim() === "";
+        return;
+    }
+
+    // ✅ 3. VALID FILE NA → saka lang i-set
+    selectedFile = file;
+
+    previewContainer.innerHTML = "";
     const div = document.createElement("div");
     div.className = "file-preview";
 
@@ -50,31 +65,28 @@ fileInput.addEventListener("change", function () {
         const img = document.createElement("img");
         img.src = URL.createObjectURL(file);
         div.appendChild(img);
-
-    } else if (file.type.startsWith("video/")) {
-        const vid = document.createElement("video");
-        vid.src = URL.createObjectURL(file);
-        vid.muted = true; // ✅ para di maingay
-        div.appendChild(vid);
-
     } else {
         div.textContent = file.name;
     }
 
+    // REMOVE BUTTON
     const remove = document.createElement("div");
     remove.className = "file-remove";
     remove.textContent = "✕";
 
     remove.onclick = () => {
-    selectedFile = null;
-    previewContainer.innerHTML = "";
-    fileInput.value = "";
+        selectedFile = null;
+        previewContainer.innerHTML = "";
+        fileInput.value = "";
 
-    ticketSend.disabled = ticketInput.value.trim() === "";
-};
+        ticketSend.disabled = ticketInput.value.trim() === "";
+    };
 
     div.appendChild(remove);
     previewContainer.appendChild(div);
+
+    // ✅ 4. FINAL BUTTON STATE
+    ticketSend.disabled = ticketInput.value.trim() === "" && !selectedFile;
 });
 
 }
@@ -334,41 +346,49 @@ function renderMessages(messages){
     body.className = "ticket-text";
     body.innerHTML = "";
 
-const fileUrl = "/storage/" + m.text;
-const fileName = m.text.split('/').pop();
-const ext = fileName.split('.').pop().toLowerCase();
+const text = m.text || "";
 
-// 🔥 AUTO DETECT IMAGE
-if (m.type === "image" || ["jpg","jpeg","png","gif","webp"].includes(ext)) {
+// ✅ check if may extension
+const hasExtension = text.includes('.') && text.split('.').pop().length <= 5;
+
+const fileUrl = hasExtension ? "/storage/" + text : null;
+const fileName = hasExtension ? text.split('/').pop() : "";
+const ext = hasExtension ? fileName.split('.').pop().toLowerCase() : "";
+
+// 🔥 IMAGE
+if (hasExtension && (m.type === "image" || ["jpg","jpeg","png","gif","webp"].includes(ext))) {
 
     const img = document.createElement("img");
     img.src = fileUrl;
     img.style.maxWidth = "200px";
     img.style.borderRadius = "10px";
     img.style.cursor = "pointer";
-
-    // click to open full
     img.onclick = () => window.open(fileUrl, "_blank");
 
     body.appendChild(img);
 
-} 
 // 🔥 VIDEO
-else if (m.type === "video" || ["mp4","webm"].includes(ext)) {
+} else if (hasExtension && ["mp4","webm"].includes(ext)) {
 
-    const vid = document.createElement("video");
-    vid.src = fileUrl;
-    vid.controls = true;
-    vid.style.maxWidth = "200px";
+    const link = document.createElement("a");
+    link.href = fileUrl;
+    link.target = "_blank";
+    link.className = "file-bubble";
 
-    body.appendChild(vid);
+    link.innerHTML = `
+        <div class="file-icon">🎬</div>
+        <div class="file-info">
+            <div class="file-name">${fileName}</div>
+            <div class="file-action">Open video</div>
+        </div>
+    `;
 
-} 
-// 🔥 FILES (docx, xlsx, etc.)
-else {
+    body.appendChild(link);
+
+// 🔥 FILES
+} else if (hasExtension) {
 
     let icon = "📄";
-
     if(ext === "docx") icon = "📝";
     else if(ext === "xlsx") icon = "📊";
     else if(ext === "pdf") icon = "📕";
@@ -387,6 +407,11 @@ else {
     `;
 
     body.appendChild(link);
+
+// 🔥 NORMAL TEXT (FIX NA FIX)
+} else {
+
+    body.textContent = text;
 }
 
     const time = document.createElement("div");
@@ -508,7 +533,13 @@ if (Number.isFinite(currentTargetUserId) && currentTargetUserId > 0) {
 async function sendMessage() {
 
   if (isSending) return;
-  isSending = true;
+isSending = true;
+
+// ✅ UI: show sending state
+ticketSend.disabled = true;
+ticketSend.classList.add("sending");
+ticketSend.dataset.original = ticketSend.innerHTML;
+ticketSend.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>';
 
   const msg = ticketInput.value.trim();
 
@@ -578,7 +609,10 @@ async function sendMessage() {
   } finally {
   isSending = false;
 
-  // ✅ FIX: reset send button state
+  // ✅ restore button
+  ticketSend.classList.remove("sending");
+ticketSend.innerHTML = ticketSend.dataset.original || '<i class="fa-solid fa-paper-plane"></i>';
+
   ticketSend.disabled = ticketInput.value.trim() === "" && !selectedFile;
 }
 }

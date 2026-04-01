@@ -588,35 +588,11 @@ setInterval(refreshPresence, 5000);
 
   const ticketId = btn.dataset.ticketId;
 
-  // ✅ WAIT muna sa update
-  try{
-    const res = await fetch(`/admin/tickets/${ticketId}/view`, {
-  method: "PATCH",
-  headers:{
-    "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').content,
-    "Accept": "application/json",
-    "X-Requested-With": "XMLHttpRequest"
-  }
-});
-
-const data = await res.json();
-
-// ✅ FIX
-if(data.success){
-  btn.dataset.inprogress = data.in_progress_at ?? "";
-  btn.dataset.resolved = data.resolved_at ?? "";
-}
-  }catch(err){}
 
   // ✅ UPDATE TABLE BADGE AGAD
   const row = btn.closest('tr');
   const badge = row.querySelector('td:nth-child(6) .badge');
 
-  if(badge && badge.innerText.toLowerCase().includes('pending')){
-    badge.classList.remove('bg-danger');
-    badge.classList.add('bg-primary');
-    badge.textContent = 'In Progress';
-  }
 
   // ✅ NOW OPEN MODAL WITH UPDATED STATUS
   const status = badge ? badge.innerText.trim() : (btn.dataset.status || '—');

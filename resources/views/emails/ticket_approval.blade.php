@@ -3,14 +3,27 @@
 <p>Dear {{ $ticket->user->name }},</p>
 
 <p>
-Our IT team has reviewed and addressed your concern for the ticket below:
+Our {{ strtoupper($ticket->department) }} team has reviewed and addressed your concern for the ticket below:
 </p>
 
 <p style="font-size:16px;">
 <strong>{{ $ticket->ticket_no }}</strong>
 </p>
 
-<p>
+<!-- ✅ ADD THIS BLOCK -->
+<div style="
+margin-top:15px;
+padding:12px;
+background:#f4f6fb;
+border-left:4px solid #092257;
+border-radius:6px;
+">
+  <strong>Resolution Details:</strong><br>
+  {{ $justification ?? 'No additional details provided.' }}
+</div>
+<!-- ✅ END -->
+
+<p style="margin-top:15px;">
 Please confirm if your issue has been successfully resolved.
 </p>
 
@@ -30,7 +43,7 @@ border-radius:8px;
 text-decoration:none;
 font-weight:600;
 ">
-Go to Login & Confirm
+Login
 </a>
 
 <br><br>

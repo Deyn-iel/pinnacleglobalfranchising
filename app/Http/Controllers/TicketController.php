@@ -111,46 +111,121 @@ class TicketController extends Controller
 
 public function updateStatus(Request $request, Ticket $ticket)
 {
-    if($ticket->status === 'resolved'){
-        return back()->with('success','Ticket is already resolved.');
-    }
 
     $request->validate([
         'status' => 'required|in:pending,in_progress,resolved',
+    'resolution_justification' => 'nullable|string'
     ]);
 
-    // ❌ users cannot set in_progress
-    if($request->status === 'in_progress'){
-        return back()->with('success','Only admin can set ticket to In Progress.');
-    }
 
-if($request->status === 'resolved'){
+// if($request->status === 'resolved'){
 
-    // ❗ IMPORTANT: make sure may in_progress muna
-    if(!$ticket->in_progress_at){
-        return back()->with('error','Ticket must be in progress first.');
-    }
+//     if(!$ticket->in_progress_at){
+//         return back()->with('error','Ticket must be in progress first.');
+//     }
 
-    // ✅ STOP IN PROGRESS TIMER
-    $ticket->resolved_at = now();
-}
+//     if(empty($request->resolution_justification)){
+//         return back()->with('error','Justification is required before resolving.');
+//     }
+
+//     $ticket->resolution_justification = $request->resolution_justification;
+//     $ticket->resolved_at = now();
+//     $ticket->status = 'resolved';
+
+//     $ticket->save();
+
+
+//     $mainEmails = explode(',', env('SUPPORT_NOTIFY_EMAILS'));
+
+//     $departmentMap = [
+//         'it' => env('IT_SUPPORT_EMAIL'),
+//         'hr' => env('HR_SUPPORT_EMAIL'),
+//         'smm' => env('SMM_SUPPORT_EMAIL'),
+//         'finance' => env('FINANCE_SUPPORT_EMAIL'),
+//         'admin-secretary' => env('ADMIN_SUPPORT_EMAIL'),
+//         'od' => env('OPERATIONS_DIRECTOR_SUPPORT_EMAIL'),
+//         'om' => env('OPERATIONS_MANAGER_SUPPORT_EMAIL'),
+//     ];
+
+//     $departmentEmail = $departmentMap[$ticket->department] ?? null;
+
+//     $emails = $mainEmails;
+
+//     if($departmentEmail){
+//         $emails[] = $departmentEmail;
+//     }
+
+//     try {
+
+//         if (!empty($emails)) {
+//             Mail::to($emails)->send(
+//                 new \App\Mail\TicketResolvedMail(
+//                     $ticket,
+//                     $request->resolution_justification
+//                 )
+//             );
+//         }
+
+//     } catch (\Throwable $e) {
+//         Log::error('Resolved email failed: ' . $e->getMessage());
+//     }
+
+//     return back()->with('success', 'Ticket resolved successfully.');
+// }
 
     $ticket->status = $request->status;
     $ticket->save();
 
-    return back()->with('success', 'Ticket resolved successfully.');
+    return back()->with('success', 'Status updated successfully.');
 }
 
-public function requestApproval($id)
+public function requestApproval(Request $request, $id)
 {
+    $request->validate([
+        'justification' => 'required|string'
+    ]);
+
     $ticket = Ticket::with('user')->findOrFail($id);
 
-    Log::info("Sending approval email to: " . $ticket->user->email);
+    // ✅ IMPORTANT: SET APPROVAL FLAG
+    $ticket->approval_requested = true;
+    $ticket->approval_requested_at = now();
+    $ticket->save();
 
+    // ✅ SEND EMAIL
     Mail::to($ticket->user->email)
-        ->send(new TicketApprovalRequestMail($ticket));
+        ->send(new TicketApprovalRequestMail($ticket, $request->justification));
 
     return response()->json(['success' => true]);
 }
 
+public function decline(Request $request, $id)
+{
+    $request->validate([
+        'reason' => 'required|string'
+    ]);
+
+    $ticket = Ticket::findOrFail($id);
+
+    $ticket->status = 'in_progress';
+    $ticket->approval_decline_reason = $request->reason;
+    $ticket->approval_requested = false;
+    $ticket->approved_at = null; // 🔥 ADD THIS
+
+    $ticket->save();
+
+    return response()->json(['success' => true]);
+}
+public function approve($id)
+{
+    $ticket = Ticket::findOrFail($id);
+
+    $ticket->status = 'resolved'; // 🔥 FINAL STATE
+    $ticket->approved_at = now();
+    $ticket->approval_requested = false;
+
+    $ticket->save();
+
+    return response()->json(['success' => true]);
+}
 }

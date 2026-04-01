@@ -11,26 +11,26 @@
                 <form id="ticketForm" method="POST" action="{{ route('tickets.store') }}">
                         @csrf
 
-                        <!-- SUBJECT -->
-                        <div class="mb-3">
-    <label class="form-label">Branch</label>
-    <select name="branch" class="form-select" required>
-        <option value="" disabled selected>Select branch</option>
+                        <!-- BRANCH (AUTO FROM USER NAME) -->
+<div class="mb-3">
+  <label class="form-label">Branch</label>
 
-        <option value="Cauayan" {{ old('branch') == 'Cauayan' ? 'selected' : '' }}>KI Cauayan Branch</option>
-        <option value="Ilagan" {{ old('branch') == 'Ilagan' ? 'selected' : '' }}>KI Ilagan Branch</option>
-        <option value="San Mateo" {{ old('branch') == 'San Mateo' ? 'selected' : '' }}>KI San Mateo Branch</option>
-        <option value="Ramon" {{ old('branch') == 'Ramon' ? 'selected' : '' }}>KI Ramon Branch</option>
-        <option value="Capas" {{ old('branch') == 'Capas' ? 'selected' : '' }}>KI Capas Branch</option>
-        <option value="Aurora" {{ old('branch') == 'Aurora' ? 'selected' : '' }}>KI Aurora Branch</option>
-        <option value="Roxas" {{ old('branch') == 'Roxas' ? 'selected' : '' }}>KI Roxas Branch</option>
-        <option value="Cabagan" {{ old('branch') == 'Cabagan' ? 'selected' : '' }}>KI Cabagan Branch</option>
-        <option value="Tumauini" {{ old('branch') == 'Tumauini' ? 'selected' : '' }}>KI Tumauini Branch</option>
-        <option value="SMDC" {{ old('branch') == 'SMDC' ? 'selected' : '' }}>KI SMDC Branch</option>
-        <option value="Food Truck" {{ old('branch') == 'Food Truck' ? 'selected' : '' }}>KI Food Truck</option>
-    </select>
+  <!-- 👀 DISPLAY ONLY -->
+  <input 
+    type="text" 
+    class="form-control" 
+    value="{{ ucwords(strtolower(Auth::user()->name)) }}" 
+    style="background-color: transparent;"
+    disabled
+  >
+
+  <!-- ✅ ACTUAL VALUE NA MASUSUBMIT -->
+  <input 
+    type="hidden" 
+    name="branch" 
+    value="{{ ucwords(strtolower(Auth::user()->name)) }}"
+  >
 </div>
-
                         <!-- DESCRIPTION -->
                         <div class="mb-3">
                             <label class="form-label">Concern Details</label>
@@ -81,6 +81,7 @@
                             </button>
                         </div>
 
+                        
                     </form>
 
             </div>

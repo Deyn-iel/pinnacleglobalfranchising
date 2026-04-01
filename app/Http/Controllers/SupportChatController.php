@@ -40,24 +40,33 @@ class SupportChatController extends Controller
             return response()->json(['messages' => [], 'last_id' => $afterId]);
         }
 
-        $messages = SupportMessage::query()
-            ->where('target_user_id', $targetUserId)
-            ->when($afterId > 0, fn($qq) => $qq->where('id', '>', $afterId))
-            ->with('user:id,name,usertype')
-            ->orderBy('id')
-            ->limit(200)
-            ->get()
-            ->map(function ($m) {
-                return [
-                    'id'   => $m->id,
-                    'text' => $m->message,
-                    'type' => $m->type ?? 'text',
-                    'name' => $m->user->name ?? 'Unknown',
-                    'role' => $m->user->usertype ?? 'user',
-                    'time' => optional($m->created_at)->format('M d, Y h:i A') ?? '',
-                    'mine' => (int) $m->user_id === (int) Auth::id(),
-                ];
-            });
+        $ticketId = (int) $request->query('ticket_id', 0);
+
+$query = SupportMessage::query()
+    ->where('target_user_id', $targetUserId);
+
+// ✅ filter by ticket (IMPORTANT)
+if ($ticketId > 0) {
+    $query->where('ticket_id', $ticketId);
+}
+
+$messages = $query
+    ->when($afterId > 0, fn($qq) => $qq->where('id', '>', $afterId))
+    ->with('user:id,name,usertype')
+    ->orderBy('id')
+    ->limit(200)
+    ->get()
+    ->map(function ($m) {
+        return [
+            'id'   => $m->id,
+            'text' => $m->message,
+            'type' => $m->type ?? 'text',
+            'name' => $m->user->name ?? 'Unknown',
+            'role' => $m->user->usertype ?? 'user',
+            'time' => optional($m->created_at)->format('M d, Y h:i A') ?? '',
+            'mine' => (int) $m->user_id === (int) Auth::id(),
+        ];
+    });
 
         $lastIdOut = $messages->last()['id'] ?? $afterId;
 
@@ -98,7 +107,31 @@ class SupportChatController extends Controller
         ->where('id', '!=', $msg->id)
         ->exists();
 
-    if (!$alreadyUnread) {
+    // 🔥 CHECK ONLINE USING CACHE (TAMA NA SYSTEM MO)
+if ($this->isStaff()) {
+
+    // admin → check user
+    $isOnline = cache()->has('user-online-' . $targetUserId);
+
+} else {
+
+    // user → check ANY staff
+    $staffIds = \App\Models\User::whereIn('usertype', [
+        'admin','admin-secretary','hr','it','support','staff','om','od','smm'
+    ])->pluck('id');
+
+    $isOnline = false;
+
+    foreach ($staffIds as $id) {
+        if (cache()->has('user-online-' . $id)) {
+            $isOnline = true;
+            break;
+        }
+    }
+}
+
+// ✅ FINAL CONDITION
+if (!$alreadyUnread && !$isOnline) {
 
         // ✅ SAME AS TICKET CONTROLLER
         $mainEmails = explode(',', env('SUPPORT_NOTIFY_EMAILS'));
@@ -236,7 +269,7 @@ public function destroy(Request $request)
 public function upload(Request $request)
 {
     $request->validate([
-        'file' => 'required|file|max:10240', // 10MB
+        'file' => 'required|file|max:20240', // 20MB
     ]);
 
     $authUser = Auth::user();

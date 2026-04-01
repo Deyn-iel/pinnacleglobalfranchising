@@ -57,7 +57,7 @@
 
     <input id="ticketChatInput" class="ticket-input" placeholder="Type your message..." disabled />
 
-    <button id="ticketChatSend" class="ticket-send" type="button" disabled>Send</button>
+    <button id="ticketChatSend" class="ticket-send" type="button" disabled><i class="fa-solid fa-paper-plane"></i></button>
   </div>
 
 </footer>

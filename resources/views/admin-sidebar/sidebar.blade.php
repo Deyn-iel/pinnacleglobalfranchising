@@ -19,6 +19,14 @@
             </a>
         </li>
 
+        <li class="nav-item">
+            <a href="{{ route('admin.requirements') }}"
+               class="nav-link {{ request()->routeIs('admin.requirements') ? 'active' : '' }}">
+                <i class="fas fa-file-lines"></i>
+                <span>Company Files</span>
+            </a>
+        </li>
+
         {{-- <li class="nav-item">
             <a href="{{ route('admin.admin-portal') }}"
                class="nav-link {{ request()->routeIs('admin.admin-portal') ? 'active' : '' }}">
@@ -151,13 +159,7 @@
             </a>
         </li> --}}
 
-        {{-- <li class="nav-item">
-            <a href="{{ route('admin.requirements') }}"
-               class="nav-link {{ request()->routeIs('admin.requirements') ? 'active' : '' }}">
-                <i class="fas fa-file-lines"></i>
-                <span>Requirements</span>
-            </a>
-        </li> --}}
+        
         
         <li class="nav-item">
             <a href="{{ route('admin.contacts') }}"

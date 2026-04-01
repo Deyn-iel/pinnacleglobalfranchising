@@ -580,7 +580,35 @@ th:nth-child(8), td:nth-child(8){ width: 90px; }  /* Actions */
   </div>
 
 </main>
+<!-- ✅ APPROVAL JUSTIFICATION MODAL -->
+<div class="modal fade" id="approvalModal" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
 
+      <div class="modal-header">
+        <h5 class="modal-title">Request Approval</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+
+      <div class="modal-body">
+        <label class="fw-bold mb-2">Justification</label>
+        <textarea 
+          id="approvalJustification" 
+          class="form-control"
+          rows="4"
+          placeholder="Enter reason before requesting approval..."></textarea>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        <button class="btn btn-warning" id="confirmApprovalBtn">
+          Send Request
+        </button>
+      </div>
+
+    </div>
+  </div>
+</div>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script>
 document.addEventListener('DOMContentLoaded', () => {
@@ -635,33 +663,106 @@ setInterval(refreshPresence, 5000);
   }
 
   // ✅ VIEW button only opens modal (NO CHAT HERE)
-  document.addEventListener('click', (e) => {
-    const btn = e.target.closest('[data-bs-target="#concernModal"]');
-    if(!btn) return;
+document.addEventListener('click', (e) => {
+  const btn = e.target.closest('[data-bs-target="#concernModal"]');
+  if(!btn) return;
 
-    document.getElementById('m_ticket').innerText = btn.dataset.ticket || '—';
-    document.getElementById('m_user').innerText   = btn.dataset.user || '—';
-    document.getElementById('m_branch').innerText = 'Branch: ' + (btn.dataset.branch || '—');
-    document.getElementById('m_dept').innerText   = 'Dept: ' + (btn.dataset.dept || '—');
-    document.getElementById('m_priority').innerText = 'Priority: ' + (btn.dataset.priority || '—');
-    document.getElementById('m_date').innerText   = btn.dataset.date || '—';
+  document.getElementById('m_ticket').innerText = btn.dataset.ticket || '—';
+  document.getElementById('m_user').innerText   = btn.dataset.user || '—';
+  document.getElementById('m_branch').innerText = 'Branch: ' + (btn.dataset.branch || '—');
+  document.getElementById('m_dept').innerText   = 'Dept: ' + (btn.dataset.dept || '—');
+  document.getElementById('m_priority').innerText = 'Priority: ' + (btn.dataset.priority || '—');
+  document.getElementById('m_date').innerText   = btn.dataset.date || '—';
 
-    const status = btn.dataset.status || '—';
-    const statusEl = document.getElementById('m_status');
-    statusEl.innerText = status;
+  const status = btn.dataset.status || '—';
+  const statusEl = document.getElementById('m_status');
+  statusEl.innerText = status;
 
-    // reset badge class then apply
-    statusEl.className = 'badge';
-    const s = (status || '').toLowerCase();
-    if(s.includes('pending')) statusEl.classList.add('bg-danger');
-    else if(s.includes('progress')) statusEl.classList.add('bg-primary');
-    else if(s.includes('resolved')) statusEl.classList.add('bg-success');
-    else statusEl.classList.add('bg-dark');
+  statusEl.className = 'badge';
+  const s = (status || '').toLowerCase();
+  if(s.includes('pending')) statusEl.classList.add('bg-danger');
+  else if(s.includes('progress')) statusEl.classList.add('bg-primary');
+  else if(s.includes('resolved')) statusEl.classList.add('bg-success');
+  else statusEl.classList.add('bg-dark');
 
-    document.getElementById('m_concern').innerText = btn.dataset.concern || '—';
+  document.getElementById('m_concern').innerText = btn.dataset.concern || '—';
 
-    // ❌ IMPORTANT: WALANG startAccountChat dito
-  });
+  // ===============================
+  // ✅ TIME COMPUTATION (NEW)
+  // ===============================
+
+  function diffTime(start, end){
+    if(!start || !end) return "-";
+
+    const diff = Math.floor((new Date(end) - new Date(start)) / 1000);
+
+    const m = Math.floor(diff / 60);
+    const h = Math.floor(diff / 3600);
+    const d = Math.floor(diff / 86400);
+
+    if(d > 0) return d + " day(s)";
+    if(h > 0) return h + " hour(s)";
+    if(m > 0) return m + " min(s)";
+    return "1 min(s)";
+  }
+
+  const created = btn.dataset.pending;
+  const rawInProgress = btn.dataset.inprogress;
+
+  const inProgress = (
+    rawInProgress &&
+    rawInProgress !== "null" &&
+    rawInProgress !== created
+  ) ? rawInProgress : null;
+
+  const resolved = btn.dataset.resolved && btn.dataset.resolved !== "null"
+    ? btn.dataset.resolved
+    : null;
+
+  const now = new Date();
+
+  // 🟥 PENDING
+  let pendingTime = "-";
+
+  if (created) {
+    if (inProgress && inProgress !== created) {
+      pendingTime = diffTime(created, inProgress);
+    } else {
+      pendingTime = diffTime(created, now);
+    }
+  }
+
+  // 🟦 IN PROGRESS
+  let progressTime = "-";
+
+  if (inProgress) {
+    if (resolved) {
+      progressTime = diffTime(inProgress, resolved);
+    } else {
+      progressTime = diffTime(inProgress, now);
+    }
+  }
+
+  let resolvedTime = resolved ? "Done" : "-";
+
+  // ✅ OUTPUT
+  document.getElementById('m_timeline').innerHTML = `
+    <div class="d-flex align-items-center gap-2 text-danger">
+      <i class="fa-solid fa-hourglass-half"></i>
+      <span>Pending: ${pendingTime}</span>
+    </div>
+
+    <div class="d-flex align-items-center gap-2 text-primary">
+      <i class="fa-solid fa-gear"></i>
+      <span>In Progress: ${progressTime}</span>
+    </div>
+
+    <div class="d-flex align-items-center gap-2 text-success">
+      <i class="fa-solid fa-circle-check"></i>
+      <span>Resolved: ${resolvedTime}</span>
+    </div>
+  `;
+});
 });
 
 // ✅ CHAT button handler (global para gumana sa inline onclick)
@@ -730,58 +831,22 @@ document.addEventListener('click', async function(e){
 
 });
 
-document.addEventListener('click', async function(e){
+let selectedTicketId = null;
+
+document.addEventListener('click', function(e){
 
   const btn = e.target.closest('.request-approval');
   if(!btn) return;
 
-  const ticketId = btn.dataset.ticketId;
+  selectedTicketId = btn.dataset.ticketId;
 
-  if(!confirm("Send approval request to this user?")) return;
-
-  const loader = document.getElementById('globalLoader');
-
-  try{
-
-    // ✅ SHOW FULLSCREEN LOADER
-    loader.classList.remove('d-none');
-
-    const res = await fetch(`/admin/headoffice-portals/tickets/${ticketId}/request-approval`, {
-      method: "POST",
-      headers:{
-        "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').content,
-        "Accept": "application/json",
-        "Content-Type": "application/json",
-        "X-Requested-With": "XMLHttpRequest"
-      }
-    });
-
-    const data = await res.json().catch(() => null);
-
-    if(res.ok){
-
-      showToast("Approval request sent successfully.");
-
-    }else{
-
-      console.error(data);
-      showToast("Failed to send request.", "error");
-
-    }
-
-  }catch(err){
-
-    console.log(err);
-    showToast("Network error. Please try again.", "error");
-
-  }finally{
-
-    // ✅ HIDE LOADER ALWAYS
-    loader.classList.add('d-none');
-
-  }
+  // open modal instead of confirm
+  const modal = new bootstrap.Modal(document.getElementById('approvalModal'));
+  modal.show();
 
 });
+
+  
 
 function showToast(message, type = "success"){
 
@@ -818,6 +883,56 @@ function showToast(message, type = "success"){
     toast.remove();
   };
 }
+
+document.getElementById('confirmApprovalBtn').addEventListener('click', async function(){
+
+  const justification = document.getElementById('approvalJustification').value.trim();
+
+  if(!justification){
+    alert("⚠️ Justification is required.");
+    return;
+  }
+
+  const loader = document.getElementById('globalLoader');
+
+  try{
+
+    loader.classList.remove('d-none');
+
+    const res = await fetch(`/admin/headoffice-portals/tickets/${selectedTicketId}/request-approval`, {
+      method: "POST",
+      headers:{
+        "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').content,
+        "Content-Type": "application/json",
+        "Accept": "application/json"
+      },
+      body: JSON.stringify({
+        justification: justification
+      })
+    });
+
+    if(res.ok){
+
+      showToast("Approval request sent successfully.");
+
+      // close modal
+      bootstrap.Modal.getInstance(document.getElementById('approvalModal')).hide();
+
+      // clear textarea
+      document.getElementById('approvalJustification').value = '';
+
+    }else{
+      showToast("Failed to send request.", "error");
+    }
+
+  }catch(err){
+    console.log(err);
+    showToast("Network error.", "error");
+  }finally{
+    loader.classList.add('d-none');
+  }
+
+});
 </script>
 
 

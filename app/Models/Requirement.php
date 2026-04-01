@@ -11,9 +11,10 @@ class Requirement extends Model
     use HasFactory;
 
     protected $fillable = [
-        'document_name',
-        'category',
-        'file_path',
-        'file_original_name'
-    ];
+    'document_name',
+    'folder', // ✅ ADD THIS
+    'category',
+    'file_path',
+    'file_original_name'
+];
 }

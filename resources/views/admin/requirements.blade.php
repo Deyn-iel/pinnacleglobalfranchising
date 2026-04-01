@@ -13,186 +13,192 @@
 
 <style>
   :root{
-    --sidebar-w: 260px;
+  --sidebar-w: 260px;
 
-    --bg: #f5f6fa;
-    --text: #0f172a;
-    --muted: #64748b;
-    --border: rgba(15,23,42,.10);
-    --card: rgba(255,255,255,.90);
+  --bg: #f6f8fb;
+  --text: #0f172a;
+  --muted: #64748b;
+  --border: rgba(15,23,42,.08);
+  --card: rgba(255,255,255,.95);
 
-    --shadow: 0 18px 45px rgba(15,23,42,.08);
-    --shadow-hover: 0 28px 80px rgba(15,23,42,.16);
-    --radius: 18px;
-  }
+  --primary: #2563eb;
+  --primary-light: rgba(37,99,235,.08);
 
-  body{
-    background:
-      radial-gradient(1200px 650px at 18% 0%, rgba(13,110,253,.08), transparent 55%),
-      radial-gradient(900px 520px at 95% 10%, rgba(34,197,94,.07), transparent 55%),
-      var(--bg);
-    overflow-x: hidden;
-    color: var(--text);
-    font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
-  }
+  --shadow: 0 10px 30px rgba(15,23,42,.06);
+  --shadow-hover: 0 20px 50px rgba(15,23,42,.12);
 
-  aside{
-    width: var(--sidebar-w);
-    z-index: 999;
-  }
+  --radius: 16px;
+}
 
-  /* ================= MAIN ================= */
+/* BODY */
+body{
+  background: linear-gradient(135deg, #eef2ff, #f8fafc);
+  color: var(--text);
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+}
+
+/* MAIN */
+main{
+  margin-left: var(--sidebar-w);
+  padding: 28px;
+}
+
+@media (max-width: 991px){
   main{
-    margin-left: var(--sidebar-w);
-    padding: clamp(16px, 2.2vw, 34px);
-    max-width: calc(100vw - var(--sidebar-w));
-    min-width: 0;
+    margin-left: 0;
+    padding: 16px;
   }
+}
 
-  @media (max-width: 991.98px){
-    main{
-      margin-left: 0;
-      max-width: 100%;
-      padding: 16px;
-    }
-  }
+/* HEADER */
+.page-header{
+  background: var(--card);
+  border-radius: var(--radius);
+  padding: 20px 24px;
+  box-shadow: var(--shadow);
+  margin-bottom: 20px;
+}
 
-  /* ================= HEADER ================= */
-  .page-header{
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: clamp(16px, 2vw, 22px);
-    box-shadow: var(--shadow);
-    margin-bottom: 16px;
-    position: relative;
-    overflow: hidden;
-    backdrop-filter: blur(10px);
-  }
+.page-header h4{
+  font-weight: 900;
+}
 
-  .page-header::after{
-    content:"";
-    position:absolute;
-    right:-90px; top:-90px;
-    width: 260px; height: 260px;
-    background: radial-gradient(circle, rgba(13,110,253,.18), transparent 60%);
-    pointer-events:none;
-  }
+.page-header p{
+  color: var(--muted);
+}
 
-  .page-header h4{
-    font-weight: 900;
-    letter-spacing: -.02em;
-    margin-bottom: 4px;
-  }
-  .page-header p{
-    color: var(--muted);
-    margin: 0;
-  }
+/* CARD */
+.content-card{
+  background: var(--card);
+  border-radius: var(--radius);
+  padding: 20px;
+  box-shadow: var(--shadow);
+  margin-bottom: 20px;
+}
 
-  /* ================= CARD / FORM ================= */
-  .content-card{
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 20px;
-    padding: clamp(16px, 2vw, 24px);
-    box-shadow: var(--shadow);
-    margin-bottom: 16px;
-    backdrop-filter: blur(10px);
-  }
+/* FORM */
+.form-control{
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  padding: 10px 12px;
+}
 
-  .section-title{
-    font-weight: 900;
-    letter-spacing: -.01em;
-  }
+.form-control:focus{
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px var(--primary-light);
+}
 
-  .form-label{
-    font-weight: 800;
-    font-size: 12.5px;
-    color: #374151;
-    margin-bottom: 6px;
-  }
+/* BUTTON */
+.btn{
+  border-radius: 999px;
+  font-weight: 600;
+}
 
-  .form-control,
-  .form-select{
-    border-radius: 14px;
-    border: 1px solid rgba(15,23,42,.12);
-    padding: 10px 12px;
-    font-size: 14px;
-  }
+.btn-primary{
+  background: var(--primary);
+  border: none;
+}
 
-  .form-control:focus,
-  .form-select:focus{
-    border-color: rgba(13,110,253,.45);
-    box-shadow: 0 0 0 4px rgba(13,110,253,.14);
-  }
+.btn-primary:hover{
+  background: #1d4ed8;
+}
 
-  /* ================= TABLE WRAPPER ================= */
-  .table-wrapper{
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    box-shadow: var(--shadow);
-    overflow: hidden;
-    backdrop-filter: blur(10px);
-  }
+/* SUCCESS */
+.success-msg{
+  background: #dcfce7;
+  color: #166534;
+  border-left: 5px solid #22c55e;
+  padding: 12px;
+  border-radius: 10px;
+  margin-bottom: 15px;
+}
 
-  .table-responsive{
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-  }
+/* ================= FOLDER GRID ================= */
 
-  table{
-    width: 100%;
-    font-size: 14px;
-    margin-bottom: 0;
-    min-width: 820px; /* scroll on small screens */
-  }
+.folder-grid{
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 16px;
+}
 
-  th{
-    white-space: nowrap;
-  }
+/* FOLDER CARD */
+.folder-card{
+  background: var(--card);
+  border-radius: var(--radius);
+  padding: 18px;
+  box-shadow: var(--shadow);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
+  color: var(--text);
+  transition: all .2s ease;
+  border: 1px solid var(--border);
+}
 
-  th, td{
-    vertical-align: middle;
-  }
+.folder-card:hover{
+  box-shadow: var(--shadow-hover);
+  background: var(--primary-light);
+}
 
-  .table-hover tbody tr{
-    transition: background .15s ease;
-  }
-  .table-hover tbody tr:hover{
-    background: rgba(13,110,253,.05);
-  }
+/* ICON */
+.folder-icon{
+  font-size: 26px;
+  color: #facc15;
+}
 
-  /* ================= BUTTONS ================= */
-  .btn{
-    font-weight: 900;
-    border-radius: 999px;
-  }
+/* NAME */
+.folder-name{
+  font-weight: 700;
+  font-size: 14px;
+  word-break: break-word;
+}
 
-  .btn-sm{
-    padding: 6px 12px;
-    font-size: 13px;
-  }
+/* EMPTY STATE */
+.empty-state{
+  text-align: center;
+  padding: 40px 10px;
+  color: var(--muted);
+  font-size: 14px;
+}
 
-  /* ================= SUCCESS ================= */
-  .success-msg{
-    background: rgba(34,197,94,.12);
-    color: #166534;
-    border: 1px solid rgba(34,197,94,.25);
-    border-left: 6px solid #22c55e;
-    padding: 12px 14px;
-    border-radius: 14px;
-    font-weight: 900;
-    box-shadow: 0 12px 28px rgba(15,23,42,.08);
-    transition: opacity .5s ease, transform .5s ease;
-    margin-bottom: 14px;
-  }
+/* WRAPPER */
+.folder-card-wrapper{
+  position: relative;
+}
 
-  /* ================= EMPTY ================= */
-  .no-hover{
-    pointer-events: none;
-    background: transparent !important;
-  }
+/* DELETE BUTTON */
+.delete-folder-btn{
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: #ef4444;
+  border: none;
+  color: white;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  opacity: 0;
+  transform: scale(0.8);
+  transition: 0.2s;
+}
+
+/* SHOW ON HOVER */
+.folder-card-wrapper:hover .delete-folder-btn{
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* HOVER EFFECT */
+.delete-folder-btn:hover{
+  background: #dc2626;
+  transform: scale(1.1);
+}
 </style>
 </head>
 
@@ -206,10 +212,10 @@
   <!-- HEADER -->
   <div class="page-header">
     <h4 class="fw-bold mb-1">
-      <i class="fas fa-file-lines me-2"></i>Upload Requirements
+      <i class="fas fa-file-lines me-2"></i>UPLOADING DOCUMENTS FOR VIEWING OF DEPARTMENT EMPLOYEES
     </h4>
     <p class="text-muted mb-0">
-      Upload franchise-related documents and requirements.
+      PINNACLE GLOBAL FRANCHISING GROUP INC.
     </p>
   </div>
 
@@ -225,113 +231,80 @@
   <div class="content-card">
     <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 mb-3">
       <h5 class="section-title mb-0">
-        <i class="fas fa-upload me-2"></i>Upload File
+        <i class="fas fa-upload me-2"></i>Create Folder
       </h5>
-      <div class="text-muted small">Fill in document info then upload.</div>
+      <div class="text-muted small">Create a new folder for organizing documents.</div>
     </div>
 
-    <form action="{{ route('admin.requirements') }}" method="POST" enctype="multipart/form-data">
-      @csrf
+    <form action="{{ route('admin.folder.create') }}" method="POST">
+@csrf
 
-      <div class="row g-3">
-        <div class="col-12 col-md-6">
-          <label class="form-label">Document Name *</label>
-          <input type="text" name="document_name" class="form-control" required>
-        </div>
+<div class="row g-3">
 
-        <div class="col-12 col-md-6">
-          <label class="form-label">Category *</label>
-          <select name="category" class="form-select" required>
-            <option value="">Select Category</option>
-            <option>Government ID</option>
-            <option>Business Permit</option>
-            <option>Franchise Agreement</option>
-            <option>Financial Document</option>
-            <option>Other Requirement</option>
-          </select>
-        </div>
+  <div class="col-12 col-md-6">
+    <label class="form-label">Folder Name *</label>
+    <input type="text" name="folder" class="form-control" required>
+  </div>
 
-        <div class="col-12">
-          <label class="form-label">Select File *</label>
-          <input type="file" name="file" class="form-control" required>
-        </div>
-      </div>
+</div>
 
-      <div class="mt-4 d-flex gap-2 flex-wrap">
-        <button class="btn btn-success px-4">
-          <i class="fas fa-cloud-upload-alt me-1"></i> Upload
-        </button>
-      </div>
-    </form>
+<div class="mt-4">
+  <button class="btn btn-primary px-4">
+    <i class="fas fa-folder-plus me-1"></i> Create Folder
+  </button>
+</div>
+
+</form>
   </div>
 
   <!-- TABLE -->
-  <div class="table-wrapper">
-    <div class="table-responsive">
-      <table class="table table-hover align-middle">
-        <thead class="table-dark">
-          <tr>
-            <th>Document</th>
-            <th>Category</th>
-            <th>Date Uploaded</th>
-            <th class="text-center">Action</th>
-          </tr>
-        </thead>
+  <div class="content-card">
 
-        <tbody>
-          @forelse($requirements as $req)
-          <tr>
-            <td class="fw-semibold">{{ $req->document_name }}</td>
-            <td>{{ $req->category }}</td>
-            <td class="text-muted small">
-              {{ $req->created_at->format('M d, Y · h:i A') }}
-            </td>
-            <td class="text-center">
-              <div class="d-inline-flex justify-content-center gap-2">
+  <h5 class="section-title mb-3">
+    <i class="fas fa-folder me-2"></i>Folders
+  </h5>
 
-                <a href="{{ asset('storage/'.$req->file_path) }}"
-                   target="_blank"
-                   class="btn btn-sm btn-outline-primary"
-                   aria-label="View">
-                  <i class="fas fa-eye"></i>
-                </a>
+  <div class="folder-grid">
 
-                <a href="{{ asset('storage/'.$req->file_path) }}"
-                   download
-                   class="btn btn-sm btn-outline-secondary"
-                   aria-label="Download">
-                  <i class="fas fa-download"></i>
-                </a>
+    @forelse($folders as $folder)
+  <div class="folder-card-wrapper">
 
-                <form action="{{ route('admin.requirements.delete', $req->id) }}"
-                      method="POST"
-                      class="m-0"
-                      onsubmit="return confirm('Delete this file?')">
-                  @csrf
-                  @method('DELETE')
-                  <button class="btn btn-sm btn-outline-danger" aria-label="Delete">
-                    <i class="fas fa-trash"></i>
-                  </button>
-                </form>
+    <a href="{{ route('admin.folder.view', $folder) }}" class="folder-card">
+      <i class="fas fa-folder folder-icon"></i>
+      <div class="folder-name">{{ $folder }}</div>
+    </a>
 
-              </div>
-            </td>
-          </tr>
-          @empty
-          <tr>
-            <td colspan="4" class="text-center text-muted py-4 no-hover">
-              No uploaded files yet.
-            </td>
-          </tr>
-          @endforelse
-        </tbody>
-      </table>
-    </div>
+    <!-- DELETE BUTTON -->
+    <form action="{{ route('admin.folder.delete', $folder) }}" method="POST" class="delete-folder-form">
+      @csrf
+      @method('DELETE')
+      <button type="submit" class="delete-folder-btn">
+        <i class="fas fa-trash"></i>
+      </button>
+    </form>
+
   </div>
+    @empty
+      <div class="empty-state">
+        <i class="fas fa-folder-open mb-2" style="font-size:30px;"></i><br>
+        No folders yet
+      </div>
+    @endforelse
+
+  </div>
+
+</div>
 
 </main>
 
 <script>
+  document.querySelectorAll('.delete-folder-form').forEach(form => {
+  form.addEventListener('submit', function(e){
+    if(!confirm('Delete this folder and all its files?')) {
+      e.preventDefault();
+    }
+  });
+});
   setTimeout(() => {
     const msg = document.getElementById('successMsg');
     if (msg) {

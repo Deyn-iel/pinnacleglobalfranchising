@@ -11,9 +11,12 @@ use Illuminate\Support\Str;
 
 class UserManagementController extends Controller
 {
-    public function index()
+public function index()
 {
-    $users = \App\Models\User::orderBy('created_at', 'desc')->get(); // ❌ wag paginate()
+    $users = \App\Models\User::orderBy('usertype')
+        ->orderBy('name')
+        ->get()
+        ->groupBy('usertype');
 
     return view('admin.users-account', compact('users'));
 }

@@ -101,6 +101,16 @@
             font-size: 13px;
         }
     }
+
+    tbody tr:first-child td {
+    border-top: 2px solid #000;
+}
+.table tbody tr.group-header td{
+    background:#b3b3b3 !important; /* 🔥 force override */
+    font-weight:700;
+    text-transform:uppercase;
+    letter-spacing:1px;
+}
 </style>
 </head>
 
@@ -150,74 +160,74 @@
                 </thead>
 
                 <tbody>
-                    @forelse($users as $user)
-                    <tr>
-                        <td>{{ $user->name }}</td>
+@forelse($users as $type => $group)
+    
+    <!-- 🔥 GROUP HEADER -->
+    <tr class="group-header">
+        <td colspan="6" class="fw-bold text-uppercase">
+            {{ strtoupper($type) }}
+        </td>
+    </tr>
 
-                        <td>{{ $user->email }}</td>
+    @foreach($group as $user)
+    <tr>
+        <td>{{ $user->name }}</td>
 
-                        <td>
-                            <span class="badge
-    {{ $user->usertype === 'admin'
-        ? 'bg-primary'
-        : ($user->usertype === 'supplies'
-            ? 'bg-info'
-            : ($user->usertype === 'ticket'
-                ? 'bg-warning text-dark'
-                : ($user->usertype === 'portal'
-                    ? 'bg-success'
-                    : ($user->usertype === 'it'
-                        ? 'bg-dark'
-                        : ($user->usertype === 'smm'
-                            ? 'bg-danger'
-                            : ($user->usertype === 'od'
-                                ? 'bg-secondary'
-                                : ($user->usertype === 'om'
-                                    ? 'bg-light text-dark'
-                                    : ($user->usertype === 'hr'
-                                        ? 'bg-primary-subtle text-dark'
-                                        : ($user->usertype === 'admin-secretary'
-                                            ? 'bg-info-subtle text-dark'
-                                            : 'bg-secondary'))))))))) }}">
-    {{ ucfirst($user->usertype) }}
-</span>
+        <td>{{ $user->email }}</td>
 
-                        </td>
+        <td>
+            <span class="badge
+                {{ $user->usertype === 'admin' ? 'bg-primary'
+                : ($user->usertype === 'supplies' ? 'bg-info'
+                : ($user->usertype === 'ticket' ? 'bg-warning text-dark'
+                : ($user->usertype === 'portal' ? 'bg-success'
+                : ($user->usertype === 'it' ? 'bg-dark'
+                : ($user->usertype === 'smm' ? 'bg-danger'
+                : ($user->usertype === 'od' ? 'bg-secondary'
+                : ($user->usertype === 'om' ? 'bg-light text-dark'
+                : ($user->usertype === 'hr' ? 'bg-primary-subtle text-dark'
+                : ($user->usertype === 'admin-secretary' ? 'bg-info-subtle text-dark'
+                : 'bg-secondary'))))))))) }}">
+                {{ ucfirst($user->usertype) }}
+            </span>
+        </td>
 
-                        <td>{{ $user->created_at->format('M d, Y') }}</td>
+        <td>{{ $user->created_at->format('M d, Y') }}</td>
 
-                        <td>
-                            @if($user->temp_password)
-                                <span class="badge bg-warning text-dark">
-                                    {{ $user->temp_password }}
-                                </span>
-                            @else
-                                <span class="badge bg-success">
-                                    Active
-                                </span>
-                            @endif
-                        </td>
+        <td>
+            @if($user->temp_password)
+                <span class="badge bg-warning text-dark">
+                    {{ $user->temp_password }}
+                </span>
+            @else
+                <span class="badge bg-success">
+                    Active
+                </span>
+            @endif
+        </td>
 
-                        <td class="text-center">
-                            <form action="{{ route('admin.users-account.destroy', $user->id) }}"
-                                  method="POST"
-                                  onsubmit="return confirm('Delete this user?')">
-                                @csrf
-                                @method('DELETE')
-                                <button class="btn btn-danger btn-sm">
-                                    <i class="fas fa-trash"></i>
-                                </button>
-                            </form>
-                        </td>
-                    </tr>
-                    @empty
-                    <tr>
-                        <td colspan="6" class="text-center text-muted py-4">
-                            No user accounts found.
-                        </td>
-                    </tr>
-                    @endforelse
-                </tbody>
+        <td class="text-center">
+            <form action="{{ route('admin.users-account.destroy', $user->id) }}"
+                  method="POST"
+                  onsubmit="return confirm('Delete this user?')">
+                @csrf
+                @method('DELETE')
+                <button class="btn btn-danger btn-sm">
+                    <i class="fas fa-trash"></i>
+                </button>
+            </form>
+        </td>
+    </tr>
+    @endforeach
+
+@empty
+<tr>
+    <td colspan="6" class="text-center text-muted py-4">
+        No user accounts found.
+    </td>
+</tr>
+@endforelse
+</tbody>
             </table>
         </div>
     </div>

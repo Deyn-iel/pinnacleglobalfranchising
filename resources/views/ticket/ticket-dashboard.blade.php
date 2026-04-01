@@ -217,6 +217,7 @@ Showing <span id="visibleCount">0</span> ticket(s)
             data-priority="{{ strtolower($ticket->priority) }}"
             data-status="{{ strtolower($ticket->status) }}"
             data-time="{{ $ticket->created_at->diffForHumans() }}"
+            data-approval-requested="{{ $ticket->approval_requested ? 1 : 0 }}"
             onclick="openTicketDetails(this)"
             aria-label="Open ticket {{ $ticket->ticket_no }} details"
           >
@@ -302,20 +303,55 @@ Showing <span id="visibleCount">0</span> ticket(s)
 
           <hr class="my-3">
 
-          <div class="d-flex flex-wrap gap-2 align-items-center">
-            <div class="fw-bold text-muted small">Update Status</div>
 
-            <select name="status" id="d_statusSelect"
-class="form-select"
-style="max-width:220px; border-radius:999px; font-weight:800;">
-</select>
-          </div>
+
+
+<!-- ✅ JUSTIFICATION (FOR CANCEL / REJECT) -->
+<div id="cancelJustificationWrap" class="mt-3 d-none">
+  <label class="fw-bold text-muted small">Reason for Cancellation</label>
+  <textarea 
+    name="cancel_justification" 
+    id="cancelJustification" 
+    class="form-control mt-1"
+    rows="3"
+    placeholder="Why are you rejecting the resolved status?"></textarea>
+</div>
+          <div id="statusSection">
+
+  <!-- ✅ NORMAL FLOW (NO APPROVAL YET) -->
+  <div id="normalStatusWrap">
+    <div class="fw-bold text-muted small mt-3">Update Status</div>
+
+    <select name="status" id="d_statusSelect"
+      class="form-select"
+      style="max-width:220px; border-radius:999px; font-weight:800;">
+    </select>
+  </div>
+
+  <!-- ✅ APPROVAL MODE -->
+  <div id="approvalActionsWrap" class="d-none mt-3">
+
+    <div class="fw-bold text-muted small">Approval Required</div>
+
+    <div class="d-flex gap-2 mt-2">
+      <button type="button" class="btn btn-success btn-sm" id="acceptTicket">
+        <i class="bi bi-check-circle"></i> Accept
+      </button>
+
+      <button type="button" class="btn btn-danger btn-sm" id="cancelTicket">
+        <i class="bi bi-x-circle"></i> Decline
+      </button>
+    </div>
+
+  </div>
+
+</div>
         </div>
 
         <div class="modal-footer d-flex gap-2 justify-content-end">
-          <button type="submit" class="btn btn-black px-4">
-            Save
-          </button>
+          <button type="submit" class="btn btn-black px-4" id="saveBtn">
+  Save
+</button>
           <button type="button" class="btn btn-ghost" data-bs-dismiss="modal">
             Close
           </button>

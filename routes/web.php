@@ -125,6 +125,10 @@ Route::patch('/tickets/{ticket}/status', [TicketController::class, 'updateStatus
     Route::post('/tickets', [TicketController::class, 'store'])
         ->name('tickets.store');
 
+        Route::post('/tickets/{id}/decline', [TicketController::class, 'decline']);
+
+        Route::post('/tickets/{id}/approve', [TicketController::class, 'approve']);
+
 });
 
 
@@ -462,14 +466,32 @@ Route::view('/application', 'admin.application')->name('application');
 
 
 
+// ================= FOLDER SYSTEM =================
+
+// DELETE FOLDER
+Route::delete('/folder/{folder}', [RequirementController::class, 'deleteFolder'])
+    ->name('folder.delete');
+
+// MAIN PAGE (list of folders)
 Route::get('/requirements', [RequirementController::class, 'index'])
     ->name('requirements');
 
-    Route::delete('/requirements/{id}', 
+// CREATE FOLDER
+Route::post('/folder', [RequirementController::class, 'store'])
+    ->name('folder.create');
+
+// VIEW FOLDER (click folder)
+Route::get('/folder/{folder}', [RequirementController::class, 'viewFolder'])
+    ->name('folder.view');
+
+// UPLOAD FILE INSIDE FOLDER
+Route::post('/folder/{folder}/upload', [RequirementController::class, 'uploadToFolder'])
+    ->name('folder.upload');
+
+// DELETE FILE
+Route::delete('/requirements/{id}', 
     [RequirementController::class, 'destroy']
 )->name('requirements.delete');
-
-Route::post('/requirements', [RequirementController::class, 'store']);
 
 Route::get('/uploading-exams', [AdminExamController::class, 'index'])
             ->name('uploading-exams');

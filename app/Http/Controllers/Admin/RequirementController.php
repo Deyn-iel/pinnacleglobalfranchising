@@ -7,37 +7,33 @@ use Illuminate\Http\Request;
 use App\Models\Requirement;
 use Illuminate\Support\Facades\Storage;
 
+use Illuminate\Support\Facades\File;
+
 class RequirementController extends Controller
 {
-    public function index()
-    {
-        $requirements = Requirement::latest()->get();
-        return view('admin.requirements', compact('requirements'));
-    }
+public function index()
+{
+    $folders = collect(Storage::disk('public')->directories('requirements'))
+        ->map(function ($path) {
+            return basename($path);
+        });
 
-    public function store(Request $request)
-    {
-        $request->validate([
-            'document_name' => 'required|string|max:255',
-            'category'      => 'required|string',
-            'file'          => 'required|file|mimes:pdf,jpg,jpeg,png,docx,zip|max:10240',
-        ]);
+    return view('admin.requirements', compact('folders'));
+}
 
-        // Store file
-        $file = $request->file('file');
-        $path = $file->store('requirements', 'public');
+public function store(Request $request)
+{
+    $request->validate([
+        'folder' => 'required|string|max:255'
+    ]);
 
-        // Save to DB
-        Requirement::create([
-            'document_name'      => $request->document_name,
-            'category'           => $request->category,
-            'file_path'          => $path,
-            'file_original_name' => $file->getClientOriginalName(),
-        ]);
+    $folder = str_replace(' ', '_', $request->folder);
 
-        return redirect()->back()->with('success', 'File uploaded successfully!');
-    }
-    public function destroy($id)
+    Storage::disk('public')->makeDirectory("requirements/$folder");
+
+    return back()->with('success', 'Folder created successfully!');
+}
+public function destroy($id)
 {
     $requirement = Requirement::findOrFail($id);
 
@@ -49,7 +45,57 @@ class RequirementController extends Controller
     // delete database record
     $requirement->delete();
 
-    return redirect()->back()->with('success', 'Requirement deleted successfully.');
+    return response()->json([
+        'success' => true,
+        'message' => 'File deleted successfully!'
+    ]);
+}
+
+public function uploadToFolder(Request $request, $folder)
+{
+    $request->validate([
+        'file' => 'required|file|max:51200',
+    ]);
+
+    $file = $request->file('file');
+
+    // SAVE FILE SA FOLDER (no category)
+    $path = $file->store("requirements/$folder", 'public');
+
+    $requirement = Requirement::create([
+        'document_name'      => $file->getClientOriginalName(),
+        'file_path'          => $path,
+        'file_original_name' => $file->getClientOriginalName(),
+    ]);
+
+    return response()->json([
+        'success' => true,
+        'message' => 'File uploaded successfully!',
+        'file' => [
+            'id' => $requirement->id,
+            'original_name' => $requirement->file_original_name,
+            'file_path' => $requirement->file_path,
+        ]
+    ]);
+}
+
+public function viewFolder($folder)
+{
+    $files = Requirement::where('file_path', 'like', "requirements/$folder/%")
+        ->latest()
+        ->get();
+
+    return view('admin.folder-files', compact('files', 'folder'));
+}
+public function deleteFolder($folder)
+{
+    $folderPath = 'requirements/' . $folder;
+
+    if (Storage::disk('public')->exists($folderPath)) {
+        Storage::disk('public')->deleteDirectory($folderPath);
+    }
+
+    return redirect()->back()->with('success', 'Folder deleted successfully.');
 }
 }
 
