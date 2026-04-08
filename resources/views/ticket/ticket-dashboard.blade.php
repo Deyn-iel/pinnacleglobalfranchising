@@ -46,7 +46,6 @@
     <div class="logout-fab-2">
       <div class="user-pill">
         <span class="avatar">{{ $initials }}</span>
-        <span>{{ ucwords(strtolower(Auth::user()->name)) }}</span>
       </div>
     </div>
     
@@ -79,19 +78,44 @@
 
   <div class="page-head">
     <div>
-      <h2>{{ ucwords(strtolower(Auth::user()->name)) }}'s Tickets</h2>
+      <h2></h2>
+      <h2>{{ ucwords(strtolower(Auth::user()->name)) }}'s Tickets </h2>
       <p>Track and manage your concerns.</p>
+      
     </div>
   </div>
 
   <div class="summary-grid">
     <div class="summary-card">
       <div>
+        <p style="margin:0;">
+  <a href="{{ route('tickets.dashboard') }}"
+     style="
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 6px 12px;
+        border-radius: 8px;
+        background: #f1f5f9;
+        text-decoration: none;
+        color: #0f172a;
+        font-weight: 600;
+     ">
+     
+     <i class="fas fa-arrow-left"></i>
+     Back to Dashboard
+  </a>
+</p>
+      </div>
+      
+    </div>
+    {{-- <div class="summary-card">
+      <div>
         <div class="label">Total</div>
         <p class="value">{{ $tickets->count() }}</p>
       </div>
       <div class="summary-icon"><i class="bi bi-collection"></i></div>
-    </div>
+    </div> --}}
     <div class="summary-card">
       <div>
         <div class="label">Pending</div>
@@ -205,6 +229,9 @@ Showing <span id="visibleCount">0</span> ticket(s)
               default => ''
             };
           @endphp
+          @php
+  $isReview = $ticket->status === 'in_progress' && $ticket->approval_requested;
+@endphp
 
           <button
             type="button"
@@ -215,7 +242,7 @@ Showing <span id="visibleCount">0</span> ticket(s)
             data-description="{{ strtolower($ticket->description) }}"
             data-department="{{ strtolower($ticket->department) }}"
             data-priority="{{ strtolower($ticket->priority) }}"
-            data-status="{{ strtolower($ticket->status) }}"
+            data-status="{{ $ticket->approval_requested && $ticket->status === 'in_progress' ? 'for_review' : strtolower($ticket->status) }}"
             data-time="{{ $ticket->created_at->diffForHumans() }}"
             data-approval-requested="{{ $ticket->approval_requested ? 1 : 0 }}"
             onclick="openTicketDetails(this)"
@@ -237,9 +264,9 @@ Showing <span id="visibleCount">0</span> ticket(s)
                 </div>
               </div>
 
-              <span class="badge-status {{ $statusClass }}" id="status-{{ $ticket->id }}">
-                {{ str_replace('_',' ', $ticket->status) }}
-              </span>
+              <span class="badge-status {{ $isReview ? 'st-review' : $statusClass }}" id="status-{{ $ticket->id }}">
+  {{ $isReview ? 'for review' : str_replace('_',' ', $ticket->status) }}
+</span>
             </div>
           </button>
         @empty
@@ -262,12 +289,18 @@ Showing <span id="visibleCount">0</span> ticket(s)
         </div>
         <div class="side-box">
           <div class="side-row"><span class="k">Total</span><span>{{ $tickets->count() }}</span></div>
-          <div class="side-row"><span class="k">Pending</span><span>{{ $tickets->where('status','pending')->count() }}</span></div>
-          <div class="side-row"><span class="k">In Progress</span><span>{{ $tickets->where('status','in_progress')->count() }}</span></div>
-          <div class="side-row"><span class="k">Resolved</span><span>{{ $tickets->where('status','resolved')->count() }}</span></div>
+          <div class="side-row"><span class="k" style="color: rgb(233, 53, 53);">Pending</span><span>{{ $tickets->where('status','pending')->count() }}</span></div>
+          <div class="side-row"><span class="k" style="color: #1d4ed8;">In Progress</span><span>{{ $tickets->where('status','in_progress')->count() }}</span></div>
+          <div class="side-row"><span class="k" style="color: #166534;">Resolved</span><span>{{ $tickets->where('status','resolved')->count() }}</span></div>
 
           <div class="side-note">
-            Support team will respond as soon as possible. Please keep your ticket details complete for faster resolution.
+            Support team will respond as soon as possible. Please ensure that all ticket details are complete and 
+            accurate upon submission to facilitate 
+            faster resolution. Kindly avoid submitting multiple requests for the same concern to prevent 
+            duplication and processing delays.<br><br>
+
+            <strong style="font-weight: bolder; color:#444444;">Reminder:</strong> Please observe proper behavior and professionalism when communicating your concerns. Our support team 
+            is here to assist you, and maintaining a respectful tone will help us serve you better. Thank you for your understanding.
           </div>
         </div>
       </div>
@@ -306,21 +339,21 @@ Showing <span id="visibleCount">0</span> ticket(s)
 
 
 
-<!-- ✅ JUSTIFICATION (FOR CANCEL / REJECT) -->
 <div id="cancelJustificationWrap" class="mt-3 d-none">
   <label class="fw-bold text-muted small">Reason for Cancellation</label>
+
   <textarea 
-    name="cancel_justification" 
     id="cancelJustification" 
     class="form-control mt-1"
     rows="3"
     placeholder="Why are you rejecting the resolved status?"></textarea>
+
+  
 </div>
           <div id="statusSection">
 
-  <!-- ✅ NORMAL FLOW (NO APPROVAL YET) -->
   <div id="normalStatusWrap">
-    <div class="fw-bold text-muted small mt-3">Update Status</div>
+    <div class="fw-bold text-muted small mt-3">Status</div>
 
     <select name="status" id="d_statusSelect"
       class="form-select"
@@ -328,10 +361,9 @@ Showing <span id="visibleCount">0</span> ticket(s)
     </select>
   </div>
 
-  <!-- ✅ APPROVAL MODE -->
   <div id="approvalActionsWrap" class="d-none mt-3">
 
-    <div class="fw-bold text-muted small">Approval Required</div>
+    <div class="fw-bold text-muted small">Waiting for Your Approval Decision</div>
 
     <div class="d-flex gap-2 mt-2">
       <button type="button" class="btn btn-success btn-sm" id="acceptTicket">
@@ -349,9 +381,14 @@ Showing <span id="visibleCount">0</span> ticket(s)
         </div>
 
         <div class="modal-footer d-flex gap-2 justify-content-end">
-          <button type="submit" class="btn btn-black px-4" id="saveBtn">
+          {{-- <button type="submit" class="btn btn-black px-4" id="saveBtn">
   Save
-</button>
+</button> --}}
+<button 
+    type="button" 
+    id="submitDeclineBtn"
+    class="btn btn-black px-4  d-none"> Save
+  </button>
           <button type="button" class="btn btn-ghost" data-bs-dismiss="modal">
             Close
           </button>
@@ -371,44 +408,36 @@ Showing <span id="visibleCount">0</span> ticket(s)
 @include('partials.chatbot')
 
 <script>
-function updateTicketsRealtime() {
-    fetch('/tickets/user')
-        .then(res => res.json())
-        .then(data => {
 
-            data.forEach(ticket => {
-                let el = document.getElementById('status-' + ticket.id);
-
-                if (el) {
-
-                    el.innerText = ticket.status.replace('_', ' ');
-
-                    el.classList.remove('st-pending','st-progress','st-resolved');
-
-                    if (ticket.status === 'pending') {
-                        el.classList.add('st-pending');
-                    } 
-                    else if (ticket.status === 'in_progress') {
-                        el.classList.add('st-progress');
-                    } 
-                    else if (ticket.status === 'resolved') {
-                        el.classList.add('st-resolved');
-                    }
-                }
-            });
-
-        })
-        .catch(err => console.log(err));
-}
-
-setInterval(updateTicketsRealtime, 5000);
 
 document.getElementById('ticketForm').addEventListener('submit', function () {
     let btn = document.getElementById('submitBtn');
 
     btn.disabled = true;
 
-    btn.innerHTML = '<i class="bi bi-hourglass-split"></i> Submitting...';
+    btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span> Submitting...';
+});
+</script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+
+  const msg = localStorage.getItem('success');
+
+  if(msg){
+
+    const alertBox = document.createElement('div');
+    alertBox.className = 'alert alert-green py-2 px-3 mb-3 fade show';
+    alertBox.innerHTML = `<i class="bi bi-check-circle-fill me-2"></i> ${msg}`;
+
+    document.querySelector('main.container').prepend(alertBox);
+
+    // remove after show
+    setTimeout(() => alertBox.classList.remove('show'), 5000);
+    setTimeout(() => alertBox.remove(), 5500);
+
+    localStorage.removeItem('success');
+  }
+
 });
 </script>
 </body>

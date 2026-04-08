@@ -11,11 +11,9 @@
                 <form id="ticketForm" method="POST" action="{{ route('tickets.store') }}">
                         @csrf
 
-                        <!-- BRANCH (AUTO FROM USER NAME) -->
 <div class="mb-3">
   <label class="form-label">Branch</label>
 
-  <!-- 👀 DISPLAY ONLY -->
   <input 
     type="text" 
     class="form-control" 
@@ -24,7 +22,6 @@
     disabled
   >
 
-  <!-- ✅ ACTUAL VALUE NA MASUSUBMIT -->
   <input 
     type="hidden" 
     name="branch" 
@@ -43,7 +40,6 @@
 
                         {{-- <div class="divider"></div> --}}
 
-                        <!-- DEPARTMENT -->
                         <div class="mb-3">
                             <label class="form-label">Department</label>
                             <select name="department" class="form-select" required>
@@ -57,7 +53,6 @@
                             </select>
                         </div>
 
-                        <!-- PRIORITY -->
                         <div class="mb-4">
                             <label class="form-label">Priority Level</label>
                             <select name="priority" class="form-select" required>
@@ -68,7 +63,6 @@
                             </select>
                         </div>
 
-                        <!-- ACTIONS -->
                         <div class="d-flex justify-content-between align-items-center">
                             <button type="button"
                                     class="btn btn-dark btn-sm p-2 fw-semibold" 

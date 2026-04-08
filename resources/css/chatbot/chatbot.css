@@ -154,9 +154,17 @@
 .ticket-messages{
   flex:1;
   padding:14px 12px;
-  overflow-y:auto;
+  overflow-y:auto; /* keep scroll working */
   background:#fff;
   min-height:0;
+
+  /* 🔥 HIDE SCROLLBAR */
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE/Edge */
+}
+
+.ticket-messages::-webkit-scrollbar {
+  display: none; /* Chrome, Safari */
 }
 
 /* Empty */
@@ -437,3 +445,16 @@
   border-color: rgba(239,68,68,.28);
 }
 
+
+.chat-badge {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  background: red;
+  color: white;
+  font-size: 11px;
+  padding: 2px 6px;
+  border-radius: 50%;
+  font-weight: bold;
+  display: none;
+}

@@ -43,7 +43,10 @@ class SupportChatController extends Controller
         $ticketId = (int) $request->query('ticket_id', 0);
 
 $query = SupportMessage::query()
-    ->where('target_user_id', $targetUserId);
+    ->where(function($q) use ($targetUserId) {
+        $q->where('target_user_id', $targetUserId)
+          ->orWhere('user_id', $targetUserId);
+    });
 
 // ✅ filter by ticket (IMPORTANT)
 if ($ticketId > 0) {
@@ -68,6 +71,27 @@ $messages = $query
         ];
     });
 
+// ✅ DITO MO ILALAGAY
+if ($request->query('mark_as_read') == 1) {
+
+    if ($this->isStaff()) {
+
+        // ✅ ADMIN viewing USER messages
+        SupportMessage::where('user_id', $targetUserId)
+            ->where('target_user_id', Auth::id())
+            ->where('is_read', false)
+            ->update(['is_read' => true]);
+
+    } else {
+
+        // ✅ USER viewing ADMIN messages
+        SupportMessage::where('target_user_id', Auth::id()) // TO USER
+            ->where('user_id', '!=', Auth::id()) // FROM ADMIN
+            ->where('is_read', false)
+            ->update(['is_read' => true]);
+    }
+}
+
         $lastIdOut = $messages->last()['id'] ?? $afterId;
 
         return response()->json([
@@ -86,19 +110,44 @@ $messages = $query
 
     $authUser = Auth::user();
 
-    $targetUserId = $this->isStaff()
-        ? (int) $request->target_user_id
-        : (int) $authUser->id;
+    $department = null; // ✅ FIX #1 (IMPORTANT)
 
-    // ✅ KUHA DEPARTMENT (IMPORTANT 🔥)
-    $department = strtolower($request->input('department', 'general'));
+    if ($this->isStaff()) {
+
+     $department = strtolower($authUser->usertype);
+
+        // ✅ ADMIN → USER
+        $targetUserId = (int) $request->input('target_user_id');
+
+        if (!$targetUserId || $targetUserId === $authUser->id) {
+            return response()->json([
+                'error' => 'Invalid target user'
+            ], 422);
+        }
+
+    } else {
+
+        // ✅ USER → ADMIN
+        $department = strtolower($request->input('department', 'it'));
+
+        $admin = \App\Models\User::where('usertype', $department)->first();
+
+        if (!$admin) {
+            $admin = \App\Models\User::whereIn('usertype', [
+                'admin','admin-secretary','support','staff'
+            ])->first();
+        }
+
+        $targetUserId = $admin?->id;
+    }
 
     // ✅ SAVE MESSAGE
     $msg = SupportMessage::create([
         'user_id'        => (int) $authUser->id,
         'target_user_id' => $targetUserId,
         'message'        => $request->message,
-        'department'     => $department, // ✅ ADD THIS COLUMN
+        'department'     => $department, // ✅ SAFE NA
+        'is_read'        => false,
     ]);
 
     // ✅ PREVENT EMAIL SPAM
@@ -146,7 +195,7 @@ if (!$alreadyUnread && !$isOnline) {
             'om' => env('OPERATIONS_MANAGER_EMAIL'),
         ];
 
-        $departmentEmail = $departmentMap[$department] ?? null;
+        $departmentEmail = $department ? ($departmentMap[$department] ?? null) : null;
 
         $emails = $mainEmails;
 
@@ -261,7 +310,10 @@ public function destroy(Request $request)
     }
 
     // ✅ delete buong thread (lahat ng chats, kahit sino sender)
-    $deleted = SupportMessage::where('target_user_id', $target)->delete();
+    $deleted = SupportMessage::where(function($q) use ($target){
+    $q->where('target_user_id', $target)
+      ->orWhere('user_id', $target);
+})->delete();
 
     return response()->json(['ok' => true, 'deleted' => $deleted]);
 }
@@ -274,9 +326,36 @@ public function upload(Request $request)
 
     $authUser = Auth::user();
 
-    $targetUserId = $this->isStaff()
-        ? (int) $request->target_user_id
-        : (int) $authUser->id;
+if ($this->isStaff()) {
+
+    $targetUserId = (int) $request->input('target_user_id');
+
+if (!$targetUserId || $targetUserId === $authUser->id) {
+    return response()->json([
+        'error' => 'Invalid target user'
+    ], 422);
+}
+
+} else {
+
+    $department = strtolower($request->input('department'));
+
+if (!$department) {
+    return response()->json([
+        'error' => 'Department is required'
+    ], 422);
+}
+
+$admin = \App\Models\User::where('usertype', $department)->first();
+
+if (!$admin) {
+    $admin = \App\Models\User::whereIn('usertype', [
+        'admin','support','staff'
+    ])->first();
+}
+
+$targetUserId = $admin?->id;
+}
 
     if (!$request->hasFile('file')) {
         return response()->json(['error' => 'No file'], 400);
@@ -297,11 +376,14 @@ public function upload(Request $request)
 
     // ✅ SAVE AS MESSAGE
     $msg = SupportMessage::create([
-        'user_id'        => (int) $authUser->id,
-        'target_user_id' => $targetUserId,
-        'message'        => $path, // file path
-        'type'           => $type, // ⚠️ NEED COLUMN
-    ]);
+    'user_id'        => (int) $authUser->id,
+    'target_user_id' => $targetUserId,
+    'message'        => $path,
+    'type'           => $type,
+
+    // ✅ ADD THIS DIN
+    'is_read'        => false,
+]);
 
     return response()->json([
         'ok'   => true,
@@ -309,6 +391,49 @@ public function upload(Request $request)
         'path' => $path,
         'type' => $type
     ]);
+}
+
+
+public function unreadCount(Request $request)
+{
+    $user = Auth::user();
+
+    $department = strtolower($request->query('department'));
+
+    $isStaff = in_array(strtolower($user->usertype), [
+        'admin','admin-secretary','hr','it','support','staff','om','od','smm'
+    ]);
+
+    if ($isStaff) {
+
+        $targetUserId = (int) $request->query('user_id');
+
+        if ($targetUserId > 0) {
+
+            $count = SupportMessage::where('user_id', $targetUserId)
+                ->where('is_read', false)
+                ->where(function($q) use ($user, $department){
+                    $q->where('target_user_id', $user->id);
+
+                    if($department){
+                        $q->orWhere('department', $department);
+                    }
+                })
+                ->count();
+
+        } else {
+            $count = 0;
+        }
+
+    } else {
+
+        $count = SupportMessage::where('target_user_id', $user->id)
+            ->where('user_id', '!=', $user->id)
+            ->where('is_read', false)
+            ->count();
+    }
+
+    return response()->json(['count' => $count]);
 }
 
 }

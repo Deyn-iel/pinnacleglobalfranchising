@@ -377,7 +377,6 @@ th:nth-child(8), td:nth-child(8){ width: 90px; }  /* Actions */
               <th>Priority</th>
               <th>Status</th>
               <th>Date Submitted</th>
-              <th class="text-center">Actions</th>
             </tr>
           </thead>
 
@@ -433,14 +432,23 @@ th:nth-child(8), td:nth-child(8){ width: 90px; }  /* Actions */
               </td>
 
               <td>
-                <span class="badge
-                  {{ $ticket->status === 'pending' ? 'bg-danger'
-                      : ($ticket->status === 'in_progress' ? 'bg-primary'
-                      : ($ticket->status === 'resolved' ? 'bg-success'
-                      : 'bg-secondary')) }} p-2">
-                  {{ ucwords(str_replace('_',' ', $ticket->status)) }}
-                </span>
-              </td>
+@php
+  $isRequesting = $ticket->status === 'in_progress' && $ticket->approval_requested;
+@endphp
+
+<span class="badge
+{{ $ticket->status === 'pending' ? 'bg-danger'
+: ($isRequesting ? 'bg-warning text-dark'
+: ($ticket->status === 'in_progress' ? 'bg-primary'
+: ($ticket->status === 'resolved' ? 'bg-success'
+: 'bg-secondary'))) }} p-2">
+
+{{ $isRequesting 
+    ? 'Requesting' 
+    : ucwords(str_replace('_',' ',$ticket->status)) }}
+
+</span>
+</td>
 
               <td>
 <div class="small text-muted">
@@ -450,7 +458,7 @@ th:nth-child(8), td:nth-child(8){ width: 90px; }  /* Actions */
 </div>
 </td>
 
-              <td class="text-center">
+              {{-- <td class="text-center">
                 <div class="action-wrap">
                   <form method="POST"
                         action="{{ route('admin.tickets.destroy', $ticket) }}"
@@ -463,7 +471,7 @@ th:nth-child(8), td:nth-child(8){ width: 90px; }  /* Actions */
                     </button>
                   </form>
                 </div>
-              </td>
+              </td> --}}
             </tr>
           @endforeach
           </tbody>
@@ -720,6 +728,6 @@ window.startAdminChat = function(btn){
 </script>
 
 
-  @include('partials.chatbot')
+ @include('partials.chatbot', ['isAdmin' => true])
 </body>
 </html>

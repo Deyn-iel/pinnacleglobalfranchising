@@ -20,8 +20,16 @@ class TicketController extends Controller
             ->latest()
             ->get();
 
-        return view('ticket.ticket-dashboard', compact('tickets'));
+        return view('ticket.main-ticket-dashboard', compact('tickets')) ->with('pageTitle', 'Ticket Dashboard');
     }
+public function myTickets()
+{
+    $tickets = \App\Models\Ticket::where('user_id', Auth::id())
+        ->latest()
+        ->get();
+
+    return view('ticket.ticket-dashboard', compact('tickets'));
+}
 
     public function create()
     {
@@ -104,7 +112,7 @@ class TicketController extends Controller
         }
     }
 
-    return redirect()->route('tickets.dashboard')
+    return redirect()->route('tickets.myTickets')
         ->with('success', 'Ticket submitted successfully.');
 }
 
@@ -205,26 +213,92 @@ public function decline(Request $request, $id)
         'reason' => 'required|string'
     ]);
 
-    $ticket = Ticket::findOrFail($id);
+    $ticket = Ticket::with('user')->findOrFail($id);
 
+    // ✅ UPDATE STATUS
     $ticket->status = 'in_progress';
     $ticket->approval_decline_reason = $request->reason;
     $ticket->approval_requested = false;
-    $ticket->approved_at = null; // 🔥 ADD THIS
+    $ticket->approved_at = null;
 
     $ticket->save();
+
+    // ==========================
+    // 🔥 SEND EMAIL TO DEPARTMENT
+    // ==========================
+    $departmentMap = [
+        'it' => env('IT_SUPPORT_EMAIL'),
+        'hr' => env('HR_SUPPORT_EMAIL'),
+        'smm' => env('SMM_SUPPORT_EMAIL'),
+        'finance' => env('FINANCE_SUPPORT_EMAIL'),
+        'admin-secretary' => env('ADMIN_SUPPORT_EMAIL'),
+        'od' => env('OPERATIONS_DIRECTOR_SUPPORT_EMAIL'),
+        'om' => env('OPERATIONS_MANAGER_SUPPORT_EMAIL'),
+    ];
+
+    $departmentEmail = $departmentMap[$ticket->department] ?? null;
+
+    try {
+
+        if ($departmentEmail) {
+            Mail::to($departmentEmail)->send(
+                new \App\Mail\TicketDeclinedMail(
+                    $ticket,
+                    $request->reason
+                )
+            );
+        }
+
+    } catch (\Throwable $e) {
+
+        Log::error('Decline email failed: ' . $e->getMessage());
+
+    }
 
     return response()->json(['success' => true]);
 }
 public function approve($id)
 {
-    $ticket = Ticket::findOrFail($id);
+    $ticket = Ticket::with('user')->findOrFail($id);
 
-    $ticket->status = 'resolved'; // 🔥 FINAL STATE
+    $ticket->status = 'resolved';
     $ticket->approved_at = now();
     $ticket->approval_requested = false;
+    $ticket->resolved_at = now();
 
     $ticket->save();
+
+    // ==========================
+    // 🔥 SEND EMAIL TO DEPARTMENT ONLY
+    // ==========================
+    $departmentMap = [
+        'it' => env('IT_SUPPORT_EMAIL'),
+        'hr' => env('HR_SUPPORT_EMAIL'),
+        'smm' => env('SMM_SUPPORT_EMAIL'),
+        'finance' => env('FINANCE_SUPPORT_EMAIL'),
+        'admin-secretary' => env('ADMIN_SUPPORT_EMAIL'),
+        'od' => env('OPERATIONS_DIRECTOR_SUPPORT_EMAIL'),
+        'om' => env('OPERATIONS_MANAGER_SUPPORT_EMAIL'),
+    ];
+
+    $departmentEmail = $departmentMap[$ticket->department] ?? null;
+
+    try {
+
+        if ($departmentEmail) {
+            Mail::to($departmentEmail)->send(
+                new \App\Mail\TicketResolvedMail(
+                    $ticket,
+                    $ticket->resolution_justification ?? ''
+                )
+            );
+        }
+
+    } catch (\Throwable $e) {
+
+        Log::error('Resolved email failed: ' . $e->getMessage());
+
+    }
 
     return response()->json(['success' => true]);
 }

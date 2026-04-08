@@ -1,4 +1,15 @@
+history.scrollRestoration = "manual";
 document.addEventListener('DOMContentLoaded', () => {
+
+  const msg = localStorage.getItem('success');
+if(msg){
+  showSuccess(msg);
+  localStorage.removeItem('success');
+
+  // 🔥 scroll sa taas pag load
+  window.scrollTo(0, 0);
+}
+
     // Tabs
     document.querySelectorAll('.tab').forEach(t => {
       t.addEventListener('click', () => {
@@ -33,6 +44,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     applyFilters();
+    setInterval(refreshTickets, 3000);
   });
 
   function syncMobileToDesktop(){
@@ -125,7 +137,13 @@ if(approvalRequested){
 
   document.getElementById('d_department').innerText = cap(dept);
   document.getElementById('d_priority').innerText = cap(pri);
-  document.getElementById('d_statusText').innerText = (st || '').replace(/_/g,' ');
+  let statusText = (st || '').replace(/_/g,' ');
+
+if(st === 'in_progress' && approvalRequested){
+    statusText = 'for review';
+}
+
+document.getElementById('d_statusText').innerText = statusText;
   document.getElementById('d_time').innerText = el.dataset.time || '';
 
   // ✅ set dropdown
@@ -166,7 +184,6 @@ if(statusSelect){
 else if(st === "in_progress"){
   statusSelect.innerHTML = `
     <option value="in_progress" selected>In Progress</option>
-    <option value="resolved">Resolved</option>
   `;
 }
 else{
@@ -243,6 +260,16 @@ if(saveBtn){
   }
 }
 
+// 🔥 FIX ACCEPT BUTTON CLICK
+const acceptBtn = document.getElementById('acceptTicket');
+
+if(acceptBtn){
+  acceptBtn.replaceWith(acceptBtn.cloneNode(true)); // remove old listeners
+
+  const newBtn = document.getElementById('acceptTicket');
+  newBtn.addEventListener('click', approveTicket);
+}
+
 }
 
 
@@ -257,18 +284,51 @@ document.getElementById('cancelTicket')?.addEventListener('click', function(){
   const wrap = document.getElementById('cancelJustificationWrap');
   const textarea = document.getElementById('cancelJustification');
 
-  // show first
-  if(wrap.classList.contains('d-none')){
-    wrap.classList.remove('d-none');
-    textarea.focus();
-    return; // STOP muna dito
+  wrap.classList.remove('d-none');
+  textarea.focus();
+
+});
+
+document.getElementById('cancelJustification')?.addEventListener('input', function(){
+
+  const btn = document.getElementById('submitDeclineBtn');
+
+  if(this.value.trim()){
+    btn.classList.remove('d-none');
+  }else{
+    btn.classList.add('d-none');
   }
 
-  // second click = submit
-  if(!textarea.value.trim()){
-    alert('⚠️ Please provide a reason for rejection.');
-    textarea.focus();
-    return;
+});
+
+document.getElementById('cancelJustification')?.addEventListener('keydown', function(e){
+
+  if(e.key === 'Enter' && !e.shiftKey){
+    e.preventDefault();
+    submitDecline(); // 🔥 reuse function
+  }
+
+});
+
+
+
+
+
+
+
+
+function submitDecline(){
+
+  const textarea = document.getElementById('cancelJustification');
+  const reason = textarea.value.trim();
+  if(!reason) return;
+
+  const btn = document.getElementById('submitDeclineBtn');
+
+  // 🔥 LOADING STATE
+  if(btn){
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span> Declining...';
   }
 
   const form = document.getElementById('statusForm');
@@ -278,25 +338,124 @@ document.getElementById('cancelTicket')?.addEventListener('click', function(){
 
   const baseUrl = document.querySelector('meta[name="base-url"]').content;
 
-fetch(`${baseUrl}/tickets/${ticketId}/decline`, {
+  fetch(`${baseUrl}/tickets/${ticketId}/decline`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
       'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
     },
     body: JSON.stringify({
-      reason: textarea.value
+      reason: reason
     })
   })
   .then(res => res.json())
   .then(() => {
-    alert('❌ Ticket rejected.');
-    location.reload();
+
+    localStorage.setItem('success', 'Ticket declined successfully.');
+location.reload();
+
+  })
+  .catch(() => {
+
+    // ❌ restore button if error
+    if(btn){
+      btn.disabled = false;
+      btn.innerHTML = 'Save';
+    }
+
   });
 
-});
+}
 
-document.getElementById('acceptTicket')?.addEventListener('click', function(){
+
+
+
+document.getElementById('submitDeclineBtn')?.addEventListener('click', submitDecline);
+
+function refreshTickets(){
+
+  const baseUrl = document.querySelector('meta[name="base-url"]').content;
+
+  // 🔥 STOP if modal is open
+  const modal = document.getElementById('ticketDetailsModal');
+  const isOpen = modal?.classList.contains('show');
+  if(isOpen) return;
+
+  fetch(`${baseUrl}/tickets/user`)
+    .then(res => res.json())
+    .then(tickets => {
+
+      tickets.forEach(ticket => {
+
+        const el = document.querySelector(`.ticket-item[data-id="${ticket.id}"]`);
+        if(!el) return;
+
+        // ✅ UPDATE STATUS
+        el.dataset.status = ticket.status;
+
+        const badge = el.querySelector('.badge-status');
+        if(badge){
+
+  // 🔥 REMOVE OLD STATUS CLASSES
+badge.classList.remove('st-pending', 'st-progress', 'st-resolved', 'st-review');
+
+// 🔥 ADD NEW CLASS BASED SA STATUS
+if(ticket.status === 'pending'){
+  badge.classList.add('st-pending');
+}
+else if(ticket.status === 'in_progress' && ticket.approval_requested){
+  badge.classList.add('st-review'); // ✅ NEW (FOR REVIEW)
+}
+else if(ticket.status === 'in_progress'){
+  badge.classList.add('st-progress');
+}
+else if(ticket.status === 'resolved'){
+  badge.classList.add('st-resolved');
+}
+
+  // 🔥 UPDATE TEXT
+  let statusText = ticket.status.replace('_',' ');
+
+// 🔥 CUSTOM LABEL
+if(ticket.status === 'in_progress' && ticket.approval_requested){
+    statusText = 'for review'; // or 'requesting approval'
+}
+
+badge.innerText = statusText;
+}
+
+        // ✅ UPDATE APPROVAL FLAG
+        el.dataset.approvalRequested = ticket.approval_requested ? "1" : "0";
+
+      });
+
+      applyFilters();
+
+    });
+
+}
+
+
+
+
+let approving = false;
+
+function approveTicket(){
+
+  if(approving) return; // 🔥 prevent double click
+  approving = true;
+
+  const confirmApprove = confirm("Are you sure you want to approve this ticket?");
+  if(!confirmApprove){
+    approving = false;
+    return;
+  }
+
+  const btn = document.getElementById('acceptTicket');
+  if(btn){
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span> Processing...';
+  }
 
   const form = document.getElementById('statusForm');
   const action = form.action;
@@ -305,7 +464,7 @@ document.getElementById('acceptTicket')?.addEventListener('click', function(){
 
   const baseUrl = document.querySelector('meta[name="base-url"]').content;
 
-fetch(`${baseUrl}/tickets/${ticketId}/approve`, {
+  fetch(`${baseUrl}/tickets/${ticketId}/approve`, {
     method: 'POST',
     headers: {
       'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
@@ -313,10 +472,18 @@ fetch(`${baseUrl}/tickets/${ticketId}/approve`, {
   })
   .then(res => res.json())
   .then(() => {
-    alert('✅ Ticket approved!');
-    location.reload();
+
+    localStorage.setItem('success', 'Ticket resolved successfully.');
+location.reload();
+
+  })
+  .catch(() => {
+    approving = false;
+    if(btn){
+      btn.disabled = false;
+      btn.innerHTML = '<i class="bi bi-check-circle"></i> Accept';
+    }
   });
 
-});
-
+}
   

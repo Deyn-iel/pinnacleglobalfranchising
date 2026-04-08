@@ -24,6 +24,7 @@ export default defineConfig({
 
                 //ticket
                 'resources/css/chatbot/ticket.css',
+                'resources/css/chatbot/main-ticket.css',
                 'resources/js/chatbot/ticket.js',
 
                 'resources/js/header/app.js',

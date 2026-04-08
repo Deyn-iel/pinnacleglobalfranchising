@@ -121,10 +121,10 @@ class="nav-link {{ request()->routeIs('admin.portals.admin-secretary') ? 'active
 Notifications
 </a>
 
-<a href="#">
+{{-- <a href="#">
                 <i class="fas fa-calendar-check"></i>
                 <span>Attendance</span>
-            </a>
+            </a> --}}
 
 <a href="{{ route('admin.portals.admin-secretary.tickets') }}"
 class="nav-link {{ request()->routeIs('admin.portals.admin-secretary.tickets') ? 'active' : '' }}">

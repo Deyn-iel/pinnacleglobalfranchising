@@ -9,45 +9,48 @@
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
 <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
 @vite([
-        'resources/css/chatbot/app.css',
-            
-            // js files
-            'resources/js/chatbot/app.js'])
+'resources/css/chatbot/app.css',
+'resources/js/chatbot/app.js'
+])
+
 <style>
 
+/* ================= ROOT DESIGN ================= */
 :root{
 --sidebar:260px;
 --primary:#0f172a;
---accent:#2563eb;
---bg:#f1f5f9;
+--accent:#3b82f6;
+--bg:#f8fafc;
 --card:#ffffff;
---border:#e2e8f0;
+--border:#eef2f6;
 --text:#0f172a;
 --muted:#64748b;
+--transition:all .25s ease;
 }
 
 body{
 margin:0;
-font-family:system-ui;
+font-family:'Inter', system-ui;
 background:var(--bg);
 color:var(--text);
 overflow-x:hidden;
 }
 
-/* SIDEBAR */
-
+/* ================= SIDEBAR UPGRADE ================= */
 .sidebar{
 position:fixed;
 top:0;
 left:0;
 width:var(--sidebar);
 height:100vh;
-background:#0f172a;
+background:linear-gradient(145deg,#0f172a,#020617);
 color:white;
 padding:22px 18px;
-transition:0.3s;
+transition:.3s;
 z-index:1000;
+box-shadow:8px 0 25px rgba(0,0,0,0.08);
 }
 
 .sidebar h4{
@@ -60,162 +63,156 @@ display:flex;
 align-items:center;
 gap:12px;
 padding:12px 14px;
-border-radius:10px;
+border-radius:14px;
 text-decoration:none;
 color:#cbd5f5;
 font-weight:500;
 margin-bottom:6px;
+transition:var(--transition);
 }
 
 .sidebar a:hover{
-background:#1e293b;
+background:rgba(59,130,246,0.2);
 color:white;
 }
 
 .sidebar a.active{
-background:#2563eb;
+background:#3b82f6;
 color:white;
+box-shadow:0 6px 14px rgba(59,130,246,0.3);
 }
 
-/* MOBILE SIDEBAR */
-
-.sidebar.mobile-hide{
-left:-260px;
-}
-
-.sidebar-overlay{
-position:fixed;
-top:0;
-left:0;
-width:100%;
-height:100%;
-background:rgba(0,0,0,0.4);
-z-index:900;
-display:none;
-}
-
-.sidebar-overlay.active{
-display:block;
-}
-
-/* MAIN */
-
+/* ================= MAIN ================= */
 main{
 margin-left:var(--sidebar);
 padding:28px;
-transition:0.3s;
+transition:.3s;
 }
 
-/* HEADER */
-
+/* ================= HEADER (GLASS STYLE) ================= */
 .page-header{
-background:var(--card);
-border:1px solid var(--border);
-border-radius:12px;
-padding:20px;
-margin-bottom:20px;
+background:rgba(255,255,255,0.85);
+backdrop-filter:blur(8px);
+border:1px solid rgba(255,255,255,0.6);
+border-radius:22px;
+padding:20px 24px;
+margin-bottom:25px;
 display:flex;
 justify-content:space-between;
 align-items:center;
 flex-wrap:wrap;
 gap:10px;
+box-shadow:0 4px 12px rgba(0,0,0,0.03);
 }
 
 .page-header h3{
 margin:0;
-font-weight:700;
+font-weight:800;
 }
 
-/* MOBILE HEADER */
-
+/* ================= MOBILE ================= */
 .mobile-menu{
 display:none;
 font-size:20px;
 background:#fff;
 border:1px solid var(--border);
 padding:8px 12px;
-border-radius:8px;
+border-radius:12px;
 }
 
-/* STATS */
-
+/* ================= STAT CARDS ================= */
 .stat-card{
 background:var(--card);
-border:1px solid var(--border);
-border-radius:12px;
-padding:18px;
+border-radius:22px;
+padding:20px;
 display:flex;
 justify-content:space-between;
 align-items:center;
-transition:.2s;
+transition:.3s;
+border:1px solid var(--border);
+box-shadow:0 2px 6px rgba(0,0,0,0.02);
 }
 
 .stat-card:hover{
-transform:translateY(-2px);
-box-shadow:0 6px 20px rgba(0,0,0,.05);
+box-shadow:0 20px 30px -12px rgba(0,0,0,0.08);
 }
 
 .stat-title{
-font-size:12px;
+font-size:11px;
 text-transform:uppercase;
 color:var(--muted);
+font-weight:600;
 }
 
 .stat-value{
-font-size:24px;
-font-weight:700;
+font-size:28px;
+font-weight:800;
 }
 
 .stat-icon{
-width:40px;
-height:40px;
-border-radius:10px;
-background:#f1f5f9;
+width:50px;
+height:50px;
+border-radius:18px;
+background:#eff6ff;
 display:flex;
 align-items:center;
 justify-content:center;
+font-size:18px;
+color:#3b82f6;
 }
 
-/* PANELS */
-
+/* ================= PANEL ================= */
 .panel{
 background:var(--card);
-border:1px solid var(--border);
-border-radius:12px;
+border-radius:22px;
 padding:20px;
+border:1px solid var(--border);
+box-shadow:0 4px 12px rgba(0,0,0,0.02);
 }
 
 .panel-title{
-font-weight:600;
+font-weight:700;
 margin-bottom:15px;
+border-left:4px solid var(--accent);
+padding-left:10px;
 }
 
-/* TABLE */
-
-table{
-margin:0;
+/* ================= TABLE ================= */
+.table{
+border-collapse:separate;
+border-spacing:0 8px;
 }
 
-thead{
-background:#f8fafc;
-font-size:12px;
+thead th{
+background:#f1f5f9;
+font-size:11px;
 text-transform:uppercase;
 color:var(--muted);
+border:none !important;
+padding:12px;
 }
+
+tbody tr{
+background:white;
+border-radius:14px;
+transition:.2s;
+}
+
 
 tbody td{
-font-size:13px;
+padding:12px;
+border:none !important;
 }
 
-
-/* TABLE RESPONSIVE */
-
-.table-responsive{
-overflow-x:auto;
+/* ================= BADGE MODERN ================= */
+.badge{
+border-radius:50px !important;
+padding:6px 12px;
+font-size:11px;
+font-weight:600;
 }
 
-/* RESPONSIVE */
-
+/* ================= RESPONSIVE ================= */
 @media (max-width: 991px){
 
 main{
@@ -236,35 +233,36 @@ left:0;
 }
 
 }
-/* ===== FIX LOGOUT BUTTON ===== */
+
+/* ================= LOGOUT ================= */
 .logout-btn{
-  display:flex;
-  align-items:center;
-  gap:12px;
-  padding:12px 14px;
-  border-radius:10px;
-  background:none;
-  border:none;
-  color:#cbd5f5;
-  font-weight:500;
-  width:100%;
-  transition:0.2s;
+display:flex;
+align-items:center;
+gap:12px;
+padding:12px 14px;
+border-radius:14px;
+background:none;
+border:none;
+color:#cbd5f5;
+width:100%;
+transition:0.2s;
 }
 
 .logout-btn:hover{
-  background:#ef4444;
-  color:white;
+background:#ef4444;
+color:white;
 }
+
 </style>
 </head>
 
 <body>
+
 @include('admin.headoffice-portals.it.partials.sidebar')
-
-
 
 <main>
 
+<!-- HEADER -->
 <div class="page-header">
 
 <div class="d-flex align-items-center gap-2">
@@ -274,8 +272,8 @@ left:0;
 </button>
 
 <div>
-<h3>IT Dashboard</h3>
-<small class="text-muted">Information Technology Management Panel</small>
+<h3>Command Center</h3>
+<small class="text-muted">IT Operations & Support Intelligence</small>
 </div>
 
 </div>
@@ -289,26 +287,25 @@ left:0;
 
 </div>
 
+<!-- STATS -->
+<div class="row g-4 mb-4">
 
-<div class="row g-3 mb-4 row-cols-1 row-cols-md-2 row-cols-lg-2">
-
-<div class="col">
+<div class="col-md-6">
 <div class="stat-card">
 <div>
-<div class="stat-title">Employees</div>
+<div class="stat-title">TOTAL PERSONNEL</div>
 <div class="stat-value">{{ \App\Models\User::count() }}</div>
 </div>
 <div class="stat-icon">
-<i class="fa-solid fa-users"></i>
+<i class="fa-solid fa-user-astronaut"></i>
 </div>
 </div>
 </div>
 
-
-<div class="col">
+<div class="col-md-6">
 <div class="stat-card">
 <div>
-<div class="stat-title">Tickets</div>
+<div class="stat-title">TOTAL IT TICKETS</div>
 <div class="stat-value">{{ \App\Models\Ticket::where('department', 'it')->count() }}</div>
 </div>
 <div class="stat-icon">
@@ -319,8 +316,8 @@ left:0;
 
 </div>
 
-
-<div class="panel mb-4">
+<!-- PANEL -->
+<div class="panel">
 
 <div class="panel-title">
 Recent Support Tickets
@@ -328,7 +325,7 @@ Recent Support Tickets
 
 <div class="table-responsive">
 
-<table class="table table-hover align-middle">
+<table class="table align-middle">
 
 <thead>
 <tr>
@@ -344,39 +341,39 @@ Recent Support Tickets
 use App\Models\Ticket;
 
 $tickets = Ticket::with('user')
-    ->where('department','it')
-    ->latest()
-    ->take(5)
-    ->get();
+->where('department','it')
+->latest()
+->take(5)
+->get();
 @endphp
+
 <tbody>
 
 @forelse($tickets as $ticket)
 
 <tr>
-<td>{{ $ticket->ticket_no }}</td>
+<td class="fw-semibold">{{ $ticket->ticket_no }}</td>
+
+<td>{{ $ticket->user->name ?? 'Unknown' }}</td>
+
+<td>{{ strtoupper($ticket->department) }}</td>
 
 <td>
-{{ $ticket->user->name ?? 'Unknown' }}
-</td>
+@php
+$isRequesting = $ticket->status === 'in_progress' && $ticket->approval_requested;
+@endphp
 
-<td>
-{{ strtoupper($ticket->department) }}
-</td>
-
-<td>
 <span class="badge
 {{ $ticket->status === 'pending' ? 'bg-danger'
+: ($isRequesting ? 'bg-warning text-dark'
 : ($ticket->status === 'in_progress' ? 'bg-primary'
 : ($ticket->status === 'resolved' ? 'bg-success'
-: 'bg-secondary')) }}">
-{{ ucwords(str_replace('_',' ',$ticket->status)) }}
+: 'bg-secondary'))) }}">
+{{ $isRequesting ? 'Requesting' : ucwords(str_replace('_',' ',$ticket->status)) }}
 </span>
 </td>
 
-<td>
-{{ $ticket->created_at->format('M d Y') }}
-</td>
+<td>{{ $ticket->created_at->format('M d Y') }}</td>
 
 </tr>
 
@@ -397,7 +394,6 @@ No tickets found
 </div>
 
 </div>
-
 
 </main>
 

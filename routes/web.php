@@ -45,7 +45,7 @@ use App\Http\Controllers\Admin\ClaimInboxController;
 use App\Http\Controllers\Portal\HrDashboardController;
 
 use App\Http\Controllers\Admin\HeadOfficeTicketController;
-
+use App\Http\Controllers\AnnouncementController;
 
 Route::middleware(['web','auth','role:portal'])->group(function () {
 
@@ -108,6 +108,9 @@ Route::get('/support/chat',  [SupportChatController::class, 'fetch']);
   Route::post('/support/chat', [SupportChatController::class, 'send']);
   Route::delete('/support/chat', [SupportChatController::class, 'destroy']);
 
+  Route::get('/support/unread-count', [SupportChatController::class, 'unreadCount']);
+  
+
   Route::post('/support/presence/ping', [SupportPresenceController::class, 'ping']);
   Route::get('/support/presence/status', [SupportPresenceController::class, 'status']); 
 
@@ -118,6 +121,12 @@ Route::patch('/tickets/{ticket}/status', [TicketController::class, 'updateStatus
 
     Route::get('/tickets', [TicketController::class, 'index'])
         ->name('tickets.dashboard');
+
+        Route::get('/my-tickets', [TicketController::class, 'myTickets'])
+    ->name('tickets.myTickets');
+
+    Route::get('/announcements', [AnnouncementController::class, 'index'])
+    ->name('tickets.announcements');
 
     Route::get('/tickets/create', [TicketController::class, 'create'])
         ->name('tickets.create');
@@ -281,6 +290,10 @@ Route::middleware(['auth', 'admin.desktop'])
     ->prefix('admin')
     ->name('admin.')
     ->group(function () {
+
+    Route::get('/tickets/status-list', function () {
+    return \App\Models\Ticket::select('id','status','approval_requested')->get();
+});
 
     // HEADOFFICE PORTALS
 Route::prefix('headoffice-portals')->name('portals.')->group(function () {

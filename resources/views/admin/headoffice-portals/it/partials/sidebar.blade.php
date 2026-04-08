@@ -130,10 +130,10 @@ class="nav-link {{ request()->routeIs('admin.portals.it') ? 'active' : '' }}">
 Notifications
 </a>
 
-<a href="#">
+{{-- <a href="#">
                 <i class="fas fa-calendar-check"></i>
                 <span>Attendance</span>
-            </a>
+            </a> --}}
             
 <a href="{{ route('admin.portals.it.tickets') }}"
 class="nav-link {{ request()->routeIs('admin.portals.it.tickets') ? 'active' : '' }}">

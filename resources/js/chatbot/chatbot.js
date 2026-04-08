@@ -1,13 +1,66 @@
+
+
 document.addEventListener("DOMContentLoaded", function () {
 
-  
+  const dept = document.querySelector('meta[name="chat-department"]')?.getAttribute("content");
 
 
   // ✅ Prevent double-init (pag na-load app.js twice)
   if (window.__supportChatInited) return;
   window.__supportChatInited = true;
 
-  const chatButton = document.getElementById("chat-button");
+const chatButton = document.getElementById("chat-button");
+
+// ✅ only run if exists (user side)
+if (chatButton) {
+
+  chatButton.addEventListener("click", () => {
+
+    const open = chatBox.classList.contains("open");
+
+    if(open){
+      chatBox.style.display = "none";
+      chatBox.classList.remove("open");
+      chatBox.setAttribute("aria-hidden", "true");
+      stopSupportChat();
+      return;
+    }
+
+    unreadCount = 0;
+    updateBadge();
+
+    chatBox.style.display = "flex";
+    chatBox.classList.add("open");
+    chatBox.setAttribute("aria-hidden", "false");
+
+    if(!currentTargetUserId){
+      const metaUid = document.querySelector('meta[name="chat-target-user-id"]')?.getAttribute("content");
+      if(metaUid) currentTargetUserId = Number(metaUid);
+    }
+
+    if(!currentTargetUserId){
+      setInputState(false);
+      return;
+    }
+
+    window.startAccountChat(currentTargetUserId, "Support Chat");
+  });
+
+}
+  const chatBadge = document.getElementById("chatBadge");
+let unreadCount = 0;
+
+  function updateBadge(){
+    console.log("UNREAD:", unreadCount);
+  if(!chatBadge) return;
+
+  if(unreadCount > 0){
+    chatBadge.style.display = "inline-block";
+    chatBadge.textContent = unreadCount > 9 ? "9+" : unreadCount;
+  }else{
+    chatBadge.style.display = "none";
+  }
+}
   const chatBox = document.getElementById("chatbox");
   const closeChat = document.getElementById("close-chat");
   const deleteChat = document.getElementById("delete-chat");
@@ -26,6 +79,9 @@ const fileInput = document.getElementById("fileInput");
 
 // ✅ safe check (important)
 if (fileInput && previewContainer) {
+
+
+
 
 fileInput.addEventListener("change", function () {
     const file = this.files[0];
@@ -389,9 +445,9 @@ if (hasExtension && (m.type === "image" || ["jpg","jpeg","png","gif","webp"].inc
 } else if (hasExtension) {
 
     let icon = "📄";
-    if(ext === "docx") icon = "📝";
-    else if(ext === "xlsx") icon = "📊";
-    else if(ext === "pdf") icon = "📕";
+    if(ext === "docx") icon = '<i class="fas fa-file-word text-primary"></i>';
+    else if(ext === "xlsx") icon = '<i class="fas fa-file-excel text-success"></i>';
+    else if(ext === "pdf") icon = '<i class="fas fa-file-pdf text-danger"></i>';
 
     const link = document.createElement("a");
     link.href = fileUrl;
@@ -445,7 +501,16 @@ if (Number.isFinite(currentTargetUserId) && currentTargetUserId > 0) {
   url.searchParams.set("target_user_id", String(currentTargetUserId));
 }
 
+// 🔥 ADD THIS (IMPORTANT)
+if (chatBox.classList.contains("open") && currentTargetUserId) {
+  url.searchParams.set("mark_as_read", "1");
+}
 
+// ✅ kapag open chat → auto clear badge
+if (chatBox.classList.contains("open")) {
+  unreadCount = 0;
+  updateBadge();
+}
 
     const res = await fetch(url.toString(), {
       method: "GET",
@@ -500,8 +565,28 @@ if (Number.isFinite(currentTargetUserId) && currentTargetUserId > 0) {
   const newMessages = data.messages.filter(m => Number(m.id) > lastId);
 
   if (newMessages.length > 0) {
-    renderMessages(newMessages);
-  }
+
+  const isChatOpen = chatBox.classList.contains("open");
+
+if (!isChatOpen) {
+
+  // ❌ wag na mag manual add (nagkaka-duplicate)
+  // unreadCount += newFromOthers.length;
+
+  // ✅ always sync from server (REAL COUNT)
+  fetch("/support/unread-count")
+    .then(res => res.json())
+    .then(data => {
+      unreadCount = data.count;
+      updateBadge();
+    });
+
+}
+
+  renderMessages(newMessages);
+
+  
+}
 
   return; 
 }
@@ -561,15 +646,27 @@ ticketSend.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>';
     ticketSend.disabled = true;
 
     const formData = new FormData();
-    formData.append("file", selectedFile);
-    formData.append("target_user_id", currentTargetUserId);
+formData.append("file", selectedFile);
+formData.append("target_user_id", currentTargetUserId);
+formData.append("department", dept); // ✅ ADD THIS
 
     try{
-        await fetch("/support/chat/upload", {
-            method: "POST",
-            headers: { "X-CSRF-TOKEN": token },
-            body: formData
-        });
+        const res = await fetch("/support/chat/upload", {
+    method: "POST",
+    credentials: "same-origin", // ✅ IMPORTANT
+    headers: {
+        "X-CSRF-TOKEN": token,
+        "X-Requested-With": "XMLHttpRequest"
+    },
+    body: formData
+});
+
+const text = await res.text();
+console.log("UPLOAD RESPONSE:", text);
+
+if (!res.ok) {
+    alert("Upload failed — check console");
+}
 
     } catch(e){
         alert("Upload failed");
@@ -596,9 +693,10 @@ ticketSend.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>';
                 "X-Requested-With": "XMLHttpRequest"
             },
             body: JSON.stringify({
-                message: msg,
-                target_user_id: currentTargetUserId
-            })
+    message: msg,
+    target_user_id: currentTargetUserId,
+    department: dept
+})
         });
 
         ticketInput.value = "";
@@ -719,47 +817,47 @@ setPresenceUI(false); // optional: reset to Offline
   }
 
   // OPEN/CLOSE UI
-  chatButton?.addEventListener("click", () => {
-  const open = chatBox.style.display === "flex";
+// chatButton?.addEventListener("click", () => {
 
-if(open){
-  chatBox.style.display = "none";
-  chatBox.setAttribute("aria-hidden", "true");
-  stopSupportChat(); // ✅ IMPORTANT
-  return;
-}
+//   const open = chatBox.classList.contains("open");
 
+//   if(open){
+//     chatBox.style.display = "none";
+//     chatBox.classList.remove("open"); 
+//     chatBox.setAttribute("aria-hidden", "true");
+//     stopSupportChat();
+//     return;
+//   }
 
-  // ✅ if wala pang target user, default = sarili (for normal user pages)
-  if(!currentTargetUserId){
-    const metaUid = document.querySelector('meta[name="chat-target-user-id"]')?.getAttribute("content");
-    if(metaUid) currentTargetUserId = Number(metaUid);
-  }
+//   // 🔥 RESET BADGE PAG BINUKSAN
+//   unreadCount = 0;
+//   updateBadge();
 
-  // fallback: kung wala pa rin, open but disabled send
-  if(!currentTargetUserId){
-    chatBox.style.display = "flex";
-    chatBox.setAttribute("aria-hidden", "false");
-    if(ticketHint) ticketHint.textContent = "No target user selected";
-    setInputState(false);
-    ticketBox.innerHTML = `
-      <div class="ticket-empty">
-        <div class="ticket-empty-title">No account selected</div>
-        <div class="ticket-empty-sub">Admin: open a ticket first. User: set meta chat-target-user-id.</div>
-      </div>
-    `;
-    return;
-  }
+//   chatBox.style.display = "flex";
+//   chatBox.classList.add("open"); 
+//   chatBox.setAttribute("aria-hidden", "false");
 
-  window.startAccountChat(currentTargetUserId, "Support Chat");
-});
+//   if(!currentTargetUserId){
+//     const metaUid = document.querySelector('meta[name="chat-target-user-id"]')?.getAttribute("content");
+//     if(metaUid) currentTargetUserId = Number(metaUid);
+//   }
+
+//   if(!currentTargetUserId){
+//     if(ticketHint) ticketHint.textContent = "No target user selected";
+//     setInputState(false);
+//     return;
+//   }
+
+//   window.startAccountChat(currentTargetUserId, "Support Chat");
+// });
 
 
   closeChat?.addEventListener("click", () => {
-    chatBox.style.display = "none";
-    chatBox.setAttribute("aria-hidden", "true");
-    stopSupportChat();
-  });
+  chatBox.style.display = "none";
+  chatBox.classList.remove("open"); // ✅ ADD THIS
+  chatBox.setAttribute("aria-hidden", "true");
+  stopSupportChat();
+});
 
   // SEND
   ticketSend?.addEventListener("click", sendMessage);
@@ -776,5 +874,21 @@ if(open){
     lastId = 0;
     await fetchMessages();
   });
+
+  // 🔥 GLOBAL UNREAD POLLER (WORKS KAHIT SARADO CHAT)
+setInterval(() => {
+
+  // wag mag fetch kung open (kasi fetchMessages na bahala)
+  if (chatBox.classList.contains("open")) return;
+
+  fetch("/support/unread-count")
+    .then(res => res.json())
+    .then(data => {
+      unreadCount = data.count;
+      updateBadge();
+    })
+    .catch(() => {});
+
+}, 1000);
 
 });

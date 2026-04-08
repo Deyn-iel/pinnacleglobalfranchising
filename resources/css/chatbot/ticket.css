@@ -9,7 +9,7 @@
       --shadow: 0 10px 30px rgba(17, 24, 39, .06);
       --radius: 16px;
 
-      --pending-bg:#fff7ed;   --pending-br:#fed7aa;   --pending-tx:#9a3412;
+      --pending-bg:#fff7ed;   --pending-br:#fed7aa;   --pending-tx:rgb(233, 53, 53);
       --progress-bg:#eff6ff;  --progress-br:#bfdbfe;  --progress-tx:#1d4ed8;
       --resolved-bg:#eaf7ee;  --resolved-br:rgba(22,163,74,.25); --resolved-tx:#166534;
 
@@ -23,6 +23,7 @@
       background: var(--bg);
       color: var(--text);
       overflow-x: hidden;
+      
     }
 
     /* ====== Layout ====== */
@@ -655,4 +656,56 @@
     width: calc(100% - 1.5rem);
     max-width: none;
   }
+}
+
+.st-review{
+  background: linear-gradient(135deg, #fde68a, #facc15);
+  color: #78350f;
+  border: 1px solid #f59e0b;
+  letter-spacing: 0.3px;
+
+  /* 🔥 MAS GLOW */
+  box-shadow: 0 0 0 rgba(250, 204, 21, 0.6);
+
+  /* 🔥 MAS MALAKAS NA ANIMATION */
+  animation: pulseReview 1.2s infinite;
+
+  /* 🔥 konting scale para buhay */
+  transform: scale(1);
+}
+
+@keyframes pulseReview {
+  0% {
+    box-shadow: 0 0 0 0 rgba(250, 204, 21, 0.7);
+    transform: scale(1);
+  }
+  50% {
+    box-shadow: 0 0 0 10px rgba(250, 204, 21, 0);
+    transform: scale(1.05);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(250, 204, 21, 0);
+    transform: scale(1);
+  }
+}
+
+.st-review::after{
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(
+    120deg,
+    transparent,
+    rgba(255,255,255,0.6),
+    transparent
+  );
+  opacity: 0;
+  animation: shimmer 2s infinite;
+}
+
+@keyframes shimmer{
+  0% { opacity: 0; transform: translateX(-100%); }
+  50% { opacity: 1; }
+  100% { opacity: 0; transform: translateX(100%); }
 }

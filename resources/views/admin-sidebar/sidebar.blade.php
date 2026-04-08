@@ -172,7 +172,7 @@
         <li class="nav-item">
             <a href="{{ route('admin.tickets.index') }}"
             class="nav-link {{ request()->routeIs('admin.tickets.*') ? 'active' : '' }}">
-                <i class="fas fa-life-ring"></i>
+                <i class="fas fa-ticket"></i>
                 <span>Tickets</span>
             </a>
         </li>

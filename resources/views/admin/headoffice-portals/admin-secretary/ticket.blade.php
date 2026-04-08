@@ -5,7 +5,7 @@
 <title>Admin Secretary · Support Tickets</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="csrf-token" content="{{ csrf_token() }}">
-
+<meta name="chat-department" content="admin-secretary">
 <link rel="icon" type="image/png" href="{{ asset('img/logo1-removebg-preview.png') }}">
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
@@ -337,6 +337,19 @@ th:nth-child(8), td:nth-child(8){ width: 90px; }  /* Actions */
     transform: translateY(0);
   }
 }
+
+.chat-badge{
+  position:absolute;
+  top:-5px;
+  right:-5px;
+  background:red;
+  color:white;
+  font-size:11px;
+  padding:2px 6px;
+  border-radius:50%;
+  font-weight:bold;
+  display:none;
+}
 </style>
 </head>
 
@@ -386,14 +399,19 @@ th:nth-child(8), td:nth-child(8){ width: 90px; }  /* Actions */
         <div>
           <h5>
             <i class="fa-solid fa-user me-1 text-muted"></i>
-            {{ $user->name ?? 'Unknown User' }}<button
+            {{ $user->name ?? 'Unknown User' }}
+            
+            <button
   type="button"
-  class="btn btn-sm btn-dark ms-2"
+  class="btn btn-sm btn-dark ms-2 position-relative"
   data-user-id="{{ $user->id }}"
   data-user-name="{{ $user->name }}"
   onclick="startAdminChat(this)"
 >
   <i class="fa-solid fa-comments me-1"></i> Chat
+
+  <!-- ✅ ADD THIS -->
+  <span id="chatBadge-{{ $user->id }}" class="chat-badge">0</span>
 </button>
         
           </h5>
@@ -453,6 +471,9 @@ th:nth-child(8), td:nth-child(8){ width: 90px; }  /* Actions */
                     data-priority="{{ ucfirst($ticket->priority) }}"
                     data-status="{{ ucwords(str_replace('_',' ', $ticket->status)) }}"
                     data-date="{{ $ticket->created_at->format('M d, Y • h:i A') }}"
+                    data-pending="{{ $ticket->pending_at ?? $ticket->created_at }}"
+                    data-inprogress="{{ $ticket->in_progress_at }}"
+                    data-resolved="{{ $ticket->resolved_at }}"
                     data-concern="{{ $ticket->description }}"
                     aria-label="View full concern"
                   >
@@ -474,15 +495,22 @@ th:nth-child(8), td:nth-child(8){ width: 90px; }  /* Actions */
                 </span>
               </td>
 
-              <td>
-                <span class="badge
-                  {{ $ticket->status === 'pending' ? 'bg-danger'
-                      : ($ticket->status === 'in_progress' ? 'bg-primary'
-                      : ($ticket->status === 'resolved' ? 'bg-success'
-                      : 'bg-secondary')) }} p-2">
-                  {{ ucwords(str_replace('_',' ', $ticket->status)) }}
-                </span>
-              </td>
+              @php
+  $isReview = $ticket->status === 'in_progress' && $ticket->approval_requested;
+@endphp
+
+<td>
+  <span class="badge
+    {{ $ticket->status === 'pending' ? 'bg-danger'
+        : ($isReview ? 'bg-warning text-dark'
+        : ($ticket->status === 'in_progress' ? 'bg-primary'
+        : ($ticket->status === 'resolved' ? 'bg-success'
+        : 'bg-secondary'))) }} p-2">
+
+    {{ $isReview ? 'Requesting' : ucwords(str_replace('_',' ', $ticket->status)) }}
+
+  </span>
+</td>
 
               <td>
 <div class="small text-muted">
@@ -497,15 +525,19 @@ th:nth-child(8), td:nth-child(8){ width: 90px; }  /* Actions */
               <td class="text-center">
   <div class="action-wrap">
 
-    <!-- ✅ REQUEST APPROVAL (PER TICKET) -->
-    <button
-      type="button"
-      class="btn btn-sm btn-warning request-approval"
-      data-ticket-id="{{ $ticket->id }}"
-      title="Request user confirmation"
-    >
-      <i class="fa-solid fa-paper-plane"></i>
-    </button>
+    @php
+  $isReview = $ticket->status === 'in_progress' && $ticket->approval_requested;
+@endphp
+
+<button
+  type="button"
+  class="btn btn-sm btn-warning request-approval"
+  data-ticket-id="{{ $ticket->id }}"
+  title="Request user confirmation"
+  {{ $isReview ? 'disabled' : '' }}
+>
+  <i class="fa-solid {{ $isReview ? 'fa-hourglass-half' : 'fa-paper-plane' }}"></i>
+</button>
 
     <!-- DELETE -->
     <form method="POST"
@@ -556,6 +588,8 @@ th:nth-child(8), td:nth-child(8){ width: 90px; }  /* Actions */
               <span id="m_user">—</span> • <span id="m_date">—</span>
             </div>
 
+            <div id="m_timeline" class="fw-bold mt-2"></div>
+            
             <div class="mt-2 d-flex gap-2 flex-wrap meta-badges">
               <span class="badge bg-secondary" id="m_branch">—</span>
               <span class="badge bg-secondary" id="m_dept">—</span>
@@ -767,20 +801,40 @@ document.addEventListener('click', (e) => {
 
 // ✅ CHAT button handler (global para gumana sa inline onclick)
 window.startAdminChat = function(btn){
-  const targetUserId = Number(btn?.dataset?.userId || 0);
-  const userName = btn?.dataset?.userName || "User";
 
-  if (!Number.isFinite(targetUserId) || targetUserId <= 0) {
-    alert("Invalid user selected.");
+  const targetUserId = Number(btn.dataset.userId);
+  const userName = btn.dataset.userName || "User";
+
+  if (!targetUserId) {
+    alert("Invalid user");
     return;
   }
 
+  const chatBox = document.getElementById("chatbox");
+
+  // ✅ FORCE OPEN CHATBOX
+  chatBox.style.display = "flex";
+  chatBox.classList.add("open");
+  chatBox.setAttribute("aria-hidden", "false");
+
+  const badge = document.getElementById("chatBadge-" + targetUserId);
+
+if (badge) {
+  badge.style.display = "none";
+  badge.textContent = "0";
+}
+
+  // ✅ START CHAT (ETO NA MAIN ENGINE)
   if (typeof window.startAccountChat === "function") {
     window.startAccountChat(targetUserId, "Chat with " + userName);
   } else {
-    console.log("startAccountChat not found. Make sure chatbot/app.js is loaded.");
-    alert("Chat system not ready. Check if chatbot/app.js is loaded.");
+    console.error("startAccountChat not found");
   }
+
+  setTimeout(() => {
+  refreshAdminBadges();
+}, 500);
+
 };
 
 document.addEventListener('click', async function(e){
@@ -900,26 +954,43 @@ document.getElementById('confirmApprovalBtn').addEventListener('click', async fu
     loader.classList.remove('d-none');
 
     const res = await fetch(`/admin/headoffice-portals/tickets/${selectedTicketId}/request-approval`, {
-      method: "POST",
-      headers:{
-        "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').content,
-        "Content-Type": "application/json",
-        "Accept": "application/json"
-      },
-      body: JSON.stringify({
-        justification: justification
-      })
-    });
+  method: "POST",
+  headers:{
+    "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').content,
+    "Accept": "application/json"
+  },
+  body: new URLSearchParams({
+    justification: justification
+  })
+});
 
     if(res.ok){
 
-      showToast("Approval request sent successfully.");
+  showToast("Request submitted. Waiting for user approval...");
 
-      // close modal
-      bootstrap.Modal.getInstance(document.getElementById('approvalModal')).hide();
+  // 🔥 REALTIME UPDATE (DITO ILAGAY)
+  const btn = document.querySelector(`.request-approval[data-ticket-id="${selectedTicketId}"]`);
 
-      // clear textarea
-      document.getElementById('approvalJustification').value = '';
+  if(btn){
+    const row = btn.closest('tr');
+    const badge = row.querySelector('td:nth-child(6) .badge');
+
+    if(badge){
+      badge.classList.remove('bg-primary', 'bg-danger', 'bg-success');
+      badge.classList.add('bg-warning', 'text-dark');
+      badge.textContent = 'Requesting';
+    }
+
+    // disable para di ma spam
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fa-solid fa-hourglass-half"></i>';
+  }
+
+  // close modal
+  bootstrap.Modal.getInstance(document.getElementById('approvalModal')).hide();
+
+  // clear textarea
+  document.getElementById('approvalJustification').value = '';
 
     }else{
       showToast("Failed to send request.", "error");
@@ -932,10 +1003,114 @@ document.getElementById('confirmApprovalBtn').addEventListener('click', async fu
     loader.classList.add('d-none');
   }
 
+
+
 });
+
+async function refreshAdminBadges(){
+
+  const badges = document.querySelectorAll('[id^="chatBadge-"]');
+  const dept = document.querySelector('meta[name="chat-department"]').content;
+
+  for (const el of badges){
+
+    const userId = el.id.replace('chatBadge-','');
+
+    try{
+      const res = await fetch(`/support/unread-count?user_id=${userId}&department=${dept}`);
+      const data = await res.json();
+
+      console.log("DEPT:", dept, "USER:", userId, "COUNT:", data.count);
+
+      if(data.count > 0){
+        el.style.display = "inline-block";
+        el.textContent = data.count > 9 ? "9+" : data.count;
+      }else{
+        el.style.display = "none";
+        el.textContent = "0";
+      }
+
+    }catch(e){
+      console.log("BADGE ERROR:", e);
+    }
+
+  }
+
+}
+
+// ✅ AUTO RUN
+setInterval(refreshAdminBadges, 1000);
+refreshAdminBadges();
+
+// ===============================
+// ✅ REALTIME TICKET STATUS
+// ===============================
+function refreshTicketStatus(){
+
+  fetch('/admin/tickets/status-list')
+    .then(res => res.json())
+    .then(tickets => {
+
+      tickets.forEach(ticket => {
+
+        const row = document.querySelector(
+          `.request-approval[data-ticket-id="${ticket.id}"]`
+        )?.closest('tr');
+
+        if(!row) return;
+
+        const badge = row.querySelector('td:nth-child(6) .badge');
+        const btn = row.querySelector('.request-approval');
+
+        if(!badge) return;
+
+        // ✅ RESOLVED
+        if(ticket.status === 'resolved'){
+          badge.className = 'badge bg-success p-2';
+          badge.textContent = 'Resolved';
+
+          if(btn){
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fa-solid fa-check"></i>';
+          }
+        }
+
+        // ✅ REQUESTING
+        else if(ticket.status === 'in_progress' && ticket.approval_requested){
+          badge.className = 'badge bg-warning text-dark p-2';
+          badge.textContent = 'Requesting';
+
+          if(btn){
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fa-solid fa-hourglass-half"></i>';
+          }
+        }
+
+        // ✅ BACK TO IN PROGRESS (DECLINED)
+        else if(ticket.status === 'in_progress'){
+          badge.className = 'badge bg-primary p-2';
+          badge.textContent = 'In Progress';
+
+          if(btn){
+            btn.disabled = false;
+            btn.innerHTML = '<i class="fa-solid fa-paper-plane"></i>';
+          }
+        }
+
+      });
+
+    });
+
+}
+
+// 🔁 AUTO RUN
+setInterval(refreshTicketStatus, 2000);
+refreshTicketStatus();
 </script>
 
 
-  @include('partials.chatbot')
+  @include('partials.chatbot', ['isAdmin' => true])
+
+
 </body>
 </html>

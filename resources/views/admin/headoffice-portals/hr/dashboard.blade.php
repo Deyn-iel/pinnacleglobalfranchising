@@ -16,38 +16,40 @@
             'resources/js/chatbot/app.js'])
 <style>
 
+/* ================= ROOT DESIGN ================= */
 :root{
 --sidebar:260px;
 --primary:#0f172a;
---accent:#2563eb;
---bg:#f1f5f9;
+--accent:#3b82f6;
+--bg:#f8fafc;
 --card:#ffffff;
---border:#e2e8f0;
+--border:#eef2f6;
 --text:#0f172a;
 --muted:#64748b;
+--transition:all .25s ease;
 }
 
 body{
 margin:0;
-font-family:system-ui;
+font-family:'Inter', system-ui;
 background:var(--bg);
 color:var(--text);
 overflow-x:hidden;
 }
 
-/* SIDEBAR */
-
+/* ================= SIDEBAR UPGRADE ================= */
 .sidebar{
 position:fixed;
 top:0;
 left:0;
 width:var(--sidebar);
 height:100vh;
-background:#0f172a;
+background:linear-gradient(145deg,#0f172a,#020617);
 color:white;
 padding:22px 18px;
-transition:0.3s;
+transition:.3s;
 z-index:1000;
+box-shadow:8px 0 25px rgba(0,0,0,0.08);
 }
 
 .sidebar h4{
@@ -60,181 +62,156 @@ display:flex;
 align-items:center;
 gap:12px;
 padding:12px 14px;
-border-radius:10px;
+border-radius:14px;
 text-decoration:none;
 color:#cbd5f5;
 font-weight:500;
 margin-bottom:6px;
+transition:var(--transition);
 }
 
 .sidebar a:hover{
-background:#1e293b;
+background:rgba(59,130,246,0.2);
 color:white;
 }
 
 .sidebar a.active{
-background:#2563eb;
+background:#3b82f6;
 color:white;
+box-shadow:0 6px 14px rgba(59,130,246,0.3);
 }
 
-/* MOBILE SIDEBAR */
-
-.sidebar.mobile-hide{
-left:-260px;
-}
-
-.sidebar-overlay{
-position:fixed;
-top:0;
-left:0;
-width:100%;
-height:100%;
-background:rgba(0,0,0,0.4);
-z-index:900;
-display:none;
-}
-
-.sidebar-overlay.active{
-display:block;
-}
-
-/* MAIN */
-
+/* ================= MAIN ================= */
 main{
 margin-left:var(--sidebar);
 padding:28px;
-transition:0.3s;
+transition:.3s;
 }
 
-/* HEADER */
-
+/* ================= HEADER (GLASS STYLE) ================= */
 .page-header{
-background:var(--card);
-border:1px solid var(--border);
-border-radius:12px;
-padding:20px;
-margin-bottom:20px;
+background:rgba(255,255,255,0.85);
+backdrop-filter:blur(8px);
+border:1px solid rgba(255,255,255,0.6);
+border-radius:22px;
+padding:20px 24px;
+margin-bottom:25px;
 display:flex;
 justify-content:space-between;
 align-items:center;
 flex-wrap:wrap;
 gap:10px;
+box-shadow:0 4px 12px rgba(0,0,0,0.03);
 }
 
 .page-header h3{
 margin:0;
-font-weight:700;
+font-weight:800;
 }
 
-/* MOBILE HEADER */
-
+/* ================= MOBILE ================= */
 .mobile-menu{
 display:none;
 font-size:20px;
 background:#fff;
 border:1px solid var(--border);
 padding:8px 12px;
-border-radius:8px;
+border-radius:12px;
 }
 
-/* STATS */
-
+/* ================= STAT CARDS ================= */
 .stat-card{
 background:var(--card);
-border:1px solid var(--border);
-border-radius:12px;
-padding:18px;
+border-radius:22px;
+padding:20px;
 display:flex;
 justify-content:space-between;
 align-items:center;
-transition:.2s;
+transition:.3s;
+border:1px solid var(--border);
+box-shadow:0 2px 6px rgba(0,0,0,0.02);
 }
 
 .stat-card:hover{
-transform:translateY(-2px);
-box-shadow:0 6px 20px rgba(0,0,0,.05);
+box-shadow:0 20px 30px -12px rgba(0,0,0,0.08);
 }
 
 .stat-title{
-font-size:12px;
+font-size:11px;
 text-transform:uppercase;
 color:var(--muted);
+font-weight:600;
 }
 
 .stat-value{
-font-size:24px;
-font-weight:700;
+font-size:28px;
+font-weight:800;
 }
 
 .stat-icon{
-width:40px;
-height:40px;
-border-radius:10px;
-background:#f1f5f9;
+width:50px;
+height:50px;
+border-radius:18px;
+background:#eff6ff;
 display:flex;
 align-items:center;
 justify-content:center;
+font-size:18px;
+color:#3b82f6;
 }
 
-/* PANELS */
-
+/* ================= PANEL ================= */
 .panel{
 background:var(--card);
-border:1px solid var(--border);
-border-radius:12px;
+border-radius:22px;
 padding:20px;
+border:1px solid var(--border);
+box-shadow:0 4px 12px rgba(0,0,0,0.02);
 }
 
 .panel-title{
-font-weight:600;
+font-weight:700;
 margin-bottom:15px;
+border-left:4px solid var(--accent);
+padding-left:10px;
 }
 
-/* TABLE */
-
-table{
-margin:0;
+/* ================= TABLE ================= */
+.table{
+border-collapse:separate;
+border-spacing:0 8px;
 }
 
-thead{
-background:#f8fafc;
-font-size:12px;
+thead th{
+background:#f1f5f9;
+font-size:11px;
 text-transform:uppercase;
 color:var(--muted);
+border:none !important;
+padding:12px;
 }
+
+tbody tr{
+background:white;
+border-radius:14px;
+transition:.2s;
+}
+
 
 tbody td{
-font-size:13px;
+padding:12px;
+border:none !important;
 }
 
-/* LOGOUT */
-
-.logout-btn{
-display:flex;
-align-items:center;
-gap:12px;
-padding:12px 14px;
-border-radius:10px;
-background:none;
-border:none;
-color:#cbd5f5;
-font-weight:500;
-width:100%;
+/* ================= BADGE MODERN ================= */
+.badge{
+border-radius:50px !important;
+padding:6px 12px;
+font-size:11px;
+font-weight:600;
 }
 
-.logout-btn:hover{
-background:#ef4444;
-color:white;
-}
-
-/* TABLE RESPONSIVE */
-
-.table-responsive{
-overflow-x:auto;
-}
-
-/* RESPONSIVE */
-
+/* ================= RESPONSIVE ================= */
 @media (max-width: 991px){
 
 main{
@@ -254,6 +231,25 @@ left:-260px;
 left:0;
 }
 
+}
+
+/* ================= LOGOUT ================= */
+.logout-btn{
+display:flex;
+align-items:center;
+gap:12px;
+padding:12px 14px;
+border-radius:14px;
+background:none;
+border:none;
+color:#cbd5f5;
+width:100%;
+transition:0.2s;
+}
+
+.logout-btn:hover{
+background:#ef4444;
+color:white;
 }
 
 </style>
@@ -321,7 +317,7 @@ left:0;
 <div class="stat-card">
 <div>
 <div class="stat-title">Registrations</div>
-<div class="stat-value">25</div>
+<div class="stat-value">0</div>
 </div>
 <div class="stat-icon">
 <i class="fa-solid fa-user-check"></i>
@@ -389,12 +385,21 @@ $tickets = Ticket::with('user')
 </td>
 
 <td>
+@php
+  $isRequesting = $ticket->status === 'in_progress' && $ticket->approval_requested;
+@endphp
+
 <span class="badge
 {{ $ticket->status === 'pending' ? 'bg-warning text-dark'
+: ($isRequesting ? 'bg-warning text-dark'
 : ($ticket->status === 'in_progress' ? 'bg-primary'
 : ($ticket->status === 'resolved' ? 'bg-success'
-: 'bg-secondary')) }}">
-{{ ucwords(str_replace('_',' ',$ticket->status)) }}
+: 'bg-secondary'))) }}">
+
+{{ $isRequesting 
+    ? 'Requesting' 
+    : ucwords(str_replace('_',' ',$ticket->status)) }}
+
 </span>
 </td>
 
@@ -521,7 +526,7 @@ Latest Registrations
 
 <tbody>
 
-<tr>
+{{-- <tr>
 <td>Anna Garcia</td>
 <td>anna@email.com</td>
 <td><span class="badge bg-warning text-dark">Pending</span></td>
@@ -533,7 +538,7 @@ Latest Registrations
 <td>mark@email.com</td>
 <td><span class="badge bg-success">Approved</span></td>
 <td>Mar 15</td>
-</tr>
+</tr> --}}
 
 </tbody>
 

@@ -125,6 +125,14 @@ class="nav-link {{ request()->routeIs('admin.portals.hr.payslip') ? 'active' : '
 
 </a>
 
+{{-- <a href="{{ route('admin.portals.hr.payslip') }}"
+class="nav-link {{ request()->routeIs('admin.portals.hr.payslip') ? 'active' : '' }}">
+
+<i class="fa-solid fa-bullhorn"></i>
+<span>Announcements</span>
+
+</a> --}}
+
 
 
 <a href="{{ route('admin.portals.hr.registration') }}"
@@ -140,10 +148,10 @@ class="nav-link {{ request()->routeIs('admin.portals.hr.registration') ? 'active
 Notifications
 </a>
 
-<a href="#">
+{{-- <a href="#">
                 <i class="fas fa-calendar-check"></i>
                 <span>Attendance</span>
-            </a>
+            </a> --}}
 
 <a href="{{ route('admin.portals.hr.tickets') }}"
 class="nav-link {{ request()->routeIs('admin.portals.hr.tickets') ? 'active' : '' }}">

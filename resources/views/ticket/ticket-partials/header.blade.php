@@ -1,17 +1,16 @@
-<div class="header d-flex justify-content-between align-items-center">
-    <div class="header-left">
-        <h5 class="mb-0">@yield('page-title')</h5>
-        <small class="header-sub">Support Management</small>
-    </div>
-
-    <div class="header-right d-flex align-items-center gap-3">
-        <div class="dark-toggle" id="darkToggle" title="Toggle dark mode">
-            <i class="bi bi-moon-stars-fill"></i>
-        </div>
-
-        <div class="user-pill">
-            <i class="bi bi-person-circle"></i>
-            <span>{{ Auth::user()->name }}</span>
-        </div>
-    </div>
-</div>
+<header class="top-header">
+            <div style="display: flex; align-items: center; gap: 14px;">
+                <button class="menu-toggle" id="menuToggleBtn" aria-label="Menu">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <div class="page-title">
+                    <h1 id="dynamicHeading">{{ $pageTitle }}</h1>
+                    <p id="dynamicSub">Overview</p>
+                </div>
+            </div>
+            <div class="header-actions">
+                <div class="notification-bell" id="bellIcon">
+                    <i class="far fa-bell"></i>
+                </div>
+            </div>
+        </header>
