@@ -2,7 +2,45 @@
 
 document.addEventListener("DOMContentLoaded", function () {
 
-  const dept = document.querySelector('meta[name="chat-department"]')?.getAttribute("content");
+  function showToast(message){
+  const toast = document.getElementById("chatToast");
+  if(!toast) return;
+
+  toast.textContent = message;
+  toast.classList.add("show");
+
+  setTimeout(() => {
+    toast.classList.remove("show");
+  }, 3000);
+}
+
+  let currentDepartment =
+  document.querySelector('meta[name="chat-department"]')?.getAttribute("content") || "";
+
+
+
+
+  const chatDepartmentSelect = document.getElementById("chatDepartmentSelect");
+
+if (chatDepartmentSelect) {
+  chatDepartmentSelect.value = currentDepartment;
+
+  chatDepartmentSelect.addEventListener("change", function () {
+    currentDepartment = this.value;
+
+    const metaDept = document.querySelector('meta[name="chat-department"]');
+    if (metaDept) {
+      metaDept.setAttribute("content", currentDepartment);
+    }
+
+    // kung bukas yung chat, i-refresh niya yung tamang dept thread
+    if (chatBox && chatBox.classList.contains("open") && currentTargetUserId) {
+      window.startAccountChat(currentTargetUserId, "Support Chat - " + currentDepartment.toUpperCase());
+    }
+  });
+}
+
+
 
 
   // ✅ Prevent double-init (pag na-load app.js twice)
@@ -43,7 +81,7 @@ if (chatButton) {
       return;
     }
 
-    window.startAccountChat(currentTargetUserId, "Support Chat");
+    window.startAccountChat(currentTargetUserId, "Support Chat - " + currentDepartment.toUpperCase());
   });
 
 }
@@ -153,9 +191,9 @@ fileInput.addEventListener("change", function () {
   let lastRenderedRow = null;
 
   let poller = null;
-  let currentTargetUserId = null;
-  let isSending = false;
-  // ✅ presence heartbeat every 10s (works kahit chat sarado)
+let currentTargetUserId = null;
+let isSending = false;
+let activeChatToken = 0;
 let presenceTimer = null;
 
 // ✅ Chat presence badge
@@ -307,9 +345,17 @@ document.addEventListener("visibilitychange", () => {
   }
 
   function setInputState(enabled){
-    ticketInput.disabled = !enabled;
-    ticketSend.disabled = !enabled || (ticketInput.value.trim() === "" && !selectedFile);
+  ticketInput.readOnly = !enabled;
+  ticketInput.disabled = false;
+  ticketSend.disabled = !enabled || (ticketInput.value.trim() === "" && !selectedFile);
+
+  if(!enabled){
+    ticketInput.blur();
+    ticketInput.placeholder = "Click here to type a message...";
+  }else{
+    ticketInput.placeholder = "Type your message...";
   }
+}
 
   ticketInput?.addEventListener("input", () => {
     if(ticketInput.disabled) return;
@@ -332,16 +378,7 @@ function setHeaderPeer(name){
 
 function sameSender(a, b){
   if(!a || !b) return false;
-
-  // mine group
-  if(!!a.mine && !!b.mine) return true;
-
-  // other group: same "name" (pwede mo palitan to user_id if meron kayo)
-  if(!a.mine && !b.mine){
-    return String(a.name || "").trim().toLowerCase() === String(b.name || "").trim().toLowerCase();
-  }
-
-  return false;
+  return Number(a.sender_id) === Number(b.sender_id);
 }
 
 function downgradePrevAvatarToGhost(){
@@ -404,15 +441,14 @@ function renderMessages(messages){
 
 const text = m.text || "";
 
-// ✅ check if may extension
-const hasExtension = text.includes('.') && text.split('.').pop().length <= 5;
+const looksLikeStoredFile = text.startsWith("chat_files/");
+const fileUrl = looksLikeStoredFile ? "/storage/" + text : null;
+const fileName = looksLikeStoredFile ? text.split('/').pop() : "";
+const ext = looksLikeStoredFile && fileName.includes('.')
+  ? fileName.split('.').pop().toLowerCase()
+  : "";
 
-const fileUrl = hasExtension ? "/storage/" + text : null;
-const fileName = hasExtension ? text.split('/').pop() : "";
-const ext = hasExtension ? fileName.split('.').pop().toLowerCase() : "";
-
-// 🔥 IMAGE
-if (hasExtension && (m.type === "image" || ["jpg","jpeg","png","gif","webp"].includes(ext))) {
+if (looksLikeStoredFile && (m.type === "image" || ["jpg","jpeg","png","gif","webp"].includes(ext))) {
 
     const img = document.createElement("img");
     img.src = fileUrl;
@@ -424,7 +460,7 @@ if (hasExtension && (m.type === "image" || ["jpg","jpeg","png","gif","webp"].inc
     body.appendChild(img);
 
 // 🔥 VIDEO
-} else if (hasExtension && ["mp4","webm"].includes(ext)) {
+} else if (looksLikeStoredFile && ["mp4","webm"].includes(ext)) {
 
     const link = document.createElement("a");
     link.href = fileUrl;
@@ -442,7 +478,7 @@ if (hasExtension && (m.type === "image" || ["jpg","jpeg","png","gif","webp"].inc
     body.appendChild(link);
 
 // 🔥 FILES
-} else if (hasExtension) {
+} else if (looksLikeStoredFile) {
 
     let icon = "📄";
     if(ext === "docx") icon = '<i class="fas fa-file-word text-primary"></i>';
@@ -491,7 +527,7 @@ if (hasExtension && (m.type === "image" || ["jpg","jpeg","png","gif","webp"].inc
   ticketBox.scrollTop = ticketBox.scrollHeight;
 }
 
-  async function fetchMessages() {
+  async function fetchMessages(chatToken = activeChatToken) {
   try {
     const url = new URL("/support/chat", window.location.origin);
 url.searchParams.set("after_id", String(lastId || 0));
@@ -499,6 +535,10 @@ url.searchParams.set("after_id", String(lastId || 0));
 // ✅ add target user id (owner ng conversation)
 if (Number.isFinite(currentTargetUserId) && currentTargetUserId > 0) {
   url.searchParams.set("target_user_id", String(currentTargetUserId));
+}
+
+if (currentDepartment) {
+  url.searchParams.set("department", currentDepartment);
 }
 
 // 🔥 ADD THIS (IMPORTANT)
@@ -559,6 +599,7 @@ if (chatBox.classList.contains("open")) {
 
     const data = await res.json();
     console.log("SUPPORT CHAT DATA:", data);
+    if (chatToken !== activeChatToken) return;
 
     if (Array.isArray(data.messages) && data.messages.length > 0) {
 
@@ -573,13 +614,12 @@ if (!isChatOpen) {
   // ❌ wag na mag manual add (nagkaka-duplicate)
   // unreadCount += newFromOthers.length;
 
-  // ✅ always sync from server (REAL COUNT)
-  fetch("/support/unread-count")
-    .then(res => res.json())
-    .then(data => {
-      unreadCount = data.count;
-      updateBadge();
-    });
+fetch(`/support/unread-count?department=${encodeURIComponent(currentDepartment)}`)
+  .then(res => res.json())
+  .then(data => {
+    unreadCount = data.count;
+    updateBadge();
+  });
 
 }
 
@@ -648,7 +688,7 @@ ticketSend.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>';
     const formData = new FormData();
 formData.append("file", selectedFile);
 formData.append("target_user_id", currentTargetUserId);
-formData.append("department", dept); // ✅ ADD THIS
+formData.append("department", currentDepartment);
 
     try{
         const res = await fetch("/support/chat/upload", {
@@ -665,7 +705,8 @@ const text = await res.text();
 console.log("UPLOAD RESPONSE:", text);
 
 if (!res.ok) {
-    alert("Upload failed — check console");
+  alert("Upload failed — check console");
+  return;
 }
 
     } catch(e){
@@ -683,21 +724,29 @@ if (!res.ok) {
 
     // ✅ TEXT MESSAGE
     if (msg) {
-        await fetch(`/support/chat`, {
-            method: "POST",
-            credentials: "same-origin",
-            headers: {
-                "Accept": "application/json",
-                "Content-Type": "application/json",
-                "X-CSRF-TOKEN": token,
-                "X-Requested-With": "XMLHttpRequest"
-            },
-            body: JSON.stringify({
+        const sendRes = await fetch(`/support/chat`, {
+  method: "POST",
+  credentials: "same-origin",
+  headers: {
+    "Accept": "application/json",
+    "Content-Type": "application/json",
+    "X-CSRF-TOKEN": token,
+    "X-Requested-With": "XMLHttpRequest"
+  },
+  body: JSON.stringify({
     message: msg,
     target_user_id: currentTargetUserId,
-    department: dept
-})
-        });
+    department: currentDepartment
+  })
+});
+
+if (!sendRes.ok) {
+  const raw = await sendRes.text();
+  console.log("SEND RESPONSE:", raw);
+
+  showToast("⚠ Select a department from the header first.");
+  return;
+}
 
         ticketInput.value = "";
     }
@@ -763,37 +812,44 @@ ticketSend.innerHTML = ticketSend.dataset.original || '<i class="fa-solid fa-pap
     poller = setInterval(fetchMessages, 2000);
   }
 
-  // ✅ call this from user dashboard + admin dashboard
 window.startAccountChat = function(targetUserId, label = "Support Chat"){
   currentTargetUserId = Number(targetUserId || 0);
+  activeChatToken++;
 
-  // ✅ start watching target user's presence
-refreshChatPresence();
-if(presenceWatchTimer) clearInterval(presenceWatchTimer);
-presenceWatchTimer = setInterval(refreshChatPresence, 5000);
+  if(poller) {
+    clearInterval(poller);
+    poller = null;
+  }
+
+  if(presenceWatchTimer) {
+    clearInterval(presenceWatchTimer);
+    presenceWatchTimer = null;
+  }
+
+  refreshChatPresence();
+  presenceWatchTimer = setInterval(refreshChatPresence, 5000);
 
   lastId = 0;
+  lastRenderedMsg = null;
+  lastRenderedRow = null;
 
-  // open chatbox
   chatBox.style.display = "flex";
   chatBox.setAttribute("aria-hidden", "false");
 
-  // hint title
   if(ticketHint) ticketHint.textContent = label;
-setHeaderPeer(label);
+  setHeaderPeer(label || ("Support Chat - " + currentDepartment.toUpperCase()));
 
-  // enable inputs
-  setInputState(true);
+  setInputState(false);
 
-  // load + poll
   ticketBox.innerHTML = `<div class="ticket-empty"><div class="ticket-empty-title">Loading…</div></div>`;
-  fetchMessages();
 
-  if(poller) clearInterval(poller);
-  poller = setInterval(fetchMessages, 2000);
+  fetchMessages(activeChatToken);
 
-  // focus input
-  ticketInput?.focus();
+  poller = setInterval(() => {
+    fetchMessages(activeChatToken);
+  }, 2000);
+
+  // ticketInput?.focus();
 };
 
 
@@ -868,6 +924,12 @@ setPresenceUI(false); // optional: reset to Offline
     }
   });
 
+  ticketInput?.addEventListener("click", () => {
+  if (ticketInput.readOnly) {
+    setInputState(true);
+  }
+});
+
   // CLEAR (reload)
   clearChat?.addEventListener("click", async () => {
     ticketBox.innerHTML = `<div class="ticket-empty"><div class="ticket-empty-title">Reloading…</div></div>`;
@@ -875,13 +937,11 @@ setPresenceUI(false); // optional: reset to Offline
     await fetchMessages();
   });
 
-  // 🔥 GLOBAL UNREAD POLLER (WORKS KAHIT SARADO CHAT)
 setInterval(() => {
 
-  // wag mag fetch kung open (kasi fetchMessages na bahala)
   if (chatBox.classList.contains("open")) return;
 
-  fetch("/support/unread-count")
+  fetch(`/support/unread-count?department=${encodeURIComponent(currentDepartment)}`)
     .then(res => res.json())
     .then(data => {
       unreadCount = data.count;
@@ -889,6 +949,7 @@ setInterval(() => {
     })
     .catch(() => {});
 
-}, 1000);
+}, 2000);
 
 });
+

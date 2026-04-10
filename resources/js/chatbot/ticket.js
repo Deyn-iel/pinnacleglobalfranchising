@@ -328,7 +328,7 @@ function submitDecline(){
   // 🔥 LOADING STATE
   if(btn){
     btn.disabled = true;
-    btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span> Declining...';
+    btn.innerHTML = '<i class="fa-solid fa-arrows-rotate fa-spin"></i> Declining...';
   }
 
   const form = document.getElementById('statusForm');

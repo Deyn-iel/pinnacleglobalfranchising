@@ -128,6 +128,8 @@ Route::patch('/tickets/{ticket}/status', [TicketController::class, 'updateStatus
     Route::get('/announcements', [AnnouncementController::class, 'index'])
     ->name('tickets.announcements');
 
+    
+
     Route::get('/tickets/create', [TicketController::class, 'create'])
         ->name('tickets.create');
 
@@ -290,6 +292,9 @@ Route::middleware(['auth', 'admin.desktop'])
     ->prefix('admin')
     ->name('admin.')
     ->group(function () {
+
+
+    Route::post('/tickets/{id}/transfer', [TicketController::class, 'transfer']);
 
     Route::get('/tickets/status-list', function () {
     return \App\Models\Ticket::select('id','status','approval_requested')->get();

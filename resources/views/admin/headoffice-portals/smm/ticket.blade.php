@@ -137,15 +137,13 @@
     -webkit-overflow-scrolling: touch;
   }
 
-/* Force same width ng Concern column across rows */
 table{
   table-layout: fixed; 
 }
 
-/* Set fixed width for each column (adjust if you want) */
 th:nth-child(1), td:nth-child(1){ width: 140px; } /* Ticket # */
 th:nth-child(2), td:nth-child(2){ width: 120px; } /* Branch */
-th:nth-child(3), td:nth-child(3){ width: 560px; } 
+th:nth-child(3), td:nth-child(3){ width: 160px; } 
 th:nth-child(4), td:nth-child(4){ width: 120px; } /* Dept */
 th:nth-child(5), td:nth-child(5){ width: 110px; } /* Priority */
 th:nth-child(6), td:nth-child(6){ width: 110px; } /* Status */
@@ -166,22 +164,21 @@ th:nth-child(8), td:nth-child(8){ width: 90px; }  /* Actions */
   .table tbody tr{ transition: background .15s ease; }
   .table-hover tbody tr:hover{ background: rgba(13,110,253,.05); }
 
-  /* ===== CONCERN + VIEW (SIDE BY SIDE) ===== */
-  .concern-cell{
-    min-width: 520px;
-    max-width: 760px;
-  }
+.concern-cell{
+  min-width: 280px;
+  max-width: 320px;
+}
 
   .concern-row{
     display:flex;
-    align-items:center; /* center button vertically */
+    align-items:center; 
     gap: 10px;
-    min-width: 0; /* IMPORTANT for flex shrink */
+    min-width: 0; 
   }
 
 .description-box{
   flex: 1 1 auto;
-  min-width: 0;               /* important for ellipsis inside flex */
+  min-width: 0;               
   width: 100%;
 
   font-size: 14px;
@@ -194,7 +191,6 @@ th:nth-child(8), td:nth-child(8){ width: 90px; }  /* Actions */
   border: 1px solid rgba(15,23,42,.10);
   background: rgba(15,23,42,.03);
 
-  /* ✅ ONE-LINE PREVIEW ONLY */
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -213,7 +209,6 @@ th:nth-child(8), td:nth-child(8){ width: 90px; }  /* Actions */
   }
   .btn-view:hover{ background: rgba(15,23,42,.04); }
 
-  /* Keep clamp consistent (no conflicting overrides) */
   @media (max-width: 1200px){
     .concern-cell{ min-width: 420px; }
     .description-box{ -webkit-line-clamp: 2; }
@@ -225,7 +220,6 @@ th:nth-child(8), td:nth-child(8){ width: 90px; }  /* Actions */
     .description-box{ -webkit-line-clamp: 2; }
   }
 
-  /* ===== ACTIONS ===== */
   .action-wrap{
     display:flex;
     gap: 8px;
@@ -255,7 +249,6 @@ th:nth-child(8), td:nth-child(8){ width: 90px; }  /* Actions */
     backdrop-filter: blur(10px);
   }
 
-  /* ===== MODAL (CENTERED + RESPONSIVE) ===== */
   .modal{ z-index: 2000; }
   .modal-backdrop{ z-index: 1990; }
 
@@ -289,7 +282,6 @@ th:nth-child(8), td:nth-child(8){ width: 90px; }  /* Actions */
     padding: 14px;
     min-height: 120px;
 
-    /* also handle super long no-space words in modal */
     overflow-wrap: anywhere;
     word-break: break-word;
     word-break: break-all;
@@ -355,7 +347,7 @@ th:nth-child(8), td:nth-child(8){ width: 90px; }  /* Actions */
 
 <body>
   <div id="toastContainer" class="toast-container position-fixed top-0 end-0 p-3" style="z-index:9999;"></div>
-<!-- FULLSCREEN LOADING -->
+
 <div id="globalLoader" class="global-loader d-none">
   <div class="loader-content">
     <div class="spinner-border text-light" role="status"></div>
@@ -366,7 +358,6 @@ th:nth-child(8), td:nth-child(8){ width: 90px; }  /* Actions */
 
 <main>
 
-  <!-- HEADER -->
   <div class="page-header">
     <div>
       <h3><i class="fa-solid fa-ticket me-2"></i>Support Tickets</h3>
@@ -409,7 +400,6 @@ th:nth-child(8), td:nth-child(8){ width: 90px; }  /* Actions */
 >
   <i class="fa-solid fa-comments me-1"></i> Chat
 
-  <!-- ✅ ADD THIS -->
   <span id="chatBadge-{{ $user->id }}" class="chat-badge">0</span>
 </button>
           </h5>
@@ -421,7 +411,6 @@ th:nth-child(8), td:nth-child(8){ width: 90px; }  /* Actions */
       {{ $userTickets->count() }} Ticket(s)
     </span>
 
-    <!-- ✅ REALTIME ONLINE/OFFLINE -->
     <span class="badge bg-secondary" id="user-presence-{{ $user->id }}">Offline</span>
   </div>
       </div>
@@ -467,7 +456,11 @@ th:nth-child(8), td:nth-child(8){ width: 90px; }  /* Actions */
                     data-branch="{{ $ticket->subject }}"
                     data-dept="{{ ucfirst($ticket->department) }}"
                     data-priority="{{ ucfirst($ticket->priority) }}"
-                    data-status="{{ ucwords(str_replace('_',' ', $ticket->status)) }}"
+                    {{-- @php
+$isReview = $ticket->status === 'in_progress' && $ticket->approval_requested;
+@endphp
+
+data-status="{{ $isReview ? 'Requesting' : ucwords(str_replace('_',' ', $ticket->status)) }}" --}}
                     data-date="{{ $ticket->created_at->format('M d, Y • h:i A') }}"
                     data-pending="{{ $ticket->pending_at ?? $ticket->created_at }}"
                     data-inprogress="{{ $ticket->in_progress_at }}"
@@ -535,17 +528,41 @@ th:nth-child(8), td:nth-child(8){ width: 90px; }  /* Actions */
   <i class="fa-solid {{ $isReview ? 'fa-hourglass-half' : 'fa-paper-plane' }}"></i>
 </button>
 
-    <!-- DELETE -->
+@php
+  $isLocked = $ticket->status === 'resolved' || $ticket->approval_requested;
+@endphp
+
+<button
+  type="button"
+  class="btn btn-sm btn-info transfer-ticket"
+  data-ticket-id="{{ $ticket->id }}"
+  data-current-dept="{{ $ticket->department }}"
+  title="{{ $isLocked ? 'Transfer disabled' : 'Transfer to another department' }}"
+  {{ $isLocked ? 'disabled' : '' }}
+>
+  <i class="fa-solid {{ $isLocked ? 'fa-lock' : 'fa-share' }}"></i>
+</button>
+
+    {{-- <!-- DELETE -->
     <form method="POST"
           action="{{ route('admin.tickets.destroy', $ticket) }}"
           class="m-0"
           onsubmit="return confirm('Delete this ticket permanently?')">
       @csrf
       @method('DELETE')
-      <button class="btn btn-sm btn-danger" aria-label="Delete">
-        <i class="fa-solid fa-trash"></i>
-      </button>
-    </form>
+      @php
+  $isDeleteAllowed = $ticket->status === 'resolved';
+@endphp
+
+<button 
+  class="btn btn-sm btn-danger"
+  aria-label="Delete"
+  {{ !$isDeleteAllowed ? 'disabled' : '' }}
+  title="{{ !$isDeleteAllowed ? 'Only resolved tickets can be deleted' : 'Delete ticket' }}"
+>
+  <i class="fa-solid {{ $isDeleteAllowed ? 'fa-trash' : 'fa-lock' }}"></i>
+</button>
+    </form> --}}
 
   </div>
 </td>
@@ -566,7 +583,6 @@ th:nth-child(8), td:nth-child(8){ width: 90px; }  /* Actions */
     </div>
   @endforelse
 
-  <!-- MODAL (CENTERED + RESPONSIVE) -->
   <div class="modal fade" id="concernModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg modal-fullscreen-sm-down modal-dialog-scrollable">
       <div class="modal-content">
@@ -577,7 +593,7 @@ th:nth-child(8), td:nth-child(8){ width: 90px; }  /* Actions */
               <h5 class="modal-title mb-0">
                 Ticket <span id="m_ticket">—</span>
               </h5>
-              <span class="badge bg-dark" id="m_status">—</span>
+              {{-- <span class="badge bg-dark" id="m_status">—</span> --}}
             </div>
 
             <div class="text-muted mt-1" style="font-weight:650;">
@@ -610,7 +626,6 @@ th:nth-child(8), td:nth-child(8){ width: 90px; }  /* Actions */
   </div>
 
 </main>
-<!-- ✅ APPROVAL JUSTIFICATION MODAL -->
 <div class="modal fade" id="approvalModal" tabindex="-1">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
@@ -639,469 +654,509 @@ th:nth-child(8), td:nth-child(8){ width: 90px; }  /* Actions */
     </div>
   </div>
 </div>
+
+<div class="modal fade" id="transferModal" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h5 class="modal-title">Transfer Ticket</h5>
+        <button class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+
+      <div class="modal-body">
+
+        <label class="fw-bold mb-2">Select Department</label>
+          <select id="transferDept" class="form-select mb-3" required>
+  <option value="" disabled selected>Choose</option>
+</select>
+
+        <label class="fw-bold mb-2">Reason</label>
+        <textarea id="transferReason" class="form-control"></textarea>
+
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        <button class="btn btn-info" id="confirmTransferBtn">
+  <span class="btn-text">Transfer</span>
+  <span class="btn-loading d-none">
+    <i class="fa-solid fa-arrows-rotate fa-spin"></i> Transferring...
+  </span>
+</button>
+      </div>
+
+    </div>
+  </div>
+</div>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script>
-document.addEventListener('DOMContentLoaded', () => {
+(() => {
+"use strict";
 
-  // ✅ ADMIN: refresh online/offline badges every 5s
-const presenceEls = document.querySelectorAll('[id^="user-presence-"]');
-const userIds = Array.from(presenceEls)
-  .map(el => Number(el.id.replace('user-presence-','')))
-  .filter(n => Number.isFinite(n) && n > 0);
+const $ = (sel, parent=document) => parent.querySelector(sel);
+const $$ = (sel, parent=document) => [...parent.querySelectorAll(sel)];
+
+function safeText(el, text){
+  if(el) el.textContent = text ?? "—";
+}
+
+function safeHTML(el, html){
+  if(el) el.innerHTML = html ?? "";
+}
+
+const CSRF = document.querySelector('meta[name="csrf-token"]')?.content;
+
+let selectedTicketId = null;
+let transferTicketId = null;
+
+document.addEventListener("DOMContentLoaded", () => {
+
+  initPresence();
+  initAlerts();
+  initEventDelegation();
+
+  refreshAdminBadges();
+  refreshTicketStatus();
+
+  setInterval(refreshPresence, 5000);
+  setInterval(refreshAdminBadges, 4000); // 🔥 less spam
+  setInterval(refreshTicketStatus, 4000); // 🔥 less spam
+
+});
+
+function initAlerts(){
+  const alert = $("#successAlert");
+  if (!alert) return;
+
+  setTimeout(() => alert.classList.remove("show"), 3500);
+  setTimeout(() => alert.remove(), 4200);
+}
+
+let userIds = [];
+
+function initPresence(){
+  userIds = $$('[id^="user-presence-"]')
+    .map(el => Number(el.id.replace("user-presence-","")))
+    .filter(n => n > 0);
+
+  refreshPresence();
+}
 
 async function refreshPresence(){
   if(!userIds.length) return;
 
-  const url = new URL("/support/presence/status", window.location.origin);
-  url.searchParams.set("user_ids", userIds.join(","));
-
   try{
-    const res = await fetch(url.toString(), {
-      method: "GET",
-      credentials: "same-origin",
-      headers: { "Accept": "application/json", "X-Requested-With": "XMLHttpRequest" }
-    });
-
+    const url = `/support/presence/status?user_ids=${userIds.join(",")}`;
+    const res = await fetch(url, { headers:{ "Accept":"application/json" }});
     if(!res.ok) return;
+
     const data = await res.json();
 
     (data.users || []).forEach(u => {
       const el = document.getElementById(`user-presence-${u.id}`);
       if(!el) return;
 
-      if(u.online){
-        el.textContent = "Online";
-        el.classList.remove("bg-secondary");
-        el.classList.add("bg-success");
-      }else{
-        el.textContent = "Offline";
-        el.classList.remove("bg-success");
-        el.classList.add("bg-secondary");
-      }
+      el.textContent = u.online ? "Online" : "Offline";
+      el.classList.toggle("bg-success", u.online);
+      el.classList.toggle("bg-secondary", !u.online);
     });
-  }catch(e){}
+
+  }catch(e){
+    console.log("Presence error:", e);
+  }
 }
 
-refreshPresence();
-setInterval(refreshPresence, 5000);
-
-  // success alert fade out
-  const alert = document.getElementById('successAlert');
-  if (alert){
-    setTimeout(() => alert.classList.remove('show'), 3500);
-    setTimeout(() => alert.remove(), 4200);
-  }
-
-  // ✅ VIEW button only opens modal (NO CHAT HERE)
-document.addEventListener('click', (e) => {
-  const btn = e.target.closest('[data-bs-target="#concernModal"]');
-  if(!btn) return;
-
-  document.getElementById('m_ticket').innerText = btn.dataset.ticket || '—';
-  document.getElementById('m_user').innerText   = btn.dataset.user || '—';
-  document.getElementById('m_branch').innerText = 'Branch: ' + (btn.dataset.branch || '—');
-  document.getElementById('m_dept').innerText   = 'Dept: ' + (btn.dataset.dept || '—');
-  document.getElementById('m_priority').innerText = 'Priority: ' + (btn.dataset.priority || '—');
-  document.getElementById('m_date').innerText   = btn.dataset.date || '—';
-
-  const status = btn.dataset.status || '—';
-  const statusEl = document.getElementById('m_status');
-  statusEl.innerText = status;
-
-  statusEl.className = 'badge';
-  const s = (status || '').toLowerCase();
-  if(s.includes('pending')) statusEl.classList.add('bg-danger');
-  else if(s.includes('progress')) statusEl.classList.add('bg-primary');
-  else if(s.includes('resolved')) statusEl.classList.add('bg-success');
-  else statusEl.classList.add('bg-dark');
-
-  document.getElementById('m_concern').innerText = btn.dataset.concern || '—';
-
-  // ===============================
-  // ✅ TIME COMPUTATION (NEW)
-  // ===============================
-
-  function diffTime(start, end){
-    if(!start || !end) return "-";
-
-    const diff = Math.floor((new Date(end) - new Date(start)) / 1000);
-
-    const m = Math.floor(diff / 60);
-    const h = Math.floor(diff / 3600);
-    const d = Math.floor(diff / 86400);
-
-    if(d > 0) return d + " day(s)";
-    if(h > 0) return h + " hour(s)";
-    if(m > 0) return m + " min(s)";
-    return "1 min(s)";
-  }
-
-  const created = btn.dataset.pending;
-  const rawInProgress = btn.dataset.inprogress;
-
-  const inProgress = (
-    rawInProgress &&
-    rawInProgress !== "null" &&
-    rawInProgress !== created
-  ) ? rawInProgress : null;
-
-  const resolved = btn.dataset.resolved && btn.dataset.resolved !== "null"
-    ? btn.dataset.resolved
-    : null;
-
-  const now = new Date();
-
-  // 🟥 PENDING
-  let pendingTime = "-";
-
-  if (created) {
-    if (inProgress && inProgress !== created) {
-      pendingTime = diffTime(created, inProgress);
-    } else {
-      pendingTime = diffTime(created, now);
-    }
-  }
-
-  // 🟦 IN PROGRESS
-  let progressTime = "-";
-
-  if (inProgress) {
-    if (resolved) {
-      progressTime = diffTime(inProgress, resolved);
-    } else {
-      progressTime = diffTime(inProgress, now);
-    }
-  }
-
-  let resolvedTime = resolved ? "Done" : "-";
-
-  // ✅ OUTPUT
-  document.getElementById('m_timeline').innerHTML = `
-    <div class="d-flex align-items-center gap-2 text-danger">
-      <i class="fa-solid fa-hourglass-half"></i>
-      <span>Pending: ${pendingTime}</span>
-    </div>
-
-    <div class="d-flex align-items-center gap-2 text-primary">
-      <i class="fa-solid fa-gear"></i>
-      <span>In Progress: ${progressTime}</span>
-    </div>
-
-    <div class="d-flex align-items-center gap-2 text-success">
-      <i class="fa-solid fa-circle-check"></i>
-      <span>Resolved: ${resolvedTime}</span>
-    </div>
-  `;
-});
-});
-
-// ✅ CHAT button handler (global para gumana sa inline onclick)
 window.startAdminChat = function(btn){
 
-  const targetUserId = Number(btn.dataset.userId);
-  const userName = btn.dataset.userName || "User";
+  const userId = Number(btn?.dataset?.userId);
+  const userName = btn?.dataset?.userName || "User";
 
-  if (!targetUserId) {
+  if(!userId){
     alert("Invalid user");
     return;
   }
 
-  const chatBox = document.getElementById("chatbox");
-
-  // ✅ FORCE OPEN CHATBOX
-  chatBox.style.display = "flex";
-  chatBox.classList.add("open");
-  chatBox.setAttribute("aria-hidden", "false");
-
-  const badge = document.getElementById("chatBadge-" + targetUserId);
-
-if (badge) {
-  badge.style.display = "none";
-  badge.textContent = "0";
-}
-
-  // ✅ START CHAT (ETO NA MAIN ENGINE)
-  if (typeof window.startAccountChat === "function") {
-    window.startAccountChat(targetUserId, "Chat with " + userName);
-  } else {
-    console.error("startAccountChat not found");
+  const chatBox = $("#chatbox");
+  if(chatBox){
+    chatBox.style.display = "flex";
+    chatBox.classList.add("open");
   }
 
-  setTimeout(() => {
-  refreshAdminBadges();
-}, 500);
+  const badge = document.getElementById("chatBadge-" + userId);
+  if(badge){
+    badge.style.display = "none";
+    badge.textContent = "0";
+  }
 
+  if(typeof window.startAccountChat === "function"){
+  const dept = document.querySelector('meta[name="chat-department"]')?.content || "";
+  window.startAccountChat(userId, "Chat with " + userName + (dept ? " - " + dept.toUpperCase() : ""));
+}
+
+  setTimeout(refreshAdminBadges, 500);
 };
 
-document.addEventListener('click', async function(e){
+function handleViewTicket(btn){
 
-  const btn = e.target.closest('.view-ticket');
-  if(!btn) return;
+  safeText($("#m_ticket"), btn.dataset.ticket);
+  safeText($("#m_user"), btn.dataset.user);
+  safeText($("#m_branch"), "Branch: " + (btn.dataset.branch || "—"));
+  safeText($("#m_dept"), "Dept: " + (btn.dataset.dept || "—"));
+  safeText($("#m_priority"), "Priority: " + (btn.dataset.priority || "—"));
+  safeText($("#m_date"), btn.dataset.date);
 
-  const ticketId = btn.dataset.ticketId;
+  const status = btn.dataset.status || "—";
+  const statusEl = $("#m_status");
 
-  try{
+  if(statusEl){
+    statusEl.className = "badge";
+    statusEl.textContent = status;
 
-    const response = await fetch(`/admin/tickets/${ticketId}/view`, {
-      method: "PATCH",
-      headers:{
-        "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').content,
-        "Accept": "application/json",
-        "X-Requested-With": "XMLHttpRequest"
-      }
-    });
+    const s = status.toLowerCase();
 
-    if(response.ok){
-
-      const currentStatus = (btn.dataset.status || '').toLowerCase();
-
-      if(currentStatus.includes('resolved')) return;
-
-      const row = btn.closest('tr');
-      const badge = row.querySelector('td:nth-child(6) .badge');
-
-      if(badge){
-        badge.classList.remove('bg-danger');
-        badge.classList.add('bg-primary');
-        badge.textContent = 'In Progress';
-      }
-
-      btn.dataset.status = "In Progress";
-
-      const modalStatus = document.getElementById('m_status');
-      if(modalStatus){
-        modalStatus.innerText = "In Progress";
-        modalStatus.className = 'badge bg-primary';
-      }
-    }
-
-  }catch(err){
-    console.log(err);
+    if(s.includes("pending")) statusEl.classList.add("bg-danger");
+    else if(s.includes("requesting")) statusEl.classList.add("bg-warning","text-dark");
+    else if(s.includes("progress")) statusEl.classList.add("bg-primary");
+    else if(s.includes("resolved")) statusEl.classList.add("bg-success");
+    else statusEl.classList.add("bg-dark");
   }
 
-});
+  safeText($("#m_concern"), btn.dataset.concern);
 
-let selectedTicketId = null;
+  computeTimeline(btn);
 
-document.addEventListener('click', function(e){
-
-  const btn = e.target.closest('.request-approval');
-  if(!btn) return;
-
-  selectedTicketId = btn.dataset.ticketId;
-
-  // open modal instead of confirm
-  const modal = new bootstrap.Modal(document.getElementById('approvalModal'));
-  modal.show();
-
-});
-
-  
-
-function showToast(message, type = "success"){
-
-  const container = document.getElementById('toastContainer');
-
-  const toast = document.createElement('div');
-
-  const bg = type === "success" ? "bg-success" : "bg-danger";
-  const icon = type === "success"
-    ? "fa-circle-check"
-    : "fa-circle-xmark";
-
-  toast.className = `toast align-items-center text-white ${bg} border-0 show toast-custom mb-2`;
-
-  toast.innerHTML = `
-    <div class="d-flex align-items-center">
-      <div class="toast-body">
-        <i class="fa-solid ${icon} me-2"></i> ${message}
-      </div>
-      <button type="button" class="btn-close btn-close-white me-2 m-auto"></button>
-    </div>
-  `;
-
-  container.appendChild(toast);
-
-  // auto remove
-  setTimeout(() => {
-    toast.classList.remove('show');
-    setTimeout(() => toast.remove(), 300);
-  }, 3000);
-
-  // manual close
-  toast.querySelector('.btn-close').onclick = () => {
-    toast.remove();
-  };
+  // mark viewed
+  fetch(`/admin/tickets/${btn.dataset.ticketId}/view`, {
+    method: "PATCH",
+    headers:{
+      "X-CSRF-TOKEN": CSRF,
+      "Accept": "application/json"
+    }
+  }).catch(()=>{});
 }
 
-document.getElementById('confirmApprovalBtn').addEventListener('click', async function(){
+function diffTime(start, end){
+  if(!start || !end) return "-";
 
-  const justification = document.getElementById('approvalJustification').value.trim();
+  const diff = Math.floor((new Date(end) - new Date(start)) / 1000);
+
+  if(diff <= 0) return "1 min";
+
+  const d = Math.floor(diff / 86400);
+  const h = Math.floor(diff / 3600);
+  const m = Math.floor(diff / 60);
+
+  if(d) return d + " day(s)";
+  if(h) return h + " hour(s)";
+  if(m) return m + " min(s)";
+  return "1 min";
+}
+
+function computeTimeline(btn){
+
+  const created = btn.dataset.pending || btn.dataset.date;
+  const inProgress = btn.dataset.inprogress !== "null" ? btn.dataset.inprogress : null;
+  const resolved = btn.dataset.resolved !== "null" ? btn.dataset.resolved : null;
+
+  const pendingTime = created
+    ? diffTime(created, inProgress || new Date())
+    : "-";
+
+  const progressTime = inProgress
+    ? diffTime(inProgress, resolved || new Date())
+    : "-";
+
+  const resolvedTime = resolved ? "Done" : "-";
+
+  safeHTML($("#m_timeline"), `
+    <div class="text-danger">Pending: ${pendingTime}</div>
+    <div class="text-primary">In Progress: ${progressTime}</div>
+    <div class="text-success">Resolved: ${resolvedTime}</div>
+  `);
+}
+
+async function handleApproval(){
+
+  const justification = $("#approvalJustification")?.value?.trim();
 
   if(!justification){
-    alert("⚠️ Justification is required.");
+    alert("Justification required");
     return;
   }
 
-  const loader = document.getElementById('globalLoader');
+  const loader = $("#globalLoader");
+
+  const btn = document.querySelector(`.request-approval[data-ticket-id="${selectedTicketId}"]`);
+
+if(btn){
+  btn.disabled = true;
+  btn.innerHTML = `<i class="fa-solid fa-hourglass-half"></i>`;
+}
+
+  try{
+    loader?.classList.remove("d-none");
+
+    const res = await fetch(`/admin/headoffice-portals/tickets/${selectedTicketId}/request-approval`, {
+      method: "POST",
+      headers:{
+        "X-CSRF-TOKEN": CSRF,
+        "Accept": "application/json"
+      },
+      body: new URLSearchParams({ justification })
+    });
+
+    if(!res.ok) throw new Error();
+
+    showToast('<i class="fa-solid fa-circle-check me-2"></i>Request submitted');
+
+    bootstrap.Modal.getInstance($("#approvalModal"))?.hide();
+
+  }catch{
+    showToast("Failed", "error");
+  }finally{
+    loader?.classList.add("d-none");
+  }
+}
+
+async function handleTransfer(){
+
+  const dept = $("#transferDept")?.value;
+  const reason = $("#transferReason")?.value;
+
+  if(!dept){
+    showToast("Please select a department", "error");
+    $("#transferDept").classList.add("is-invalid");
+    return;
+  }else{
+    $("#transferDept").classList.remove("is-invalid");
+  }
+
+  const btn = $("#confirmTransferBtn");
+  const text = btn.querySelector(".btn-text");
+  const loading = btn.querySelector(".btn-loading");
 
   try{
 
-    loader.classList.remove('d-none');
-
-    const res = await fetch(`/admin/headoffice-portals/tickets/${selectedTicketId}/request-approval`, {
-  method: "POST",
-  headers:{
-    "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').content,
-    "Accept": "application/json"
-  },
-  body: new URLSearchParams({
-    justification: justification
-  })
-});
-
-    if(res.ok){
-
-  showToast("Request submitted. Waiting for user approval...");
-
-  // 🔥 REALTIME UPDATE (DITO ILAGAY)
-  const btn = document.querySelector(`.request-approval[data-ticket-id="${selectedTicketId}"]`);
-
-  if(btn){
-    const row = btn.closest('tr');
-    const badge = row.querySelector('td:nth-child(6) .badge');
-
-    if(badge){
-      badge.classList.remove('bg-primary', 'bg-danger', 'bg-success');
-      badge.classList.add('bg-warning', 'text-dark');
-      badge.textContent = 'Requesting';
-    }
-
-    // disable para di ma spam
     btn.disabled = true;
-    btn.innerHTML = '<i class="fa-solid fa-hourglass-half"></i>';
+    text.classList.add("d-none");
+    loading.classList.remove("d-none");
+
+    const res = await fetch(`/admin/tickets/${transferTicketId}/transfer`, {
+      method: "POST",
+      headers:{
+        "X-CSRF-TOKEN": CSRF,
+        "Accept": "application/json"
+      },
+      body: new URLSearchParams({ department: dept, reason })
+    });
+
+    if(!res.ok) throw new Error();
+
+    showToast("Transferred successfully");
+
+    setTimeout(() => location.reload(), 800);
+
+  }catch{
+
+    showToast("Transfer failed", "error");
+
+    btn.disabled = false;
+    text.classList.remove("d-none");
+    loading.classList.add("d-none");
+
   }
 
-  // close modal
-  bootstrap.Modal.getInstance(document.getElementById('approvalModal')).hide();
-
-  // clear textarea
-  document.getElementById('approvalJustification').value = '';
-
-    }else{
-      showToast("Failed to send request.", "error");
-    }
-
-  }catch(err){
-    console.log(err);
-    showToast("Network error.", "error");
-  }finally{
-    loader.classList.add('d-none');
-  }
-
-
-
-});
+}
 
 async function refreshAdminBadges(){
 
-  const badges = document.querySelectorAll('[id^="chatBadge-"]');
-  const dept = document.querySelector('meta[name="chat-department"]').content;
+  const dept = document.querySelector('meta[name="chat-department"]')?.content;
 
-  for (const el of badges){
+  for(const el of $$('[id^="chatBadge-"]')){
 
-    const userId = el.id.replace('chatBadge-','');
+    const userId = el.id.replace("chatBadge-","");
 
     try{
       const res = await fetch(`/support/unread-count?user_id=${userId}&department=${dept}`);
       const data = await res.json();
-
-      console.log("DEPT:", dept, "USER:", userId, "COUNT:", data.count);
 
       if(data.count > 0){
         el.style.display = "inline-block";
         el.textContent = data.count > 9 ? "9+" : data.count;
       }else{
         el.style.display = "none";
-        el.textContent = "0";
       }
 
-    }catch(e){
-      console.log("BADGE ERROR:", e);
-    }
+    }catch{}
+  }
+}
 
+async function refreshTicketStatus(){
+
+  try{
+    const res = await fetch('/admin/tickets/status-list');
+    const tickets = await res.json();
+
+    tickets.forEach(ticket => {
+
+      const row = document.querySelector(`.request-approval[data-ticket-id="${ticket.id}"]`)?.closest("tr");
+      if(!row) return;
+
+      const badge = row.querySelector('td:nth-child(6) .badge');
+
+      if(!badge) return;
+
+      const approvalBtn = row.querySelector('.request-approval');
+      const transferBtn = row.querySelector('.transfer-ticket');
+      const deleteBtn = row.querySelector('.btn-danger');
+
+// STATUS
+if(ticket.status === "pending"){
+  badge.className = "badge bg-danger p-2";
+  badge.textContent = "Pending";
+}
+else if(ticket.approval_requested){
+  badge.className = "badge bg-warning text-dark p-2";
+  badge.textContent = "Requesting";
+}
+else if(ticket.status === "in_progress"){
+  badge.className = "badge bg-primary p-2";
+  badge.textContent = "In Progress";
+}
+else if(ticket.status === "resolved"){
+  badge.className = "badge bg-success p-2";
+  badge.textContent = "Resolved";
+}
+
+if(approvalBtn){
+
+  if(ticket.approval_requested){
+    approvalBtn.disabled = true;
+    approvalBtn.innerHTML = `<i class="fa-solid fa-hourglass-half"></i>`;
+  }
+
+  else if(ticket.status === "pending"){
+  approvalBtn.disabled = true;
+  approvalBtn.innerHTML = `<i class="fa-solid fa-paper-plane"></i>`;
+}
+  else if(ticket.status === "in_progress"){
+    approvalBtn.disabled = false;
+    approvalBtn.innerHTML = `<i class="fa-solid fa-paper-plane"></i>`;
+  }
+
+  else if(ticket.status === "resolved"){
+    approvalBtn.disabled = true;
+    approvalBtn.innerHTML = `<i class="fa-solid fa-check"></i>`;
   }
 
 }
 
-// ✅ AUTO RUN
-setInterval(refreshAdminBadges, 1000);
-refreshAdminBadges();
+if(transferBtn){
 
-// ===============================
-// ✅ REALTIME TICKET STATUS
-// ===============================
-function refreshTicketStatus(){
-
-  fetch('/admin/tickets/status-list')
-    .then(res => res.json())
-    .then(tickets => {
-
-      tickets.forEach(ticket => {
-
-        const row = document.querySelector(
-          `.request-approval[data-ticket-id="${ticket.id}"]`
-        )?.closest('tr');
-
-        if(!row) return;
-
-        const badge = row.querySelector('td:nth-child(6) .badge');
-        const btn = row.querySelector('.request-approval');
-
-        if(!badge) return;
-
-        // ✅ RESOLVED
-        if(ticket.status === 'resolved'){
-          badge.className = 'badge bg-success p-2';
-          badge.textContent = 'Resolved';
-
-          if(btn){
-            btn.disabled = true;
-            btn.innerHTML = '<i class="fa-solid fa-check"></i>';
-          }
-        }
-
-        // ✅ REQUESTING
-        else if(ticket.status === 'in_progress' && ticket.approval_requested){
-          badge.className = 'badge bg-warning text-dark p-2';
-          badge.textContent = 'Requesting';
-
-          if(btn){
-            btn.disabled = true;
-            btn.innerHTML = '<i class="fa-solid fa-hourglass-half"></i>';
-          }
-        }
-
-        // ✅ BACK TO IN PROGRESS (DECLINED)
-        else if(ticket.status === 'in_progress'){
-          badge.className = 'badge bg-primary p-2';
-          badge.textContent = 'In Progress';
-
-          if(btn){
-            btn.disabled = false;
-            btn.innerHTML = '<i class="fa-solid fa-paper-plane"></i>';
-          }
-        }
-
-      });
-
-    });
+  if(ticket.status === "resolved" || ticket.approval_requested){
+    transferBtn.disabled = true;
+    transferBtn.innerHTML = `<i class="fa-solid fa-lock"></i>`;
+  }else{
+    transferBtn.disabled = false;
+    transferBtn.innerHTML = `<i class="fa-solid fa-share"></i>`;
+  }
 
 }
 
-// 🔁 AUTO RUN
-setInterval(refreshTicketStatus, 2000);
-refreshTicketStatus();
+if(deleteBtn){
+
+  if(ticket.status === "resolved"){
+    deleteBtn.disabled = false;
+    deleteBtn.innerHTML = `<i class="fa-solid fa-trash"></i>`;
+    deleteBtn.title = "Delete ticket";
+  }else{
+    deleteBtn.disabled = true;
+    deleteBtn.innerHTML = `<i class="fa-solid fa-lock"></i>`;
+    deleteBtn.title = "Only resolved tickets can be deleted";
+  }
+
+}
+
+    });
+
+  }catch(e){
+    console.log("Status error:", e);
+  }
+}
+
+function showToast(msg, type="success"){
+
+  const container = $("#toastContainer");
+  if(!container) return;
+
+  const toast = document.createElement("div");
+
+  toast.className = `toast show text-white ${type==="success"?"bg-success":"bg-danger"} mb-2`;
+  toast.innerHTML = `<div class="toast-body">${msg}</div>`;
+
+  container.appendChild(toast);
+
+  setTimeout(()=>toast.remove(), 3000);
+}
+
+function initEventDelegation(){
+
+  document.addEventListener("click", e => {
+
+    const view = e.target.closest(".view-ticket");
+    if(view) return handleViewTicket(view);
+
+    const approval = e.target.closest(".request-approval");
+    if(approval){
+      selectedTicketId = approval.dataset.ticketId;
+      new bootstrap.Modal($("#approvalModal")).show();
+    }
+
+    const transfer = e.target.closest(".transfer-ticket");
+if(transfer){
+
+  transferTicketId = transfer.dataset.ticketId;
+
+  const currentDept = transfer.dataset.currentDept;
+
+  const select = document.getElementById("transferDept");
+
+  // 🔥 reset options
+  const allDepts = {
+    it: "IT",
+    hr: "HR",
+    smm: "SMM",
+    "admin-secretary": "Admin Secretary",
+    od: "OD",
+    om: "OM"
+  };
+
+  select.innerHTML = `<option value="" disabled selected>Choose</option>`;
+
+Object.entries(allDepts).forEach(([key, label]) => {
+
+  if(key === currentDept){
+    // 🔥 current department (disabled)
+    select.innerHTML += `<option value="${key}" disabled>${label} (Current)</option>`;
+  } else {
+    // normal options
+    select.innerHTML += `<option value="${key}">${label}</option>`;
+  }
+
+});
+
+  new bootstrap.Modal($("#transferModal")).show();
+}
+
+  });
+
+  $("#confirmApprovalBtn")?.addEventListener("click", handleApproval);
+  $("#confirmTransferBtn")?.addEventListener("click", handleTransfer);
+
+}
+
+})();
 </script>
 
 

@@ -145,7 +145,7 @@ table{
 /* Set fixed width for each column (adjust if you want) */
 th:nth-child(1), td:nth-child(1){ width: 140px; } /* Ticket # */
 th:nth-child(2), td:nth-child(2){ width: 120px; } /* Branch */
-th:nth-child(3), td:nth-child(3){ width: 560px; } 
+th:nth-child(3), td:nth-child(3){ width: 260px; } 
 th:nth-child(4), td:nth-child(4){ width: 120px; } /* Dept */
 th:nth-child(5), td:nth-child(5){ width: 110px; } /* Priority */
 th:nth-child(6), td:nth-child(6){ width: 110px; } /* Status */
@@ -164,12 +164,11 @@ th:nth-child(8), td:nth-child(8){ width: 90px; }  /* Actions */
   }
 
   .table tbody tr{ transition: background .15s ease; }
-  .table-hover tbody tr:hover{ background: rgba(13,110,253,.05); }
 
   /* ===== CONCERN + VIEW (SIDE BY SIDE) ===== */
   .concern-cell{
-    min-width: 520px;
-    max-width: 760px;
+    min-width: 220px;
+    max-width: 360px;
   }
 
   .concern-row{

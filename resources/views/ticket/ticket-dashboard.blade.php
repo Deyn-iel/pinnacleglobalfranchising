@@ -7,6 +7,7 @@
   <meta name="csrf-token" content="{{ csrf_token() }}">
   <meta name="chat-target-user-id" content="{{ Auth::id() }}">
   <meta name="base-url" content="{{ url('/') }}">
+<meta name="chat-department" content="">
 
   <link rel="icon" type="image/png" href="{{ asset('img/logo1-removebg-preview.png') }}">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -24,7 +25,7 @@
 </head>
 
 <body>
-
+<div id="chatToast" class="chat-toast"></div>
 <header class="app-header">
   <div class="app-header-inner">
     <div class="brand">
@@ -36,7 +37,7 @@
     </div>
 
     <div class="top-actions">
-      @php
+      {{-- @php
         $initials = collect(explode(' ', trim(Auth::user()->name)))
           ->filter()
           ->map(fn($p)=> strtoupper(mb_substr($p,0,1)))
@@ -47,8 +48,21 @@
       <div class="user-pill">
         <span class="avatar">{{ $initials }}</span>
       </div>
-    </div>
-    
+    </div> --}}
+
+    <div class="chat-dept-wrapper">
+  <div class="chat-dept-container">
+    <select id="chatDepartmentSelect" class="chat-dept-select">
+      <option value="" disabled selected>Chat Department</option>
+      <option value="it">IT</option>
+      <option value="hr">HR</option>
+      <option value="smm">SMM</option>
+      <option value="admin-secretary">Admin Secretary</option>
+      <option value="od">OD</option>
+      <option value="om">OM</option>
+    </select>
+  </div>
+</div>
 
       <button class="btn btn-black" data-bs-toggle="modal" data-bs-target="#submitTicketModal">
         <i class="bi bi-plus-circle me-1"></i> New Ticket
@@ -415,7 +429,7 @@ document.getElementById('ticketForm').addEventListener('submit', function () {
 
     btn.disabled = true;
 
-    btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span> Submitting...';
+    btn.innerHTML = '<i class="fa-solid fa-arrows-rotate fa-spin"></i> Submitting...';
 });
 </script>
 <script>
@@ -440,5 +454,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
 });
 </script>
+
 </body>
 </html>

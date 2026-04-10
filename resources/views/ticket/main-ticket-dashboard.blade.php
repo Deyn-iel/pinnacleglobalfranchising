@@ -16,17 +16,15 @@
 
     @include('ticket.ticket-partials.sidebar')
 <div class="app-wrapper">
-    <!-- overlay for mobile -->
     <div class="sidebar-overlay" id="sidebarOverlay"></div>
     
     
 
-    <!-- MAIN CONTENT -->
     <main class="main-content" id="mainContent">
         @include('ticket.ticket-partials.header')
 
         <div class="dashboard-content" id="mainContentArea">
-            <!-- DASHBOARD PANEL -->
+
             <div id="dashboardPanel">
                 <div class="stats-grid">
                     <div class="stat-card">
@@ -169,21 +167,18 @@ if (closeBtn) {
     closeBtn.addEventListener("click", closeSidebar);
 }
 
-// OPEN SIDEBAR
 function openSidebar() {
     sidebar.classList.remove("mobile-closed");
     overlay.classList.add("active");
     document.body.style.overflow = "hidden";
 }
 
-// CLOSE SIDEBAR
 function closeSidebar() {
     sidebar.classList.add("mobile-closed");
     overlay.classList.remove("active");
     document.body.style.overflow = "";
 }
 
-// TOGGLE SIDEBAR
 function toggleSidebar() {
     if (sidebar.classList.contains("mobile-closed")) {
         openSidebar();
@@ -192,7 +187,6 @@ function toggleSidebar() {
     }
 }
 
-// AUTO HANDLE SCREEN SIZE
 function handleResize() {
     if (window.innerWidth > 967) {
         sidebar.classList.remove("mobile-closed");
@@ -205,7 +199,6 @@ function handleResize() {
     }
 }
 
-// EVENTS
 document.addEventListener("DOMContentLoaded", () => {
 
     handleResize();

@@ -12,6 +12,7 @@ use App\Mail\TicketSubmittedMail;
 
 use App\Mail\TicketApprovalRequestMail;
 
+use App\Mail\TicketTransferredMail;
 class TicketController extends Controller
 {
     public function index()
@@ -298,6 +299,67 @@ public function approve($id)
 
         Log::error('Resolved email failed: ' . $e->getMessage());
 
+    }
+
+    return response()->json(['success' => true]);
+}
+
+
+public function transfer(Request $request, $id)
+{
+    $request->validate([
+        'department' => 'required|string',
+        'reason' => 'nullable|string'
+    ]);
+
+    $ticket = Ticket::findOrFail($id);
+
+    $oldDept = $ticket->department;
+
+    // ✅ update department
+    // ✅ update department
+$ticket->department = $request->department;
+
+// ✅ RESET FULL STATE (IMPORTANT)
+$ticket->status = 'pending';
+$ticket->pending_at = now();
+
+$ticket->in_progress_at = null;
+$ticket->resolved_at = null;
+
+$ticket->approval_requested = false;
+$ticket->approval_requested_at = null;
+$ticket->approved_at = null;
+$ticket->approval_decline_reason = null;
+
+// optional (clean reset)
+$ticket->resolution_justification = null;
+
+$ticket->save();
+
+    // ==========================
+    // 🔥 EMAIL SA NEW DEPARTMENT
+    // ==========================
+    $departmentMap = [
+        'it' => env('IT_SUPPORT_EMAIL'),
+        'hr' => env('HR_SUPPORT_EMAIL'),
+        'smm' => env('SMM_SUPPORT_EMAIL'),
+        'finance' => env('FINANCE_SUPPORT_EMAIL'),
+        'admin-secretary' => env('ADMIN_SUPPORT_EMAIL'),
+        'od' => env('OPERATIONS_DIRECTOR_SUPPORT_EMAIL'),
+        'om' => env('OPERATIONS_MANAGER_SUPPORT_EMAIL'),
+    ];
+
+    $newEmail = $departmentMap[$ticket->department] ?? null;
+
+    try {
+        if ($newEmail) {
+            Mail::to($newEmail)->send(
+                new \App\Mail\TicketTransferredMail($ticket, $oldDept, $request->reason)
+            );
+        }
+    } catch (\Throwable $e) {
+        Log::error('Transfer email failed: ' . $e->getMessage());
     }
 
     return response()->json(['success' => true]);

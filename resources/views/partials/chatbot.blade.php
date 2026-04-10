@@ -25,18 +25,18 @@
   </div>
 
   <div class="chat-header-actions">
-  <button id="delete-chat" class="chat-btn ghost" type="button" aria-label="Delete conversation">
+  {{-- <button id="delete-chat" class="chat-btn ghost" type="button" aria-label="Delete conversation">
     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" 
        viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
     <path stroke-linecap="round" stroke-linejoin="round" 
           d="M3 6h18M9 6V4h6v2M6 6l1 14h10l1-14M10 11v6M14 11v6"/>
   </svg>
-  </button>
+  </button> --}}
 
   <button id="close-chat" class="chat-btn ghost" type="button" aria-label="Close chat">✕</button>
 </div>
 </header>
-
+  
   <div id="ticketChatBox" class="ticket-messages">
     <div class="ticket-empty">
       <div class="ticket-empty-title">No messages yet</div>
