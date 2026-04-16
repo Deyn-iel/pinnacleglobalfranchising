@@ -113,8 +113,8 @@ public function myTickets()
         }
     }
 
-    return redirect()->route('tickets.myTickets')
-        ->with('success', 'Ticket submitted successfully.');
+    return redirect()->back()
+    ->with('success', 'Ticket submitted successfully.');
 }
 
 

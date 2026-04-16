@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\FranchiseApplication;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\FranchiseSubmitted;
+use App\Mail\AdminFranchiseNotification;
 
 class FranchiseController extends Controller
 {
@@ -100,6 +103,28 @@ class FranchiseController extends Controller
 
     FranchiseApplication::create($validated);
 
-    return redirect()->back()->with('success', 'Application submitted successfully!');
+// 📩 SEND EMAIL TO USER
+Mail::to($validated['email'])->send(
+    new FranchiseSubmitted($validated)
+);
+
+$mainEmails = explode(',', env('SUPPORT_NOTIFY_EMAILS'));
+
+$opsDirector = env('OPERATIONS_DIRECTOR_SUPPORT_EMAIL');
+$adminSec = env('ADMIN_SUPPORT_EMAIL');
+
+// 🔥 combine all emails (main + ops + admin sec)
+$allEmails = array_merge($mainEmails, [$opsDirector, $adminSec]);
+
+// remove empty values (safety)
+$allEmails = array_filter($allEmails);
+
+Mail::to($allEmails)->send(
+    new AdminFranchiseNotification($validated)
+);
+
+
+return redirect()->back()->with('success', 'Application submitted successfully!');
+
     }
 }

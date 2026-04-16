@@ -29,7 +29,7 @@ class AdminUserController extends Controller
         User::create([
             'name'          => $request->name,
             'email'         => $request->email,
-            'usertype'      => $request->usertype, // ✅ FIXED
+            'usertype'      => $request->usertype,
             'password'      => Hash::make($tempPassword),
             'temp_password' => $tempPassword,
         ]);

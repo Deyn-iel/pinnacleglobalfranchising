@@ -363,6 +363,13 @@ th:nth-child(8), td:nth-child(8){ width: 90px; }  /* Actions */
     <div>
       <h3><i class="fa-solid fa-ticket me-2"></i>Support Tickets</h3>
       <p class="text-muted mb-0">View tickets by account</p>
+      <br>
+      <a href="{{ route('tickets.myTickets', ['from' => 'admin-secretary']) }}"
+   style="text-decoration: none; color: black; font-weight: 700;"
+   class="nav-item {{ request()->routeIs('tickets.myTickets') ? 'active' : '' }}">
+    <i class="fas fa-ticket"></i>
+    <span>LODGE TICKET</span>
+</a>
     </div>
 
     <span class="muted-pill">
@@ -672,24 +679,6 @@ data-status="{{ $isReview ? 'Requesting' : ucwords(str_replace('_',' ', $ticket-
         <label class="fw-bold mb-2">Select Department</label>
         <select id="transferDept" class="form-select mb-3" required>
   <option value="" disabled selected>Choose</option>
-
-  @php
-    $departments = [
-      'it' => 'IT',
-      'hr' => 'HR',
-      'smm' => 'SMM',
-      'admin-secretary' => 'Admin Secretary',
-      'od' => 'OD',
-      'om' => 'OM'
-    ];
-  @endphp
-
-  @foreach($departments as $key => $label)
-    @if($key !== $ticket->department)
-      <option value="{{ $key }}">{{ $label }}</option>
-    @endif
-  @endforeach
-
 </select>
 
         <label class="fw-bold mb-2">Reason</label>

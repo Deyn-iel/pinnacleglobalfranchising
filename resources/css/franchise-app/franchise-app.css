@@ -466,3 +466,14 @@ hr {
 }
 
 
+#submitBtn {
+  position: relative;
+  min-width: 140px;
+}
+
+#submitBtn .btn-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+

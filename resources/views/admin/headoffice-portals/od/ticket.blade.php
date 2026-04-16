@@ -363,6 +363,13 @@ th:nth-child(8), td:nth-child(8){ width: 90px; }  /* Actions */
     <div>
       <h3><i class="fa-solid fa-ticket me-2"></i>Support Tickets</h3>
       <p class="text-muted mb-0">View tickets by account</p>
+      <br>
+      <a href="{{ route('tickets.myTickets', ['from' => 'od']) }}"
+   style="text-decoration: none; color: black; font-weight: 700;"
+   class="nav-item {{ request()->routeIs('tickets.myTickets') ? 'active' : '' }}">
+    <i class="fas fa-ticket"></i>
+    <span>LODGE TICKET</span>
+</a>
     </div>
 
     <span class="muted-pill">

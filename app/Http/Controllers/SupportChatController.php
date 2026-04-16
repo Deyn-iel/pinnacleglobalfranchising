@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Log;
+use App\Models\User;
 
 class SupportChatController extends Controller
 {
@@ -25,91 +26,95 @@ class SupportChatController extends Controller
         return in_array($role, ['admin','admin-secretary','hr','it','support','staff', 'om', 'od','smm']);
     }
 
-    public function fetch(Request $request)
+   public function fetch(Request $request)
 {
     $afterId    = (int) $request->query('after_id', 0);
     $authUser   = Auth::user();
+    $myId       = (int) $authUser->id;
     $department = strtolower(trim((string) $request->query('department', '')));
 
-    if (!$department) {
+    if (!$department || !in_array($department, $this->allowedDepartments(), true)) {
         return response()->json([
             'messages' => [],
             'last_id'  => $afterId
         ]);
     }
 
-    if ($this->isStaff()) {
-        $targetUserId = (int) $request->query('target_user_id', 0);
+    $requestedTargetUserId = (int) $request->query('target_user_id', 0);
+    $deptUserIds = $this->departmentUserIds($department);
 
-        if ($targetUserId <= 0) {
-            return response()->json([
-                'messages' => [],
-                'last_id'  => $afterId
-            ]);
-        }
-
-        // ✅ admin/HO side
-        // pwede mo iwan muna ang fallback for old NULL data
-        $query = SupportMessage::query()
-    ->where('department', $department)
-    ->where(function ($q) use ($authUser, $targetUserId) {
-        $q->where(function ($qq) use ($authUser, $targetUserId) {
-            $qq->where('user_id', $targetUserId)
-               ->where('target_user_id', $authUser->id);
-        })->orWhere(function ($qq) use ($authUser, $targetUserId) {
-            $qq->where('user_id', $authUser->id)
-               ->where('target_user_id', $targetUserId);
-        });
-    });
-
-    } else {
-        $targetUserId = (int) $authUser->id;
-
-        // ✅ user side STRICT per department
-        $query = SupportMessage::query()
-            ->where('department', $department)
-            ->where(function ($q) use ($targetUserId) {
-                $q->where('user_id', $targetUserId)
-                  ->orWhere('target_user_id', $targetUserId);
-            });
+    if ($deptUserIds->isEmpty()) {
+        return response()->json([
+            'messages' => [],
+            'last_id'  => $afterId
+        ]);
     }
 
-    $messages = $query
-        ->when($afterId > 0, fn($qq) => $qq->where('id', '>', $afterId))
-        ->with('user:id,name,usertype')
-        ->orderBy('id')
-        ->limit(200)
-        ->get()
-        ->map(function ($m) {
-    return [
-        'id'        => $m->id,
-        'sender_id' => (int) $m->user_id,
-        'text'      => $m->message,
-        'type'      => $m->type ?? 'text',
-        'name'      => $m->user->name ?? 'Unknown',
-        'role'      => $m->user->usertype ?? 'user',
-        'time'      => optional($m->created_at)->format('M d, Y h:i A') ?? '',
-        'mine'      => (int) $m->user_id === (int) Auth::id(),
-    ];
-});
+    // ✅ CASE A: admin page chatting with selected user
+    if ($this->isStaff() && $requestedTargetUserId > 0 && $requestedTargetUserId !== $myId) {
+        $subjectUserId = $requestedTargetUserId;
 
-    if ($request->query('mark_as_read') == 1) {
-        if ($this->isStaff()) {
-            SupportMessage::where('department', $department)
-    ->where('user_id', $targetUserId)
-    ->where('target_user_id', $authUser->id)
-    ->where('is_read', false)
-    ->update(['is_read' => true]);
+        $query = SupportMessage::query()
+            ->where('department', $department)
+            ->where(function ($q) use ($subjectUserId, $deptUserIds) {
+                $q->where(function ($qq) use ($subjectUserId, $deptUserIds) {
+                    $qq->where('user_id', $subjectUserId)
+                       ->whereIn('target_user_id', $deptUserIds);
+                })->orWhere(function ($qq) use ($subjectUserId, $deptUserIds) {
+                    $qq->where('target_user_id', $subjectUserId)
+                       ->whereIn('user_id', $deptUserIds);
+                });
+            });
 
-        } else {
-            // ✅ user side STRICT per department
+        if ((int) $request->query('mark_as_read') === 1) {
             SupportMessage::where('department', $department)
-                ->where('target_user_id', $authUser->id)
-                ->where('user_id', '!=', $authUser->id)
+                ->where('user_id', $subjectUserId)
+                ->whereIn('target_user_id', $deptUserIds)
+                ->where('is_read', false)
+                ->update(['is_read' => true]);
+        }
+
+    } else {
+        // ✅ CASE B: myTickets / department chat
+        $query = SupportMessage::query()
+            ->where('department', $department)
+            ->where(function ($q) use ($myId, $deptUserIds) {
+                $q->where(function ($qq) use ($myId, $deptUserIds) {
+                    $qq->where('user_id', $myId)
+                       ->whereIn('target_user_id', $deptUserIds);
+                })->orWhere(function ($qq) use ($myId, $deptUserIds) {
+                    $qq->where('target_user_id', $myId)
+                       ->whereIn('user_id', $deptUserIds);
+                });
+            });
+
+        if ((int) $request->query('mark_as_read') === 1) {
+            SupportMessage::where('department', $department)
+                ->where('target_user_id', $myId)
+                ->whereIn('user_id', $deptUserIds)
                 ->where('is_read', false)
                 ->update(['is_read' => true]);
         }
     }
+
+    $messages = $query
+        ->when($afterId > 0, fn ($qq) => $qq->where('id', '>', $afterId))
+        ->with('user:id,name,usertype')
+        ->orderBy('id')
+        ->limit(200)
+        ->get()
+        ->map(function ($m) use ($myId) {
+            return [
+                'id'        => $m->id,
+                'sender_id' => (int) $m->user_id,
+                'text'      => $m->message,
+                'type'      => $m->type ?? 'text',
+                'name'      => $m->user->name ?? 'Unknown',
+                'role'      => $m->user->usertype ?? 'user',
+                'time'      => optional($m->created_at)->format('M d, Y h:i A') ?? '',
+                'mine'      => (int) $m->user_id === $myId,
+            ];
+        });
 
     $lastIdOut = $messages->last()['id'] ?? $afterId;
 
@@ -129,49 +134,33 @@ class SupportChatController extends Controller
 
     $authUser = Auth::user();
 
+$department = strtolower(trim((string) $request->input('department')));
+
+if (!$department) {
+    return response()->json([
+        'error' => 'Department is required'
+    ], 422);
+}
+
+$requestedTargetUserId = (int) $request->input('target_user_id', 0);
+
 if ($this->isStaff()) {
-
-    $department = strtolower(trim((string) $request->input('department')));
-
-    if (!$department) {
-        return response()->json([
-            'error' => 'Department is required'
-        ], 422);
+    // ✅ admin ticket pages: preserve clicked user
+    if ($requestedTargetUserId > 0 && $requestedTargetUserId !== (int) $authUser->id) {
+        $targetUserId = $requestedTargetUserId;
+    } else {
+        // ✅ dept-to-dept chat fallback
+        $targetUserId = (int) ($this->resolveDepartmentTarget($department, (int) $authUser->id) ?? 0);
     }
-
-    $targetUserId = (int) $request->input('target_user_id');
-
-    if (!$targetUserId || $targetUserId === $authUser->id) {
-        return response()->json([
-            'error' => 'Invalid target user'
-        ], 422);
-    }
-
 } else {
+    // ✅ normal user always chats with selected department
+    $targetUserId = (int) ($this->resolveDepartmentTarget($department, (int) $authUser->id) ?? 0);
+}
 
-    $department = strtolower(trim((string) $request->input('department')));
-
-    if (!$department) {
-        return response()->json([
-            'error' => 'Department is required'
-        ], 422);
-    }
-
-    $admin = \App\Models\User::where('usertype', $department)->first();
-
-    if (!$admin) {
-        $admin = \App\Models\User::whereIn('usertype', [
-            'admin','admin-secretary','support','staff'
-        ])->first();
-    }
-
-    $targetUserId = $admin?->id;
-
-    if (!$targetUserId) {
-        return response()->json([
-            'error' => 'No department admin found'
-        ], 422);
-    }
+if ($targetUserId <= 0) {
+    return response()->json([
+        'error' => 'No valid target found'
+    ], 422);
 }
 
     // ✅ SAVE MESSAGE
@@ -365,55 +354,33 @@ public function upload(Request $request)
 
     $authUser = Auth::user();
 
-    if ($this->isStaff()) {
-
     $department = strtolower(trim((string) $request->input('department')));
 
-    if (!$department) {
-        return response()->json([
-            'error' => 'Department is required'
-        ], 422);
+if (!$department) {
+    return response()->json([
+        'error' => 'Department is required'
+    ], 422);
+}
+
+$requestedTargetUserId = (int) $request->input('target_user_id', 0);
+
+if ($this->isStaff()) {
+    // ✅ admin ticket pages: preserve clicked user
+    if ($requestedTargetUserId > 0 && $requestedTargetUserId !== (int) $authUser->id) {
+        $targetUserId = $requestedTargetUserId;
+    } else {
+        // ✅ dept-to-dept fallback
+        $targetUserId = (int) ($this->resolveDepartmentTarget($department, (int) $authUser->id) ?? 0);
     }
-
-    $targetUserId = (int) $request->input('target_user_id');
-
-    if (!$targetUserId || $targetUserId === $authUser->id) {
-        return response()->json([
-            'error' => 'Invalid target user'
-        ], 422);
-    }
-
 } else {
+    $targetUserId = (int) ($this->resolveDepartmentTarget($department, (int) $authUser->id) ?? 0);
+}
 
-        // ✅ USER side:
-        // kukunin ang napiling department
-        $department = strtolower(trim((string) $request->input('department')));
-
-        if (!$department) {
-            return response()->json([
-                'error' => 'Department is required'
-            ], 422);
-        }
-
-        $admin = \App\Models\User::where('usertype', $department)->first();
-
-        if (!$admin) {
-            $admin = \App\Models\User::whereIn('usertype', [
-                'admin',
-                'admin-secretary',
-                'support',
-                'staff'
-            ])->first();
-        }
-
-        $targetUserId = $admin?->id;
-
-        if (!$targetUserId) {
-            return response()->json([
-                'error' => 'No department admin found'
-            ], 422);
-        }
-    }
+if ($targetUserId <= 0) {
+    return response()->json([
+        'error' => 'No valid target found'
+    ], 422);
+}
 
     if (!$request->hasFile('file')) {
         return response()->json([
@@ -474,19 +441,28 @@ public function unreadCount(Request $request)
 
     if ($isStaff) {
 
-        $targetUserId = (int) $request->query('user_id');
+    $targetUserId = (int) $request->query('user_id');
 
-        if ($targetUserId > 0 && $department) {
-            $count = SupportMessage::where('department', $department)
-                ->where('user_id', $targetUserId)
-                ->where('target_user_id', $user->id)
-                ->where('is_read', false)
-                ->count();
-        } else {
-            $count = 0;
-        }
+    if ($targetUserId > 0 && $department) {
+    $deptUserIds = $this->departmentUserIds($department);
 
+    $count = SupportMessage::where('department', $department)
+        ->where('user_id', $targetUserId)
+        ->whereIn('target_user_id', $deptUserIds)
+        ->where('is_read', false)
+        ->count();
+} elseif ($department) {
+        // ✅ dept-to-dept unread count on ticket dashboard
+        $count = SupportMessage::where('department', $department)
+            ->where('target_user_id', $user->id)
+            ->where('user_id', '!=', $user->id)
+            ->where('is_read', false)
+            ->count();
     } else {
+        $count = 0;
+    }
+
+} else {
 
         $query = SupportMessage::where('target_user_id', $user->id)
             ->where('user_id', '!=', $user->id)
@@ -505,6 +481,58 @@ public function unreadCount(Request $request)
 private function allowedDepartments(): array
 {
     return ['it', 'hr', 'smm', 'admin-secretary', 'od', 'om'];
+}
+
+private function resolveDepartmentTarget(string $department, int $excludeUserId = 0): ?int
+{
+    $department = strtolower(trim($department));
+
+    if (!in_array($department, $this->allowedDepartments(), true)) {
+        return null;
+    }
+
+    $directId = User::query()
+        ->whereRaw('LOWER(usertype) = ?', [$department])
+        ->when($excludeUserId > 0, fn ($q) => $q->where('id', '!=', $excludeUserId))
+        ->orderBy('id')
+        ->value('id');
+
+    if ($directId) {
+        return (int) $directId;
+    }
+
+    $fallbackId = User::query()
+        ->whereIn('usertype', ['admin', 'admin-secretary', 'support', 'staff'])
+        ->when($excludeUserId > 0, fn ($q) => $q->where('id', '!=', $excludeUserId))
+        ->orderBy('id')
+        ->value('id');
+
+    return $fallbackId ? (int) $fallbackId : null;
+}
+
+private function departmentUserIds(string $department, int $excludeUserId = 0)
+{
+    $department = strtolower(trim($department));
+
+    if (!in_array($department, $this->allowedDepartments(), true)) {
+        return collect();
+    }
+
+    $ids = User::query()
+        ->whereRaw('LOWER(usertype) = ?', [$department])
+        ->when($excludeUserId > 0, fn ($q) => $q->where('id', '!=', $excludeUserId))
+        ->pluck('id')
+        ->map(fn ($id) => (int) $id)
+        ->values();
+
+    if ($ids->isEmpty()) {
+        $fallbackId = $this->resolveDepartmentTarget($department, $excludeUserId);
+        if ($fallbackId) {
+            $ids = collect([(int) $fallbackId]);
+        }
+    }
+
+    return $ids;
 }
 
 }

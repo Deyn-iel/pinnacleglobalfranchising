@@ -5,7 +5,7 @@
 <title>Admin · Support Tickets</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="csrf-token" content="{{ csrf_token() }}">
-
+<meta name="chat-department" content="">
 <link rel="icon" type="image/png" href="{{ asset('img/logo1-removebg-preview.png') }}">
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
@@ -298,6 +298,50 @@ th:nth-child(8), td:nth-child(8){ width: 90px; }  /* Actions */
     .modal-dialog{ margin: 0; }
     .modal-content{ border-radius: 0 !important; }
   }
+
+  #chatbox.chat-readonly #ticketChatInput,
+#chatbox.chat-readonly #ticketChatSend,
+#chatbox.chat-readonly #clear-chat,
+#chatbox.chat-readonly #delete-chat,
+#chatbox.chat-readonly #fileInput,
+#chatbox.chat-readonly #filePreviewContainer,
+#chatbox.chat-readonly #uploadStatus{
+  display: none !important;
+}
+
+#chatbox.chat-readonly #ticketChatHint::after{
+  content: " • View only";
+  font-weight: 700;
+  color: #64748b;
+}
+
+.user-info-block{
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+
+.user-name-row{
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.chat-dept-actions{
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.dept-chat-btn{
+  padding: 6px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  line-height: 1.1;
+}
 </style>
 </head>
 
@@ -338,21 +382,40 @@ th:nth-child(8), td:nth-child(8){ width: 90px; }  /* Actions */
 
       <!-- USER HEADER -->
       <div class="user-header">
-        <div>
-          <h5>
-            <i class="fa-solid fa-user me-1 text-muted"></i>
-            {{ $user->name ?? 'Unknown User' }}<button
-  type="button"
-  class="btn btn-sm btn-dark ms-2"
-  data-user-id="{{ $user->id }}"
-  data-user-name="{{ $user->name }}"
-  onclick="startAdminChat(this)"
->
-  <i class="fa-solid fa-comments me-1"></i> Chat
-</button>
-          </h5>
-          <small>{{ $user->email ?? 'No email' }}</small>
-        </div>
+        @php
+  $chatDepartments = $userTickets->pluck('department')
+      ->filter()
+      ->map(fn($d) => strtolower(trim($d)))
+      ->unique()
+      ->values();
+@endphp
+
+<div class="user-info-block">
+  <div class="user-name-row">
+    <h5 class="mb-0">
+      <i class="fa-solid fa-user me-1 text-muted"></i>
+      {{ $user->name ?? 'Unknown User' }}
+    </h5>
+
+    <div class="chat-dept-actions">
+      @foreach($chatDepartments as $dept)
+        <button
+          type="button"
+          class="btn btn-sm btn-dark dept-chat-btn"
+          data-user-id="{{ $user->id }}"
+          data-user-name="{{ $user->name }}"
+          data-department="{{ $dept }}"
+          onclick="startAdminChat(this)"
+        >
+          <i class="fa-solid fa-comments me-1"></i>
+          {{ strtoupper($dept) }}
+        </button>
+      @endforeach
+    </div>
+  </div>
+
+  <small>{{ $user->email ?? 'No email' }}</small>
+</div>
 
         <div class="d-flex align-items-center gap-2">
     <span class="badge bg-primary count-badge">
@@ -388,9 +451,9 @@ th:nth-child(8), td:nth-child(8){ width: 90px; }  /* Actions */
               <!-- Concern + View (magkatabi + clamped preview) -->
               <td class="concern-cell">
                 <div class="concern-row">
-                  <div class="description-box" title="Click View to see full concern">
-                      ...........
-                    </div>
+                  <div class="description-box" title="{{ $ticket->description }}">
+  {{ \Illuminate\Support\Str::limit($ticket->description, 80) }}
+</div>
 
                   <button
                     type="button"
@@ -531,6 +594,16 @@ th:nth-child(8), td:nth-child(8){ width: 90px; }  /* Actions */
       </div>
     </div>
   </div>
+
+  <select id="chatDepartmentSelect" class="d-none" aria-hidden="true">
+  <option value=""></option>
+  <option value="it">IT</option>
+  <option value="hr">HR</option>
+  <option value="smm">SMM</option>
+  <option value="admin-secretary">Admin Secretary</option>
+  <option value="od">OD</option>
+  <option value="om">OM</option>
+</select>
 
 </main>
 
@@ -703,18 +776,69 @@ document.getElementById('m_timeline').innerHTML = `
 });
 });
 
-// ✅ CHAT button handler (global para gumana sa inline onclick)
+function setAdminChatReadOnly(enabled = true){
+  const chatBox = document.getElementById("chatbox");
+  if (!chatBox) return;
+
+  chatBox.classList.toggle("chat-readonly", enabled);
+
+  const input   = document.getElementById("ticketChatInput");
+  const send    = document.getElementById("ticketChatSend");
+  const clear   = document.getElementById("clear-chat");
+  const del     = document.getElementById("delete-chat");
+  const file    = document.getElementById("fileInput");
+  const preview = document.getElementById("filePreviewContainer");
+  const upload  = document.getElementById("uploadStatus");
+
+  if (input) {
+    input.value = "";
+    input.readOnly = true;
+    input.disabled = true;
+    input.placeholder = "View only";
+  }
+
+  [send, clear, del, file, preview, upload].forEach(el => {
+    if (el) el.style.display = enabled ? "none" : "";
+  });
+}
+
 window.startAdminChat = function(btn){
   const targetUserId = Number(btn?.dataset?.userId || 0);
   const userName = btn?.dataset?.userName || "User";
+  const department = String(btn?.dataset?.department || "").trim().toLowerCase();
 
   if (!Number.isFinite(targetUserId) || targetUserId <= 0) {
     alert("Invalid user selected.");
     return;
   }
 
+  if (!department) {
+    alert("No department selected.");
+    return;
+  }
+
+  const deptSelect = document.getElementById("chatDepartmentSelect");
+  if (deptSelect) {
+    deptSelect.value = department;
+    deptSelect.dispatchEvent(new Event("change", { bubbles: true }));
+  }
+
+  const chatBox = document.getElementById("chatbox");
+  if (chatBox) {
+    chatBox.style.display = "flex";
+    chatBox.classList.add("open");
+    chatBox.setAttribute("aria-hidden", "false");
+  }
+
   if (typeof window.startAccountChat === "function") {
-    window.startAccountChat(targetUserId, "Chat with " + userName);
+    window.startAccountChat(
+      targetUserId,
+      "Chat with " + userName + " - " + department.toUpperCase()
+    );
+
+    // re-apply readonly after app.js opens the chat
+    setTimeout(() => setAdminChatReadOnly(true), 150);
+    setTimeout(() => setAdminChatReadOnly(true), 500);
   } else {
     console.log("startAccountChat not found. Make sure chatbot/app.js is loaded.");
     alert("Chat system not ready. Check if chatbot/app.js is loaded.");

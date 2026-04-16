@@ -25,6 +25,12 @@
 </head>
 
 <body>
+<body>
+
+@php
+  $userDept = strtolower(Auth::user()->usertype ?? '');
+@endphp
+
 <div id="chatToast" class="chat-toast"></div>
 <header class="app-header">
   <div class="app-header-inner">
@@ -53,14 +59,15 @@
     <div class="chat-dept-wrapper">
   <div class="chat-dept-container">
     <select id="chatDepartmentSelect" class="chat-dept-select">
-      <option value="" disabled selected>Chat Department</option>
-      <option value="it">IT</option>
-      <option value="hr">HR</option>
-      <option value="smm">SMM</option>
-      <option value="admin-secretary">Admin Secretary</option>
-      <option value="od">OD</option>
-      <option value="om">OM</option>
-    </select>
+  <option value="" disabled selected>Chat Department</option>
+
+  <option value="it" {{ $userDept == 'it' ? 'disabled' : '' }}>IT Tech Support Department</option>
+  <option value="hr" {{ $userDept == 'hr' ? 'disabled' : '' }}>Human Resources Department</option>
+  <option value="smm" {{ $userDept == 'smm' ? 'disabled' : '' }}>Marketing Department</option>
+  <option value="admin-secretary" {{ $userDept == 'admin-secretary' ? 'disabled' : '' }}>Corp Admin Secretary</option>
+  <option value="od" {{ $userDept == 'od' ? 'disabled' : '' }}>Franchising Department</option>
+  <option value="om" {{ $userDept == 'om' ? 'disabled' : '' }}>KI Operations Department</option>
+</select>
   </div>
 </div>
 
@@ -103,8 +110,22 @@
     <div class="summary-card">
       <div>
         <p style="margin:0;">
-  <a href="{{ route('tickets.dashboard') }}"
-     style="
+  @php
+    $from = request('from');
+
+    $route = match($from) {
+        'hr' => 'admin.portals.hr.tickets',
+        'it' => 'admin.portals.it.tickets',
+        'smm' => 'admin.portals.smm.tickets',
+        'om' => 'admin.portals.om.tickets',
+        'od' => 'admin.portals.od.tickets',
+        'admin-secretary' => 'admin.portals.admin-secretary.tickets',
+        default => 'tickets.dashboard',
+    };
+@endphp
+
+<a href="{{ route($route) }}"
+   style="
         display: inline-flex;
         align-items: center;
         gap: 6px;
@@ -114,11 +135,10 @@
         text-decoration: none;
         color: #0f172a;
         font-weight: 600;
-     ">
-     
-     <i class="fas fa-arrow-left"></i>
-     Back to Dashboard
-  </a>
+   ">
+   <i class="fas fa-arrow-left"></i>
+   Back to Dashboard
+</a>
 </p>
       </div>
       
@@ -167,12 +187,12 @@
       <div class="d-none d-md-flex gap-2 flex-wrap align-items-center">
         <select id="departmentFilter" class="select">
           <option value="">All Departments</option>
-          <option value="it">IT</option>
-          <option value="smm">SMM</option>
-          <option value="hr">HR</option>
-          <option value="admin-secretary">Admin</option>
-          <option value="od">Operations Director</option>
-          <option value="om">Operations Manager</option>
+          <option value="it">IT Tech Support Department</option>
+          <option value="smm">Marketing Department</option>
+          <option value="hr">Human Resources Department</option>
+          <option value="admin-secretary">Corp Admin Secretary</option>
+          <option value="od">Franchising Department</option>
+          <option value="om">KI Operations Department</option>
         </select>
 
         <select id="priorityFilter" class="select">
@@ -189,13 +209,13 @@
       <div class="d-flex gap-2 flex-wrap pt-2">
         <select id="departmentFilter_m" class="select w-100">
           <option value="">All Departments</option>
-          <option value="it">IT</option>
-          <option value="smm">SMM</option>
-          <option value="hr">HR</option>
-          <option value="finance">Finance</option>
-          <option value="admin-secretary">Admin</option>
-          <option value="od">Operations Director</option>
-          <option value="om">Operations Manager</option>
+          <option value="it">IT Tech Support Department</option>
+          <option value="smm">Marketing Department</option>
+          <option value="hr">Human Resources Department</option>
+          <option value="finance">Finance Department</option>
+          <option value="admin-secretary">Corp Admin Secretary</option>
+          <option value="od">KI Franchising Department</option>
+          <option value="om">KI Operations Department</option>
         </select>
 
         <select id="priorityFilter_m" class="select w-100">

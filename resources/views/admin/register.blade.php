@@ -273,17 +273,17 @@ select:focus {
                 <label>User Type</label>
                 <select name="usertype" required>
                     <option value="" disabled selected>Select user type</option>
-                    <option value="admin">Admin</option>
-                    <option value="user">User</option>
-                    <option value="supplies">Supplies</option>
-                    <option value="ticket">Ticket</option>
-                    <option value="portal">Portal</option>
-                    <option value="smm">SMM</option>
-                    <option value="hr">HR</option>
-                    <option value="om">Operation Manager</option>
-                    <option value="od">Operation Director</option>
-                    <option value="it">IT</option>
-                    <option value="admin-secretary">Admin Secretary</option>
+                    <option value="admin">Admin User</option>
+                    <option value="user">Branch Employee User</option>
+                    <option value="supplies">Provincial Coffee Supplies</option>
+                    <option value="ticket">Upper Management User</option>
+                    <option value="portal">Insurance Claim</option>
+                    <option value="smm">Marketing Department</option>
+                    <option value="hr">Human Resources Department</option>
+                    <option value="om">KI Operations Department</option>
+                    <option value="od">Franchising Department</option>
+                    <option value="it">IT Tech Support Department</option>
+                    <option value="admin-secretary">Corp Admin Secretary</option>
                 </select>
 
             </div>

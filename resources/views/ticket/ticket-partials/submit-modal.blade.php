@@ -42,15 +42,38 @@
 
                         <div class="mb-3">
                             <label class="form-label">Department</label>
-                            <select name="department" class="form-select" required>
-                                <option value="">Select department</option>
-                                <option value="it">IT</option>
-                                <option value="od">Operations Director</option>
-                                <option value="om">Operations Manager</option>
-                                <option value="admin-secretary">Admin</option>
-                                <option value="hr">HR</option>
-                                <option value="smm">SMM</option>
-                            </select>
+                            @php
+  $userDept = strtolower(Auth::user()->usertype);
+@endphp
+
+<select name="department" class="form-select" required>
+  <option value="">Select department</option>
+
+  <option value="it" {{ $userDept == 'it' ? 'disabled' : '' }}>
+    IT Tech Support Department {{ $userDept == 'it' ? '(Your Department)' : '' }}
+  </option>
+
+  <option value="od" {{ $userDept == 'od' ? 'disabled' : '' }}>
+    Franchising Department {{ $userDept == 'od' ? '(Your Department)' : '' }}
+  </option>
+
+  <option value="om" {{ $userDept == 'om' ? 'disabled' : '' }}>
+    KI Operations Department {{ $userDept == 'om' ? '(Your Department)' : '' }}
+  </option>
+
+  <option value="admin-secretary" {{ $userDept == 'admin-secretary' ? 'disabled' : '' }}>
+    Corp Admin Secretary {{ $userDept == 'admin-secretary' ? '(Your Department)' : '' }}
+  </option>
+
+  <option value="hr" {{ $userDept == 'hr' ? 'disabled' : '' }}>
+    Human Resources Department {{ $userDept == 'hr' ? '(Your Department)' : '' }}
+  </option>
+
+  <option value="smm" {{ $userDept == 'smm' ? 'disabled' : '' }}>
+    Marketing Department {{ $userDept == 'smm' ? '(Your Department)' : '' }}
+  </option>
+
+</select>
                         </div>
 
                         <div class="mb-4">

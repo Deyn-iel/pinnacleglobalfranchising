@@ -12,104 +12,188 @@
 @vite(['resources/css/admin/app.css'])
 
 <style>
-    body {
-        background: #f5f6fa;
-        overflow-x: hidden;
-        font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
-    }
+/* ================= BASE ================= */
+body {
+    background: #f5f6fa;
+    overflow-x: hidden;
+    font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+}
+
+aside {
+    width: 260px;
+    z-index: 999;
+    transition: all .3s ease;
+}
+
+/* ================= MAIN ================= */
+main {
+    margin-left: 260px;
+    padding: clamp(16px, 2.5vw, 34px);
+    max-width: calc(100vw - 260px);
+    transition: all .3s ease;
+}
+
+/* ================= HEADER ================= */
+.page-header {
+    background: #ffffff;
+    border-radius: 14px;
+    padding: clamp(14px, 2vw, 22px);
+    box-shadow: 0 10px 30px rgba(15,23,42,.08);
+    margin-bottom: 22px;
+}
+
+/* ================= TABLE ================= */
+.table-wrapper {
+    background: #ffffff;
+    border-radius: 14px;
+    box-shadow: 0 10px 28px rgba(15,23,42,.08);
+    overflow: hidden;
+}
+
+/* scroll support sa mobile */
+.table-responsive {
+    width: 100%;
+    overflow-x: auto;
+}
+
+/* table base */
+table {
+    width: 100%;
+    table-layout: fixed;
+    font-size: clamp(12px, 0.9vw, 14px);
+    margin-bottom: 0;
+    min-width: 700px; /* para di mag-collapse */
+}
+
+th, td {
+    vertical-align: middle;
+    word-break: break-word;
+    white-space: normal;
+}
+
+/* ================= COLUMN WIDTHS ================= */
+th:nth-child(1) { width: 140px; }
+th:nth-child(2) { width: 300px; }
+th:nth-child(3) { width: 140px; }
+th:nth-child(4) { width: 140px; }
+th:nth-child(5) { width: 200px; }
+th:nth-child(6) { width: 80px; }
+
+/* ================= BADGES ================= */
+.badge {
+    font-size: clamp(10px, 0.7vw, 12px);
+    padding: clamp(4px, 0.5vw, 6px) clamp(8px, 0.8vw, 10px);
+    font-weight: 600;
+    border-radius: 999px;
+    white-space: nowrap;
+}
+
+/* prevent overflow */
+td .badge {
+    display: inline-block;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* ================= BUTTONS ================= */
+.btn-primary {
+    background: #000;
+    border: none;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.btn-primary:hover {
+    background: #333;
+}
+
+/* ================= ALERT ================= */
+.alert.hide {
+    opacity: 0;
+    max-height: 0;
+    padding: 0;
+    margin: 0;
+    transition: all .4s ease;
+}
+
+/* ================= GROUP HEADER ================= */
+tbody tr:first-child td {
+    border-top: 2px solid #000;
+}
+
+.table tbody tr.group-header td {
+    background: #b3b3b3 !important;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* ================= TABLET ================= */
+@media (max-width: 1024px) {
 
     aside {
-        width: 260px;
-        z-index: 999;
+        width: 220px;
     }
 
-    /* ================= MAIN ================= */
     main {
-        margin-left: 260px;
-        padding: clamp(20px, 2.5vw, 34px);
-        max-width: calc(100vw - 260px);
-    }
-
-    /* ================= HEADER ================= */
-    .page-header {
-        background: #ffffff;
-        border-radius: 14px;
-        padding: 18px 22px;
-        box-shadow: 0 10px 30px rgba(15,23,42,.08);
-        margin-bottom: 22px;
-    }
-
-    /* ================= TABLE ================= */
-    .table-wrapper {
-        background: #ffffff;
-        border-radius: 14px;
-        box-shadow: 0 10px 28px rgba(15,23,42,.08);
-        overflow: hidden;
+        margin-left: 220px;
+        max-width: calc(100vw - 220px);
     }
 
     table {
-        width: 100%;
-        table-layout: fixed;
-        font-size: clamp(13px, 0.9vw, 14px);
-        margin-bottom: 0;
-    }
-
-    th, td {
-        vertical-align: middle;
-        word-break: break-word;
-        white-space: normal;
-    }
-
-    /* Column widths (desktop safe) */
-    th:nth-child(1) { width: 160px; }
-    th:nth-child(2) { width: 360px; }
-    th:nth-child(3) { width: 130px; }
-    th:nth-child(4) { width: 150px; }
-    th:nth-child(5) { width: 220px; }
-    th:nth-child(6) { width: 90px; }
-
-    /* ================= BADGES ================= */
-    .badge {
         font-size: 12px;
-        padding: 6px 10px;
-        font-weight: 600;
     }
-
-    /* ================= BUTTONS ================= */
-    .btn-primary {
-        background: #000;
-        border: none;
-        font-weight: 600;
-    }
-
-    .btn-primary:hover {
-        background: #333;
-    }
-
-    /* ================= ALERT ================= */
-    .alert.hide {
-        opacity: 0;
-        max-height: 0;
-        padding: 0;
-        margin: 0;
-        transition: all .4s ease;
-    }
-
-    /* ================= SAFETY ================= */
-    @media (max-width: 1280px) {
-        table {
-            font-size: 13px;
-        }
-    }
-
-    tbody tr:first-child td {
-    border-top: 2px solid #000;
 }
-.table tbody tr.group-header td{
-    background:#b3b3b3 !important; /* 🔥 force override */
-    font-weight:700;
-    text-transform:uppercase;
-    letter-spacing:1px;
+
+/* ================= MOBILE ================= */
+@media (max-width: 768px) {
+
+    aside {
+        position: fixed;
+        left: -260px;
+        top: 0;
+        height: 100%;
+    }
+
+    main {
+        margin-left: 0;
+        max-width: 100%;
+        padding: 16px;
+    }
+
+    .page-header {
+        text-align: center;
+    }
+
+    table {
+        font-size: 11px;
+        min-width: 600px;
+    }
+
+    .badge {
+        font-size: 10px;
+        padding: 4px 8px;
+    }
+}
+
+/* ================= EXTRA SMALL ================= */
+@media (max-width: 480px) {
+
+    table {
+        font-size: 10px;
+        min-width: 550px;
+    }
+
+    .badge {
+        font-size: 9px;
+        padding: 3px 6px;
+    }
+
+    .btn-primary {
+        width: 100%;
+        text-align: center;
+    }
 }
 </style>
 </head>
@@ -144,6 +228,22 @@
         </div>
     @endif
 
+    @php
+$roleLabels = [
+    'admin' => 'ADMIN USER',
+    'supplies' => 'PROVINCIAL COFFEE SUPPLIES',
+    'ticket' => 'UPPER MANAGEMENT USER',
+    'user' => 'BRANCH EMPLOYEE USER',
+    'portal' => 'INSURANCE CLAIM',
+    'it' => 'IT TECH SUPPORT DEPARTMENT',
+    'smm' => 'MARKETING DEPARTMENT',
+    'od' => 'FRANCHISING DEPARTMENT',
+    'om' => 'KI OPERATIONS DEPARTMENT',
+    'hr' => 'HUMAN RESOURCES DEPARTMENT',
+    'admin-secretary' => 'CORP ADMIN SECRETARY',
+];
+@endphp
+
     <!-- TABLE -->
     <div class="table-wrapper">
         <div class="table-responsive">
@@ -162,7 +262,6 @@
                 <tbody>
 @forelse($users as $type => $group)
     
-    <!-- 🔥 GROUP HEADER -->
     <tr class="group-header">
         <td colspan="6" class="fw-bold text-uppercase">
             {{ strtoupper($type) }}
@@ -171,9 +270,9 @@
 
     @foreach($group as $user)
     <tr>
-        <td>{{ $user->name }}</td>
+        <td>{{ strtoupper($user->name) }}</td>
 
-        <td>{{ $user->email }}</td>
+        <td>{{ strtoupper($user->email) }}</td>
 
         <td>
             <span class="badge
@@ -188,7 +287,7 @@
                 : ($user->usertype === 'hr' ? 'bg-primary-subtle text-dark'
                 : ($user->usertype === 'admin-secretary' ? 'bg-info-subtle text-dark'
                 : 'bg-secondary'))))))))) }}">
-                {{ ucfirst($user->usertype) }}
+                {{ $roleLabels[$user->usertype] ?? strtoupper($user->usertype) }}
             </span>
         </td>
 

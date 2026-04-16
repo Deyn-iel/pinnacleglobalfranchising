@@ -1,11 +1,9 @@
-{{-- resources/views/admin/applications/partials/details-modal-content.blade.php --}}
-
 <style>
   .app-section{
     background:#ffffff;
     border-radius:18px;
     padding:18px;
-    box-shadow: 0 14px 34px rgba(15,23,42,.08);
+    box-shadow:0 14px 34px rgba(15,23,42,.08);
     margin-bottom:16px;
   }
 
@@ -35,6 +33,14 @@
   .app-table td{
     vertical-align:top;
     word-break:break-word;
+  }
+
+  .badge{
+    color:#fff;
+    font-size:12px;
+    font-weight:700;
+    padding:6px 10px;
+    border-radius:999px;
   }
 
   .badge-yes{
@@ -117,11 +123,18 @@
 </style>
 
 <div>
-  <div class="mb-2">
-    <div class="fw-bold fs-5">Application #{{ $application->id }}</div>
-    <div class="text-muted small">
-      Submitted on {{ $application->created_at->format('M d, Y · h:i A') }}
+  <div class="mb-3 d-flex justify-content-between align-items-center flex-wrap gap-2">
+    <div>
+      <div class="fw-bold fs-5">Application #{{ $application->id }}</div>
+      <div class="text-muted small">
+        Submitted on {{ $application->created_at->format('M d, Y · h:i A') }}
+      </div>
     </div>
+
+    <a href="{{ route('admin.applications.pdf', $application->id) }}"
+       class="btn btn-primary btn-sm file-btn">
+      <i class="fas fa-file-pdf me-1"></i> Download PDF
+    </a>
   </div>
 
   <div class="app-section">
@@ -135,8 +148,8 @@
           </span>
         </td>
       </tr>
-      <tr><th>Email</th><td>{{ $application->email }}</td></tr>
-      <tr><th>Lead Source</th><td>{{ $application->lead_source }}</td></tr>
+      <tr><th>Email</th><td>{{ $application->email ?? '—' }}</td></tr>
+      <tr><th>Lead Source</th><td>{{ $application->lead_source ?? '—' }}</td></tr>
     </table>
   </div>
 
@@ -152,70 +165,92 @@
     @endif
 
     <table class="table table-bordered app-table mb-0">
-      <tr><th>Complete Name</th><td>{{ $application->personal_full_name }}</td></tr>
-      <tr><th>Gender</th><td>{{ $application->personal_gender }}</td></tr>
-      <tr><th>Civil Status</th><td>{{ $application->personal_civil_status }}</td></tr>
-      <tr><th>Age</th><td>{{ $application->personal_age }}</td></tr>
-      <tr><th>Country of Birth</th><td>{{ $application->personal_country_birth }}</td></tr>
-      <tr><th>Nationality</th><td>{{ $application->personal_nationality }}</td></tr>
-      <tr><th>Residence</th><td>{{ $application->personal_residence }}</td></tr>
-      <tr><th>Address</th><td>{{ $application->personal_address }}</td></tr>
-      <tr><th>Contact</th><td>{{ $application->personal_contact }}</td></tr>
-      <tr><th>TIN</th><td>{{ $application->personal_tin }}</td></tr>
-      <tr><th>Religion</th><td>{{ $application->personal_religion }}</td></tr>
-      <tr><th>Hobbies</th><td>{{ $application->personal_hobbies }}</td></tr>
-      <tr><th>Spouse</th><td>{{ $application->personal_spouse }}</td></tr>
-      <tr><th>Dependents</th><td>{{ $application->personal_dependents }}</td></tr>
+      <tr><th>Complete Name</th><td>{{ $application->personal_full_name ?? '—' }}</td></tr>
+      <tr><th>Gender</th><td>{{ $application->personal_gender ?? '—' }}</td></tr>
+      <tr><th>Civil Status</th><td>{{ $application->personal_civil_status ?? '—' }}</td></tr>
+      <tr><th>Age</th><td>{{ $application->personal_age ?? '—' }}</td></tr>
+      <tr><th>Country of Birth</th><td>{{ $application->personal_country_birth ?? '—' }}</td></tr>
+      <tr><th>Nationality</th><td>{{ $application->personal_nationality ?? '—' }}</td></tr>
+      <tr><th>Country of Residence</th><td>{{ $application->personal_residence ?? '—' }}</td></tr>
+      <tr><th>Primary Address</th><td>{{ $application->personal_address ?? '—' }}</td></tr>
+      <tr><th>Contact</th><td>{{ $application->personal_contact ?? '—' }}</td></tr>
+      <tr><th>TIN</th><td>{{ $application->personal_tin ?? '—' }}</td></tr>
+      <tr><th>Religion</th><td>{{ $application->personal_religion ?? '—' }}</td></tr>
+      <tr><th>Hobbies</th><td>{{ $application->personal_hobbies ?? '—' }}</td></tr>
+      <tr><th>Spouse</th><td>{{ $application->personal_spouse ?? '—' }}</td></tr>
+      <tr><th>Dependents</th><td>{!! nl2br(e($application->personal_dependents ?? '—')) !!}</td></tr>
     </table>
   </div>
 
   <div class="app-section">
     <div class="app-section-title">Professional Background</div>
     <table class="table table-bordered app-table mb-0">
-      <tr><th>Education</th><td>{{ $application->professional_education }}</td></tr>
-      <tr><th>School & Year</th><td>{{ $application->professional_school }}</td></tr>
-      <tr><th>Employment</th><td>{{ $application->professional_employment }}</td></tr>
-      <tr><th>Position</th><td>{{ $application->professional_occupation }}</td></tr>
-      <tr><th>Company</th><td>{{ $application->professional_company }}</td></tr>
-      <tr><th>Years</th><td>{{ $application->professional_years }}</td></tr>
-      <tr><th>Responsibilities</th><td>{{ $application->professional_responsibilities }}</td></tr>
+      <tr><th>Education</th><td>{{ $application->professional_education ?? '—' }}</td></tr>
+      <tr><th>School & Year</th><td>{{ $application->professional_school ?? '—' }}</td></tr>
+      <tr><th>Employment</th><td>{{ $application->professional_employment ?? '—' }}</td></tr>
+      <tr><th>Occupation</th><td>{{ $application->professional_occupation ?? '—' }}</td></tr>
+      <tr><th>Job Title</th><td>{{ $application->professional_job_title ?? '—' }}</td></tr>
+      <tr><th>Company</th><td>{{ $application->professional_company ?? '—' }}</td></tr>
+      <tr><th>Years</th><td>{{ $application->professional_years ?? '—' }}</td></tr>
+      <tr><th>Company Address</th><td>{{ $application->professional_company_address ?? '—' }}</td></tr>
+      <tr><th>Responsibilities</th><td>{!! nl2br(e($application->professional_responsibilities ?? '—')) !!}</td></tr>
+      <tr><th>Nature of Business</th><td>{{ $application->professional_business_nature ?? '—' }}</td></tr>
+      <tr><th>Company Contact</th><td>{{ $application->professional_company_contact ?? '—' }}</td></tr>
     </table>
   </div>
 
   <div class="app-section">
     <div class="app-section-title">Business Background</div>
     <table class="table table-bordered app-table mb-0">
-      <tr><th>Business Experience</th><td>{{ $application->business_experience }}</td></tr>
-      <tr><th>Business Name</th><td>{{ $application->business_name }}</td></tr>
-      <tr><th>Industry</th><td>{{ $application->business_industry }}</td></tr>
-      <tr><th>Closed Business?</th><td>{{ $application->business_closed }}</td></tr>
-      <tr><th>Closure Reason</th><td>{{ $application->business_closure_reason }}</td></tr>
+      <tr><th>Business Experience</th><td>{{ $application->business_experience ?? '—' }}</td></tr>
+      <tr><th>Business Name</th><td>{{ $application->business_name ?? '—' }}</td></tr>
+      <tr><th>Years of Experience</th><td>{{ $application->business_years ?? '—' }}</td></tr>
+      <tr><th>Industry</th><td>{{ $application->business_industry ?? '—' }}</td></tr>
+      <tr><th>Closed Business?</th><td>{{ $application->business_closed ?? '—' }}</td></tr>
+      <tr><th>Closure Reason</th><td>{!! nl2br(e($application->business_closure_reason ?? '—')) !!}</td></tr>
+      <tr><th>Venture Description</th><td>{!! nl2br(e($application->business_venture_description ?? '—')) !!}</td></tr>
+    </table>
+  </div>
+
+  <div class="app-section">
+    <div class="app-section-title">Kape-Ilokano Background</div>
+    <table class="table table-bordered app-table mb-0">
+      <tr><th>Customer of Kape-Ilokano?</th><td>{{ $application->ki_customer ?? '—' }}</td></tr>
+      <tr><th>Affiliated with Any Branch?</th><td>{{ $application->ki_affiliated ?? '—' }}</td></tr>
+      <tr><th>Affiliation Details</th><td>{{ $application->ki_affiliated_details ?? '—' }}</td></tr>
+      <tr><th>Has Existing Coffee Shop?</th><td>{{ $application->ki_has_coffee_shop ?? '—' }}</td></tr>
+      <tr><th>Knowledge in Coffee Industry?</th><td>{{ $application->ki_industry_knowledge ?? '—' }}</td></tr>
+      <tr><th>Passion for Coffee?</th><td>{{ $application->ki_passion ?? '—' }}</td></tr>
+      <tr><th>Eagerness Level</th><td>{{ $application->ki_eagerness ?? '—' }}</td></tr>
     </table>
   </div>
 
   <div class="app-section">
     <div class="app-section-title">Business Proposal</div>
     <table class="table table-bordered app-table mb-0">
-      <tr><th>Target Location</th><td>{{ $application->proposal_location }}</td></tr>
-      <tr><th>Reason</th><td>{{ $application->proposal_reason }}</td></tr>
-      <tr><th>Expectations</th><td>{{ $application->proposal_expectations }}</td></tr>
-      <tr><th>Involvement</th><td>{{ $application->proposal_involvement }}</td></tr>
+      <tr><th>Target Location</th><td>{{ $application->proposal_location ?? '—' }}</td></tr>
+      <tr><th>Reason</th><td>{!! nl2br(e($application->proposal_reason ?? '—')) !!}</td></tr>
+      <tr><th>Expectations</th><td>{!! nl2br(e($application->proposal_expectations ?? '—')) !!}</td></tr>
+      <tr><th>Involvement</th><td>{!! nl2br(e($application->proposal_involvement ?? '—')) !!}</td></tr>
+      <tr><th>Management Philosophy</th><td>{!! nl2br(e($application->proposal_philosophy ?? '—')) !!}</td></tr>
+      <tr><th>Other Business Interests</th><td>{!! nl2br(e($application->proposal_interests ?? '—')) !!}</td></tr>
+      <tr><th>Socio-civic Affiliations</th><td>{!! nl2br(e($application->proposal_affiliations ?? '—')) !!}</td></tr>
     </table>
   </div>
 
   <div class="app-section">
     <div class="app-section-title">Financial Information</div>
     <table class="table table-bordered app-table mb-0">
-      <tr><th>Investment</th><td>{{ $application->financial_investment }}</td></tr>
-      <tr><th>Expected Sales</th><td>{{ $application->financial_expected_sales }}</td></tr>
-      <tr><th>ROI</th><td>{{ $application->financial_roi }}</td></tr>
+      <tr><th>Investment</th><td>{{ $application->financial_investment ?? '—' }}</td></tr>
+      <tr><th>Expected Sales</th><td>{{ $application->financial_expected_sales ?? '—' }}</td></tr>
+      <tr><th>ROI</th><td>{{ $application->financial_roi ?? '—' }}</td></tr>
     </table>
   </div>
 
   <div class="app-section">
     <div class="app-section-title">Character References</div>
     <div class="border rounded p-3 bg-light">
-      {!! nl2br(e($application->references)) !!}
+      {!! nl2br(e($application->references ?? '—')) !!}
     </div>
   </div>
 

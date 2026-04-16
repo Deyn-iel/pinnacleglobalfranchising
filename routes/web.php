@@ -252,6 +252,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
 Route::view('/franchise-application-process', 'franchise-application-process.franchise-application-process')
     ->name('franchise.process');
 
+    Route::view('/franchise-patatas-process', 'franchise-application-process.franchise-patatas-process')
+    ->name('patatas.process');
+
 Route::get('/franchise/application', fn() =>
     view('franchise-application-process.franchise-application-process')
 )->name('franchise.form');
@@ -522,6 +525,12 @@ Route::delete('/exams/delete/{id}', [AdminExamController::class, 'delete'])
 
 Route::get('/applications', [FranchiseAdminController::class, 'index'])
             ->name('applications');
+
+Route::get('/applications/{id}/pdf', [FranchiseAdminController::class, 'downloadPdf'])
+    ->name('applications.pdf');
+
+// Route::get('/applications/{id}/print', [FranchiseAdminController::class, 'print'])
+//     ->name('applications.print');
 
 Route::get('/applications/{id}', [FranchiseAdminController::class, 'show'])
             ->name('applications.show');

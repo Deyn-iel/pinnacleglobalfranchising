@@ -14,30 +14,56 @@ document.addEventListener("DOMContentLoaded", function () {
   }, 3000);
 }
 
-  let currentDepartment =
-  document.querySelector('meta[name="chat-department"]')?.getAttribute("content") || "";
+let currentDepartment = "";
+const chatDepartmentSelect = document.getElementById("chatDepartmentSelect");
+const metaDept = document.querySelector('meta[name="chat-department"]');
 
+function setCurrentDepartment(value) {
+  currentDepartment = String(value || "").trim().toLowerCase();
 
+  if (metaDept) {
+    metaDept.setAttribute("content", currentDepartment);
+  }
 
+  // ✅ localStorage only for user page with select
+  if (chatDepartmentSelect) {
+    if (currentDepartment) {
+      localStorage.setItem("chat_department", currentDepartment);
+    } else {
+      localStorage.removeItem("chat_department");
+    }
+  }
+}
 
-  const chatDepartmentSelect = document.getElementById("chatDepartmentSelect");
+const metaDepartment =
+  (metaDept?.getAttribute("content") || "").trim().toLowerCase();
 
+// ✅ USER PAGE: may dropdown → placeholder muna
 if (chatDepartmentSelect) {
-  chatDepartmentSelect.value = currentDepartment;
+  if (metaDept) {
+    metaDept.setAttribute("content", "");
+  }
+
+  currentDepartment = "";
+  chatDepartmentSelect.selectedIndex = 0;
+  chatDepartmentSelect.value = "";
 
   chatDepartmentSelect.addEventListener("change", function () {
-    currentDepartment = this.value;
+    setCurrentDepartment(this.value);
 
-    const metaDept = document.querySelector('meta[name="chat-department"]');
-    if (metaDept) {
-      metaDept.setAttribute("content", currentDepartment);
-    }
-
-    // kung bukas yung chat, i-refresh niya yung tamang dept thread
     if (chatBox && chatBox.classList.contains("open") && currentTargetUserId) {
-      window.startAccountChat(currentTargetUserId, "Support Chat - " + currentDepartment.toUpperCase());
+      window.startAccountChat(
+        currentTargetUserId,
+        "Support Chat - " + currentDepartment.toUpperCase()
+      );
     }
   });
+
+} else {
+  // ✅ ADMIN / STAFF PAGE: walang dropdown → gamitin ang meta dept
+  if (metaDepartment) {
+    setCurrentDepartment(metaDepartment);
+  }
 }
 
 
@@ -68,8 +94,13 @@ if (chatButton) {
     updateBadge();
 
     chatBox.style.display = "flex";
-    chatBox.classList.add("open");
-    chatBox.setAttribute("aria-hidden", "false");
+chatBox.classList.add("open");
+chatBox.setAttribute("aria-hidden", "false");
+
+if (document.activeElement) {
+  document.activeElement.blur();
+}
+ticketInput?.blur();
 
     if(!currentTargetUserId){
       const metaUid = document.querySelector('meta[name="chat-target-user-id"]')?.getAttribute("content");
@@ -109,8 +140,9 @@ let unreadCount = 0;
   const ticketSend = document.getElementById("ticketChatSend");
   const ticketHint = document.getElementById("ticketChatHint");
   const typing = document.getElementById("ticketTyping");
-  const uploadStatus = document.getElementById("uploadStatus");
-  let selectedFile = null;
+const uploadStatus = document.getElementById("uploadStatus");
+let selectedFile = null;
+let inputLocked = true;
 
 const previewContainer = document.getElementById("filePreviewContainer");
 const fileInput = document.getElementById("fileInput");
@@ -214,68 +246,69 @@ function setPresenceUI(isOnline){
   }
 }
 
-async function deleteConversation(){
-  // guard target user
-  if (!Number.isFinite(currentTargetUserId) || currentTargetUserId <= 0) {
-    alert("No target user selected.");
-    return;
-  }
+// async function deleteConversation(){
+//   // guard target user
+//   if (!Number.isFinite(currentTargetUserId) || currentTargetUserId <= 0) {
+//     alert("No target user selected.");
+//     return;
+//   }
 
-  const ok = confirm("Delete this conversation? This cannot be undone.");
-  if(!ok) return;
+//   const ok = confirm("Delete this conversation? This cannot be undone.");
+//   if(!ok) return;
 
-  const token = document.querySelector('meta[name="csrf-token"]')?.getAttribute("content") || "";
+//   const token = document.querySelector('meta[name="csrf-token"]')?.getAttribute("content") || "";
   
-  try{
-    const res = await fetch("/support/chat", {
-  method: "POST", // ✅ keep POST, spoof DELETE for Laravel
-  credentials: "same-origin",
-  headers: {
-    "Accept": "application/json",
-    "Content-Type": "application/json",
-    "X-CSRF-TOKEN": token,
-    "X-Requested-With": "XMLHttpRequest"
-  },
-  body: JSON.stringify({
-    _method: "DELETE",
-    target_user_id: currentTargetUserId
-  })
-});
+//   try{
+//     const res = await fetch("/support/chat", {
+//   method: "POST", // ✅ keep POST, spoof DELETE for Laravel
+//   credentials: "same-origin",
+//   headers: {
+//     "Accept": "application/json",
+//     "Content-Type": "application/json",
+//     "X-CSRF-TOKEN": token,
+//     "X-Requested-With": "XMLHttpRequest"
+//   },
+//   body: JSON.stringify({
+//   _method: "DELETE",
+//   target_user_id: currentTargetUserId,
+//   department: currentDepartment
+// })
+// });
 
-    const ct = res.headers.get("content-type") || "";
-    const raw = await res.text();
+//     const ct = res.headers.get("content-type") || "";
+//     const raw = await res.text();
 
-    if(!res.ok){
-  console.log("DELETE STATUS:", res.status);
-  console.log("DELETE CT:", ct);
-  console.log("DELETE RAW:", raw.slice(0, 3000)); // preview
-  alert(`Delete failed: ${res.status}. Check console + Network.`);
-  return;
-}
+//     if(!res.ok){
+//   console.log("DELETE STATUS:", res.status);
+//   console.log("DELETE CT:", ct);
+//   console.log("DELETE RAW:", raw.slice(0, 3000)); // preview
+//   alert(`Delete failed: ${res.status}. Check console + Network.`);
+//   return;
+// }
 
-if(!ct.includes("application/json")){
-  console.log("DELETE NON-JSON RAW:", raw.slice(0, 3000));
-  alert("Delete returned non-JSON (possible redirect/CSRF). Check Network.");
-  return;
-}
+// if(!ct.includes("application/json")){
+//   console.log("DELETE NON-JSON RAW:", raw.slice(0, 3000));
+//   alert("Delete returned non-JSON (possible redirect/CSRF). Check Network.");
+//   return;
+// }
 
-    // ✅ reset UI after delete
-    lastId = 0;
-    lastRenderedMsg = null;
-    lastRenderedRow = null;
+//     // ✅ reset UI after delete
+//     lastId = 0;
+//     lastRenderedMsg = null;
+//     lastRenderedRow = null;
 
-    ticketBox.innerHTML = `
-      <div class="ticket-empty">
-        <div class="ticket-empty-title">Conversation deleted</div>
-        <div class="ticket-empty-sub">Start a new chat by sending a message.</div>
-      </div>
-    `;
+//     ticketBox.innerHTML = `
+//       <div class="ticket-empty">
+//         <div class="ticket-empty-title">Conversation deleted</div>
+//         <div class="ticket-empty-sub">Start a new chat by sending a message.</div>
+//       </div>
+//     `;
 
-  }catch(err){
-    console.log("DELETE EXCEPTION:", err);
-    alert("Delete exception. Check console.");
-  }
-}
+//   }catch(err){
+//     console.log("DELETE EXCEPTION:", err);
+//     alert("Delete exception. Check console.");
+//   }
+// }
 
 deleteChat?.addEventListener("click", deleteConversation);
 
@@ -344,17 +377,21 @@ document.addEventListener("visibilitychange", () => {
     if(show) ticketBox.scrollTop = ticketBox.scrollHeight;
   }
 
-  function setInputState(enabled){
+function setInputState(enabled){
+  inputLocked = !enabled;
+
   ticketInput.readOnly = !enabled;
   ticketInput.disabled = false;
-  ticketSend.disabled = !enabled || (ticketInput.value.trim() === "" && !selectedFile);
+  ticketInput.placeholder = "Type your message...";
 
   if(!enabled){
     ticketInput.blur();
-    ticketInput.placeholder = "Click here to type a message...";
-  }else{
-    ticketInput.placeholder = "Type your message...";
+    if (document.activeElement === ticketInput) {
+      document.activeElement.blur();
+    }
   }
+
+  ticketSend.disabled = !enabled || (ticketInput.value.trim() === "" && !selectedFile);
 }
 
   ticketInput?.addEventListener("input", () => {
@@ -749,6 +786,7 @@ if (!sendRes.ok) {
 }
 
         ticketInput.value = "";
+await fetchMessages(activeChatToken);
     }
 
   } catch (err) {
@@ -777,7 +815,8 @@ ticketSend.innerHTML = ticketSend.dataset.original || '<i class="fa-solid fa-pap
     if(ticketHint) ticketHint.textContent = "Support Chat";
 
     // enable inputs
-    setInputState(true);
+    setInputState(false);
+ticketInput.blur();
 
     // load + poll
     ticketBox.innerHTML = `
@@ -840,6 +879,7 @@ window.startAccountChat = function(targetUserId, label = "Support Chat"){
   setHeaderPeer(label || ("Support Chat - " + currentDepartment.toUpperCase()));
 
   setInputState(false);
+ticketInput.blur();
 
   ticketBox.innerHTML = `<div class="ticket-empty"><div class="ticket-empty-title">Loading…</div></div>`;
 
@@ -918,17 +958,35 @@ setPresenceUI(false); // optional: reset to Offline
   // SEND
   ticketSend?.addEventListener("click", sendMessage);
   ticketInput?.addEventListener("keydown", (e) => {
-    if(e.key === "Enter"){
-      e.preventDefault();
-      sendMessage();
-    }
-  });
+  if (inputLocked) return;
 
-  ticketInput?.addEventListener("click", () => {
-  if (ticketInput.readOnly) {
-    setInputState(true);
+  if(e.key === "Enter"){
+    e.preventDefault();
+    sendMessage();
   }
 });
+
+// ticketInput?.addEventListener("keydown", (e) => {
+//   if (inputLocked) return;
+
+//   if(e.key === "Enter"){
+//     e.preventDefault();
+//     sendMessage();
+//   }
+// });
+
+function unlockAndFocusInput() {
+  if (!inputLocked) return;
+
+  setInputState(true);
+
+  setTimeout(() => {
+    ticketInput.focus();
+  }, 0);
+}
+
+ticketInput?.addEventListener("touchstart", unlockAndFocusInput, { passive: true });
+ticketInput?.addEventListener("mousedown", unlockAndFocusInput);
 
   // CLEAR (reload)
   clearChat?.addEventListener("click", async () => {

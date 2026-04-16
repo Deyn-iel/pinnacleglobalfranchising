@@ -13,12 +13,10 @@
     @vite(['resources/css/header/app.css', 
             'resources/css/footer/app.css',
             'resources/css/main/app.css',
-            'resources/css/chatbot/app.css',
             'resources/css/scroll/app.css',
             
             // js files
             'resources/js/header/app.js',
-            'resources/js/chatbot/app.js',
             'resources/js/scroll/app.js',
             'resources/js/app.js',
             'resources/js/main/app.js'])
@@ -51,24 +49,28 @@
 
     </div>
 
+<section class="franchise-brands-section text-center mt-5">
 
-<section class="franchise-section text-center mt-5">
-
-    <h2 class="franchise-title">FRANCHISE NOW!</i>
-</h2>
+    <h2 class="franchise-title">FRANCHISE NOW!</h2>
     <div class="underline"></div>
 
     <div class="container mt-5">
     <div class="row justify-content-center g-5">
 
         <div class="col-md-5 col-lg-4 text-center">
-            <div class="circle-box animate scale-up delay-2">
-                <img src="{{ asset('img/kape.webp') }}" alt="Kape Ilokano">
+            <div class="circle-box">
+            <img src="{{ asset('img/kape.webp') }}" alt="Kape Ilokano">
 
-                <div class="circle-desc">
-                    Naimas nga kape inspired by Ilokano culture
-                </div>
+            {{-- <div class="circle-desc">
+                Naimas nga kape inspired by Ilokano culture
+            </div> --}}
+
+            <div class="circle-actions">
+                <a href="{{ route('franchise.process') }}" class="circle-btn">
+                    FRANCHISE KAPE ILOKANO
+                </a>
             </div>
+        </div>
             <h3 class="brand-name mt-3">Kape Ilokano</h3>
             <p class="brand-desc">Serving Naimas Nga Kape</p>
         </div>
@@ -77,8 +79,14 @@
             <div class="circle-box">
                 <img src="{{ asset('img/patatas.webp') }}" alt="Patatas Project">
 
-                <div class="circle-desc">
+                {{-- <div class="circle-desc">
                     Crispy fries crafted to fuel big dreams.
+                </div> --}}
+
+                <div class="circle-actions">
+                    <a href="{{ route('patatas.process') }}" class="circle-btn">
+                        FRANCHISE PATATAS PROJECT
+                    </a>
                 </div>
             </div>
             <h3 class="brand-name mt-3">Patatas Project</h3>
@@ -129,7 +137,7 @@
     <div class="underline"></div>
 
 
-<section class="franchise-section">
+<section class="franchise-steps-section">
 
     <div class="franchise-steps">
 
@@ -211,9 +219,13 @@
 
 
     <!-- CTA BUTTON -->
-    <div class="franchise-now-button-wrapper">
-        <a href="{{ route('franchise.process') }}" class="franchise-now-btn">FRANCHISE NOW</a>
+    {{-- <div class="franchise-now-button-wrapper">
+        <a href="{{ route('franchise.process') }}" class="franchise-now-btn">FRANCHISE NOW KAPE</a>
     </div>
+
+    <div class="franchise-now-button-wrapper">
+        <a href="{{ route('patatas.process') }}" class="franchise-now-btn">FRANCHISE NOW PATATAS</a>
+    </div> --}}
 {{-- <h1 class="section-title">Kape Ilokano Drinks</h1>
 <div class="drinks-container">
 

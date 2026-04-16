@@ -15,7 +15,6 @@ Our {{ strtoupper($ticket->department) }} team has reviewed and addressed your c
 margin-top:15px;
 padding:12px;
 background:#f4f6fb;
-border-left:4px solid #092257;
 border-radius:6px;
 ">
   <strong>Resolution Details:</strong><br>
@@ -38,7 +37,7 @@ style="
 display:inline-block;
 background:#092257;
 color:white;
-padding:12px 18px;
+padding:12px;
 border-radius:8px;
 text-decoration:none;
 font-weight:600;

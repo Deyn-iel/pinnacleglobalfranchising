@@ -4,6 +4,27 @@ document.addEventListener("DOMContentLoaded", () => {
     const previewBtn = document.getElementById("previewBtn");
     const previewContent = document.getElementById("previewContent");
 
+    const submitBtn = document.getElementById("submitBtn");
+
+form.addEventListener("submit", function (e) {
+
+    // 🔥 check muna required fields (reuse mo logic mo)
+    const invalidField = checkRequiredFields(form);
+    if (invalidField) {
+        e.preventDefault(); // STOP submit
+        alert("⚠ Please complete all required fields before submitting.");
+        invalidField.focus();
+        invalidField.scrollIntoView({ behavior: "smooth", block: "center" });
+        return;
+    }
+
+    // ✅ LOADING STATE
+    submitBtn.disabled = true;
+
+    submitBtn.querySelector(".btn-text").classList.add("d-none");
+    submitBtn.querySelector(".btn-loading").classList.remove("d-none");
+});
+
     const previewModal = new bootstrap.Modal(
         document.getElementById("previewModal")
     );

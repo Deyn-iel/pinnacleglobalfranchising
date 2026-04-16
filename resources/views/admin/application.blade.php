@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Admin · Dashboard</title>
+<title>Franchie Application · Dashboard</title>
 
 <link rel="icon" type="image/png" href="{{ asset('img/logo1-removebg-preview.png') }}">
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -116,7 +116,6 @@
   }
 
   .stat-card:hover {
-    transform: translateY(-3px);
     box-shadow: var(--shadow-hover);
     border-color: rgba(13,110,253,.22);
   }
@@ -367,7 +366,7 @@
 
   <div class="page-header">
     <h3 class="fw-bold mb-1">
-      <i class="fas fa-chart-line me-2"></i>Admin Dashboard
+      <i class="fas fa-chart-line me-2"></i>Franchise Application Dashboard
     </h3>
     <p class="text-muted mb-0">
       Overview of franchise applications and recent activity.
@@ -452,29 +451,40 @@
             <td>{{ $app->lead_source }}</td>
             <td>{{ $app->created_at->format('M d, Y') }}</td>
             <td class="text-center actions-cell">
-              <div class="d-inline-flex align-items-center gap-2">
-                <button
-                  type="button"
-                  class="btn btn-primary btn-sm js-view-app"
-                  data-app-id="{{ $app->id }}"
-                  data-bs-toggle="modal"
-                  data-bs-target="#appDetailsModal"
-                >
-                  View
-                </button>
+  <div class="d-inline-flex align-items-center gap-2">
 
-                <form action="{{ route('admin.applications.destroy', $app->id) }}"
-                      method="POST"
-                      class="m-0"
-                      onsubmit="return confirm('Delete this application?');">
-                  @csrf
-                  @method('DELETE')
-                  <button class="btn btn-danger btn-sm">
-                    Delete
-                  </button>
-                </form>
-              </div>
-            </td>
+    <button
+  type="button"
+  class="btn btn-primary btn-sm js-view-app"
+  data-url="{{ route('admin.applications.modal', $app->id) }}"
+  data-bs-toggle="modal"
+  data-bs-target="#appDetailsModal"
+  title="View Details"
+>
+  <i class="fas fa-eye"></i>
+</button>
+
+    <a
+      href="{{ route('admin.applications.pdf', $app->id) }}"
+      class="btn btn-primary btn-sm"
+      title="Download PDF"
+    >
+      <i class="fas fa-file-pdf"></i>
+    </a>
+
+    <form action="{{ route('admin.applications.destroy', $app->id) }}"
+          method="POST"
+          class="m-0"
+          onsubmit="return confirm('Delete this application?');">
+      @csrf
+      @method('DELETE')
+      <button class="btn btn-danger btn-sm">
+        <i class="fas fa-trash"></i>
+      </button>
+    </form>
+
+  </div>
+</td>
           </tr>
         @empty
           <tr>
@@ -526,8 +536,8 @@ document.addEventListener("DOMContentLoaded", () => {
   const modalBody = document.getElementById("appModalBody");
 
   document.querySelectorAll(".js-view-app").forEach(btn => {
-    btn.addEventListener("click", async () => {
-      const id = btn.getAttribute("data-app-id");
+    btn.addEventListener("click", async function () {
+      const url = this.dataset.url;
 
       modalBody.innerHTML = `
         <div class="text-center py-5 text-muted">
@@ -537,19 +547,30 @@ document.addEventListener("DOMContentLoaded", () => {
       `;
 
       try {
-        const res = await fetch(`{{ url('/admin/applications') }}/${id}/modal`, {
-          headers: { "X-Requested-With": "XMLHttpRequest" }
+        const res = await fetch(url, {
+          method: "GET",
+          headers: {
+            "X-Requested-With": "XMLHttpRequest",
+            "Accept": "text/html"
+          },
+          credentials: "same-origin"
         });
 
-        if (!res.ok) throw new Error("Failed to load");
-
         const html = await res.text();
+
+        if (!res.ok) {
+          console.error("Modal load failed:", res.status, html);
+          throw new Error(`HTTP ${res.status}`);
+        }
+
         modalBody.innerHTML = html;
 
-      } catch (e) {
+      } catch (error) {
+        console.error("Error loading modal:", error);
         modalBody.innerHTML = `
           <div class="alert alert-danger mb-0">
-            Failed to load application details. Please try again.
+            Failed to load application details.<br>
+            <small>${error.message}</small>
           </div>
         `;
       }

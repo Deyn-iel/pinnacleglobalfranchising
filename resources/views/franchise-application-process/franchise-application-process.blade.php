@@ -6,6 +6,7 @@
   <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
   <link rel="icon" type="image/png" href="{{ asset('img/logo1-removebg-preview.png') }}">
   <title>Franchise Application</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 
 @vite(['resources/css/franchise-app/app.css', 
@@ -420,7 +421,14 @@
 
         <div style="display:flex; gap:10px; justify-content:flex-end; margin-top:20px;">
         <button type="button" id="previewBtn" class="btn ghost">Preview Application</button>
-        <button type="submit" class="btn">Submit</button>
+        <button type="submit" id="submitBtn" class="btn">
+    <span class="btn-text">Submit</span>
+
+    <span class="btn-loading d-none">
+        <i class="fa-solid fa-arrows-rotate fa-spin me-2"></i>
+        Submitting...
+    </span>
+</button>
     </div>
 
 
