@@ -116,6 +116,19 @@ class="nav-link {{ request()->routeIs('admin.portals.od') ? 'active' : '' }}">
 
 </a>
 
+<a href="{{ route('portal.company-files', 'od') }}"
+class="nav-link {{ request()->routeIs('portal.company-files') ? 'active' : '' }}">
+<i class="fas fa-file-lines"></i>
+Company Files
+</a>
+
+<a href="{{ route('portal.company-files', 'od') }}"
+class="nav-link {{ request()->routeIs('portal.company-files') ? 'active' : '' }}">
+<i class="fas fa-file-signature"></i>
+Register Franchise
+</a>
+
+
 <a href="#">
 <i class="fa-solid fa-bell"></i>
 Notifications

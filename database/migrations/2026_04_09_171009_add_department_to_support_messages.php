@@ -10,16 +10,27 @@ return new class extends Migration
      * Run the migrations.
      */
     public function up(): void
-{
-    Schema::table('support_messages', function (Blueprint $table) {
-        $table->string('department')->nullable()->after('message');
-    });
-}
+    {
+        if (!Schema::hasColumn('support_messages', 'department')) {
 
-public function down(): void
-{
-    Schema::table('support_messages', function (Blueprint $table) {
-        $table->dropColumn('department');
-    });
-}
+            Schema::table('support_messages', function (Blueprint $table) {
+                $table->string('department')->nullable()->after('message');
+            });
+
+        }
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        if (Schema::hasColumn('support_messages', 'department')) {
+
+            Schema::table('support_messages', function (Blueprint $table) {
+                $table->dropColumn('department');
+            });
+
+        }
+    }
 };

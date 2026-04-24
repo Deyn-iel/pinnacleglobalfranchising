@@ -1,11 +1,9 @@
-/* ================= PROFILE PAGE ================= */
+
 
 .profile-page {
     width: 100%;
     animation: fadeUp 0.5s ease forwards;
 }
-
-/* ================= PAGE TITLE ================= */
 
 .page-title {
     margin-bottom: 32px;
@@ -37,7 +35,6 @@
     text-align: left;
 }
 
-/* ================= GRID LAYOUT ================= */
 
 .profile-grid {
     display: grid;
@@ -46,7 +43,6 @@
     align-items: start;
 }
 
-/* ================= CARD BASE ================= */
 
 .profile-card {
     background: #ffffff;
@@ -65,7 +61,6 @@
         0 4px 10px rgba(0,0,0,0.06);
 }
 
-/* ================= CARD HEADERS ================= */
 
 .profile-card h3 {
     font-size: 22px;
@@ -80,7 +75,6 @@
     line-height: 1.6;
 }
 
-/* ================= FORM ================= */
 
 .profile-card form {
     margin-top: 22px;
@@ -88,14 +82,13 @@
 
 .profile-card label {
     display: block;
-    padding: 8px; /* ← ITO ANG KULANG */
+    padding: 8px;
     font-size: 13.5px;
     font-weight: 600;
     color: #000000;
 }
 
 
-/* inputs */
 .profile-card input[type="text"],
 .profile-card input[type="email"],
 .profile-card input[type="password"] {
@@ -114,8 +107,6 @@
     border-color: #2563eb;
     box-shadow: 0 0 0 4px rgba(37,99,235,0.15);
 }
-
-/* ================= BUTTONS ================= */
 
 .profile-card button {
     border-radius: 14px;
@@ -139,14 +130,12 @@
     box-shadow: 0 10px 24px rgba(37,99,235,0.35);
 }
 
-/* ================= DIVIDER ================= */
 
 .profile-divider {
     border-top: 1px solid #e5e7eb;
     margin: 30px 0;
 }
 
-/* ================= DANGER CARD ================= */
 
 .profile-card.danger {
     border-left: 5px solid #ef4444;
@@ -167,7 +156,6 @@
     box-shadow: 0 10px 25px rgba(239,68,68,0.35);
 }
 
-/* ================= SUCCESS / ERROR ================= */
 
 .profile-page .text-green-600 {
     font-size: 13px;
@@ -178,7 +166,6 @@
     font-size: 13px;
 }
 
-/* ================= MODAL ================= */
 
 .profile-page .fixed.inset-0 {
     backdrop-filter: blur(6px);
@@ -189,7 +176,6 @@
     box-shadow: 0 25px 60px rgba(0,0,0,0.25);
 }
 
-/* ================= ANIMATION ================= */
 
 @keyframes fadeUp {
     from {
@@ -202,7 +188,6 @@
     }
 }
 
-/* ================= RESPONSIVE ================= */
 
 @media (max-width: 1024px) {
     .profile-grid {
@@ -234,8 +219,6 @@
         font-size: 13.5px;
     }
 }
-
-/* ================= PASSWORD EYE TOGGLE ================= */
 
 .password-group {
     margin-bottom: 18px;

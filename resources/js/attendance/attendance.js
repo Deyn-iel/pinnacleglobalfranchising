@@ -9,9 +9,6 @@ let messageTimer = null;
 let currentStream = null;
 let capturedBlob = null;
 
-/* =========================
-   🎥 START CAMERA
-========================= */
 function startCamera() {
     navigator.mediaDevices.getUserMedia({
         video: { facingMode: "user" },
@@ -32,9 +29,6 @@ function startCamera() {
     });
 }
 
-/* =========================
-   📸 CAPTURE PHOTO (FIXED)
-========================= */
 function capturePhoto() {
     if (!currentStream) {
         alert('Open camera first');
@@ -56,7 +50,6 @@ function capturePhoto() {
 
     ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
 
-    // ✅ SHOW CAPTURED IMAGE
     video.style.display = 'none';
     canvas.hidden = false;
 
@@ -112,9 +105,6 @@ function getLocation() {
 }
 
 
-/* =========================
-   📤 SUBMIT ATTENDANCE
-========================= */
 async function submitAttendance(type) {
     if (!capturedBlob) {
         alert('Capture selfie first');
@@ -155,7 +145,7 @@ async function submitAttendance(type) {
     timeDisplay.classList.remove('error');
     timeDisplay.classList.add('success', 'show');
 
-    resetAfterSubmit(); // 🔥 auto reset
+    resetAfterSubmit();
 })
 .catch(err => {
     timeDisplay.innerText = err.message || 'Attendance failed';
@@ -173,31 +163,26 @@ async function submitAttendance(type) {
 }
 
 function resetAfterSubmit() {
-    // ❌ remove previous capture
     capturedBlob = null;
 
-    // 🧼 reset canvas
     const ctx = canvas.getContext('2d');
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     canvas.hidden = true;
 
-    // 🎥 force video preview back
     if (currentStream) {
-        video.srcObject = currentStream; // 🔥 important
+        video.srcObject = currentStream;
         video.play();
         video.style.display = 'block';
     }
 
     placeholder.style.display = 'none';
 
-    // 🕒 auto-hide message
     clearTimeout(messageTimer);
     messageTimer = setTimeout(() => {
         timeDisplay.classList.remove('show', 'success', 'error');
     }, 5000);
 }
 
-    // expose functions to global scope
     window.startCamera = startCamera;
     window.capturePhoto = capturePhoto;
     window.submitAttendance = submitAttendance;

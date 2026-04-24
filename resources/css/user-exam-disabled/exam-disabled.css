@@ -1,5 +1,4 @@
-/* 403 */
-/* ================= BASE ================= */
+
 * {
     box-sizing: border-box;
     padding: 0;
@@ -14,7 +13,6 @@ body {
     color: #ffffff;
 }
 
-/* ================= CENTER WRAPPER ================= */
 .wrapper {
     min-height: 100vh;
     display: flex;
@@ -23,7 +21,6 @@ body {
     padding: 32px;
 }
 
-/* ================= LAYOUT ================= */
 .layout {
     width: 100%;
     max-width: 1100px;
@@ -33,7 +30,6 @@ body {
     gap: 64px;
 }
 
-/* ================= TEXT ================= */
 .text-area {
     max-width: 480px;
 }
@@ -58,7 +54,6 @@ body {
     margin-bottom: 28px;
 }
 
-/* ================= BUTTON ================= */
 .btn-back {
     background: #ffffff;
     color: #1e3a8a;
@@ -79,7 +74,6 @@ body {
     outline: none !important;
 }
 
-/* ================= SVG ================= */
 .illustration {
     flex-shrink: 0;
 }
@@ -89,7 +83,6 @@ body {
     height: auto;
 }
 
-/* ================= iPAD / TABLET ================= */
 @media (max-width: 1199px) {
     .layout {
         gap: 40px;
@@ -99,11 +92,10 @@ body {
         width: min(520px, 42vw);
     }
 }
-/* ================= iPAD FIX ================= */
 @media (min-width: 768px) and (max-width: 1024px) {
     .layout {
-        justify-content: center;   /* 🔥 center whole block */
-        gap: 40px;                 /* bawasan space */
+        justify-content: center;   
+        gap: 40px;                
     }
 
     .text-area {
@@ -111,11 +103,10 @@ body {
     }
 
     .illustration img {
-        width: 360px;              /* 🔥 sakto sa iPad */
+        width: 360px;         
     }
 }
 
-/* ================= MOBILE ================= */
 @media (max-width: 767px) {
     .layout {
         flex-direction: column;
@@ -142,7 +133,6 @@ body {
     }
 }
 
-/* ================= SMALL PHONE ================= */
 @media (max-width: 360px) {
     .illustration img {
         width: 220px;

@@ -17,20 +17,12 @@ class ClaimController extends Controller
     {
         $user = $request->user();
 
-        /**
-         * IMPORTANT UI -> BACKEND NOTES
-         * - Upload fields must be named like: attachments[policy_data_page], attachments[claim_form], etc.
-         * - Receipts are coming from UI as receipt_lines_json (array of {cat, desc, amt})
-         *   so we decode+map it here into $receipts (category/description/amount)
-         */
-
         $data = $request->validate([
             'surname' => ['required', 'string', 'max:100'],
             'given'   => ['required', 'string', 'max:100'],
             'middle'  => ['nullable', 'string', 'max:100'],
             'dob'     => ['required', 'date'],
             'civil'   => ['required', Rule::in(['Single', 'Married'])],
-
             'empType'    => ['required', 'string', 'max:120'],
             'claimType'  => ['required', Rule::in(['Personal Claim', "Dependent's Claim"])],
             'benefit'    => ['required', Rule::in(['Basic Medical', 'Major Medical', 'Dread Disease', 'Accident Benefit'])],
@@ -40,44 +32,31 @@ class ClaimController extends Controller
             'depName' => ['nullable', 'string', 'max:200'],
             'depRel'  => ['nullable', Rule::in(['Parent', 'Spouse', 'Children'])],
             'depDob'  => ['nullable', 'date'],
-
-            // major medical admit (optional)
             'roomDate'      => ['nullable', 'date'],
             'timeIn'        => ['nullable', 'date_format:H:i'],
             'timeOut'       => ['nullable', 'date_format:H:i'],
             'amtPerReceipt' => ['nullable', 'numeric', 'min:0'],
-
-            // receipts: you can still support array-based receipts later,
-            // but right now UI sends receipt_lines_json
             'receipts' => ['nullable', 'array'],
             'receipts.*.category' => ['required_with:receipts', 'string', 'max:60'],
             'receipts.*.description' => ['required_with:receipts', 'string', 'max:200'],
             'receipts.*.amount' => ['required_with:receipts', 'numeric', 'min:0.01'],
-
-            // ✅ from UI hidden input: <input name="receipt_lines_json" ...>
             'receipt_lines_json' => ['required', 'string'],
-
-            // uploads:
-            // must be attachments[policy_data_page], attachments[claim_form], etc.
             'attachments' => ['required','array'],
-
-// REQUIRED uploads (match sa UI names)
-'attachments.policy_data_page'     => ['required','file','max:20480'], //20 mb each
-'attachments.claim_form'           => ['required','file','max:20480'],
-'attachments.philhealth_deduction' => ['required','file','max:20480'],
-'attachments.physician_statement'  => ['required','file','max:20480'],
-
-// OPTIONAL uploads (pwede wala)
-'attachments.hr_endorsement'       => ['nullable','file','max:20480'],
-'attachments.soa_itemized'         => ['nullable','file','max:20480'],
-'attachments.medical_abstract'     => ['nullable','file','max:20480'],
-'attachments.surgical_report'      => ['nullable','file','max:20480'],
-'attachments.doctors_prescription' => ['nullable','file','max:20480'],
-'attachments.incident_report'      => ['nullable','file','max:20480'],
-'attachments.others_file'          => ['nullable','file','max:20480'],
+            'attachments.policy_data_page'     => ['required','file','max:20480'], 
+            'attachments.claim_form'           => ['required','file','max:20480'],
+            'attachments.philhealth_deduction' => ['required','file','max:20480'],
+            'attachments.physician_statement'  => ['required','file','max:20480'],
+            
+            // OPTIONAL uploads (pwede wala)
+            'attachments.hr_endorsement'       => ['nullable','file','max:20480'],
+            'attachments.soa_itemized'         => ['nullable','file','max:20480'],
+            'attachments.medical_abstract'     => ['nullable','file','max:20480'],
+            'attachments.surgical_report'      => ['nullable','file','max:20480'],
+            'attachments.doctors_prescription' => ['nullable','file','max:20480'],
+            'attachments.incident_report'      => ['nullable','file','max:20480'],
+            'attachments.others_file'          => ['nullable','file','max:20480'],
         ]);
 
-        // ✅ Validate receipt_lines_json structure (if provided)
 if ($request->filled('receipt_lines_json')) {
     $decoded = json_decode($request->input('receipt_lines_json','[]'), true);
 if (!is_array($decoded) || count($decoded) === 0) {
@@ -86,7 +65,6 @@ if (!is_array($decoded) || count($decoded) === 0) {
     ])->withInput();
 }
 
-    // Validate each line (expects {cat, desc, amt})
     foreach ($decoded as $i => $line) {
         $cat  = $line['cat']  ?? null;
         $desc = $line['desc'] ?? null;
@@ -112,9 +90,6 @@ if (!is_array($decoded) || count($decoded) === 0) {
     }
 }
 
-        // ===================== RULES (same as JS) =====================
-
-        // Employee age rule: 18–65
         $age = Carbon::parse($data['dob'])->diffInYears(now());
         if ($age < 18 || $age > 65) {
             return back()->withErrors(['dob' => 'Employee DOB invalid: accepted 18–65 only.'])->withInput();
@@ -139,7 +114,6 @@ if (!is_array($decoded) || count($decoded) === 0) {
             }
         }
 
-        // Major medical duration rule: >= 6 hours
         if ($data['benefit'] === 'Major Medical') {
             if (!$request->filled('timeIn') || !$request->filled('timeOut')) {
                 return back()->withErrors(['timeIn' => 'Major Medical: please set Time In and Time Out.'])->withInput();
@@ -158,8 +132,6 @@ if (!is_array($decoded) || count($decoded) === 0) {
                     return back()->withErrors(['timeOut' => 'Major Medical: Duration must be at least 6 hours.'])->withInput();
                 }
         }
-
-                // ===================== DUPLICATE KEY + 90-DAY RULE =====================
         $name = Str::lower(trim(preg_replace('/\s+/', ' ', $data['given'].' '.($data['middle'] ?? '').' '.$data['surname'])));
         $key  = $name.'|'.$data['dob'].'|'.Str::lower($data['benefit']).'|'.Str::lower($data['claimType']);
 
@@ -179,7 +151,6 @@ if ($last) {
 
     $expected = (int) $last->occurrence + 1;
 
-    // ✅ required: UI occurrence must match expected (prevents cheating)
     if ($uiOcc && $uiOcc !== $expected) {
         return back()->withErrors([
             'claimOccurrence' => "Invalid claim occurrence. Expected {$expected}."
@@ -196,10 +167,6 @@ if ($last) {
     }
     $occ = 1;
 }
-
-        // ===================== RECEIPTS (FIXED) =====================
-
-        // Prefer array receipts if sent; otherwise decode receipt_lines_json
         $receipts = $request->input('receipts', []);
 
         if (empty($receipts) && $request->filled('receipt_lines_json')) {
@@ -207,7 +174,6 @@ if ($last) {
             $receipts = is_array($decoded) ? $decoded : [];
         }
 
-        // Map UI keys {cat, desc, amt} -> {category, description, amount}
         $receipts = collect($receipts)->map(function ($r) {
             return [
                 'category'    => $r['category'] ?? $r['cat'] ?? '',
@@ -222,7 +188,6 @@ if ($last) {
 
         $total = collect($receipts)->sum(fn ($r) => (float) $r['amount']);
 
-        // ===================== SAVE =====================
         return DB::transaction(function () use ($user, $data, $request, $receipts, $total, $key, $occ) {
 
             $claimCode = 'CLM-' . random_int(10000, 99999);
@@ -271,7 +236,7 @@ if ($last) {
                     $path = $file->store("claims/{$claim->id}", 'public');
 
                     $claim->attachments()->create([
-                        'label'    => (string) $label, // store your key e.g. policy_data_page
+                        'label'    => (string) $label, 
                         'path'     => $path,
                         'original' => $file->getClientOriginalName(),
                     ]);
@@ -279,7 +244,7 @@ if ($last) {
             }
 
             return redirect()
-            ->route('portal.dashboard')  // <-- HR dashboard mo
+            ->route('portal.dashboard') 
             ->with('success', "Claim submitted: {$claim->claim_code}");
         });
     }
@@ -287,7 +252,7 @@ if ($last) {
     public function show(Request $request, Claim $claim)
     {
         if ($claim->hr_user_id !== $request->user()->id) abort(403);
-        // If someone visits in browser, just bounce to dashboard
+
         if (! $request->expectsJson()) {
             return redirect()->route('portal.dashboard');
         }
@@ -298,7 +263,6 @@ if ($last) {
             ($claim->employee_surname ?? '')
         );
 
-        // Map receipts to what your JS expects: { item, cat, amt }
         $analysisRows = $claim->receipts()
             ->get()
             ->map(fn ($r) => [
@@ -335,30 +299,19 @@ if ($last) {
         ]);
     }
 
-    /**
-     * GET /hr/claims/{claim}/analysis
-     * Used by the "View Analysis" button: route('hr.claims.analysis', $c->id)
-     */
     public function analysis(Claim $claim)
 {
-    // reuse your universal-portal.portal (dashboard) UI
-    // and auto-open analysis tab for this claim id
     return redirect()->route('portal.dashboard', [
         'open_analysis' => $claim->id,
     ]);
 }
 
-/**
- * DELETE /hr/claims/{claim}
- * Delete is allowed only within 24 hours after submission.
- */
 public function destroy(Request $request, Claim $claim)
 {
     if ($claim->hr_user_id !== $request->user()->id) {
     abort(403);
 }
 
-    // ✅ 24-hour rule
     $hours = $claim->created_at ? $claim->created_at->diffInHours(now()) : 9999;
     if ($hours > 24) {
         $msg = 'Delete is allowed only within 24 hours after submission.';
@@ -379,15 +332,12 @@ public function destroy(Request $request, Claim $claim)
             });
         }
 
-        // ✅ delete receipts rows
         if (method_exists($claim, 'receipts')) {
             $claim->receipts()->delete();
         }
 
-        // ✅ optionally delete directory (safe cleanup)
         Storage::disk('public')->deleteDirectory("claims/{$claim->id}");
 
-        // ✅ delete main claim row
         $claim->delete();
     });
 

@@ -696,7 +696,7 @@ data-status="{{ $isReview ? 'Requesting' : ucwords(str_replace('_',' ', $ticket-
     <i class="fa-solid fa-arrows-rotate fa-spin"></i> Transferring...
   </span>
 </button>
-
+  </div>
     </div>
   </div>
 </div>

@@ -32,6 +32,15 @@ public function myTickets()
     return view('ticket.ticket-dashboard', compact('tickets'));
 }
 
+public function coupon()
+{
+    $tickets = \App\Models\Ticket::where('user_id', Auth::id())
+        ->latest()
+        ->get();
+
+    return view('ticket.coupon', compact('tickets')) ->with('pageTitle', 'Verify Coupons');
+}
+
     public function create()
     {
         return view('ticket.create-ticket');
@@ -71,34 +80,35 @@ public function myTickets()
             'department' => $request->department,
             'priority' => $request->priority,
             'status' => 'pending',
-            'pending_at' => now(), // ✅ ADD THIS
+            'pending_at' => now(),
         ]);
     });
 
-    // ✅ SEND EMAIL HERE (OUTSIDE TRANSACTION)
 
     if($ticket){
 
-        $mainEmails = explode(',', env('SUPPORT_NOTIFY_EMAILS'));
+        $mainEmails = array_map('trim', explode(',', env('SUPPORT_NOTIFY_EMAILS')));
 
-        // department email mapping
-        $departmentMap = [
-            'it' => env('IT_SUPPORT_EMAIL'),
-            'hr' => env('HR_SUPPORT_EMAIL'),
-            'smm' => env('SMM_SUPPORT_EMAIL'),
-            'finance' => env('FINANCE_SUPPORT_EMAIL'),
-            'admin-secretary' => env('ADMIN_SUPPORT_EMAIL'),
-            'od' => env('OPERATIONS_DIRECTOR_SUPPORT_EMAIL'),
-            'om' => env('OPERATIONS_MANAGER_SUPPORT_EMAIL'),
-        ];
+$departmentMap = [
+    'it' => env('IT_SUPPORT_EMAIL'),
+    'hr' => env('HR_SUPPORT_EMAIL'),
+    'smm' => env('SMM_SUPPORT_EMAIL'),
+    'finance' => env('FINANCE_SUPPORT_EMAIL'),
+    'admin-secretary' => env('ADMIN_SUPPORT_EMAIL'),
+    'od' => env('OPERATIONS_DIRECTOR_SUPPORT_EMAIL'),
+    'om' => env('OPERATIONS_MANAGER_SUPPORT_EMAIL'),
+];
 
-        $departmentEmail = $departmentMap[$ticket->department] ?? null;
+$departmentEmail = $departmentMap[$ticket->department] ?? null;
 
-        $emails = $mainEmails;
+$emails = $mainEmails;
 
-        if($departmentEmail){
-            $emails[] = $departmentEmail;
-        }
+if($departmentEmail){
+    $deptEmails = array_map('trim', explode(',', $departmentEmail));
+    $emails = array_merge($emails, $deptEmails);
+}
+
+$emails = array_unique($emails);
 
         try {
 
@@ -196,12 +206,10 @@ public function requestApproval(Request $request, $id)
 
     $ticket = Ticket::with('user')->findOrFail($id);
 
-    // ✅ IMPORTANT: SET APPROVAL FLAG
     $ticket->approval_requested = true;
     $ticket->approval_requested_at = now();
     $ticket->save();
 
-    // ✅ SEND EMAIL
     Mail::to($ticket->user->email)
         ->send(new TicketApprovalRequestMail($ticket, $request->justification));
 
@@ -216,7 +224,6 @@ public function decline(Request $request, $id)
 
     $ticket = Ticket::with('user')->findOrFail($id);
 
-    // ✅ UPDATE STATUS
     $ticket->status = 'in_progress';
     $ticket->approval_decline_reason = $request->reason;
     $ticket->approval_requested = false;
@@ -224,9 +231,6 @@ public function decline(Request $request, $id)
 
     $ticket->save();
 
-    // ==========================
-    // 🔥 SEND EMAIL TO DEPARTMENT
-    // ==========================
     $departmentMap = [
         'it' => env('IT_SUPPORT_EMAIL'),
         'hr' => env('HR_SUPPORT_EMAIL'),
@@ -269,9 +273,6 @@ public function approve($id)
 
     $ticket->save();
 
-    // ==========================
-    // 🔥 SEND EMAIL TO DEPARTMENT ONLY
-    // ==========================
     $departmentMap = [
         'it' => env('IT_SUPPORT_EMAIL'),
         'hr' => env('HR_SUPPORT_EMAIL'),
@@ -316,11 +317,8 @@ public function transfer(Request $request, $id)
 
     $oldDept = $ticket->department;
 
-    // ✅ update department
-    // ✅ update department
 $ticket->department = $request->department;
 
-// ✅ RESET FULL STATE (IMPORTANT)
 $ticket->status = 'pending';
 $ticket->pending_at = now();
 
@@ -332,14 +330,10 @@ $ticket->approval_requested_at = null;
 $ticket->approved_at = null;
 $ticket->approval_decline_reason = null;
 
-// optional (clean reset)
 $ticket->resolution_justification = null;
 
 $ticket->save();
 
-    // ==========================
-    // 🔥 EMAIL SA NEW DEPARTMENT
-    // ==========================
     $departmentMap = [
         'it' => env('IT_SUPPORT_EMAIL'),
         'hr' => env('HR_SUPPORT_EMAIL'),

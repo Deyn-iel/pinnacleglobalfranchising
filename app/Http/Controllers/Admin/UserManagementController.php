@@ -36,7 +36,7 @@ public function index()
         'email'         => $request->email,
         'password'      => Hash::make($plainPassword),
         'temp_password' => $plainPassword,
-        'usertype'      => $request->usertype, // ✅ portal mase-save
+        'usertype'      => $request->usertype, 
     ]);
 
     return redirect()

@@ -20,7 +20,6 @@ class CoffeeRegistrationController extends Controller
         $sessions = $this->sessions();
         $rates = $this->rates();
 
-        // ✅ latest registration ng user (no auth()->id() underline issue)
         $myReg = CoffeeRegistration::where('user_id', Auth::id())
             ->latest()
             ->first();
@@ -38,7 +37,6 @@ class CoffeeRegistrationController extends Controller
         $user = $request->user();
         if (!$user) abort(403, 'Unauthorized');
 
-        // ✅ block kapag may pending na
         $existingPending = CoffeeRegistration::where('user_id', $user->id)
             ->where('status', 'Pending')
             ->exists();

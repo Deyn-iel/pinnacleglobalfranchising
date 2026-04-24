@@ -125,6 +125,12 @@ class="nav-link {{ request()->routeIs('admin.portals.it') ? 'active' : '' }}">
 
 </a>
 
+<a href="{{ route('portal.company-files', 'it') }}"
+class="nav-link {{ request()->routeIs('portal.company-files') ? 'active' : '' }}">
+<i class="fas fa-file-lines"></i>
+Company Files
+</a>
+
 <a href="#">
 <i class="fa-solid fa-bell"></i>
 Notifications

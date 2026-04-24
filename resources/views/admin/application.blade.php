@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Franchie Application · Dashboard</title>
+<title>Franchise Application · Dashboard</title>
 
 <link rel="icon" type="image/png" href="{{ asset('img/logo1-removebg-preview.png') }}">
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -225,7 +225,46 @@
 
   .actions-cell{
     white-space: nowrap;
-  }
+}
+
+.action-group{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    gap:8px;
+    flex-wrap:wrap;
+}
+
+.action-btn{
+    width:38px;
+    height:38px;
+    border:none;
+    border-radius:12px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:14px;
+    color:#fff;
+    transition:all .18s ease;
+    box-shadow:0 8px 18px rgba(0,0,0,.08);
+}
+
+.action-btn:hover{
+    box-shadow:0 14px 25px rgba(0,0,0,.15);
+}
+
+.action-view{background:#0f172a;}
+.action-schedule{background:#06b6d4;}
+.action-start{background:#2563eb;}
+.action-reschedule{background:#f59e0b;}
+.action-done{background:#16a34a;}
+.action-close{background:#111827;}
+.action-decline{background:#dc2626;}
+.action-delete{background:#e11d48;}
+
+.action-btn i{
+    pointer-events:none;
+}
 
   /* ================= ALERT ================= */
   .alert {
@@ -241,13 +280,40 @@
   }
 
   /* ================= MODAL FIX ================= */
-  .app-details-modal{
-    z-index: 5000;
-  }
+/* NORMALIZE ALL MODALS */
+.modal{
+    z-index: 1060 !important;
+}
 
-  .modal-backdrop.show{
-    z-index: 4990;
-  }
+.modal-backdrop.show{
+    z-index: 1055 !important;
+}
+
+/* application details only slightly higher */
+.app-details-modal{
+    z-index: 1070 !important;
+}
+
+  /* SCHEDULE + RESCHEDULE MODAL FIX */
+[id^="scheduleModal"] .modal-dialog,
+[id^="rescheduleModal"] .modal-dialog{
+    margin: 80px auto !important;
+    max-width: 650px;
+    pointer-events: auto;
+}
+
+#scheduleModal1 .modal-content,
+[id^="scheduleModal"] .modal-content,
+[id^="rescheduleModal"] .modal-content{
+    border-radius: 16px;
+}
+
+#scheduleModal1 .modal-body,
+[id^="scheduleModal"] .modal-body,
+[id^="rescheduleModal"] .modal-body{
+    max-height: 70vh;
+    overflow-y: auto;
+}
 
   #appDetailsModal{
     padding: 16px !important;
@@ -354,6 +420,40 @@
       font-size: 14px;
     }
   }
+
+  form .form-control,
+form .form-select{
+    height: 45px;
+    border-radius: 10px;
+}
+
+.pagination{
+    justify-content:center;
+}
+.loading-btn{
+    opacity: 1;
+}
+
+.loading-btn.loading{
+    pointer-events: none;
+    opacity: .85;
+}
+
+.loading-btn .btn-text{
+    display: none;
+}
+
+.loading-btn.loading .btn-text{
+    display: inline;
+}
+
+.loading-btn .btn-loader{
+    display: none;
+}
+
+.loading-btn.loading .btn-loader{
+    display: inline;
+}
 </style>
 </head>
 
@@ -430,82 +530,387 @@
     <div class="text-muted small">Showing latest submissions</div>
   </div>
 
+  <form method="GET" class="row g-2 mb-3">
+
+    <div class="col-md-4">
+        <input type="text"
+               name="search"
+               class="form-control"
+               placeholder="Search applicant..."
+               value="{{ request('search') }}">
+    </div>
+
+    <div class="col-md-3">
+        <select name="status" class="form-select">
+            <option value="All">All Status</option>
+            <option value="Review in Progress" {{ request('status')=='Review in Progress' ? 'selected' : '' }}>Review in Progress</option>
+            <option value="Appointment Scheduled" {{ request('status')=='Appointment Scheduled' ? 'selected' : '' }}>Appointment Scheduled</option>
+            <option value="Discovery Meeting" {{ request('status')=='Discovery Meeting' ? 'selected' : '' }}>Discovery Meeting</option>
+            <option value="Discovery Session Done" {{ request('status')=='Discovery Session Done' ? 'selected' : '' }}>Discovery Session Done</option>
+            <option value="Closed Deal" {{ request('status')=='Closed Deal' ? 'selected' : '' }}>Closed Deal</option>
+            <option value="Declined" {{ request('status')=='Declined' ? 'selected' : '' }}>Declined</option>
+        </select>
+    </div>
+
+    <div class="col-md-3">
+        <select name="sort" class="form-select">
+            <option value="latest" {{ request('sort')=='latest' ? 'selected' : '' }}>Latest</option>
+            <option value="oldest" {{ request('sort')=='oldest' ? 'selected' : '' }}>Oldest</option>
+        </select>
+    </div>
+
+    <div class="col-md-2 d-grid">
+        <button type="submit" class="btn btn-dark loading-btn">
+<span class="btn-label">Apply</span>
+<span class="btn-loader">
+<i class="fa-solid fa-arrows-rotate fa-spin me-2"></i>
+</span>
+<span class="btn-text ms-2">Loading...</span>
+</button>
+    </div>
+
+</form>
   <div class="table-wrapper">
     <div class="table-scroll">
       <table class="table table-hover align-middle">
         <thead class="table-dark">
           <tr>
-            <th>Name</th>
+            <th>Applicant</th>
             <th>Email</th>
-            <th>Lead Source</th>
-            <th>Date</th>
-            <th class="text-center" style="width:160px;">Actions</th>
+            <th>Contact</th>
+            <th>Proposed Location</th>
+            <th>Date Applied</th>
+          <th>Meeting Schedule</th>
+          <th>Status</th>
+            <th class="text-center" style="width:230px;">Actions</th>
           </tr>
         </thead>
 
         <tbody>
-        @forelse(\App\Models\FranchiseApplication::latest()->get() as $app)
+        @forelse($applications as $app)
           <tr>
             <td class="fw-semibold">{{ $app->personal_full_name }}</td>
             <td>{{ $app->email }}</td>
-            <td>{{ $app->lead_source }}</td>
+            <td>{{ $app->personal_contact }}</td>
+            <td>{{ $app->address_city }} {{ $app->proposal_location }}</td>
             <td>{{ $app->created_at->format('M d, Y') }}</td>
-            <td class="text-center actions-cell">
-  <div class="d-inline-flex align-items-center gap-2">
 
-    <button
-  type="button"
-  class="btn btn-primary btn-sm js-view-app"
-  data-url="{{ route('admin.applications.modal', $app->id) }}"
-  data-bs-toggle="modal"
-  data-bs-target="#appDetailsModal"
-  title="View Details"
->
-  <i class="fas fa-eye"></i>
+            <td>
+            @if($app->appointment_date)
+                <div class="fw-semibold">
+                    {{ \Carbon\Carbon::parse($app->appointment_date)->format('M d, Y') }}
+                </div>
+
+                <small class="text-muted">
+                    {{ \Carbon\Carbon::parse($app->appointment_time)->format('h:i A') }}
+                </small>
+            @else
+                <span class="text-muted">Not Scheduled</span>
+            @endif
+            </td>
+
+            <td>
+    @php
+        $status = $app->status ?? 'Review in Progress';
+        $badgeClass = 'bg-warning text-dark';
+
+        switch (strtolower(trim($status))) {
+
+            // MODULE 3 - APPLICATION STATUS TRACKING
+            case 'review in progress':
+                $status = 'Review in Progress';
+                $badgeClass = 'bg-warning text-dark';
+                break;
+
+            // MODULE 4 - APPOINTMENT SCHEDULING
+            case 'appointment scheduled':
+                $status = 'Appointment Scheduled';
+                $badgeClass = 'bg-info text-dark';
+                break;
+
+            // Optional next stages
+            case 'discovery meeting':
+                $status = 'Discovery Meeting';
+                $badgeClass = 'bg-primary';
+                break;
+
+            case 'discovery session done':
+                $status = 'Discovery Session Done';
+                $badgeClass = 'bg-success';
+                break;
+
+            case 'interested':
+                $status = 'Interested';
+                $badgeClass = 'bg-success';
+                break;
+
+            case 'follow-up needed':
+                $status = 'Follow-up Needed';
+                $badgeClass = 'bg-warning text-dark';
+                break;
+
+            case 'closed deal':
+                $status = 'Closed Deal';
+                $badgeClass = 'bg-success';
+                break;
+
+            case 'declined':
+                $status = 'Declined';
+                $badgeClass = 'bg-danger';
+                break;
+
+            default:
+                $status = 'Review in Progress';
+                $badgeClass = 'bg-warning text-dark';
+                break;
+        }
+    @endphp
+
+<span class="badge {{ $badgeClass }}">{{ $status }}</span>
+      </td>
+
+      <td class="text-center actions-cell">
+<div class="action-group">
+
+<button
+type="button"
+class="action-btn action-view js-view-app"
+title="View Details"
+data-bs-toggle="modal"
+data-bs-target="#appDetailsModal"
+data-url="{{ route('admin.applications.modal', $app->id) }}">
+<i class="fas fa-eye"></i>
 </button>
 
-    <a
-      href="{{ route('admin.applications.pdf', $app->id) }}"
-      class="btn btn-primary btn-sm"
-      title="Download PDF"
-    >
-      <i class="fas fa-file-pdf"></i>
-    </a>
+{{-- REVIEW --}}
+@if($app->status == 'Review in Progress' || $app->status == 'Submitted')
+<button
+type="button"
+class="action-btn action-schedule"
+title="Schedule Meeting"
+data-bs-toggle="modal"
+data-bs-target="#scheduleModal{{ $app->id }}">
+<i class="fas fa-calendar-plus"></i>
+</button>
+@endif
 
-    <form action="{{ route('admin.applications.destroy', $app->id) }}"
-          method="POST"
-          class="m-0"
-          onsubmit="return confirm('Delete this application?');">
-      @csrf
-      @method('DELETE')
-      <button class="btn btn-danger btn-sm">
-        <i class="fas fa-trash"></i>
-      </button>
-    </form>
+{{-- APPOINTMENT --}}
+@if($app->status == 'Appointment Scheduled')
 
-  </div>
+<form action="{{ route('admin.application.startDiscovery', $app->id) }}" method="POST">
+@csrf
+<button type="submit"
+class="action-btn action-start loading-btn"
+title="Start Discovery">
+<i class="fas fa-play"></i>
+</button>
+</form>
+
+<button
+type="button"
+class="action-btn action-reschedule"
+title="Reschedule"
+data-bs-toggle="modal"
+data-bs-target="#rescheduleModal{{ $app->id }}">
+<i class="fas fa-clock"></i>
+</button>
+
+@endif
+
+{{-- DISCOVERY --}}
+@if($app->status == 'Discovery Meeting')
+<form action="{{ route('admin.application.doneDiscovery', $app->id) }}" method="POST">
+@csrf
+<button type="submit"
+class="action-btn action-done loading-btn"
+title="Mark Done">
+<i class="fas fa-check"></i>
+</button>
+</form>
+@endif
+
+{{-- DONE --}}
+@if($app->status == 'Discovery Session Done')
+
+<form action="{{ route('admin.application.closeDeal', $app->id) }}" method="POST">
+@csrf
+<button type="submit"
+class="action-btn action-close loading-btn"
+title="Close Deal">
+<i class="fas fa-handshake"></i>
+</button>
+</form>
+
+<form action="{{ route('admin.application.decline', $app->id) }}" method="POST">
+@csrf
+<button type="submit"
+class="action-btn action-decline loading-btn"
+title="Decline">
+<i class="fas fa-xmark"></i>
+</button>
+</form>
+
+@endif
+
+{{-- DELETE --}}
+<form action="{{ route('admin.applications.destroy', $app->id) }}"
+method="POST"
+onsubmit="return confirm('Delete application?')">
+@csrf
+@method('DELETE')
+
+<button type="submit"
+class="action-btn action-delete loading-btn"
+title="Delete">
+<i class="fas fa-trash"></i>
+</button>
+
+</form>
+
+</div>
 </td>
-          </tr>
+</tr>
         @empty
           <tr>
-            <td colspan="5" class="text-center text-muted py-4">
+            <td colspan="8" class="text-center text-muted py-4">
               No applications submitted yet.
             </td>
           </tr>
         @endforelse
         </tbody>
       </table>
+      <div class="mt-3">
+{{ $applications->links() }}
+</div>
     </div>
   </div>
 
 </main>
 
+
+@foreach($applications as $app)
+<div class="modal fade" id="rescheduleModal{{ $app->id }}" tabindex="-1" aria-hidden="true">
+<div class="modal-dialog modal-dialog-centered">
+<div class="modal-content">
+
+<div class="modal-header">
+<h5 class="modal-title">Reschedule Appointment</h5>
+</div>
+
+<form action="{{ route('admin.application.reschedule', $app->id) }}" method="POST">
+@csrf
+
+<div class="modal-body">
+
+<div class="mb-3">
+<label>Date</label>
+<input type="date" name="appointment_date" class="form-control" required value="{{ $app->appointment_date }}">
+</div>
+
+<div class="mb-3">
+<label>Time</label>
+<input type="time" name="appointment_time" class="form-control" required value="{{ $app->appointment_time }}">
+</div>
+
+<div class="mb-3">
+<label>Meeting Type</label>
+<select name="meeting_type" class="form-select">
+<option {{ $app->meeting_type=='Zoom' ? 'selected' : '' }}>Zoom</option>
+<option {{ $app->meeting_type=='Google Meet' ? 'selected' : '' }}>Google Meet</option>
+<option {{ $app->meeting_type=='Face to Face' ? 'selected' : '' }}>Face to Face</option>
+</select>
+</div>
+
+<div class="mb-3">
+<label>Meeting Link</label>
+<input type="url" name="meeting_link" class="form-control"
+value="{{ $app->meeting_link }}"
+placeholder="Paste Zoom / Google Meet link">
+</div>
+
+</div>
+
+<div class="modal-footer">
+<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+<button type="submit" class="btn btn-warning loading-btn">
+<span class="btn-label">Save Changes</span>
+<span class="btn-loader">
+<i class="fa-solid fa-arrows-rotate fa-spin me-2"></i>
+</span>
+<span class="btn-text ms-2">Updating...</span>
+</button>
+</div>
+
+</form>
+
+</div>
+</div>
+</div>
+@endforeach
+@foreach($applications as $app)
+<div class="modal fade" id="scheduleModal{{ $app->id }}" tabindex="-1" aria-hidden="true">
+<div class="modal-dialog modal-dialog-centered">
+<div class="modal-content">
+
+<div class="modal-header">
+<h5 class="modal-title">Schedule Appointment</h5>
+</div>
+
+<form action="{{ route('admin.application.schedule', $app->id) }}" method="POST">
+@csrf
+
+<div class="modal-body">
+
+<div class="mb-3">
+<label>Date</label>
+<input type="date" name="appointment_date" class="form-control" required>
+</div>
+
+<div class="mb-3">
+<label>Time</label>
+<input type="time" name="appointment_time" class="form-control" required>
+</div>
+
+<div class="mb-3">
+<label>Meeting Type</label>
+<select name="meeting_type" class="form-select" required>
+<option value="">Select</option>
+<option>Zoom</option>
+<option>Google Meet</option>
+<option>Face to Face</option>
+</select>
+</div>
+
+<div class="mb-3">
+<label>Meeting Link</label>
+<input type="url" name="meeting_link" class="form-control"
+placeholder="Paste Zoom / Google Meet link">
+</div>
+
+</div>
+
+<div class="modal-footer">
+<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+<button type="submit" class="btn btn-info loading-btn">
+<span class="btn-label">Save Schedule</span>
+<span class="btn-loader">
+<i class="fa-solid fa-arrows-rotate fa-spin me-2"></i>
+</span>
+<span class="btn-text ms-2">Sending...</span>
+</button>
+</div>
+
+</form>
+
+</div>
+</div>
+</div>
+@endforeach
 <div class="modal fade app-details-modal" id="appDetailsModal" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog modal-dialog-scrollable">
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title fw-bold mb-0">Application Details</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
 
       <div class="modal-body" id="appModalBody">
@@ -524,6 +929,22 @@
 
 <script>
 document.addEventListener("DOMContentLoaded", () => {
+
+  document.querySelectorAll("form").forEach(form => {
+    form.addEventListener("submit", function () {
+
+        const btn = form.querySelector('button[type="submit"], button:not([type])');
+
+        if (!btn) return;
+
+        btn.disabled = true;
+        btn.classList.add("loading");
+
+        const label = btn.querySelector(".btn-label");
+        if(label) label.style.display = "none";
+    });
+});
+
   const alertBox = document.getElementById("uploadSuccessAlert");
   if (alertBox) {
     setTimeout(() => {

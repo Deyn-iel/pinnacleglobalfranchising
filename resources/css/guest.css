@@ -1,6 +1,4 @@
-/* ===============================
-   GLOBAL RESET
-================================ */
+
 * {
     margin: 0;
     padding: 0;
@@ -13,9 +11,6 @@ html, body {
     overflow-x: hidden;
 }
 
-/* ===============================
-   BODY BACKGROUND
-================================ */
 body {
     min-height: 100vh;
     display: flex;
@@ -36,9 +31,6 @@ body {
     to   { opacity: 1; }
 }
 
-/* ===============================
-   MAIN CONTAINER
-================================ */
 .container-login {
     width: 100%;
     max-width: 1100px;
@@ -68,9 +60,7 @@ body {
     }
 }
 
-/* ===============================
-   LEFT PANEL
-================================ */
+
 .left {
     flex: 1;
     position: relative;
@@ -99,9 +89,7 @@ body {
     pointer-events: none;
 }
 
-/* ===============================
-   WAVES (SUBTLE)
-================================ */
+
 .wave {
     position: absolute;
     width: 160%;
@@ -130,9 +118,6 @@ body {
     to   { transform: rotate(360deg); }
 }
 
-/* ===============================
-   LEFT TEXT
-================================ */
 .welcome-box h1 {
     font-size: 42px;
     font-weight: 800;
@@ -152,9 +137,7 @@ body {
     opacity: 0.85;
 }
 
-/* ===============================
-   RIGHT PANEL
-================================ */
+
 .right {
     flex: 1;
     padding: 65px 60px;
@@ -170,9 +153,6 @@ body {
     to   { opacity: 1; transform: translateX(0); }
 }
 
-/* ===============================
-   LOGIN TEXT
-================================ */
 .login-title {
     font-size: 34px;
     font-weight: 800;
@@ -185,9 +165,7 @@ body {
     color: #666;
 }
 
-/* ===============================
-   BUTTONS
-================================ */
+
 .btn-back {
     background: linear-gradient(135deg, #0d3553, #1e4fc6) !important;
     color: #fff !important;
@@ -202,9 +180,7 @@ body {
     box-shadow: 0 10px 20px rgba(30,79,198,0.35);
 }
 
-/* ===============================
-   EXTRA LINKS
-================================ */
+
 .extra-links {
     margin-top: 20px;
     display: flex;
@@ -226,9 +202,7 @@ body {
     color: #666666;
 }
 
-/* ===============================
-   RESPONSIVE
-================================ */
+
 @media (max-width: 850px) {
     .container-login {
         flex-direction: column;

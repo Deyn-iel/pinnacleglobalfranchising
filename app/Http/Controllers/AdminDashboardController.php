@@ -3,15 +3,20 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
-use Illuminate\Http\Request;
 
 class AdminDashboardController extends Controller
 {
     public function index()
     {
-        // COUNT ACTIVE USERS EXCEPT ADMIN
-        $activeUsers = User::where('role', '!=', 'admin')->count();
+        $totalUsers = User::where('usertype','!=','admin')->count();
 
-        return view('admin.dashboard', compact('activeUsers'));
+        $activeUsers = User::whereNotNull('last_seen_at')
+            ->where('usertype','!=','admin')
+            ->count();
+
+        return view('admin.admin', compact(
+            'totalUsers',
+            'activeUsers'
+        ));
     }
 }

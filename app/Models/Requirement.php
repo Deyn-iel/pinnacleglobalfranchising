@@ -12,7 +12,7 @@ class Requirement extends Model
 
     protected $fillable = [
     'document_name',
-    'folder', // ✅ ADD THIS
+    'folder', 
     'category',
     'file_path',
     'file_original_name'

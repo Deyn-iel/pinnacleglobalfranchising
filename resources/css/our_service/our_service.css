@@ -3,7 +3,6 @@ html, body {
 }
 
 
-/* BODY AS FLEX TO PUSH FOOTER DOWN */
 body {
     background-color: #0d3553;
     color: #ffffff;
@@ -14,12 +13,10 @@ body {
     flex-direction: column;
 }
 
-/* wrapper for content above footer */
 .main-wrapper {
     flex: 1;
 }
 
-/* IMAGE SECTION */
 .image {
     display: flex;
     justify-content: center;
@@ -46,17 +43,13 @@ body {
 }
 
 
-/* =========================
-   FRANCHISE SECTION
-=========================*/
-
 .first-services {
     margin-top: 60px;
     width: 65%;
     margin-left: auto;
-    margin-right: auto; /* ✅ centers the whole block */
+    margin-right: auto; 
     letter-spacing: 1px;
-    text-align: center; /* ✅ centers inner content */
+    text-align: center; 
 }
 
 .first-services h2 {
@@ -76,7 +69,7 @@ body {
     margin-top: 60px;
     width: 43%;
     margin-left: auto;
-    margin-right: auto; /* ✅ centers the whole block */
+    margin-right: auto; 
     letter-spacing: 1px;
     text-align: center;
 }
@@ -101,7 +94,6 @@ body {
 ul {
     margin-bottom: 70px;
 }
-/* ✅ LARGE TABLETS */
 @media (max-width: 992px) {
     .first-services {
         width: 75%;
@@ -111,8 +103,6 @@ ul {
     }
 }
 
-
-/* ✅ TABLETS */
 @media (max-width: 768px) {
     .first-services {
         width: 85%;
@@ -133,8 +123,6 @@ ul {
     }
 }
 
-
-/* ✅ MOBILE */
 @media (max-width: 576px) {
     .first-services,
     .second-services {
@@ -155,9 +143,6 @@ ul {
     }
 }
 
-
-
-/* RESPONSIVE FIXES */
 @media (max-width: 1200px) {
     .image {
         flex-wrap: wrap;

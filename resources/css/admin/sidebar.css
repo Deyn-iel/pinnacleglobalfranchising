@@ -1,34 +1,26 @@
-/* ================= ROOT ================= */
+
 :root {
-  --sb-w: 260px;      /* default */
-  --sb-w-sm: 220px;   /* small laptop */
-  --sb-w-xs: 200px;   /* smaller laptop */
+  --sb-w: 260px;     
+  --sb-w-sm: 220px;  
+  --sb-w-xs: 200px;   
 
   --sidebar-sm: 230px;
   --sidebar-md: 250px;
   --sidebar-lg: 280px;
-
-  /* Dark UI palette (soft sa mata) */
-  --sb-bg-1: #0b1220;     /* base */
-  --sb-bg-2: #070b14;     /* deeper */
+  --sb-bg-1: #0b1220;     
+  --sb-bg-2: #070b14;   
   --sb-border: rgba(255,255,255,.08);
-  --sb-text: rgba(226,232,240,.86); /* slate-200 */
-  --sb-muted: rgba(148,163,184,.78); /* slate-400 */
+  --sb-text: rgba(226,232,240,.86); 
+  --sb-muted: rgba(148,163,184,.78);
   --sb-icon: rgba(226,232,240,.82);
-
-  /* Accent (blue/cyan subtle) */
   --sb-accent: #38bdf8;
   --sb-accent-2: #2563eb;
-
-  /* Cards/shadows */
   --sb-shadow: 0 18px 40px rgba(0,0,0,.35);
   --tb-shadow: 0 10px 30px rgba(0,0,0,.35);
-
   --radius: 14px;
   --radius-lg: 18px;
 }
 
-/* ================= ADMIN SIDEBAR ================= */
 .admin-sidebar {
   width: var(--sb-w);
   position: fixed;
@@ -38,7 +30,6 @@
   display: flex;
   flex-direction: column;
 
-  /* soft dark gradient + slight noise-like feel via overlay */
   background: linear-gradient(180deg, var(--sb-bg-1), var(--sb-bg-2));
   color: var(--sb-text);
 
@@ -49,7 +40,6 @@
   box-shadow: var(--sb-shadow);
 }
 
-/* subtle top overlay (premium look) */
 .admin-sidebar::before{
   content:"";
   position:absolute;
@@ -61,10 +51,8 @@
   opacity: .9;
 }
 
-/* keep content above overlay */
 .admin-sidebar > *{ position: relative; }
 
-/* scrollbar */
 .admin-sidebar::-webkit-scrollbar { width: 8px; }
 .admin-sidebar::-webkit-scrollbar-track { background: transparent; }
 .admin-sidebar::-webkit-scrollbar-thumb {
@@ -75,7 +63,6 @@
   background: rgba(255,255,255,0.18);
 }
 
-/* ================= BRAND ================= */
 .sidebar-brand {
   height: 72px;
   display: flex;
@@ -97,7 +84,6 @@
   filter: drop-shadow(0 8px 18px rgba(56,189,248,.18));
 }
 
-/* ================= NAV ================= */
 .sidebar-nav {
   list-style: none;
   padding: 16px 10px 18px;
@@ -107,7 +93,6 @@
 
 .sidebar-nav .nav-item { margin: 6px 0; }
 
-/* SECTION LABEL */
 .nav-section {
   font-size: 11px;
   letter-spacing: 1.2px;
@@ -116,7 +101,6 @@
   margin: 18px 14px 8px;
 }
 
-/* LINKS */
 .sidebar-nav .nav-link {
   display: flex;
   align-items: center;
@@ -141,21 +125,18 @@
   color: var(--sb-icon);
 }
 
-/* HOVER (soft) */
 .sidebar-nav .nav-link:hover {
   background: rgba(255,255,255,0.06);
   border-color: rgba(255,255,255,0.08);
   color: #ffffff;
 }
 
-/* keyboard focus */
 .sidebar-nav .nav-link:focus-visible{
   outline: none;
   box-shadow: 0 0 0 4px rgba(56,189,248,.18);
   border-color: rgba(56,189,248,.28);
 }
 
-/* ACTIVE (premium pill + left accent) */
 .sidebar-nav .nav-link.active {
   background:
     linear-gradient(90deg, rgba(56,189,248,.22), rgba(56,189,248,.06));
@@ -191,7 +172,6 @@
   opacity: 0.7;
 }
 
-/* ================= DIVIDER ================= */
 .sidebar-divider {
   border: none;
   height: 1px;
@@ -199,7 +179,6 @@
   background: linear-gradient(to right, transparent, rgba(255,255,255,.18), transparent);
 }
 
-/* ================= FOOTER ================= */
 .sidebar-bottom { margin-top: auto; padding-top: 10px; }
 
 .sidebar-footer {
@@ -212,7 +191,6 @@
   border-top: 1px solid rgba(255,255,255,0.06);
 }
 
-/* ================= ADMIN TOPBAR ================= */
 .admin-topbar {
   height: 64px;
   padding: 0 18px;
@@ -221,7 +199,6 @@
   align-items: center;
   justify-content: space-between;
 
-  /* dark + blur glass */
   background: rgba(7,11,20,.88);
   color: #ffffff;
 
@@ -234,7 +211,6 @@
   backdrop-filter: blur(10px);
 }
 
-/* TOPBAR LEFT */
 .topbar-left {
   display: flex;
   align-items: center;
@@ -246,7 +222,6 @@
 
 .topbar-left i { font-size: 18px; }
 
-/* TOPBAR RIGHT */
 .topbar-right {
   display: flex;
   align-items: center;
@@ -263,7 +238,6 @@
   color: rgba(226,232,240,.92);
 }
 
-/* AVATAR */
 .admin-user .avatar {
   width: 34px;
   height: 34px;
@@ -281,7 +255,6 @@
   box-shadow: 0 10px 22px rgba(37,99,235,.28);
 }
 
-/* LOGOUT BUTTON */
 .logout-btn {
   display: flex;
   align-items: center;
@@ -313,7 +286,6 @@
   box-shadow: 0 0 0 4px rgba(220,38,38,.18);
 }
 
-/* ================= MAIN CONTENT ================= */
 .admin-content {
   margin-left: var(--sb-w);
   padding: 26px;
@@ -322,31 +294,25 @@
   transition: margin-left 0.3s ease;
 }
 
-/* ================= DESKTOP & LAPTOP RESPONSIVE ================= */
-/* Small laptops (≤1366px) */
 @media (max-width: 1366px) {
   .admin-sidebar { width: var(--sidebar-sm); }
   .admin-content { margin-left: var(--sidebar-sm); }
   .sidebar-nav .nav-link { font-size: 13.5px; padding: 10px 12px; }
 }
 
-/* Standard laptops (1367–1599px) */
 @media (min-width: 1367px) and (max-width: 1599px) {
   .admin-sidebar { width: var(--sidebar-md); }
   .admin-content { margin-left: var(--sidebar-md); }
 }
 
-/* Large desktops (≥1600px) */
 @media (min-width: 1600px) {
   .admin-sidebar { width: var(--sidebar-lg); }
   .admin-content { margin-left: var(--sidebar-lg); }
   .sidebar-nav .nav-link { font-size: 15px; padding: 12px 14px; }
 }
 
-/* ================= SIDEBAR DROPDOWN (SUPPLIES) ================= */
 .nav-item.dropdown .nav-link { display: flex; align-items: center; }
 
-/* arrow icon */
 .nav-item.dropdown .arrow {
   margin-left: auto;
   font-size: 12px;
@@ -354,10 +320,8 @@
   opacity: 0.85;
 }
 
-/* rotate arrow kapag open */
 .nav-item.dropdown.open .arrow { transform: rotate(180deg); }
 
-/* dropdown menu */
 .nav-item.dropdown .dropdown-menu {
   list-style: none;
   padding: 6px 0 6px 44px;
@@ -365,10 +329,8 @@
   display: none;
 }
 
-/* show dropdown */
 .nav-item.dropdown.open .dropdown-menu { display: block; }
 
-/* dropdown links */
 .dropdown-menu li a {
   display: flex;
   align-items: center;
@@ -400,7 +362,6 @@
   color: #ffffff;
 }
 
-/* disabled state you already have */
 .nav-disabled{
   opacity: .35;
   cursor: not-allowed;
@@ -424,7 +385,6 @@
   transform: translateY(0);
 }
 
-/* ============ SMALL LAPTOP (<= 1366px) ============ */
 @media (max-width: 1366px) {
   :root { --sb-w: var(--sb-w-sm); }
 
@@ -455,13 +415,11 @@
     width: 18px;
   }
 
-  /* dropdown inner list indent (HR-Folder) */
   .sb-dd .nav{
     margin-left: 22px !important;
   }
 }
 
-/* ============ EXTRA SMALL LAPTOP (<= 1200px) ============ */
 @media (max-width: 1200px) {
   :root { --sb-w: var(--sb-w-xs); }
 
@@ -476,7 +434,6 @@
   }
 }
 
-/* ============ SAFETY: prevent sidebar items from breaking layout ============ */
 .sidebar-nav .nav-link span{
   overflow: hidden;
   text-overflow: ellipsis;

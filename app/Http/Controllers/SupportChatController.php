@@ -50,7 +50,6 @@ class SupportChatController extends Controller
         ]);
     }
 
-    // ✅ CASE A: admin page chatting with selected user
     if ($this->isStaff() && $requestedTargetUserId > 0 && $requestedTargetUserId !== $myId) {
         $subjectUserId = $requestedTargetUserId;
 
@@ -75,7 +74,6 @@ class SupportChatController extends Controller
         }
 
     } else {
-        // ✅ CASE B: myTickets / department chat
         $query = SupportMessage::query()
             ->where('department', $department)
             ->where(function ($q) use ($myId, $deptUserIds) {
@@ -145,15 +143,12 @@ if (!$department) {
 $requestedTargetUserId = (int) $request->input('target_user_id', 0);
 
 if ($this->isStaff()) {
-    // ✅ admin ticket pages: preserve clicked user
     if ($requestedTargetUserId > 0 && $requestedTargetUserId !== (int) $authUser->id) {
         $targetUserId = $requestedTargetUserId;
     } else {
-        // ✅ dept-to-dept chat fallback
         $targetUserId = (int) ($this->resolveDepartmentTarget($department, (int) $authUser->id) ?? 0);
     }
 } else {
-    // ✅ normal user always chats with selected department
     $targetUserId = (int) ($this->resolveDepartmentTarget($department, (int) $authUser->id) ?? 0);
 }
 
@@ -163,30 +158,25 @@ if ($targetUserId <= 0) {
     ], 422);
 }
 
-    // ✅ SAVE MESSAGE
     $msg = SupportMessage::create([
         'user_id'        => (int) $authUser->id,
         'target_user_id' => $targetUserId,
         'message'        => $request->message,
-        'department'     => $department, // ✅ SAFE NA
+        'department'     => $department, 
         'is_read'        => false,
     ]);
 
-    // ✅ PREVENT EMAIL SPAM
     $alreadyUnread = SupportMessage::where('target_user_id', $targetUserId)
         ->where('notified', true)
         ->where('id', '!=', $msg->id)
         ->exists();
 
-    // 🔥 CHECK ONLINE USING CACHE (TAMA NA SYSTEM MO)
 if ($this->isStaff()) {
 
-    // admin → check user
     $isOnline = cache()->has('user-online-' . $targetUserId);
 
 } else {
 
-    // user → check ANY staff
     $staffIds = \App\Models\User::whereIn('usertype', [
         'admin','admin-secretary','hr','it','support','staff','om','od','smm'
     ])->pluck('id');
@@ -201,10 +191,8 @@ if ($this->isStaff()) {
     }
 }
 
-// ✅ FINAL CONDITION
 if (!$alreadyUnread && !$isOnline) {
 
-        // ✅ SAME AS TICKET CONTROLLER
         $mainEmails = explode(',', env('SUPPORT_NOTIFY_EMAILS'));
 
         $departmentMap = [
@@ -234,7 +222,6 @@ if (!$alreadyUnread && !$isOnline) {
                 Mail::html("
                 <div style='font-family: Arial, sans-serif; background:#f4f6f9; padding:30px;'>
 
-    <!-- ✅ EMAIL PREVIEW FIX -->
     <div style='display:none; max-height:0; overflow:hidden; opacity:0;'>
         You have a new support message. Open your dashboard to view it.
     </div>
@@ -305,7 +292,6 @@ if (!$alreadyUnread && !$isOnline) {
                 });
             }
 
-            // ✅ MARK AS NOTIFIED
             $msg->update(['notified' => true]);
 
         } catch (\Throwable $e) {
@@ -321,8 +307,6 @@ if (!$alreadyUnread && !$isOnline) {
 
 public function destroy(Request $request)
 {
-    // staff: pwedeng mag delete ng kahit sinong thread (by target_user_id)
-    // normal user: sarili lang ang pwedeng i-delete
     $target = $this->isStaff()
         ? (int) $request->input('target_user_id', 0)
         : (int) Auth::id();
@@ -365,11 +349,9 @@ if (!$department) {
 $requestedTargetUserId = (int) $request->input('target_user_id', 0);
 
 if ($this->isStaff()) {
-    // ✅ admin ticket pages: preserve clicked user
     if ($requestedTargetUserId > 0 && $requestedTargetUserId !== (int) $authUser->id) {
         $targetUserId = $requestedTargetUserId;
     } else {
-        // ✅ dept-to-dept fallback
         $targetUserId = (int) ($this->resolveDepartmentTarget($department, (int) $authUser->id) ?? 0);
     }
 } else {
@@ -390,10 +372,8 @@ if ($targetUserId <= 0) {
 
     $file = $request->file('file');
 
-    // ✅ STORE FILE
     $path = $file->store('chat_files', 'public');
 
-    // ✅ DETERMINE TYPE
     $mime = $file->getMimeType();
 
     $type = 'file';
@@ -406,7 +386,6 @@ if ($targetUserId <= 0) {
         $type = 'pdf';
     }
 
-    // ✅ SAVE MESSAGE WITH DEPARTMENT
     $msg = SupportMessage::create([
         'user_id'        => (int) $authUser->id,
         'target_user_id' => $targetUserId,
@@ -452,7 +431,6 @@ public function unreadCount(Request $request)
         ->where('is_read', false)
         ->count();
 } elseif ($department) {
-        // ✅ dept-to-dept unread count on ticket dashboard
         $count = SupportMessage::where('department', $department)
             ->where('target_user_id', $user->id)
             ->where('user_id', '!=', $user->id)

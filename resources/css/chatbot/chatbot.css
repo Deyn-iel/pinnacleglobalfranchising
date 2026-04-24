@@ -9,7 +9,6 @@
   --r:18px;
 }
 
-/* Floating button */
 .chat-fab{
   position:fixed;
   right:24px;
@@ -52,10 +51,10 @@
 @media (max-width:500px){
   .ticket-chatbox{
     width:100%;
-    height:100dvh; /* 🔥 full screen mobile */
+    height:100dvh; 
     right:0;
     bottom:0;
-    border-radius:0; /* optional para parang messenger */
+    border-radius:0; 
   }
 
   .chat-fab{
@@ -64,7 +63,6 @@
   }
 }
 
-/* ===== Messenger-ish Header ===== */
 .chat-header{
   background: var(--bw-bg);
   color:#fff;
@@ -150,24 +148,21 @@
 }
 .chat-btn.ghost:hover{ background:rgba(255,255,255,.14); }
 
-/* ===== Messages Area ===== */
 .ticket-messages{
   flex:1;
   padding:14px 12px;
-  overflow-y:auto; /* keep scroll working */
+  overflow-y:auto; 
   background:#fff;
   min-height:0;
 
-  /* 🔥 HIDE SCROLLBAR */
-  scrollbar-width: none; /* Firefox */
-  -ms-overflow-style: none; /* IE/Edge */
+  scrollbar-width: none;
+  -ms-overflow-style: none; 
 }
 
 .ticket-messages::-webkit-scrollbar {
-  display: none; /* Chrome, Safari */
+  display: none; 
 }
 
-/* Empty */
 .ticket-empty{
   border:1px dashed rgba(15,23,42,.20);
   border-radius:16px;
@@ -178,7 +173,6 @@
 .ticket-empty-sub{ margin-top:6px; font-size:12.5px; color:var(--bw-muted); }
 .ticket-empty-sub code{ color:#d946ef; font-weight:900; }
 
-/* ===== Messenger Rows ===== */
 .ticket-row{
   display:flex;
   align-items:flex-end;
@@ -190,7 +184,6 @@
 .ticket-row.is-other{ justify-content:flex-start; }
 .ticket-row.is-mine{ justify-content:flex-end; }
 
-/* other avatar */
 .msg-avatar{
   width:28px;
   height:28px;
@@ -206,14 +199,12 @@
   flex:0 0 auto;
 }
 
-/* bubble + time wrapper */
 .msg-wrap{
   display:flex;
   flex-direction:column;
   max-width:78%;
 }
 
-/* bubble */
 .ticket-bubble{
   padding:10px 12px;
   border-radius:18px;
@@ -222,7 +213,6 @@
   box-shadow: 0 8px 18px rgba(0,0,0,.06);
 }
 
-/* mine bubble */
 .ticket-row.is-mine .ticket-bubble{
   background: var(--bw-bg);
   color:#fff;
@@ -230,7 +220,6 @@
   border-bottom-right-radius:10px;
 }
 
-/* other bubble */
 .ticket-row.is-other .ticket-bubble{
   border-bottom-left-radius:10px;
 }
@@ -242,7 +231,6 @@
   white-space:pre-wrap;
 }
 
-/* time per message (mess-like) */
 .msg-time{
   margin-top:4px;
   font-size:11px;
@@ -254,17 +242,15 @@
   align-self:flex-end;
 }
 
-/* hide old meta/time if ever present */
 .ticket-meta,
 .ticket-time{
   display:none !important;
 }
 
-/* ===== Input bar ===== */
 .ticket-inputbar{
   padding:12px;
   display:flex;
-  flex-direction:column; /* 🔥 THIS FIXES EVERYTHING */
+  flex-direction:column; 
   gap:8px;
   background:#fff;
   border-top:1px solid var(--bw-border);
@@ -300,7 +286,7 @@
   cursor:not-allowed;
 }
 .ticket-text {
-  word-break: break-all;   /* 🔥 para hindi humaba */
+  word-break: break-all;   
 }
 .file-send {
   font-size: 20px;
@@ -391,41 +377,34 @@
   opacity:0.6;
 }
 
-/* ✅ Less gap between messages */
 .ticket-row{
-  margin:6px 0;          /* from 10px 0 -> 6px 0 */
+  margin:6px 0;  
 }
 
-/* ✅ Less gap between bubble and time */
 .msg-time{
-  margin-top:2px;        /* from 4px -> 2px */
-  padding:0 4px;         /* from 0 6px -> 0 4px */
+  margin-top:2px;
+  padding:0 4px; 
 }
 
-/* ✅ Even tighter kapag same sender sunod-sunod */
 .ticket-row.is-mine + .ticket-row.is-mine,
 .ticket-row.is-other + .ticket-row.is-other{
-  margin-top:2px;        /* bawas yung “space space” */
+  margin-top:2px; 
 }
 
-/* optional: bawasan konti padding ng messages area */
 .ticket-messages{
-  padding:12px 12px;     /* from 14px 12px */
+  padding:12px 12px;
 }
 
-/* placeholder same size ng avatar para aligned pa rin */
 .msg-avatar-ghost{
   width:28px;
   height:28px;
   flex:0 0 auto;
-  visibility:hidden; /* invisible pero may space */
+  visibility:hidden;
 }
 
-/* tighter per message */
 .ticket-row{ margin:6px 0; }
 .msg-time{ margin-top:2px; padding:0 4px; }
 
-/* tighter kapag same sender sunod-sunod */
 .ticket-row.is-mine + .ticket-row.is-mine,
 .ticket-row.is-other + .ticket-row.is-other{
   margin-top:2px;

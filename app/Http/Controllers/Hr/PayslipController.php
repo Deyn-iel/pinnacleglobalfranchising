@@ -56,7 +56,6 @@ class PayslipController extends Controller
     ->take(10)
     ->get();
 
-// ⭐ ito ang missing
 $payslips = Payslip::with('uploader')
     ->latest()
     ->paginate(10);
@@ -85,11 +84,9 @@ return view(
         $year  = (int)$request->year;
         $cutoff = $request->cutoff;
 
-// cutoff label
 if ($cutoff == 1) {
     $folderKey = sprintf('%04d-%02d-10_25', $year, $month);
 } else {
-    // next month handling
     $nextMonth = $month == 12 ? 1 : $month + 1;
     $nextYear = $month == 12 ? $year + 1 : $year;
 
@@ -98,7 +95,6 @@ if ($cutoff == 1) {
         $nextYear, $nextMonth
     );
 }
-
         $baseDir = "payslips/{$year}/" . str_pad((string)$month, 2, '0', STR_PAD_LEFT);
 
         $saved = 0;
@@ -160,7 +156,6 @@ if ($cutoff == 1) {
                 continue;
             }
 
-            // filename must be email (without extension)
             $emailFromFile = trim(strtolower(pathinfo($originalName, PATHINFO_FILENAME)));
             $user = User::whereRaw('LOWER(email) = ?', [$emailFromFile])->first();
 
@@ -203,14 +198,12 @@ if ($cutoff == 1) {
 }
         }
 
-        // cleanup extracted temp folder
         try {
             File::deleteDirectory($extractTo);
         } catch (\Throwable $e) {
-            // ignore cleanup errors
         }
 
-        continue; // done processing this zip
+        continue; 
     }
 
     $originalName = $file->getClientOriginalName();

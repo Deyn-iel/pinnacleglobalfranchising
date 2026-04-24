@@ -10,11 +10,6 @@ body {
     scroll-behavior: smooth;
 }
 
-
-/* =========================
-   FRANCHISE SECTION
-=========================*/
-
 .franchise-title, .inquire-title {
     margin-top: 40px;
     font-size: 30px;
@@ -46,8 +41,6 @@ body {
     color: #bebebe;
 }
 
-
-/* ✅ Tablets */
 @media (max-width: 768px) {
     .keys {
         width: 70%;
@@ -60,7 +53,6 @@ body {
     }
 }
 
-/* ✅ Mobile phones */
 @media (max-width: 576px) {
     .keys {
         width: 90%;

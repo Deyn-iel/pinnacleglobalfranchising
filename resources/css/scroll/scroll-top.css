@@ -1,6 +1,4 @@
-/* ===============================
-   SCROLL-TO-TOP — Professional
-================================ */
+
 .scroll-to-top {
   position: fixed;
   top: 0;
@@ -37,15 +35,11 @@
   z-index: 1000;
 }
 
-/* Visible state */
 .scroll-to-top.show {
   opacity: 1;
   pointer-events: auto;
 }
 
-
-
-/* Click feedback */
 .scroll-to-top:active {
   transform: scale(0.92);
   box-shadow:
@@ -53,7 +47,6 @@
     inset 0 0 12px rgba(13, 53, 83, 0.25);
 }
 
-/* Mobile adjustments */
 @media (max-width: 600px) {
   .scroll-to-top {
     width: 45px;

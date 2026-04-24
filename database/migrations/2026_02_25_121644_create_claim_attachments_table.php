@@ -9,9 +9,9 @@ return new class extends Migration {
     Schema::create('claim_attachments', function (Blueprint $table) {
       $table->id();
       $table->foreignId('claim_id')->constrained()->cascadeOnDelete();
-      $table->string('label');     // "Policy Data Page", "Claim Form", etc.
-      $table->string('path');      // storage path
-      $table->string('original');  // original filename
+      $table->string('label');     
+      $table->string('path');     
+      $table->string('original');  
       $table->timestamps();
     });
   }

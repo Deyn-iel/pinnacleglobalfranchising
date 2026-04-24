@@ -116,6 +116,12 @@ class="nav-link {{ request()->routeIs('admin.portals.hr') ? 'active' : '' }}">
 
 </a>
 
+<a href="{{ route('portal.company-files', 'hr') }}"
+class="nav-link {{ request()->routeIs('portal.company-files') ? 'active' : '' }}">
+<i class="fas fa-file-lines"></i>
+Company Files
+</a>
+
 
 <a href="{{ route('admin.portals.hr.payslip') }}"
 class="nav-link {{ request()->routeIs('admin.portals.hr.payslip') ? 'active' : '' }}">

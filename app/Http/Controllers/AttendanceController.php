@@ -13,7 +13,6 @@ class AttendanceController extends Controller
 {
     public function log(Request $request)
     {
-        // ✅ 1️⃣ VALIDATION
     $request->validate([
         'type'     => 'required|in:morning_in,morning_out,afternoon_in,afternoon_out',
         'selfie'   => 'required|image|max:5120',
@@ -22,7 +21,6 @@ class AttendanceController extends Controller
         'accuracy' => 'nullable|numeric',
     ]);
 
-    // ✅ 2️⃣ EXTRA SAFETY (ANTI-TAMPER)
     if (!in_array($request->type, [
         'morning_in',
         'morning_out',
@@ -36,7 +34,6 @@ class AttendanceController extends Controller
         ], 400);
     }
 
-    // ✅ 3️⃣ GET LOCATION SETTINGS
     $setting = AttendanceSetting::first();
 
     if (!$setting) {
@@ -51,7 +48,6 @@ class AttendanceController extends Controller
     $allowedLng = $setting->lng;
     $radius     = $setting->radius;
 
-    // ✅ 4️⃣ GPS DISTANCE CHECK
     $distance = $this->distance(
         $request->lat,
         $request->lng,
@@ -59,8 +55,6 @@ class AttendanceController extends Controller
         $allowedLng
     );
 
-
-    // GPS DISTANCE CHECK
 if ($distance > $radius) {
     return response()->json([
         'status'  => 'error',
@@ -69,7 +63,6 @@ if ($distance > $radius) {
     ], 403);
 }
 
-// GPS ACCURACY (RELAXED)
 if ($request->accuracy && $request->accuracy > ($radius * 1.5)) {
     return response()->json([
         'status'  => 'error',
@@ -78,21 +71,14 @@ if ($request->accuracy && $request->accuracy > ($radius * 1.5)) {
     ], 403);
 }
 
-
-
-
-
-        // ✅ AUTH CHECK
         $user = Auth::user();
         if (!$user) {
             return response()->json(['message' => 'Unauthenticated'], 401);
         }
 
-        // ✅ PH TIME (ITO ANG FIX)
         $now   = Carbon::now('Asia/Manila');
         $today = $now->toDateString();
 
-        // ✅ ONE ATTENDANCE PER USER PER DAY (PH DATE)
         $attendance = Attendance::where('user_id', $user->id)
         ->whereBetween('created_at', [
             Carbon::today('Asia/Manila')->startOfDay(),
@@ -101,21 +87,18 @@ if ($request->accuracy && $request->accuracy > ($radius * 1.5)) {
         ->first();
 
 
-
         if (!$attendance) {
             $attendance = Attendance::create([
                 'user_id' => $user->id,
             ]);
         }
 
-        // ❌ PREVENT DOUBLE LOG (SAME DAY ONLY)
         if ($attendance->{$request->type}) {
             return response()->json([
                 'message' => strtoupper(str_replace('_', ' ', $request->type)) . ' already recorded !'
             ], 409);
         }
 
-        // ✅ SAVE SELFIE
         $path = $request->file('selfie')
             ->store('attendance-selfies', 'public');
 
@@ -123,7 +106,6 @@ if ($request->accuracy && $request->accuracy > ($radius * 1.5)) {
             $attendance->lng = $request->lng;
             $attendance->distance = round($distance);
 
-        // ✅ SAVE TIME + SELFIE (PH TIME)
         $attendance->{$request->type} = $now;
         $attendance->{$request->type . '_selfie'} = $path;
         $attendance->save();

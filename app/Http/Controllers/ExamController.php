@@ -13,9 +13,6 @@ use Carbon\Carbon;
 
 class ExamController extends Controller
 {
-    /* ===============================
-       EXAM SELECTION
-    =============================== */
     public function select()
     {
         $exams = Exam::withCount('questions')->get();
@@ -33,9 +30,6 @@ class ExamController extends Controller
         return view('user-dashboard.exam.select', compact('exams'));
     }
 
-    /* ===============================
-       START EXAM (WITH ATTEMPT LIMIT)
-    =============================== */
     public function start(Exam $exam)
     {
         if (! $exam->is_active) {
@@ -49,13 +43,10 @@ class ExamController extends Controller
             ->where('exam_id', $exam->id)
             ->first();
 
-        // ❌ already attempted
         if ($attempt && $attempt->attempt_count >= 1) {
             return view('user-dashboard.exam.exam-done');
         }
 
-        // ✅ create attempt if not exists
-        // create if not exists
         if (!$attempt) {
             $attempt = ExamAttempt::create([
                 'user_id'         => $userId,
@@ -66,21 +57,16 @@ class ExamController extends Controller
             ]);
         }
 
-        // safety for old / null data
         if ($attempt->current_question === null) {
             $attempt->current_question = 0;
             $attempt->save();
         }
 
-
-
-        // 🔁 ensure started_at exists (refresh safe)
         if (!$attempt->started_at) {
             $attempt->started_at = now();
             $attempt->save();
         }
 
-        // load questions + options
         $exam->load('questions.options');
         $exam->timer = $exam->timer ?? 60;
 
@@ -88,14 +74,11 @@ class ExamController extends Controller
             'exam' => $exam,
             'attempt' => $attempt,
             'questionStartedAt' => $attempt->started_at,
-            'currentQuestion' => $attempt->current_question, // 🔥 ADD THIS
+            'currentQuestion' => $attempt->current_question, 
         ]);
 
     }
 
-    /* ===============================
-       SUBMIT EXAM (FINAL + STABLE)
-    =============================== */
     public function submit(Request $request)
     {
         $exam = Exam::with('questions.options')->findOrFail($request->exam_id);
@@ -103,39 +86,23 @@ class ExamController extends Controller
 
         DB::transaction(function () use ($exam, $userId, $request) {
 
-            /* ===============================
-               INCREMENT ATTEMPT COUNT
-            =============================== */
             $attempt = ExamAttempt::where('user_id', $userId)
                 ->where('exam_id', $exam->id)
                 ->first();
 
             if ($attempt) {
                 $attempt->increment('attempt_count');
-
-                // ✅ RESET progress AFTER EXAM FINISH
                 $attempt->update([
                     'current_question' => 0
                 ]);
             }
 
-
-            /* ===============================
-               GET ANSWERS FROM JS
-               FORMAT MUST BE:
-               { question_id : answer }
-            =============================== */
             $answers = json_decode($request->answers, true);
             $answers = is_array($answers) ? $answers : [];
 
             $score = 0;
-
-            /* ===============================
-               SAVE ANSWERS PER QUESTION
-            =============================== */
             foreach ($exam->questions as $question) {
 
-                // 🔥 VERY IMPORTANT (KEY BY QUESTION ID)
                 $userAnswer = $answers[$question->id] ?? null;
 
                 ExamAnswer::updateOrCreate(
@@ -149,7 +116,6 @@ class ExamController extends Controller
                     ]
                 );
 
-                // ✅ AUTO SCORE (MCQ & TRUE/FALSE ONLY)
                 if (
                     $question->type !== 'essay' &&
                     $userAnswer !== null &&
@@ -159,9 +125,6 @@ class ExamController extends Controller
                 }
             }
 
-            /* ===============================
-               SAVE EXAM RESULT SUMMARY
-            =============================== */
             ExamResult::updateOrCreate(
                 [
                     'user_id' => $userId,

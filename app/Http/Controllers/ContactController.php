@@ -21,7 +21,6 @@ class ContactController extends Controller
         'message' => $request->message,
     ]);
 
-    // ✅ RETURN JSON FOR FETCH
     return response()->json([
         'success' => true,
         'message' => 'Message sent successfully. We’ll get back to you shortly.'

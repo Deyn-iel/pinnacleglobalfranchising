@@ -18,9 +18,9 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
-        'usertype',        // ✅ FIXED
+        'usertype',       
         'temp_password',
-        'registered_device_id', // ✅ ADD THIS
+        'registered_device_id', 
     ];
 
     /**
@@ -29,7 +29,7 @@ class User extends Authenticatable
     protected $hidden = [
         'password',
         'remember_token',
-        'temp_password',  // 🔒 optional pero recommended
+        'temp_password',  
     ];
 
     /**
@@ -43,9 +43,6 @@ class User extends Authenticatable
         ];
     }
 
-    /* ======================
-       ROLE HELPERS (OPTIONAL BUT CLEAN)
-    ====================== */
 
     public function isAdmin(): bool
     {

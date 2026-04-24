@@ -17,7 +17,6 @@ if (!function_exists('cleanText')) {
     }
 }
 
-
 class AdminExamController extends Controller
 {
     public function index()
@@ -26,9 +25,6 @@ class AdminExamController extends Controller
         return view('admin.uploading-exams', compact('exams'));
     }
 
-    /* ===============================
-       STORE EXAM (WORKING)
-    =============================== */
     public function store(Request $request)
     {
         $exam = Exam::create([
@@ -49,7 +45,6 @@ class AdminExamController extends Controller
                 'correct_option' => null,
             ]);
 
-            /* ===== MCQ (FIXED) ===== */
             if ($type === 'mcq' && isset($request->options[$index])) {
 
                 $correctOptionId = null;
@@ -78,7 +73,6 @@ class AdminExamController extends Controller
                 ]);
             }
 
-            /* ===== TRUE / FALSE ===== */
             if ($type === 'true_false') {
                 $question->update([
                     'correct_option' => (int) ($correctIndex ?? 0)
@@ -89,32 +83,22 @@ class AdminExamController extends Controller
         return back()->with('success', 'Exam uploaded successfully!');
     }
 
-    /* ===============================
-       DELETE EXAM
-    =============================== */
     public function delete($id)
     {
         Exam::findOrFail($id)->delete();
         return back()->with('success', 'Exam deleted successfully!');
     }
 
-    /* ===============================
-       EDIT EXAM
-    =============================== */
     public function edit($id)
     {
         $exam = Exam::with('questions.options')->findOrFail($id);
         return view('admin.exams.edit', compact('exam'));
     }
 
-    /* ===============================
-       UPDATE EXAM (FIXED MCQ)
-    =============================== */
     public function update(Request $request, $id)
     {
         $exam = Exam::findOrFail($id);
 
-        // ================= ADD NEW QUESTIONS =================
 if ($request->has('new_questions')) {
 
     foreach ($request->new_questions as $data) {
@@ -146,7 +130,6 @@ if ($request->has('new_questions')) {
             $question->save();
         }
 
-        // ESSAY → walang correct option
 }
 }
 
@@ -155,7 +138,6 @@ if ($request->has('new_questions')) {
             'timer' => $request->timer,
         ]);
 
-        /* DELETE REMOVED QUESTIONS */
         if ($request->filled('deleted_questions')) {
             ExamQuestion::whereIn('id', $request->deleted_questions)->delete();
         }
@@ -176,7 +158,6 @@ if ($request->has('new_questions')) {
                 'correct_option' => null
             ]);
 
-/* ===== MCQ (FINAL FIX — EXISTING QUESTIONS) ===== */
 if ($type === 'mcq' && isset($request->options[$qid])) {
 
     $existingOptions = $question->options->values(); // keep order
@@ -186,14 +167,12 @@ if ($type === 'mcq' && isset($request->options[$qid])) {
 
         if (trim($optText) === '') continue;
 
-        // ✅ update existing option if exists
         if (isset($existingOptions[$index])) {
             $option = $existingOptions[$index];
             $option->update([
                 'option_text' => $optText
             ]);
         } else {
-            // ✅ create only if kulang
             $option = $question->options()->create([
                 'option_text' => $optText
             ]);
@@ -210,10 +189,6 @@ if ($type === 'mcq' && isset($request->options[$qid])) {
 }
 
 
-
-
-
-            /* ===== TRUE / FALSE ===== */
             if ($type === 'true_false') {
                 $question->update([
                     'correct_option' => (int) ($correctIndex ?? 0)
@@ -226,9 +201,6 @@ if ($type === 'mcq' && isset($request->options[$qid])) {
             ->with('success', 'Exam updated successfully.');
     }
 
-    /* ===============================
-       RESULTS
-    =============================== */
     public function results()
     {
         $results = ExamResult::with(['user', 'exam'])
@@ -293,7 +265,6 @@ public function exportDoc($id)
 
     $section->addTextBreak(1);
 
-    /* ===== QUESTIONS ===== */
     foreach ($result->exam->questions as $i => $question) {
 
         $answer = $answers[$question->id]->answer ?? null;
@@ -331,16 +302,12 @@ public function exportDoc($id)
         $section->addTextBreak(1);
     }
 
-    // clean exam title
 $examTitle = preg_replace('/[^A-Za-z0-9_-]/', '_', $result->exam->title);
 
-// clean user name
 $userName = preg_replace('/[^A-Za-z0-9_-]/', '_', $result->user->name);
 
-// build file name
 $fileName = "Exam_Result_{$examTitle}_{$userName}.docx";
 
-// save path
 $tempPath = storage_path("app/{$fileName}");
 
 $writer = IOFactory::createWriter($phpWord, 'Word2007');

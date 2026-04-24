@@ -11,14 +11,13 @@ return new class extends Migration {
             $table->id();
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
 
-            $table->string('type')->default('info'); // info, success, warning, danger
+            $table->string('type')->default('info'); 
             $table->string('title');
             $table->text('message')->nullable();
 
-            // optional: link to a registration + file links
             $table->foreignId('coffee_registration_id')->nullable()->constrained('coffee_registrations')->nullOnDelete();
 
-            $table->json('meta')->nullable(); // store file paths/urls
+            $table->json('meta')->nullable(); 
             $table->timestamp('read_at')->nullable();
 
             $table->timestamps();

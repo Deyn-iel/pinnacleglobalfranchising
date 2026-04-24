@@ -43,15 +43,15 @@ body.nav-open {
   align-items: center;
   gap: 12px;
   text-decoration: none;
-  color: #ffffff; /* white */
+  color: #ffffff;
 }
 
 .logo-link:hover {
-  color: #ffffff; /* stay white on hover */
+  color: #ffffff;
 }
 
 .logo-link .span {
-  color: inherit; /* inherits white */
+  color: inherit; 
 }
 
 .span {
@@ -60,7 +60,6 @@ body.nav-open {
 }
 .logo img { width: 36px; }
 
-/* ===== DESKTOP NAV ONLY ===== */
 .nav-menu {
   display: flex;
   align-items: center;
@@ -92,7 +91,6 @@ body.nav-open {
     transform 0.28s cubic-bezier(.4,0,.2,1);
 }
 
-/* Open state – rotates + moves DOWN */
 .nav-section.open .nav-section-title::after {
   transform: translateY(3px) rotate(180deg);
 }
@@ -131,7 +129,6 @@ body.nav-open {
     box-shadow 0.18s ease;
 }
 
-/* Hover */
 .btn-primary:hover {
   background: linear-gradient(135deg, #ffffff 0%, #eaeaea 100%);
   transform: translateY(-1px);
@@ -140,7 +137,6 @@ body.nav-open {
     inset 0 1px 0 rgba(255,255,255,0.7);
 }
 
-/* Active / Click */
 .btn-primary:active {
   transform: translateY(0);
   box-shadow:
@@ -148,7 +144,6 @@ body.nav-open {
     inset 0 2px 4px rgba(0,0,0,0.12);
 }
 
-/* Focus (Accessibility) */
 .btn-primary:focus-visible {
   outline: none;
   box-shadow:
@@ -157,7 +152,6 @@ body.nav-open {
 }
 
 
-/* TOGGLE */
 .menu-toggle {
   display: none;
   width: 32px;
@@ -173,8 +167,6 @@ body.nav-open {
   background: #fff;
 }
 
-
-/* ================= TABLET + MOBILE (SIDEBAR MODE) ================= */
 @media (max-width: 1200px) {
 
   .span {
@@ -201,26 +193,22 @@ body.nav-open {
     gap: 40px;
     overflow-y: auto;
 
-    /* 🔒 CLOSED STATE */
     opacity: 0;
     transform: translateY(-20px);
     pointer-events: none;
 
-    /* 🔥 KEY FIX: delay visibility when CLOSING */
     transition:
       opacity 0.35s ease,
       transform 0.35s ease,
       visibility 0s linear 0.35s;
   }
 
-  /* 🔓 OPEN STATE */
   .nav-menu.show {
     opacity: 1;
     transform: translateY(0);
     visibility: visible;
     pointer-events: auto;
 
-    /* remove delay when opening */
     transition:
       opacity 0.35s ease,
       transform 0.35s ease,
@@ -244,13 +232,9 @@ body.nav-open {
     padding-left: 28px;
   }
 }
-/* =====================================
-   HEADER TOGGLE ANIMATION (FIXED)
-===================================== */
 
 @media (max-width: 992px) {
 
-    /* MOBILE NAV DEFAULT (CLOSED STATE) */
     .nav-menu {
         opacity: 0;
         transform: translateY(-15px);
@@ -258,14 +242,12 @@ body.nav-open {
         transition: opacity 0.35s ease, transform 0.35s ease;
     }
 
-    /* OPEN STATE */
     .nav-menu.open {
         opacity: 1;
         transform: translateY(0);
         pointer-events: auto;
     }
 
-    /* STAGGER MENU ITEMS */
     .nav-menu a,
     .nav-section {
         opacity: 0;
@@ -279,16 +261,12 @@ body.nav-open {
         transform: translateY(0);
     }
 
-    /* DELAY CASCADE */
     .nav-menu.open a:nth-child(1) { transition-delay: 0.05s; }
     .nav-menu.open a:nth-child(2) { transition-delay: 0.1s; }
     .nav-menu.open .nav-section:nth-child(3) { transition-delay: 0.15s; }
     .nav-menu.open .nav-section:nth-child(4) { transition-delay: 0.2s; }
     .nav-menu.open .nav-section:nth-child(5) { transition-delay: 0.25s; }
 
-    /* ===============================
-       FIXED TOGGLE ICON ANIMATION
-    =============================== */
     .menu-toggle {
         width: 32px;
         height: 22px;
@@ -308,7 +286,6 @@ body.nav-open {
         transform-origin: center;
     }
 
-    /* PERFECT X STATE */
     .menu-toggle.active span:nth-child(1) {
         transform: translateY(9px) rotate(45deg);
     }
@@ -321,11 +298,7 @@ body.nav-open {
         transform: translateY(-9px) rotate(-45deg);
     }
 }
-/* ===============================
-   ACTIVE NAV – FINAL (FIXED)
-================================ */
 
-/* BASE */
 .nav-menu a,
 .nav-section-title,
 .nav-submenu a {
@@ -334,16 +307,12 @@ body.nav-open {
   text-decoration: none;
 }
 
-/* ACTIVE STATES */
 .nav-menu a.nav-active,
 .nav-section.active-parent > .nav-section-title,
 .nav-submenu a.submenu-active {
   font-weight: 700;
 }
 
-/* ===============================
-   DROPDOWN – SMOOTH (NO DISPLAY)
-================================ */
 
 /* CLOSED */
 .nav-submenu {
@@ -359,7 +328,6 @@ body.nav-open {
     transform 0.25s ease;
 }
 
-/* OPEN (JS adds .open) */
 .nav-section.open > .nav-submenu {
   max-height: 600px;
   opacity: 1;
@@ -367,9 +335,6 @@ body.nav-open {
   pointer-events: auto;
 }
 
-/* ===============================
-   DESKTOP
-================================ */
 @media (min-width: 1024px) {
 
   /* TOP LINE */
@@ -387,7 +352,6 @@ body.nav-open {
     border-radius: 3px;
   }
 
-  /* dropdown panel */
   .nav-submenu {
     position: absolute;
     top: 36px;
@@ -399,7 +363,6 @@ body.nav-open {
     box-shadow: 0 12px 30px rgba(0,0,0,0.2);
   }
 
-  /* ❌ active-parent should NOT auto-open */
   .nav-section.active-parent:not(.open) > .nav-submenu {
     max-height: 0;
     opacity: 0;
@@ -411,9 +374,6 @@ body.nav-open {
   }
 }
 
-/* ===============================
-   MOBILE / TABLET
-================================ */
 @media (max-width: 1023px) {
 
   .nav-menu a::before,
@@ -429,29 +389,21 @@ body.nav-open {
   }
 }
 
-/* ===============================
-   FORCE iPad = MOBILE NAV UI
-   (up to 1200px)
-================================ */
 
-/* 1) iPad + below: show hamburger, hide desktop spacing */
 @media (max-width: 1200px){
   .menu-toggle{ display:flex !important; }
 }
 
-/* 2) iPad + below: make nav-menu overlay like mobile */
 @media (max-width: 1200px){
 
-  /* header height feels more "mobile" */
   .header-container{
     padding: 18px 20px !important;
   }
 
-  /* ✅ overlay menu */
   .nav-menu{
     position: fixed !important;
     left: 0 !important;
-    top: 76px !important;                 /* adjust if header taller */
+    top: 76px !important;                 
     width: 100% !important;
     height: calc(100vh - 76px) !important;
 
@@ -474,7 +426,6 @@ body.nav-open {
     transition: opacity .25s ease, transform .25s ease, visibility 0s linear .25s !important;
   }
 
-  /* OPEN (support both classes) */
   .nav-menu.show,
   .nav-menu.open{
     opacity: 1 !important;
@@ -484,7 +435,6 @@ body.nav-open {
     transition: opacity .25s ease, transform .25s ease, visibility 0s !important;
   }
 
-  /* menu items look like mobile list */
   .nav-menu a,
   .nav-section-title{
     width: 100% !important;
@@ -504,7 +454,6 @@ body.nav-open {
     background: rgba(0,0,0,.06) !important;
   }
 
-  /* dropdown inside overlay */
   .nav-submenu{
     position: static !important;
     background: transparent !important;
@@ -518,7 +467,6 @@ body.nav-open {
     border-radius: 10px !important;
   }
 
-  /* CTA button full width like mobile */
 .btn-primary{
   background: #ffffff !important;
   color: #0d3553 !important;
@@ -531,7 +479,6 @@ body.nav-open {
   font-weight: 700;
   letter-spacing: 0.3px;
 
-  /* 👇 premium depth */
   box-shadow:
     0 6px 14px rgba(0,0,0,0.14),
     0 2px 4px rgba(0,0,0,0.08) !important;
@@ -545,24 +492,17 @@ body.nav-open {
 
 }
 
-/* ===============================
-   FIX: KEEP DROPDOWN ARROW + SUBMENU
-   ACTIVE = BOLD ONLY (mobile + tablet)
-================================ */
 
-/* 1) HUWAG i-hide yung ::after (arrow) */
 @media (max-width: 1200px){
   .nav-section-title::after{
     display: inline-block !important;
   }
 
-  /* wag na wag galawin ::after, pero pwede alisin top-line ::before kung meron */
   .nav-menu a::before,
   .nav-section-title::before{
     display: none !important;
   }
 
-  /* 2) ACTIVE = bold lang */
   .nav-menu a.nav-active{
     font-weight: 800 !important;
     color: #0d3553 !important;
@@ -578,7 +518,6 @@ body.nav-open {
     color: #0d3553 !important;
   }
 
-  /* 3) Safety: kung JS mo minsan sa submenu nilalagay yung .open instead of parent */
   .nav-submenu.open,
   .nav-submenu.show{
     max-height: 600px !important;

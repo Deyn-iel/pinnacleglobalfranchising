@@ -14,7 +14,7 @@ class AdminAttendanceController extends Controller
 {
     public function index(Request $request)
 {
-    $date = $request->query('date'); // yyyy-mm-dd
+    $date = $request->query('date'); 
 
     $records = Attendance::with('user')
         ->when($date, function ($q) use ($date) {
@@ -25,7 +25,7 @@ class AdminAttendanceController extends Controller
 
     $setting = AttendanceSetting::first();
 
-    $selfie = null; // ✅ define para hindi "undefined variable"
+    $selfie = null;
 
     return view('admin.attendance', compact('records', 'date', 'setting', 'selfie'));
 }
@@ -73,9 +73,6 @@ public function exportRange(Request $request)
         "attendance_{$request->from}_to_{$request->to}.xlsx"
     );
 }
-
-
-
 
 
 public function update(Request $request, Attendance $attendance)

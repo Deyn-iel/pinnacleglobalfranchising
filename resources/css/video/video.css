@@ -1,4 +1,4 @@
-/* ================= RESET ================= */
+
 * {
     margin: 0;
     padding: 0;
@@ -11,21 +11,19 @@ html, body {
     margin: 0;
 }
 
-/* ================= DASHBOARD OVERRIDES (CRITICAL) ================= */
 .content.tutorial-wrapper {
     padding: 0 !important;
     margin: 0 !important;
 }
 
-/* ================= TUTORIAL PAGE ================= */
 .tutorial-page {
-    min-height: calc(100vh - 65px); /* exact header height */
+    min-height: calc(100vh - 65px); 
     width: 100%;
 
     display: flex;
     flex-direction: column;
-    align-items: center;   /* ⬅️ horizontal center only */
-    justify-content: flex-start; /* ⬅️ TOP aligned (IMPORTANT) */
+    align-items: center;   
+    justify-content: flex-start; 
 
     gap: 18px;
     padding: 20px 0 30px; /* controlled spacing */
@@ -38,7 +36,6 @@ html, body {
     overflow: hidden;
 }
 
-/* ================= FLOATING BACKGROUND ================= */
 .bg-shape {
     position: absolute;
     width: 320px;
@@ -61,7 +58,6 @@ html, body {
     animation-delay: 4s;
 }
 
-/* ================= HEADER ================= */
 .page-header {
     text-align: center;
     z-index: 1;
@@ -84,7 +80,6 @@ html, body {
     line-height: 1.6;
 }
 
-/* ================= VIDEO ================= */
 .video-section {
     width: 100%;
     display: flex;
@@ -116,7 +111,6 @@ video {
     object-fit: contain;
 }
 
-/* ================= ACTION ================= */
 .action-area {
     width: 100%;
     display: flex;
@@ -150,8 +144,6 @@ button.enabled {
     box-shadow: 0 18px 45px rgba(37, 99, 235, 0.45);
 }
 
-
-/* ================= ANIMATIONS ================= */
 @keyframes bgMove {
     0% { background-position: 0% 50%; }
     50% { background-position: 100% 50%; }
@@ -174,7 +166,6 @@ button.enabled {
     50% { transform: translateY(40px); }
 }
 
-/* ================= MOBILE ================= */
 @media (max-width: 768px) {
     .video-wrapper {
         max-height: 45vh;

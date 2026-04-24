@@ -27,6 +27,8 @@
             </a>
         </li>
 
+        
+
         {{-- <li class="nav-item">
             <a href="{{ route('admin.admin-portal') }}"
                class="nav-link {{ request()->routeIs('admin.admin-portal') ? 'active' : '' }}">
@@ -135,6 +137,13 @@
             </a>
         </li>
 
+        <li class="nav-item">
+            <a href="{{ route('admin.coupon') }}"
+               class="nav-link {{ request()->routeIs('admin.coupon') ? 'active' : '' }}">
+                <i class="fas fa-tags"></i>
+                <span>Coupon's</span>
+            </a>
+        </li>
         {{-- <li class="nav-item disabled">
             <a href="javascript:void(0)" class="nav-link">
                 <i class="fas fa-boxes-stacked"></i>

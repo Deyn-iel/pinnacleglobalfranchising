@@ -33,40 +33,41 @@
 </div>
         
     
-            <a href="{{ route('tickets.dashboard') }}" 
-            class="nav-item {{ request()->routeIs('tickets.dashboard') ? 'active' : '' }}">
-    <i class="fas fa-chart-pie"></i>
-    <span>Dashboard</span>
-</a>
-            
-            <a href="{{ route('tickets.myTickets') }}" 
-            class="nav-item {{ request()->routeIs('tickets.myTickets') ? 'active' : '' }}" >
-    <i class="fas fa-ticket"></i>
-    <span>Tickets</span>
-</a>
+           <div class="nav-menu"> 
 
-            <a href="javascript:void(0)" class="nav-item disabled" style="color: #b6b6b6;">
-                <i class="fa-solid fa-bullhorn" style="color: #b6b6b6;"></i>
-                <span>Announcements</span>
-                <small>soon</small>
-            </a>
+    <a href="{{ route('tickets.dashboard') }}" 
+        class="nav-item {{ request()->routeIs('tickets.dashboard') ? 'active' : '' }}">
+        <i class="fas fa-chart-pie"></i>
+        <span>Dashboard</span>
+    </a>
 
-{{-- <a href="{{ route('tickets.announcements') }}"
-class="nav-item {{ request()->routeIs('tickets.announcements') ? 'active' : '' }}">
+    <a href="{{ route('tickets.myTickets') }}" 
+        class="nav-item {{ request()->routeIs('tickets.myTickets') ? 'active' : '' }}">
+        <i class="fas fa-ticket"></i>
+        <span>Tickets</span>
+    </a>
 
-<i class="fa-solid fa-bullhorn"></i>
-<span>Announcements</span>
+    <a href="{{ route('tickets.coupon') }}" 
+        class="nav-item {{ request()->routeIs('tickets.coupon') ? 'active' : '' }}">
+        <i class="fas fa-tags"></i>
+        <span>Coupon's</span>
+    </a>
 
-</a> --}}
-            
-            <form method="POST" action="{{ route('custom.logout') }}">
-    @csrf
-    <button type="submit" class="nav-item logout-btn">
-        <i class="fas fa-right-from-bracket"></i>
-        <span>Logout</span>
-    </button>
-</form>
-        </div>
+    <a href="javascript:void(0)" class="nav-item disabled" style="color: #b6b6b6;">
+        <i class="fa-solid fa-bullhorn" style="color: #b6b6b6;"></i>
+        <span>Announcements</span>
+        <small>soon</small>
+    </a>
+
+    <form method="POST" action="{{ route('custom.logout') }}">
+        @csrf
+        <button type="submit" class="nav-item logout-btn">
+            <i class="fas fa-right-from-bracket"></i>
+            <span>Logout</span>
+        </button>
+    </form>
+
+</div> 
         
         <div class="sidebar-footer">
             <div class="user-info">

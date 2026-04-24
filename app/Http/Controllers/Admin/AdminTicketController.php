@@ -8,7 +8,6 @@ use Illuminate\Http\Request;
 
 class AdminTicketController extends Controller
 {
-    // SHOW ALL TICKETS
     public function index()
 {
     $tickets = Ticket::with('user')
@@ -54,7 +53,6 @@ public function markViewed(Ticket $ticket)
 
     $ticket->status = 'in_progress';
 
-    // ✅ IMPORTANT: make sure hindi kapareho ng created_at
     $now = now();
 
     if (!$ticket->in_progress_at || $ticket->in_progress_at == $ticket->created_at) {

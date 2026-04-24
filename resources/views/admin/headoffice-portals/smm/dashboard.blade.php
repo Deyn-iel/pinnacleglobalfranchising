@@ -367,7 +367,7 @@ $tickets = Ticket::with('user')
 @endphp
 
 <span class="badge
-{{ $ticket->status === 'pending' ? 'bg-warning text-dark'
+{{ $ticket->status === 'pending' ? 'bg-danger'
 : ($isRequesting ? 'bg-warning text-dark'
 : ($ticket->status === 'in_progress' ? 'bg-primary'
 : ($ticket->status === 'resolved' ? 'bg-success'

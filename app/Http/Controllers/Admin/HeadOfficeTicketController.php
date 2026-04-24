@@ -44,7 +44,6 @@ public function index($department)
 
     public function markViewed(Ticket $ticket)
 {
-    // ❌ do nothing if already resolved
     if ($ticket->status === 'resolved') {
         return response()->json([
             'success' => false,

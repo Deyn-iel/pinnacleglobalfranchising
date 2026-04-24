@@ -1,6 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
 
-
     const sidebar      = document.getElementById("sidebar");
     const menuBtn      = document.getElementById("menuBtn");
     const closeSidebar = document.getElementById("closeSidebar");
@@ -9,21 +8,14 @@ document.addEventListener("DOMContentLoaded", () => {
     const alert = document.getElementById("alertError");
 
     if (alert) {
-        // wait 5 seconds
         setTimeout(() => {
             alert.classList.add("fade-out");
 
-            // remove completely after animation
             setTimeout(() => {
                 alert.remove();
             }, 600);
         }, 5000);
     }
-
-    /* ================= LOGIN STATE =================
-       welcomeShown → session only
-       loginTime    → survives refresh
-    ================================================ */
 
     const isFirstLoad = sessionStorage.getItem("welcomeShown") !== "true";
 
@@ -52,7 +44,6 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    /* ================= SIDEBAR TOGGLE ================= */
     if (menuBtn && sidebar) {
         menuBtn.addEventListener("click", () => {
             sidebar.classList.toggle("show");
@@ -97,7 +88,6 @@ document.addEventListener("DOMContentLoaded", () => {
     setInterval(updateLoginTime, 60000);
 });
 
-/* ================= LOGOUT ================= */
 window.handleLogout = function () {
     sessionStorage.clear();
     localStorage.removeItem("loginTime");
@@ -209,7 +199,6 @@ window.handleLogout = function () {
 //         logoutItem.classList.add("fading");
 //     }
 
-//     // 🔥 CLEAR ALL LOGIN FLAGS
 //     localStorage.removeItem("hasLoggedIn");
 //     localStorage.removeItem("loginTime");
 

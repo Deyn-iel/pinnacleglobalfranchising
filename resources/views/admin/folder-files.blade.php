@@ -11,440 +11,684 @@
 @vite(['resources/css/admin/app.css'])
 
 <style>
-/* ===== RESET & GLOBAL ===== */
+:root {
+  --sidebar-w: 260px;
+  --topbar-h: 70px;
+
+  --bg: #f4f6f9;
+  --surface: #ffffff;
+  --surface-soft: #f8fafc;
+
+  --text: #111827;
+  --muted: #6b7280;
+  --border: #e5e7eb;
+
+  --primary: #2563eb;
+  --primary-dark: #1d4ed8;
+  --primary-soft: #eff6ff;
+
+  --success: #16a34a;
+  --success-dark: #15803d;
+
+  --danger: #dc2626;
+  --danger-dark: #b91c1c;
+
+  --warning: #f59e0b;
+
+  --shadow-sm: 0 1px 3px rgba(15, 23, 42, .08);
+  --shadow-md: 0 10px 24px rgba(15, 23, 42, .08);
+
+  --radius: 14px;
+  --radius-lg: 18px;
+}
+
+/* RESET */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
-body {
-  background: linear-gradient(135deg, #eef2ff 0%, #f8fafc 100%);
-  font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
-  color: #0f172a;
-  min-height: 100vh;
-}
-
-/* Smooth scrolling */
 html {
   scroll-behavior: smooth;
 }
 
-/* ===== HEADER SECTION ===== */
+body {
+  min-height: 100vh;
+  background: var(--bg);
+  color: var(--text);
+  font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  overflow-x: hidden;
+}
+
+a {
+  text-decoration: none;
+}
+
+/* MAIN PAGE */
+.file-manager-page {
+  width: calc(100% - var(--sidebar-w));
+  min-height: 100vh;
+  margin-left: var(--sidebar-w);
+  padding: 24px clamp(18px, 2.4vw, 40px) 36px;
+}
+
+@media (max-width: 1366px) {
+  :root {
+    --sidebar-w: 240px;
+  }
+
+  .file-manager-page {
+    padding: 20px 24px 30px;
+  }
+}
+
+/* SMALL LAPTOP */
+@media (max-width: 1199px) {
+  :root {
+    --sidebar-w: 220px;
+  }
+
+  .file-manager-page {
+    padding: 18px 20px 28px;
+  }
+}
+
+/* TABLET / COLLAPSED SIDEBAR */
+@media (max-width: 991px) {
+  .file-manager-page {
+    width: 100%;
+    margin-left: 0;
+    padding: 16px 16px 24px;
+  }
+}
+
+/* MOBILE */
+@media (max-width: 575px) {
+  .file-manager-page {
+    padding: 12px 12px 20px;
+  }
+}
+
+/* HEADER */
 .header {
+  width: 100%;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 30px;
+  gap: 14px;
   flex-wrap: wrap;
-  gap: 16px;
-  padding: 0 4px;
+  margin-bottom: 22px;
 }
 
 .folder-title {
-  font-size: 28px;
-  font-weight: 800;
-  display: flex;
+  min-width: 0;
+  max-width: 100%;
+  display: inline-flex;
   align-items: center;
   gap: 12px;
-  background: rgba(255,255,255,0.6);
-  backdrop-filter: blur(4px);
-  padding: 8px 20px;
-  border-radius: 60px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 14px 18px;
+  box-shadow: var(--shadow-sm);
+  font-size: clamp(18px, 1.8vw, 26px);
+  font-weight: 800;
+  line-height: 1.2;
 }
 
 .folder-title i {
-  font-size: 28px;
-  color: #f59e0b;
-  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
+  flex: 0 0 auto;
+  font-size: clamp(22px, 2vw, 28px);
+  color: var(--warning);
+}
+
+.folder-title span {
+  min-width: 0;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+.folder-title .badge {
+  flex: 0 0 auto;
+  background: var(--surface-soft) !important;
+  color: var(--text) !important;
+  border: 1px solid var(--border);
+  font-size: 12px !important;
+  font-weight: 700;
+  padding: 7px 10px;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
 }
 
 .back-btn {
-  font-size: 14px;
-  text-decoration: none;
-  color: #4f46e5;
-  font-weight: 600;
-  background: white;
-  padding: 8px 20px;
-  border-radius: 40px;
-  transition: all 0.25s ease;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+  min-height: 44px;
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 8px;
+  background: var(--surface);
+  color: var(--primary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 10px 16px;
+  font-size: 14px;
+  font-weight: 700;
+  white-space: nowrap;
+  box-shadow: var(--shadow-sm);
+  transition: .2s ease;
 }
 
 .back-btn:hover {
-  background: #4f46e5;
-  color: white;
-  transform: translateX(-3px);
-  box-shadow: 0 8px 20px rgba(79,70,229,0.2);
+  background: var(--primary);
+  border-color: var(--primary);
+  color: #fff;
 }
 
-/* ===== UPLOAD CARD ===== */
+/* UPLOAD CARD */
 .upload-card {
-  background: rgba(255,255,255,0.9);
-  backdrop-filter: blur(8px);
-  border-radius: 28px;
-  padding: 8px;
-  box-shadow: 0 20px 35px -12px rgba(0,0,0,0.08);
-  margin-bottom: 32px;
-  border: 1px solid rgba(255,255,255,0.5);
-  transition: all 0.2s;
+  width: 100%;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 18px;
+  margin-bottom: 26px;
+  box-shadow: var(--shadow-sm);
 }
 
 .upload-box {
+  width: 100%;
   border: 2px dashed #cbd5e1;
-  border-radius: 24px;
-  padding: 40px 30px;
+  border-radius: var(--radius);
+  background: var(--surface-soft);
+  padding: clamp(34px, 4vw, 54px) clamp(18px, 3vw, 34px);
   text-align: center;
-  transition: all 0.25s ease;
-  background: #ffffffcc;
-  /* REMOVED cursor: pointer from here - only file input should trigger file dialog */
+  transition: .2s ease;
 }
 
 .upload-box.drag-over {
-  background: #e0e7ff;
-  border-color: #6366f1;
-  transform: scale(0.98);
-  border-style: solid;
+  background: var(--primary-soft);
+  border-color: var(--primary);
 }
 
 .upload-icon {
-  font-size: 44px;
-  color: #6366f1;
-  margin-bottom: 12px;
-  transition: transform 0.2s;
-  pointer-events: none; /* Prevents icon from capturing clicks */
+  width: 58px;
+  height: 58px;
+  margin: 0 auto 14px;
+  border-radius: 50%;
+  background: var(--primary-soft);
+  color: var(--primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 26px;
+  pointer-events: none;
 }
 
 .upload-text {
-  font-size: 15px;
-  font-weight: 500;
+  font-size: clamp(14px, 1.1vw, 16px);
+  font-weight: 700;
   color: #334155;
   margin-bottom: 18px;
-  pointer-events: none; /* Prevents text from capturing clicks */
+  pointer-events: none;
 }
 
-/* Custom file input styling - THIS IS THE ONLY WAY TO SELECT FILES */
+.upload-text strong {
+  color: var(--text);
+}
+
+.file-upload-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .custom-upload-btn {
+  min-height: 42px;
   display: inline-flex;
   align-items: center;
-  gap: 10px;
-  background: #16a34a; /* same sa btn-success */
-  color: white;
-  padding: 10px 22px;
-  border-radius: 40px;
+  justify-content: center;
+  gap: 9px;
+  background: var(--surface);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 10px 18px;
   font-size: 14px;
-  font-weight: 600;
+  font-weight: 700;
   cursor: pointer;
-  transition: 0.2s;
+  transition: .2s ease;
 }
 
 .custom-upload-btn:hover {
-  background: #22c55e;
-  box-shadow: 0 6px 16px rgba(34,197,94,0.3);
+  background: #f3f4f6;
+  border-color: #d1d5db;
 }
 
-.btn-upload-primary {
-  background: linear-gradient(105deg, #4f46e5 0%, #6366f1 100%);
-  border: none;
+#selectedFileName {
+  min-height: 20px;
+  font-size: 13px;
+  margin-bottom: 16px;
+}
+
+.selected-file-info {
+  max-width: min(90%, 560px);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin: 12px auto;
+  background: #eef2ff;
+  color: #1e293b;
+  border: 1px solid #dbeafe;
+  border-radius: var(--radius);
+  padding: 9px 14px;
+  font-size: 13px;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+#uploadBtn {
+  min-height: 44px;
+  background: var(--success);
+  border: 1px solid var(--success);
+  border-radius: var(--radius);
   padding: 10px 28px;
-  border-radius: 40px;
-  font-weight: 600;
-  letter-spacing: 0.3px;
-  transition: all 0.25s;
-  box-shadow: 0 4px 12px rgba(79,70,229,0.3);
+  font-size: 14px;
+  font-weight: 800;
+  box-shadow: none;
+  transition: .2s ease;
 }
 
-.btn-upload-primary:hover {
-  box-shadow: 0 12px 22px rgba(79,70,229,0.4);
-  background: linear-gradient(105deg, #4338ca 0%, #4f46e5 100%);
+#uploadBtn:hover {
+  background: var(--success-dark);
+  border-color: var(--success-dark);
 }
 
-/* ===== FILE GRID ===== */
+#uploadBtn:disabled {
+  opacity: .75;
+  cursor: not-allowed;
+}
+
+/* FILE GRID */
 .file-grid {
+  width: 100%;
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-  gap: 24px;
-  margin-top: 8px;
+  gap: 18px;
+  align-items: stretch;
 }
 
-/* ===== FILE CARD (GLASS MORPH) ===== */
+@media (min-width: 1600px) {
+  .file-grid {
+    grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+  }
+}
+
+@media (max-width: 1199px) {
+  .file-grid {
+    grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+  }
+}
+
+@media (max-width: 575px) {
+  .file-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* FILE CARD */
 .file-card {
-  background: rgba(255, 255, 255, 0.85);
-  backdrop-filter: blur(12px);
-  border-radius: 28px;
-  padding: 20px 18px 20px 18px;
-  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.05);
-  transition: all 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1);
-  border: 1px solid rgba(255,255,255,0.6);
+  min-width: 0;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 18px;
+  box-shadow: var(--shadow-sm);
+  transition: .2s ease;
   position: relative;
   overflow: hidden;
 }
 
-.file-card::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 4px;
-  background: linear-gradient(90deg, #818cf8, #c084fc, #facc15);
-  opacity: 0;
-  transition: opacity 0.3s;
-}
-
-.file-card:hover::before {
-  opacity: 1;
-}
-
 .file-card:hover {
-  box-shadow: 0 24px 42px rgba(0, 0, 0, 0.12);
-  background: rgba(255, 255, 255, 0.96);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
   border-color: #cbd5e1;
 }
 
 .file-icon {
-  font-size: 46px;
+  width: 50px;
+  height: 50px;
+  border-radius: var(--radius);
+  background: var(--surface-soft);
+  border: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 26px;
   margin-bottom: 14px;
-  transition: transform 0.2s;
-}
-
-.file-card:hover .file-icon {
-  transform: scale(1.02);
 }
 
 .file-name {
-  font-weight: 700;
-  font-size: 15px;
-  margin-bottom: 6px;
-  word-break: break-word;
-  color: #0f172a;
+  min-width: 0;
   display: flex;
-  align-items: center;
-  gap: 6px;
+  align-items: flex-start;
+  gap: 7px;
   flex-wrap: wrap;
+  color: var(--text);
+  font-size: 14px;
+  font-weight: 800;
+  line-height: 1.35;
+  margin-bottom: 14px;
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 .file-badge {
-  font-size: 9px;
-  background: #eef2ff;
-  padding: 2px 8px;
-  border-radius: 50px;
-  font-weight: 500;
-  color: #4f46e5;
+  flex: 0 0 auto;
+  background: var(--primary-soft);
+  color: var(--primary);
+  border: 1px solid #dbeafe;
+  border-radius: 999px;
+  padding: 3px 8px;
+  font-size: 10px;
+  font-weight: 800;
   text-transform: uppercase;
 }
 
-.file-date {
-  font-size: 11px;
-  color: #64748b;
-  margin-bottom: 16px;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-
-.file-date i {
-  font-size: 10px;
-}
-
-/* ===== ACTION BUTTONS ===== */
+/* ACTION BUTTONS */
 .file-actions {
   display: flex;
   gap: 8px;
   flex-wrap: wrap;
-  margin-top: 4px;
+  align-items: center;
+  margin-top: 8px;
 }
 
 .file-actions .btn {
+  min-height: 34px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius);
+  padding: 7px 12px;
   font-size: 12px;
-  border-radius: 40px;
-  padding: 6px 14px;
-  font-weight: 500;
-  transition: all 0.2s;
-  backdrop-filter: blur(2px);
+  font-weight: 800;
+  transition: .2s ease;
 }
 
 .btn-outline-primary {
-  border: 1px solid #c7d2fe;
-  color: #4f46e5;
-  background: white;
+  background: #fff;
+  border: 1px solid #bfdbfe;
+  color: var(--primary);
 }
 
 .btn-outline-primary:hover {
-  background: #4f46e5;
-  border-color: #4f46e5;
-  color: white;
+  background: var(--primary);
+  border-color: var(--primary);
+  color: #fff;
 }
 
 .btn-outline-secondary {
-  border: 1px solid #e2e8f0;
+  background: #fff;
+  border: 1px solid var(--border);
   color: #475569;
 }
 
 .btn-outline-secondary:hover {
-  background: #000000;
+  background: #111827;
+  border-color: #111827;
+  color: #fff;
 }
 
 .btn-outline-danger {
-  border: 1px solid #fee2e2;
-  color: #e11d48;
+  background: #fff;
+  border: 1px solid #fecaca;
+  color: var(--danger);
 }
 
 .btn-outline-danger:hover {
-  background: #e11d48;
-  border-color: #e11d48;
-  color: white;
+  background: var(--danger);
+  border-color: var(--danger);
+  color: #fff;
 }
 
-/* ===== EMPTY STATE ===== */
+/* FOLDER CARD */
+.folder-card-inner .file-icon {
+  background: #fffbeb;
+  border-color: #fde68a;
+}
+
+.folder-card-inner:hover {
+  border-color: #fde68a;
+  background: #fffbeb;
+}
+
+/* EMPTY STATE */
 .empty {
-  text-align: center;
-  padding: 70px 20px;
-  color: #475569;
-  background: rgba(255,255,255,0.6);
-  backdrop-filter: blur(4px);
-  border-radius: 48px;
-  margin-top: 20px;
   grid-column: 1 / -1;
+  background: var(--surface);
+  border: 1px dashed #cbd5e1;
+  border-radius: var(--radius-lg);
+  padding: clamp(44px, 6vw, 76px) 20px;
+  text-align: center;
+  color: var(--muted);
+  box-shadow: var(--shadow-sm);
 }
 
 .empty i {
-  font-size: 56px;
-  margin-bottom: 18px;
-  opacity: 0.7;
+  width: 62px;
+  height: 62px;
+  margin: 0 auto 16px;
+  border-radius: 50%;
+  background: var(--surface-soft);
   color: #94a3b8;
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
 }
 
 .empty p {
-  font-size: 16px;
-  font-weight: 500;
+  color: var(--text);
+  font-size: clamp(15px, 1.2vw, 17px);
+  font-weight: 800;
+  margin-bottom: 4px;
 }
 
-/* ===== TOAST NOTIFICATION ===== */
+.empty small {
+  color: var(--muted);
+}
+
+/* TOAST */
 .toast-notify {
   position: fixed;
-  bottom: 30px;
-  right: 30px;
-  background: #1e293b;
-  color: white;
-  padding: 12px 24px;
-  border-radius: 60px;
-  font-size: 14px;
-  font-weight: 500;
+  right: 26px;
+  bottom: 26px;
+  max-width: calc(100vw - 40px);
   display: flex;
   align-items: center;
   gap: 10px;
+  background: #111827;
+  color: #fff;
+  border-radius: var(--radius);
+  padding: 13px 18px;
+  font-size: 14px;
+  font-weight: 700;
+  box-shadow: var(--shadow-md);
   z-index: 9999;
-  box-shadow: 0 12px 28px rgba(0,0,0,0.2);
-  backdrop-filter: blur(8px);
-  background: rgba(15,23,42,0.9);
-  transform: translateX(400px);
-  transition: transform 0.3s ease;
-  font-family: monospace;
+  transform: translateX(420px);
+  transition: transform .25s ease;
 }
 
 .toast-notify.show {
   transform: translateX(0);
 }
 
-/* loading spinner */
+/* LOADING */
 .loading-spinner {
   display: inline-block;
-  width: 18px;
-  height: 18px;
-  border: 2px solid rgba(255,255,255,0.3);
+  width: 17px;
+  height: 17px;
+  border: 2px solid rgba(255, 255, 255, .35);
+  border-top-color: #fff;
   border-radius: 50%;
-  border-top-color: white;
-  animation: spin 0.6s linear infinite;
+  animation: spin .65s linear infinite;
   margin-right: 8px;
 }
 
 @keyframes spin {
-  to { transform: rotate(360deg); }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
-/* ===== RESPONSIVE ===== */
-@media (max-width: 640px) {
-  .container {
-    padding-left: 16px;
-    padding-right: 16px;
+/* MOBILE RESPONSIVE */
+@media (max-width: 768px) {
+  .header {
+    align-items: stretch;
   }
+
+  .folder-title,
+  .back-btn {
+    width: 100%;
+  }
+
   .folder-title {
-    font-size: 22px;
-    padding: 5px 14px;
+    justify-content: center;
+    text-align: center;
+    border-radius: var(--radius-lg);
   }
-  .file-grid {
-    grid-template-columns: 1fr;
+
+  .back-btn {
+    justify-content: center;
   }
+
+  .upload-card {
+    padding: 14px;
+  }
+
   .upload-box {
-    padding: 28px 18px;
+    padding: 30px 16px;
   }
-  .custom-file-input {
-    width: 90%;
-    min-width: auto;
+
+  #uploadBtn,
+  .custom-upload-btn {
+    width: 100%;
+    max-width: 320px;
+  }
+
+  .file-actions {
+    align-items: stretch;
+  }
+
+  .file-actions .btn,
+  .delete-file-form,
+  .delete-folder-form {
+    flex: 1 1 auto;
+  }
+
+  .delete-file-form .btn,
+  .delete-folder-form .btn {
+    width: 100%;
+  }
+
+  .toast-notify {
+    left: 12px;
+    right: 12px;
+    bottom: 16px;
+    justify-content: center;
+    border-radius: var(--radius);
+    transform: translateY(120px);
+  }
+
+  .toast-notify.show {
+    transform: translateY(0);
   }
 }
 
-/* file size hint */
-.file-size-badge {
-  font-size: 10px;
-  background: #f1f5f9;
-  border-radius: 20px;
-  padding: 2px 10px;
-  display: inline-block;
-  margin-top: 6px;
-  color: #334155;
-}
+@media (max-width: 420px) {
+  .folder-title {
+    padding: 12px 14px;
+    font-size: 18px;
+  }
 
-/* Selected file name styling */
-.selected-file-info {
-  background: #f1f5f9;
-  border-radius: 40px;
-  padding: 8px 16px;
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  margin: 12px auto;
-  font-size: 13px;
-  color: #0f172a;
-  max-width: 90%;
-}
-.form-control {
-    width: 50%;
-    margin: 0 auto 12px auto;
-    display: block;
+  .folder-title .badge {
+    margin-left: 0 !important;
+  }
+
+  .file-card {
+    padding: 16px;
+  }
 }
 </style>
 </head>
 
 <body>
+
 @include('admin-sidebar.navbar')
 @include('admin-sidebar.sidebar')
-<div class="container py-4">
 
-  <!-- HEADER with animated breadcrumb -->
+<main class="file-manager-page">
+
   <div class="header">
     <div class="folder-title">
       <i class="fas fa-folder-open"></i>
-      <span id="folderNameDisplay">{{ $folder ?? 'Documents' }}</span>
-      <span class="badge bg-light text-dark rounded-pill ms-2" style="font-size:12px">
-        <i class="fas fa-file-alt"></i> <span id="fileCountBadge">0</span>
+      <span id="folderNameDisplay">{{ $folderName ?? basename($folder) }}</span>
+      <span class="badge bg-light text-dark rounded-pill ms-2">
+        <i class="fas fa-layer-group"></i>
+        <span id="fileCountBadge">0</span>
       </span>
     </div>
 
-    <a href="{{ route('admin.requirements') }}" class="back-btn">
-      <i class="fas fa-arrow-left"></i> Back to Requirements
-    </a>
+    @if(!empty($parentFolder))
+      <a href="{{ route('admin.folder.view', $parentFolder) }}" class="back-btn">
+        <i class="fas fa-arrow-left"></i> Back
+      </a>
+    @else
+      <a href="{{ route('admin.requirements') }}" class="back-btn">
+        <i class="fas fa-arrow-left"></i> Back to Requirements
+      </a>
+    @endif
   </div>
 
-  <!-- UPLOAD CARD - FIXED: Only file input opens file dialog -->
+  @if(session('success'))
+    <div id="successMsg" class="alert alert-success fw-bold">
+      <i class="fa-solid fa-circle-check me-1"></i>
+      {{ session('success') }}
+    </div>
+  @endif
+
+  <div class="upload-card">
+    <form action="{{ route('admin.folder.create.inside', $folder) }}" method="POST">
+      @csrf
+
+      <div class="row g-3 align-items-end">
+        <div class="col-12 col-md-8 col-lg-6">
+          <label class="form-label fw-bold">Create Subfolder</label>
+          <input
+            type="text"
+            name="folder"
+            class="form-control"
+            placeholder="Enter subfolder name"
+            required
+          >
+        </div>
+
+        <div class="col-12 col-md-auto">
+          <button type="submit" class="btn btn-primary px-4">
+            <i class="fas fa-folder-plus"></i>
+            Create Folder
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+
   <div class="upload-card">
     <form id="uploadForm" action="{{ route('admin.folder.upload', $folder) }}" method="POST" enctype="multipart/form-data">
-    @csrf
+      @csrf
 
       <div class="upload-box" id="dropZone">
         <div class="upload-icon">
@@ -455,82 +699,131 @@ html {
           <strong>Drag & drop</strong> your file here
         </div>
 
-        <!-- ONLY THIS INPUT TRIGGERS FILE SELECTION - No other click handlers open file dialog -->
         <div style="margin: 8px 0 12px 0;">
+          <div class="file-upload-wrapper">
+            <label for="fileInput" class="custom-upload-btn">
+              <i class="fas fa-folder-open"></i> Choose File
+            </label>
+            <input type="file" name="file" id="fileInput" hidden required>
+          </div>
+        </div>
 
-  <div class="file-upload-wrapper">
-  <label for="fileInput" class="custom-upload-btn">
-    <i class="fas fa-folder-open"></i> Choose File
-  </label>
-  <input type="file" name="file" id="fileInput" hidden required>
-</div>
-</div>
-        
-        <div id="selectedFileName" style="font-size:13px; margin-bottom:16px;"></div>
-        
+        <div id="selectedFileName"></div>
+
         <button type="submit" id="uploadBtn" class="btn btn-success px-5">
           <i class="fas fa-upload me-2"></i> Upload File
         </button>
-        
+
         <p style="font-size: 11px; color: #94a3b8; margin-top: 16px; margin-bottom: 0;">
           <i class="fas fa-shield-alt"></i> Max file size: 50MB
         </p>
       </div>
-
     </form>
   </div>
 
-  <!-- FILES GRID -->
-<div class="file-grid" id="fileGrid">
+  <div class="file-grid" id="fileGrid">
 
-@forelse($files as $file)
-  @php
-    $ext = strtolower(pathinfo($file->file_original_name ?? '', PATHINFO_EXTENSION));
-    $icon = 'fa-file text-secondary';
-    if(in_array($ext, ['jpg','jpeg','png'])) $icon = 'fa-file-image text-success';
-    elseif($ext == 'pdf') $icon = 'fa-file-pdf text-danger';
-    elseif(in_array($ext, ['doc','docx'])) $icon = 'fa-file-word text-primary';
-  @endphp
+    @if(isset($subfolders) && count($subfolders) > 0)
+      @foreach($subfolders as $subfolder)
+        <div class="file-card folder-card-inner">
+          <div class="file-icon">
+            <i class="fas fa-folder text-warning"></i>
+          </div>
 
-  <div class="file-card" data-file-id="{{ $file->id }}">
-    <div class="file-icon">
-      <i class="fas {{ $icon }}"></i>
-    </div>
+          <div class="file-name">
+            {{ $subfolder['name'] }}
+            <span class="file-badge">FOLDER</span>
+          </div>
 
-    <div class="file-name">
-      {{ $file->file_original_name }}
-      <span class="file-badge">{{ strtoupper($ext) }}</span>
-    </div>
+          <div class="file-actions">
+            <a href="{{ route('admin.folder.view', $subfolder['path']) }}" class="btn btn-outline-primary btn-sm">
+              Open
+            </a>
 
-    <div class="file-actions">
-      <a href="{{ asset('storage/'.$file->file_path) }}" target="_blank" class="btn btn-outline-primary btn-sm">View</a>
-      <a href="{{ asset('storage/'.$file->file_path) }}" download class="btn btn-outline-secondary btn-sm">Download</a>
+            <form
+              class="delete-folder-form"
+              action="{{ route('admin.folder.delete', $subfolder['path']) }}"
+              method="POST"
+            >
+              @csrf
+              @method('DELETE')
 
-      <form class="delete-file-form" action="{{ route('admin.requirements.delete', $file->id) }}" method="POST">
-        @csrf
-        @method('DELETE')
-        <button type="submit" class="btn btn-outline-danger btn-sm">Delete</button>
-      </form>
-    </div>
+              <button type="submit" class="btn btn-outline-danger btn-sm">
+                Delete
+              </button>
+            </form>
+          </div>
+        </div>
+      @endforeach
+    @endif
+
+    @forelse($files as $file)
+      @php
+        $ext = strtolower(pathinfo($file->file_original_name ?? '', PATHINFO_EXTENSION));
+        $icon = 'fa-file text-secondary';
+
+        if(in_array($ext, ['jpg','jpeg','png','gif','webp'])) {
+          $icon = 'fa-file-image text-success';
+        } elseif($ext == 'pdf') {
+          $icon = 'fa-file-pdf text-danger';
+        } elseif(in_array($ext, ['doc','docx'])) {
+          $icon = 'fa-file-word text-primary';
+        } elseif(in_array($ext, ['xls','xlsx'])) {
+          $icon = 'fa-file-excel text-success';
+        } elseif(in_array($ext, ['ppt','pptx'])) {
+          $icon = 'fa-file-powerpoint text-warning';
+        }
+      @endphp
+
+      <div class="file-card actual-file-card" data-file-id="{{ $file->id }}">
+        <div class="file-icon">
+          <i class="fas {{ $icon }}"></i>
+        </div>
+
+        <div class="file-name">
+          {{ $file->file_original_name }}
+          <span class="file-badge">{{ $ext ? strtoupper($ext) : 'FILE' }}</span>
+        </div>
+
+        <div class="file-actions">
+          <a href="{{ asset('storage/'.$file->file_path) }}" target="_blank" class="btn btn-outline-primary btn-sm">
+            View
+          </a>
+
+          <a href="{{ asset('storage/'.$file->file_path) }}" download class="btn btn-outline-secondary btn-sm">
+            Download
+          </a>
+
+          <form class="delete-file-form" action="{{ route('admin.requirements.delete', $file->id) }}" method="POST">
+            @csrf
+            @method('DELETE')
+            <button type="submit" class="btn btn-outline-danger btn-sm">
+              Delete
+            </button>
+          </form>
+        </div>
+      </div>
+
+    @empty
+      @if(!isset($subfolders) || count($subfolders) === 0)
+        <div class="empty" id="emptyStatePlaceholder">
+          <i class="fas fa-folder-open d-block"></i>
+          <p>This folder is empty</p>
+          <small>Create a subfolder or upload a file above.</small>
+        </div>
+      @endif
+    @endforelse
+
   </div>
 
-@empty
-  <div class="empty">
-    <p>No files uploaded yet</p>
-  </div>
-@endforelse
+</main>
 
-</div>
-
-</div>
-
-<!-- Toast message container -->
 <div id="toastMsg" class="toast-notify">
-  <i class="fas fa-check-circle"></i> <span id="toastText">Action completed</span>
+  <i class="fas fa-check-circle"></i>
+  <span id="toastText">Action completed</span>
 </div>
 
 <script>
-// ========== FIXED: NO UNWANTED FILE DIALOG TRIGGERS ==========
 document.addEventListener('DOMContentLoaded', () => {
   const dropZone = document.getElementById('dropZone');
   const fileInput = document.getElementById('fileInput');
@@ -541,268 +834,343 @@ document.addEventListener('DOMContentLoaded', () => {
   const toastTextSpan = document.getElementById('toastText');
   const fileGrid = document.getElementById('fileGrid');
   const fileCountBadge = document.getElementById('fileCountBadge');
+  const csrfToken = document.querySelector('input[name="_token"]')?.value || '';
+  const deleteFileBaseUrl = "{{ url('/admin/requirements') }}";
+  const storageBaseUrl = "{{ asset('storage') }}";
 
-  // IMPORTANT: Remove any click handler from dropZone that might trigger file dialog
-  // The ONLY way to open file dialog is clicking the file input itself
-  
-  // update file count badge dynamically
-  function updateFileCount() {
-    const fileCards = document.querySelectorAll('.file-card');
-    if(fileCountBadge) {
-      fileCountBadge.innerText = fileCards.length;
-    }
-    if(fileCards.length === 0 && !document.querySelector('.empty')) {
-      if(fileGrid && !document.getElementById('emptyStatePlaceholder')) {
-        const emptyDiv = document.createElement('div');
-        emptyDiv.className = 'empty';
-        emptyDiv.id = 'emptyStatePlaceholder';
-        emptyDiv.innerHTML = `<i class="fas fa-folder-open"></i><p>✨ No files uploaded yet</p><small>Click "Choose File" above to select a file, then click Upload</small>`;
-        fileGrid.appendChild(emptyDiv);
-      }
-    } else if(fileCards.length > 0) {
-      const existingEmpty = document.getElementById('emptyStatePlaceholder');
-      if(existingEmpty) existingEmpty.remove();
-    }
-  }
+  let toastTimeout;
 
-let toastTimeout;
-
-function showToast(message, isError = false) {
-  clearTimeout(toastTimeout);
-
-  toastTextSpan.innerHTML = message;
-
-  if (isError) {
-    toastEl.style.background = "rgba(220,38,38,0.9)";
-    toastEl.querySelector('i').className = "fas fa-exclamation-triangle";
-  } else {
-    toastEl.style.background = "rgba(15,23,42,0.9)";
-    toastEl.querySelector('i').className = "fas fa-check-circle";
-  }
-
-  toastEl.classList.add('show');
-
-  toastTimeout = setTimeout(() => {
-    toastEl.classList.remove('show');
-  }, 2500);
-}
-
-  // Drag & drop visual ONLY - does NOT open file dialog
-  dropZone.addEventListener('dragover', (e) => {
-    e.preventDefault();
-    dropZone.classList.add('drag-over');
-  });
-  dropZone.addEventListener('dragleave', () => {
-    dropZone.classList.remove('drag-over');
-  });
-  dropZone.addEventListener('drop', (e) => {
-    e.preventDefault();
-    dropZone.classList.remove('drag-over');
-    const files = e.dataTransfer.files;
-    if(files.length > 0) {
-      // Set files to the file input
-      fileInput.files = files;
-      updateSelectedFileName(files[0].name);
-      showToast(`File "${files[0].name}" selected`, false);
-    }
-  });
-
-  function updateSelectedFileName(name) {
-    if(selectedFileNameSpan) {
-      selectedFileNameSpan.innerHTML = `<div class="selected-file-info"><i class="fas fa-paperclip text-primary"></i> <strong>Selected:</strong> ${name.length > 40 ? name.substring(0, 40) + '...' : name}</div>`;
-    }
-  }
-
-  // When file input changes (user clicked it directly)
-  fileInput.addEventListener('change', function(e) {
-    if(this.files.length > 0) {
-      updateSelectedFileName(this.files[0].name);
-    } else {
-      if(selectedFileNameSpan) selectedFileNameSpan.innerHTML = '';
-    }
-  });
-
-  // Upload with AJAX (prevents page reload)
-  uploadForm.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const file = fileInput.files[0];
-    if(!file) {
-      showToast('❌ Please select a file first', true);
-      return;
-    }
-    
-    // Validate file size (max 50MB)
-    if(file.size > 50 * 1024 * 1024) {
-      showToast('File size exceeds 50MB limit', true);
-      return;
-    }
-    
-    const formData = new FormData(uploadForm);
-    uploadBtn.disabled = true;
-    const originalBtnHtml = uploadBtn.innerHTML;
-    uploadBtn.innerHTML = '<span class="loading-spinner"></span> Uploading...';
-    
-    try {
-      const response = await fetch(uploadForm.action, {
-        method: 'POST',
-        headers: {
-          'X-Requested-With': 'XMLHttpRequest',
-          'Accept': 'application/json',
-          'X-CSRF-TOKEN': document.querySelector('input[name="_token"]').value
-        },
-        body: formData
-      });
-      
-      let result;
-      try {
-        result = await response.json();
-      } catch (e) {
-        // If response is not JSON, fallback to page reload
-        if(response.ok) {
-          showToast('Upload successful! Refreshing...', false);
-          setTimeout(() => location.reload(), 1000);
-        } else {
-          showToast('Upload failed. Server error.', true);
-        }
-        uploadBtn.disabled = false;
-        uploadBtn.innerHTML = originalBtnHtml;
-        return;
-      }
-      
-      if(response.ok && result.success) {
-        showToast(result.message || '✅ File uploaded successfully!');
-        if(result.file) {
-          addFileCardToGrid(result.file);
-          fileInput.value = '';
-          if(selectedFileNameSpan) selectedFileNameSpan.innerHTML = '';
-          updateFileCount();
-        } else {
-          setTimeout(() => location.reload(), 800);
-        }
-      } else {
-        showToast(result.message || 'Upload failed. Please try again.', true);
-      }
-    } catch (error) {
-      console.error('Upload error:', error);
-      showToast('Network error. Please check your connection.', true);
-    } finally {
-      uploadBtn.disabled = false;
-      uploadBtn.innerHTML = originalBtnHtml;
-    }
-  });
-  
-  // Helper to add card dynamically
-function addFileCardToGrid(fileData) {
-  const fileGrid = document.getElementById('fileGrid');
-
-  const fileName = fileData.original_name;
-  const ext = fileName.split('.').pop().toLowerCase();
-
-  let iconClass = 'fa-file text-secondary';
-  if(['jpg','jpeg','png','gif','webp'].includes(ext)) iconClass = 'fa-file-image text-success';
-  else if(ext === 'pdf') iconClass = 'fa-file-pdf text-danger';
-  else if(['doc','docx'].includes(ext)) iconClass = 'fa-file-word text-primary';
-
-  const fileUrl = '/storage/' + fileData.file_path;
-
-  const fileCard = document.createElement('div');
-  fileCard.className = 'file-card';
-  fileCard.setAttribute('data-file-id', fileData.id);
-
-  fileCard.innerHTML = `
-    <div class="file-icon"><i class="fas ${iconClass}"></i></div>
-    <div class="file-name">${fileName}<span class="file-badge">${ext.toUpperCase()}</span></div>
-    <div class="file-actions">
-      <a href="${fileUrl}" target="_blank" class="btn btn-outline-primary btn-sm">View</a>
-      <a href="${fileUrl}" download class="btn btn-outline-secondary btn-sm">Download</a>
-      <form class="delete-file-form" action="/admin/requirements/${fileData.id}" method="POST">
-        <input type="hidden" name="_token" value="${document.querySelector('input[name="_token"]').value}">
-        <input type="hidden" name="_method" value="DELETE">
-        <button type="submit" class="btn btn-outline-danger btn-sm">Delete</button>
-      </form>
-    </div>
-  `;
-
-  fileGrid.prepend(fileCard);
-
-  attachDeleteEvent(fileCard.querySelector('.delete-file-form'));
-}
-  
   function escapeHtml(str) {
-    if(!str) return '';
-    return str.replace(/[&<>]/g, function(m) {
-      if(m === '&') return '&amp;';
-      if(m === '<') return '&lt;';
-      if(m === '>') return '&gt;';
-      return m;
+    if (!str) return '';
+
+    return String(str).replace(/[&<>"']/g, function (m) {
+      return {
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#039;'
+      }[m];
     });
   }
-  
-  // attach delete with confirmation & AJAX
-function attachDeleteEvent(formElement) {
-  if(!formElement) return;
 
-  formElement.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    e.stopPropagation();
+  function showToast(message, isError = false) {
+    if (!toastEl || !toastTextSpan) return;
 
-    if(!confirm('⚠️ Permanently delete this file? This action cannot be undone.')) return;
+    clearTimeout(toastTimeout);
 
-    const deleteBtn = formElement.querySelector('button');
-    const originalText = deleteBtn.innerHTML;
-    deleteBtn.innerHTML = '<span class="loading-spinner"></span>';
-    deleteBtn.disabled = true;
+    toastTextSpan.innerHTML = message;
 
-    try {
-      const response = await fetch(formElement.action, {
-        method: 'POST',
-        headers: {
-          'X-CSRF-TOKEN': formElement.querySelector('input[name="_token"]').value,
-          'Accept': 'application/json',
-          'X-Requested-With': 'XMLHttpRequest'
-        },
-        body: new URLSearchParams({ '_method': 'DELETE' })
-      });
+    if (isError) {
+      toastEl.style.background = 'rgba(220,38,38,0.92)';
+      toastEl.querySelector('i').className = 'fas fa-exclamation-triangle';
+    } else {
+      toastEl.style.background = 'rgba(15,23,42,0.92)';
+      toastEl.querySelector('i').className = 'fas fa-check-circle';
+    }
 
-      const data = await response.json();
+    toastEl.classList.add('show');
 
-      if (response.ok && data.success) {
-        showToast(data.message || '🗑️ File deleted');
-        const card = formElement.closest('.file-card');
-if (card) {
-  const categoryWrapper = card.closest('[data-category]');
-  const categoryFiles = categoryWrapper.querySelector('.category-files');
-
-  card.remove();
-
-  if (categoryFiles.children.length === 0) {
-    categoryWrapper.remove();
+    toastTimeout = setTimeout(() => {
+      toastEl.classList.remove('show');
+    }, 2500);
   }
-}
 
-updateFileCount();
-      } else {
-        showToast(data.message || 'Delete failed', true);
+  function updateFileCount() {
+    const itemCards = document.querySelectorAll('.file-card');
+    const emptyStates = document.querySelectorAll('.empty');
+
+    if (fileCountBadge) {
+      fileCountBadge.innerText = itemCards.length;
+    }
+
+    if (itemCards.length > 0) {
+      emptyStates.forEach(empty => empty.remove());
+      return;
+    }
+
+    if (fileGrid && emptyStates.length === 0) {
+      const emptyDiv = document.createElement('div');
+      emptyDiv.className = 'empty';
+      emptyDiv.id = 'emptyStatePlaceholder';
+      emptyDiv.innerHTML = `
+        <i class="fas fa-folder-open d-block"></i>
+        <p>This folder is empty</p>
+        <small>Create a subfolder or upload a file above.</small>
+      `;
+      fileGrid.appendChild(emptyDiv);
+    }
+  }
+
+  function updateSelectedFileName(name) {
+    if (!selectedFileNameSpan) return;
+
+    const safeName = escapeHtml(name);
+    const shortName = safeName.length > 45 ? safeName.substring(0, 45) + '...' : safeName;
+
+    selectedFileNameSpan.innerHTML = `
+      <div class="selected-file-info">
+        <i class="fas fa-paperclip text-primary"></i>
+        <strong>Selected:</strong> ${shortName}
+      </div>
+    `;
+  }
+
+  function getIconClass(ext) {
+    ext = String(ext || '').toLowerCase();
+
+    if (['jpg', 'jpeg', 'png', 'gif', 'webp'].includes(ext)) return 'fa-file-image text-success';
+    if (ext === 'pdf') return 'fa-file-pdf text-danger';
+    if (['doc', 'docx'].includes(ext)) return 'fa-file-word text-primary';
+    if (['xls', 'xlsx'].includes(ext)) return 'fa-file-excel text-success';
+    if (['ppt', 'pptx'].includes(ext)) return 'fa-file-powerpoint text-warning';
+
+    return 'fa-file text-secondary';
+  }
+
+  function addFileCardToGrid(fileData) {
+    if (!fileGrid || !fileData) return;
+
+    const fileName = fileData.original_name || fileData.file_original_name || 'Uploaded file';
+    const safeFileName = escapeHtml(fileName);
+    const ext = fileName.includes('.') ? fileName.split('.').pop().toLowerCase() : 'file';
+    const iconClass = getIconClass(ext);
+    const fileUrl = storageBaseUrl + '/' + fileData.file_path;
+
+    document.querySelectorAll('.empty').forEach(empty => empty.remove());
+
+    const fileCard = document.createElement('div');
+    fileCard.className = 'file-card actual-file-card';
+    fileCard.setAttribute('data-file-id', fileData.id);
+
+    fileCard.innerHTML = `
+      <div class="file-icon">
+        <i class="fas ${iconClass}"></i>
+      </div>
+
+      <div class="file-name">
+        ${safeFileName}
+        <span class="file-badge">${escapeHtml(ext.toUpperCase())}</span>
+      </div>
+
+      <div class="file-actions">
+        <a href="${fileUrl}" target="_blank" class="btn btn-outline-primary btn-sm">View</a>
+        <a href="${fileUrl}" download class="btn btn-outline-secondary btn-sm">Download</a>
+
+        <form class="delete-file-form" action="${deleteFileBaseUrl}/${fileData.id}" method="POST">
+          <input type="hidden" name="_token" value="${csrfToken}">
+          <input type="hidden" name="_method" value="DELETE">
+          <button type="submit" class="btn btn-outline-danger btn-sm">Delete</button>
+        </form>
+      </div>
+    `;
+
+    fileGrid.prepend(fileCard);
+    attachDeleteEvent(fileCard.querySelector('.delete-file-form'));
+    updateFileCount();
+  }
+
+  function attachDeleteEvent(formElement) {
+    if (!formElement) return;
+
+    formElement.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+
+      if (!confirm('⚠️ Permanently delete this file? This action cannot be undone.')) {
+        return;
       }
 
-    } catch (err) {
-      console.error(err);
-      showToast('Error deleting file', true);
-    } finally {
-      deleteBtn.disabled = false;
-      deleteBtn.innerHTML = originalText;
-    }
-  });
-}
-  
-  // Attach to all existing delete forms
+      const deleteBtn = formElement.querySelector('button');
+      const originalText = deleteBtn ? deleteBtn.innerHTML : '';
+
+      if (deleteBtn) {
+        deleteBtn.innerHTML = '<span class="loading-spinner"></span>';
+        deleteBtn.disabled = true;
+      }
+
+      try {
+        const response = await fetch(formElement.action, {
+          method: 'POST',
+          headers: {
+            'X-CSRF-TOKEN': formElement.querySelector('input[name="_token"]')?.value || csrfToken,
+            'Accept': 'application/json',
+            'X-Requested-With': 'XMLHttpRequest'
+          },
+          body: new URLSearchParams({ '_method': 'DELETE' })
+        });
+
+        let data = {};
+
+        try {
+          data = await response.json();
+        } catch (err) {
+          data = {};
+        }
+
+        if (response.ok && (data.success === true || Object.keys(data).length === 0)) {
+          showToast(data.message || '🗑️ File deleted');
+
+          const card = formElement.closest('.file-card');
+          if (card) card.remove();
+
+          updateFileCount();
+        } else {
+          showToast(data.message || 'Delete failed', true);
+        }
+
+      } catch (err) {
+        console.error(err);
+        showToast('Error deleting file', true);
+      } finally {
+        if (deleteBtn) {
+          deleteBtn.disabled = false;
+          deleteBtn.innerHTML = originalText;
+        }
+      }
+    });
+  }
+
+  function attachDeleteFolderEvents() {
+    document.querySelectorAll('.delete-folder-form').forEach(function (form) {
+      form.addEventListener('submit', function (e) {
+        const confirmed = confirm('Delete this folder and all files/subfolders inside it?');
+
+        if (!confirmed) {
+          e.preventDefault();
+        }
+      });
+    });
+  }
+
+  if (dropZone && fileInput) {
+    dropZone.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      dropZone.classList.add('drag-over');
+    });
+
+    dropZone.addEventListener('dragleave', () => {
+      dropZone.classList.remove('drag-over');
+    });
+
+    dropZone.addEventListener('drop', (e) => {
+      e.preventDefault();
+      dropZone.classList.remove('drag-over');
+
+      const files = e.dataTransfer.files;
+
+      if (files.length > 0) {
+        fileInput.files = files;
+        updateSelectedFileName(files[0].name);
+        showToast(`File "${escapeHtml(files[0].name)}" selected`);
+      }
+    });
+
+    fileInput.addEventListener('change', function () {
+      if (this.files.length > 0) {
+        updateSelectedFileName(this.files[0].name);
+      } else if (selectedFileNameSpan) {
+        selectedFileNameSpan.innerHTML = '';
+      }
+    });
+  }
+
+  if (uploadForm && uploadBtn && fileInput) {
+    uploadForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const file = fileInput.files[0];
+
+      if (!file) {
+        showToast('❌ Please select a file first', true);
+        return;
+      }
+
+      if (file.size > 50 * 1024 * 1024) {
+        showToast('File size exceeds 50MB limit', true);
+        return;
+      }
+
+      const formData = new FormData(uploadForm);
+      const originalBtnHtml = uploadBtn.innerHTML;
+
+      uploadBtn.disabled = true;
+      uploadBtn.innerHTML = '<span class="loading-spinner"></span> Uploading...';
+
+      try {
+        const response = await fetch(uploadForm.action, {
+          method: 'POST',
+          headers: {
+            'X-Requested-With': 'XMLHttpRequest',
+            'Accept': 'application/json',
+            'X-CSRF-TOKEN': csrfToken
+          },
+          body: formData
+        });
+
+        let result;
+
+        try {
+          result = await response.json();
+        } catch (err) {
+          if (response.ok) {
+            showToast('Upload successful! Refreshing...');
+            setTimeout(() => location.reload(), 800);
+          } else {
+            showToast('Upload failed. Server error.', true);
+          }
+
+          return;
+        }
+
+        if (response.ok && result.success) {
+          showToast(result.message || '✅ File uploaded successfully!');
+
+          if (result.file) {
+            addFileCardToGrid(result.file);
+            fileInput.value = '';
+
+            if (selectedFileNameSpan) {
+              selectedFileNameSpan.innerHTML = '';
+            }
+          } else {
+            setTimeout(() => location.reload(), 800);
+          }
+        } else {
+          showToast(result.message || 'Upload failed. Please try again.', true);
+        }
+
+      } catch (error) {
+        console.error('Upload error:', error);
+        showToast('Network error. Please check your connection.', true);
+      } finally {
+        uploadBtn.disabled = false;
+        uploadBtn.innerHTML = originalBtnHtml;
+      }
+    });
+  }
+
   document.querySelectorAll('.delete-file-form').forEach(form => attachDeleteEvent(form));
+  attachDeleteFolderEvents();
   updateFileCount();
-  
-  // IMPORTANT: NO click handler on dropZone that opens file dialog
-  // The file input handles file selection exclusively
+
+  const successMsg = document.getElementById('successMsg');
+
+  if (successMsg) {
+    setTimeout(() => {
+      successMsg.style.opacity = '0';
+      successMsg.style.transform = 'translateY(-6px)';
+      successMsg.style.transition = 'opacity .35s ease, transform .35s ease';
+
+      setTimeout(() => {
+        successMsg.remove();
+      }, 400);
+    }, 3000);
+  }
 });
 </script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
 </body>
 </html>

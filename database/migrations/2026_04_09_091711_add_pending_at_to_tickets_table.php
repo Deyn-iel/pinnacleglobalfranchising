@@ -29,7 +29,6 @@ return new class extends Migration
     {
         Schema::table('tickets', function (Blueprint $table) {
 
-            // ✅ ROLLBACK
             $table->dropColumn([
                 'pending_at',
                 'in_progress_at',

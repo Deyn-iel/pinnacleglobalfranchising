@@ -12,28 +12,25 @@ class RedirectDashboardByRole
     {
         $user = Auth::user();
 
-        if (!$user) {
-            return redirect()->route('login');
-        }
+if (!$user) {
+    return redirect()->route('login');
+}
 
-        // ONLY kapag tinamaan ang normal user dashboard route
-        if ($request->routeIs('dashboard')) {
+if ($request->routeIs('dashboard')) {
 
-            if ($user->usertype === 'admin') {
-                return redirect()->route('admin.dashboard');
-            }
-
-            if ($user->usertype === 'supplies') {
-                return redirect()->route('supplies.supplies-dashboard');
-            }
-
-            if ($user->usertype === 'ticket') {
-                return redirect()->route('tickets.dashboard');
-            }
-            if ($user->usertype === 'portal') {
-                return redirect()->route('portal.dashboard');
-            }
-           if ($user->usertype === 'smm' && !$request->routeIs('admin.portals.smm')) {
+if ($user->usertype === 'admin') {
+    return redirect()->route('admin.dashboard');
+}
+if ($user->usertype === 'supplies') {
+    return redirect()->route('supplies.supplies-dashboard');
+}
+if ($user->usertype === 'ticket') {
+    return redirect()->route('tickets.dashboard');
+}
+if ($user->usertype === 'portal') {
+    return redirect()->route('portal.dashboard');
+}
+if ($user->usertype === 'smm' && !$request->routeIs('admin.portals.smm')) {
     return redirect()->route('admin.portals.smm');
 }
 
@@ -56,9 +53,7 @@ if ($user->usertype === 'it' && !$request->routeIs('admin.portals.it')) {
 if ($user->usertype === 'admin-secretary' && !$request->routeIs('admin.portals.admin-secretary')) {
     return redirect()->route('admin.portals.admin-secretary');
 }
-
         }
-
         return $next($request);
     }
 }

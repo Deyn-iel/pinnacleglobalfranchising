@@ -21,17 +21,14 @@ class AdminExamResultController extends Controller
 {
     $result = ExamResult::findOrFail($id);
 
-    // ✅ DELETE ANSWERS
     ExamAnswer::where('user_id', $result->user_id)
         ->where('exam_id', $result->exam_id)
         ->delete();
 
-    // ✅ RESET ATTEMPT (THIS IS THE KEY)
     ExamAttempt::where('user_id', $result->user_id)
         ->where('exam_id', $result->exam_id)
         ->delete();
 
-    // ✅ DELETE RESULT
     $result->delete();
 
     return back()->with(
@@ -47,8 +44,6 @@ class AdminExamResultController extends Controller
             'exam.questions.options'
         ])->findOrFail($id);
 
-
-        // ✅ KEY BY QUESTION ID
         $answers = ExamAnswer::where('user_id', $result->user_id)
             ->where('exam_id', $result->exam_id)
             ->get()

@@ -10,12 +10,10 @@ class StrictAuth
 {
     public function handle(Request $request, Closure $next)
     {
-        // ❌ not logged in → login
         if (!Auth::check()) {
             return redirect()->route('login');
         }
 
-        // 🚨 IF ANY ERROR / INVALID STATE → FORCE LOGOUT
         try {
             return $next($request);
         } catch (\Throwable $e) {

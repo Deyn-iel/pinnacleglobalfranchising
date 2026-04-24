@@ -9,7 +9,6 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('support_messages', function (Blueprint $table) {
-            // ✅ DITO mo ilalagay
             $table->boolean('notified')->default(false)->after('message');
         });
     }
@@ -17,7 +16,6 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('support_messages', function (Blueprint $table) {
-            // ✅ para rollback safe
             $table->dropColumn('notified');
         });
     }

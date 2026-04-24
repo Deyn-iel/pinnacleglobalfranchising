@@ -1,4 +1,4 @@
-/* ================= RESET ================= */
+
 * {
     margin: 0;
     padding: 0;
@@ -6,7 +6,6 @@
     font-family: 'Segoe UI', system-ui, sans-serif;
 }
 
-/* ================= BODY ================= */
 body {
     min-height: 100vh;
     background:
@@ -17,7 +16,6 @@ body {
     padding: 20px;
 }
 
-/* ================= CONTAINER ================= */
 .confirm-container {
     background: rgba(255,255,255,0.97);
     max-width: 520px;
@@ -31,7 +29,6 @@ body {
     backdrop-filter: blur(4px);
 }
 
-/* ================= HEADER ================= */
 .confirm-header {
     text-align: center;
     margin-bottom: 24px;
@@ -50,7 +47,6 @@ body {
     color: #5a5a5a;
 }
 
-/* ================= RULES ================= */
 .rules {
     background: linear-gradient(180deg, #f8fbff, #f1f6fb);
     border-left: 5px solid #0d3553;
@@ -68,7 +64,6 @@ body {
     line-height: 1.6;
 }
 
-/* ================= CHECKBOX ================= */
 .confirm-check {
     display: flex;
     align-items: flex-start;
@@ -91,7 +86,6 @@ body {
     cursor: pointer;
 }
 
-/* ================= CONFIRM BUTTON ================= */
 .confirm-btn {
     display: block;
     width: 100%;
@@ -122,13 +116,11 @@ body {
     opacity: 0.6;
 }
 
-/* ENABLED STATE */
 .confirm-btn.active {
     cursor: pointer;
     opacity: 1;
 }
 
-/* HOVER (ONLY WHEN ACTIVE) */
 .confirm-btn.active:hover {
     background: linear-gradient(135deg, #14507a, #1b5f8f);
     box-shadow:
@@ -142,7 +134,6 @@ body {
     box-shadow: 0 8px 18px rgba(0,0,0,0.35);
 }
 
-/* ================= FOOTER ================= */
 .confirm-footer {
     text-align: center;
     margin-top: 20px;
@@ -150,7 +141,6 @@ body {
     color: #777;
 }
 
-/* ================= ANIMATION ================= */
 @keyframes fadeUp {
     from {
         opacity: 0;
@@ -162,7 +152,6 @@ body {
     }
 }
 
-/* ================= RESPONSIVE ================= */
 @media (max-width: 480px) {
     .confirm-container {
         padding: 26px 22px;

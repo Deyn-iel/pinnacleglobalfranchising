@@ -9,7 +9,6 @@ body {
     padding: 0;
     scroll-behavior: smooth;
 }
-/* IMAGE SECTION */
 .image {
     display: flex;
     justify-content: center;
@@ -54,7 +53,7 @@ body {
     height: auto;
     background: #ffffff;
     border-radius: 50%;
-    aspect-ratio: 1 / 1; /* perfect circle */
+    aspect-ratio: 1 / 1;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -63,14 +62,12 @@ body {
     margin: 0 auto;
 }
 
-/* IMAGE FIX (Perfect Fit in Circle) */
 .circle-box img {
     width: 100%;
     height: auto;
     object-fit: contain;
 }
 
-/* RESPONSIVE FIXES */
 @media (max-width: 1200px) {
     .image {
         flex-wrap: wrap;

@@ -1,6 +1,4 @@
-/* =========================
-   FOOTER – PREMIUM DESIGN
-========================= */
+
 footer.footer {
     background: linear-gradient(180deg, #0d3553, #072a42);
     color: #ffffff;
@@ -9,7 +7,6 @@ footer.footer {
     position: relative;
 }
 
-/* Top glow divider */
 footer.footer::before {
     content: "";
     position: absolute;
@@ -22,13 +19,11 @@ footer.footer::before {
     opacity: 0.35;
 }
 
-/* Footer inner wrapper */
 .footer-content {
     max-width: 900px;
     margin: auto;
 }
 
-/* Title */
 .footer-title {
     font-size: 22px;
     font-weight: 700;
@@ -36,7 +31,6 @@ footer.footer::before {
     margin-bottom: 14px;
 }
 
-/* Address */
 .footer-address {
     font-size: 16px;
     opacity: 0.9;
@@ -44,7 +38,6 @@ footer.footer::before {
     margin-bottom: 10px;
 }
 
-/* Contact */
 .footer-contact {
     font-size: 16px;
     font-weight: 600;
@@ -56,9 +49,6 @@ footer.footer::before {
     opacity: 0.85;
 }
 
-/* =========================
-   SOCIAL ICONS
-========================= */
 .footer-socials {
     display: flex;
     justify-content: center;
@@ -80,25 +70,18 @@ footer.footer::before {
     text-decoration: none;
 }
 
-/* Hover effects */
 .footer-socials a:hover {
     background: #ffffff;
     color: #0d3553;
     box-shadow: 0 10px 25px rgba(0,0,0,0.35);
 }
 
-/* Copyright */
 .footer-copy {
     font-size: 14px;
     opacity: 0.75;
     letter-spacing: 0.3px;
 }
 
-/* =========================
-   RESPONSIVE
-========================= */
-
-/* Tablet */
 @media (max-width: 768px) {
     footer.footer {
         padding: 65px 20px 40px;
@@ -114,7 +97,6 @@ footer.footer::before {
     }
 }
 
-/* Mobile */
 @media (max-width: 576px) {
     footer.footer {
         padding: 55px 20px 35px;

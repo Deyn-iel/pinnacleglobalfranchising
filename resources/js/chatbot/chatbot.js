@@ -25,7 +25,6 @@ function setCurrentDepartment(value) {
     metaDept.setAttribute("content", currentDepartment);
   }
 
-  // ✅ localStorage only for user page with select
   if (chatDepartmentSelect) {
     if (currentDepartment) {
       localStorage.setItem("chat_department", currentDepartment);
@@ -38,7 +37,6 @@ function setCurrentDepartment(value) {
 const metaDepartment =
   (metaDept?.getAttribute("content") || "").trim().toLowerCase();
 
-// ✅ USER PAGE: may dropdown → placeholder muna
 if (chatDepartmentSelect) {
   if (metaDept) {
     metaDept.setAttribute("content", "");
@@ -60,22 +58,18 @@ if (chatDepartmentSelect) {
   });
 
 } else {
-  // ✅ ADMIN / STAFF PAGE: walang dropdown → gamitin ang meta dept
+
   if (metaDepartment) {
     setCurrentDepartment(metaDepartment);
   }
 }
 
 
-
-
-  // ✅ Prevent double-init (pag na-load app.js twice)
   if (window.__supportChatInited) return;
   window.__supportChatInited = true;
 
 const chatButton = document.getElementById("chat-button");
 
-// ✅ only run if exists (user side)
 if (chatButton) {
 
   chatButton.addEventListener("click", () => {
@@ -147,7 +141,6 @@ let inputLocked = true;
 const previewContainer = document.getElementById("filePreviewContainer");
 const fileInput = document.getElementById("fileInput");
 
-// ✅ safe check (important)
 if (fileInput && previewContainer) {
 
 
@@ -159,7 +152,6 @@ fileInput.addEventListener("change", function () {
 
     const maxSize = 10 * 1024 * 1024;
 
-    // ✅ 1. SIZE CHECK
     if (file.size > maxSize) {
         alert("Max 10MB only!");
         this.value = "";
@@ -169,18 +161,15 @@ fileInput.addEventListener("change", function () {
         return;
     }
 
-    // ✅ 2. VIDEO BLOCK (IMPORTANT: BEFORE SETTING FILE)
     if (file.type.startsWith("video/")) {
         alert("Video is not allowed!");
         this.value = "";
         selectedFile = null;
 
-        // 🔥 FIX: ibalik sa tamang state
         ticketSend.disabled = ticketInput.value.trim() === "";
         return;
     }
 
-    // ✅ 3. VALID FILE NA → saka lang i-set
     selectedFile = file;
 
     previewContainer.innerHTML = "";
@@ -211,7 +200,6 @@ fileInput.addEventListener("change", function () {
     div.appendChild(remove);
     previewContainer.appendChild(div);
 
-    // ✅ 4. FINAL BUTTON STATE
     ticketSend.disabled = ticketInput.value.trim() === "" && !selectedFile;
 });
 
@@ -228,7 +216,6 @@ let isSending = false;
 let activeChatToken = 0;
 let presenceTimer = null;
 
-// ✅ Chat presence badge
 const chatPresenceBadge = document.getElementById("chatPresenceBadge");
 let presenceWatchTimer = null;
 
@@ -260,7 +247,7 @@ function setPresenceUI(isOnline){
   
 //   try{
 //     const res = await fetch("/support/chat", {
-//   method: "POST", // ✅ keep POST, spoof DELETE for Laravel
+//   method: "POST", 
 //   credentials: "same-origin",
 //   headers: {
 //     "Accept": "application/json",
@@ -292,7 +279,7 @@ function setPresenceUI(isOnline){
 //   return;
 // }
 
-//     // ✅ reset UI after delete
+//     
 //     lastId = 0;
 //     lastRenderedMsg = null;
 //     lastRenderedRow = null;
@@ -358,7 +345,6 @@ document.addEventListener("visibilitychange", () => {
   if (!document.hidden) pingPresence();
 });
 
-  // ✅ then saka mo basahin meta
   const metaUid = document.querySelector('meta[name="chat-target-user-id"]')?.getAttribute("content");
   if (metaUid) currentTargetUserId = Number(metaUid);
 
@@ -441,8 +427,6 @@ function renderMessages(messages){
       setHeaderPeer(m.name || "Support");
     }
 
-    // ✅ IMPORTANT FIX:
-    // if previous message exists and same sender (OTHER), previous should lose avatar
     if(lastRenderedMsg && sameSender(lastRenderedMsg, m) && !lastRenderedMsg.mine){
       downgradePrevAvatarToGhost();
     }
@@ -496,7 +480,6 @@ if (looksLikeStoredFile && (m.type === "image" || ["jpg","jpeg","png","gif","web
 
     body.appendChild(img);
 
-// 🔥 VIDEO
 } else if (looksLikeStoredFile && ["mp4","webm"].includes(ext)) {
 
     const link = document.createElement("a");
@@ -514,7 +497,6 @@ if (looksLikeStoredFile && (m.type === "image" || ["jpg","jpeg","png","gif","web
 
     body.appendChild(link);
 
-// 🔥 FILES
 } else if (looksLikeStoredFile) {
 
     let icon = "📄";
@@ -537,7 +519,6 @@ if (looksLikeStoredFile && (m.type === "image" || ["jpg","jpeg","png","gif","web
 
     body.appendChild(link);
 
-// 🔥 NORMAL TEXT (FIX NA FIX)
 } else {
 
     body.textContent = text;
@@ -569,7 +550,6 @@ if (looksLikeStoredFile && (m.type === "image" || ["jpg","jpeg","png","gif","web
     const url = new URL("/support/chat", window.location.origin);
 url.searchParams.set("after_id", String(lastId || 0));
 
-// ✅ add target user id (owner ng conversation)
 if (Number.isFinite(currentTargetUserId) && currentTargetUserId > 0) {
   url.searchParams.set("target_user_id", String(currentTargetUserId));
 }
@@ -578,12 +558,10 @@ if (currentDepartment) {
   url.searchParams.set("department", currentDepartment);
 }
 
-// 🔥 ADD THIS (IMPORTANT)
 if (chatBox.classList.contains("open") && currentTargetUserId) {
   url.searchParams.set("mark_as_read", "1");
 }
 
-// ✅ kapag open chat → auto clear badge
 if (chatBox.classList.contains("open")) {
   unreadCount = 0;
   updateBadge();
@@ -600,7 +578,6 @@ if (chatBox.classList.contains("open")) {
 
     const ct = res.headers.get("content-type") || "";
 
-    // ❌ not OK (500/404/302/etc)
     if (!res.ok) {
       const body = await res.text();
       console.log("SUPPORT CHAT FETCH ERROR:", res.status);
@@ -618,7 +595,6 @@ if (chatBox.classList.contains("open")) {
       return;
     }
 
-    // ❌ OK status but server returned HTML (usually redirect/login)
     if (!ct.includes("application/json")) {
       const body = await res.text();
       console.log("SUPPORT CHAT NON-JSON RESPONSE:", body);
@@ -648,7 +624,6 @@ if (chatBox.classList.contains("open")) {
 
 if (!isChatOpen) {
 
-  // ❌ wag na mag manual add (nagkaka-duplicate)
   // unreadCount += newFromOthers.length;
 
 fetch(`/support/unread-count?department=${encodeURIComponent(currentDepartment)}`)
@@ -668,7 +643,6 @@ fetch(`/support/unread-count?department=${encodeURIComponent(currentDepartment)}
   return; 
 }
 
-    // ✅ no messages — replace loading on first load
     if (lastId === 0) {
       ticketBox.innerHTML = `
         <div class="ticket-empty">
@@ -697,7 +671,6 @@ async function sendMessage() {
   if (isSending) return;
 isSending = true;
 
-// ✅ UI: show sending state
 ticketSend.disabled = true;
 ticketSend.classList.add("sending");
 ticketSend.dataset.original = ticketSend.innerHTML;
@@ -714,10 +687,8 @@ ticketSend.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>';
 
   try {
 
-    // ✅ IF MAY FILE → UPLOAD FIRST
     if (selectedFile) {
 
-    // ✅ SHOW LOADING
     if(uploadStatus) uploadStatus.style.display = "block";
 
     ticketSend.disabled = true;
@@ -730,7 +701,7 @@ formData.append("department", currentDepartment);
     try{
         const res = await fetch("/support/chat/upload", {
     method: "POST",
-    credentials: "same-origin", // ✅ IMPORTANT
+    credentials: "same-origin", 
     headers: {
         "X-CSRF-TOKEN": token,
         "X-Requested-With": "XMLHttpRequest"
@@ -750,16 +721,13 @@ if (!res.ok) {
         alert("Upload failed");
     }
 
-    // ✅ RESET FILE
     selectedFile = null;
     previewContainer.innerHTML = "";
     document.getElementById("fileInput").value = "";
 
-    // ✅ HIDE LOADING
     if(uploadStatus) uploadStatus.style.display = "none";
 }
 
-    // ✅ TEXT MESSAGE
     if (msg) {
         const sendRes = await fetch(`/support/chat`, {
   method: "POST",
@@ -794,14 +762,12 @@ await fetchMessages(activeChatToken);
   } finally {
   isSending = false;
 
-  // ✅ restore button
   ticketSend.classList.remove("sending");
 ticketSend.innerHTML = ticketSend.dataset.original || '<i class="fa-solid fa-paper-plane"></i>';
 
   ticketSend.disabled = ticketInput.value.trim() === "" && !selectedFile;
 }
 }
-
 
 
   function startSupportChat(){
@@ -925,7 +891,6 @@ setPresenceUI(false); // optional: reset to Offline
 //     return;
 //   }
 
-//   // 🔥 RESET BADGE PAG BINUKSAN
 //   unreadCount = 0;
 //   updateBadge();
 
@@ -950,7 +915,7 @@ setPresenceUI(false); // optional: reset to Offline
 
   closeChat?.addEventListener("click", () => {
   chatBox.style.display = "none";
-  chatBox.classList.remove("open"); // ✅ ADD THIS
+  chatBox.classList.remove("open"); 
   chatBox.setAttribute("aria-hidden", "true");
   stopSupportChat();
 });

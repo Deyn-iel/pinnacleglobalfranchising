@@ -32,9 +32,6 @@ class ProfileController extends Controller
 {
     $user = $request->user();
 
-    // ======================
-    // VALIDATION
-    // ======================
     $request->validate([
         'name' => ['required', 'string', 'max:255'],
         'email' => [
@@ -47,9 +44,6 @@ class ProfileController extends Controller
         'password' => ['nullable', 'confirmed', 'min:8'],
     ]);
 
-    // ======================
-    // UPDATE PROFILE INFO
-    // ======================
     $user->name = $request->name;
 
     if ($user->email !== $request->email) {
@@ -57,9 +51,6 @@ class ProfileController extends Controller
         $user->email_verified_at = null;
     }
 
-    // ======================
-    // UPDATE PASSWORD (OPTIONAL)
-    // ======================
     $passwordChanged = false;
 
     if ($request->filled('password')) {
@@ -76,9 +67,6 @@ class ProfileController extends Controller
 
     $user->save();
 
-    // ======================
-    // OPTIONAL: LOGOUT IF PASSWORD CHANGED
-    // ======================
     if ($passwordChanged) {
         Auth::logout();
 

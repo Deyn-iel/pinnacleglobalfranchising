@@ -1,4 +1,4 @@
-/* ================= RESET ================= */
+
 * {
     margin: 0;
     padding: 0;
@@ -12,12 +12,11 @@ body {
     
 }
 
-/* ================= MODERN LOGIN OVERLAY ================= */
 .login-overlay {
     position: fixed;
     inset: 0;
     background: linear-gradient(135deg,#0d3553,#071f33);
-    display: none; /* 👈 JS ang magpapakita */
+    display: none; 
     align-items: center;
     justify-content: center;
     z-index: 99999;
@@ -74,7 +73,6 @@ body {
     letter-spacing: 0.4px;
 }
 
-/* ================= ANIMATIONS ================= */
 @keyframes popIn {
     from {
         opacity: 0;
@@ -117,7 +115,6 @@ body {
 }
 
 
-/* ================= LOGOUT FADE ANIMATION ================= */
 .login-overlay {
     opacity: 1;
     transition: opacity 0.6s ease;
@@ -129,14 +126,11 @@ body {
 }
 
 
-
-/* ================= LAYOUT ================= */
 .wrapper {
     display: flex;
     min-height: 100vh;
 }
 
-/* ================= USER SIDEBAR ================= */
 .user-sidebar {
     width: 260px;
     background: #0d3553;
@@ -149,7 +143,6 @@ body {
 }
 
 
-/* ================= HEADER ================= */
 .sidebar-header {
     display: flex;
     align-items: center;
@@ -193,7 +186,6 @@ body {
     opacity: 1;
 }
 
-/* ================= NAV ================= */
 .sidebar-nav {
     list-style: none;
     padding: 14px 0;
@@ -261,7 +253,6 @@ body {
     opacity: 0.7;
 }
 
-/* ================= LOGOUT ================= */
 .logout-item {
     margin-top: 12px;
 }
@@ -270,7 +261,6 @@ body {
     cursor: pointer;
 }
 
-/* ================= DIVIDER ================= */
 .sidebar-divider {
     border: none;
     height: 1px;
@@ -283,7 +273,6 @@ body {
     );
 }
 
-/* ================= FOOTER ================= */
 .sidebar-footer {
     padding: 14px 18px 18px;
     font-size: 12px;
@@ -291,7 +280,6 @@ body {
     color: rgba(255,255,255,0.65);
 }
 
-/* ================= MOBILE ================= */
 @media (max-width: 768px) {
     .user-sidebar {
         transform: translateX(-100%);
@@ -304,14 +292,11 @@ body {
 }
 
 
-
-/* ================= MAIN ================= */
 .main {
     margin-left: 260px;
     width: 100%;
 }
 
-/* ================= TOPBAR ================= */
 .topbar {
     height: 65px;
     background: #fff;
@@ -331,7 +316,7 @@ body {
 
 /* PROFILE RIGHT */
 .profile {
-    margin-left: auto; /* 🔥 ITO ANG IMPORTANTE */
+    margin-left: auto; 
     display: flex;
     align-items: center;
     gap: 12px;
@@ -397,12 +382,10 @@ body {
     box-shadow: 0 10px 20px rgba(239, 68, 68, 0.35);
 }
 
-/* ================= CONTENT ================= */
 .content {
     padding: 25px;
 }
 
-/* ================= CARDS ================= */
 .cards {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -440,7 +423,6 @@ body {
     box-shadow: 0 0 6px rgba(34,197,94,0.6);
 }
 
-/* ================= SECTIONS ================= */
 .sections {
     display: grid;
     grid-template-columns: 2fr 1fr;
@@ -448,7 +430,6 @@ body {
     margin-top: 25px;
 }
 
-/* ================= ACTIVITY (REDESIGNED) ================= */
 .activity {
     background: #fff;
     padding: 20px;
@@ -494,7 +475,6 @@ body {
     color: #888;
 }
 
-/* ================= PROFILE CARD ================= */
 .profile-card {
     background: #fff;
     padding: 20px;
@@ -523,7 +503,6 @@ body {
     width: 100%;
 }
 
-/* ================= RESPONSIVE ================= */
 @media (max-width: 900px) {
     .sections {
         grid-template-columns: 1fr;
@@ -562,7 +541,6 @@ body {
     display: none;
 }
 
-/* SHOW X BUTTON ONLY ON MOBILE */
 @media (max-width: 768px) {
     .close-btn {
         display: block;
@@ -585,7 +563,6 @@ body {
     transition: opacity 0.6s ease, transform 0.6s ease;
 }
 
-/* fade out state */
 .alert-error.fade-out {
     opacity: 0;
     transform: translateY(-10px);

@@ -11,19 +11,15 @@ use Illuminate\Support\Facades\Auth;
 
 class SupportPresenceController extends Controller
 {
-  // user/admin: heartbeat update
   public function ping(Request $request)
 {
     $userId = Auth::id();
 
-    // ✅ THIS IS THE IMPORTANT LINE
     Cache::put('user-online-' . $userId, true, now()->addSeconds(15));
 
     return response()->json(['ok' => true]);
 }
 
-  // admin/user: check status of target user(s)
-  // ?user_ids=1,2,3 OR ?user_id=5
   public function status(Request $request)
 {
     $idsRaw = $request->query('user_ids');

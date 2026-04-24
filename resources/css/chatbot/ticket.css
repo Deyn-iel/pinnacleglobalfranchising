@@ -26,10 +26,8 @@
       
     }
 
-    /* ====== Layout ====== */
     main.container{ max-width: 1100px; }
 
-    /* ====== Header ====== */
     .app-header{
       position: sticky;
       top: 0;
@@ -153,7 +151,6 @@
     }
     .btn-ghost:hover{ background:#f9fafb; }
 
-    /* Alert */
     .alert-green{
       background: var(--resolved-bg);
       border: 1px solid var(--resolved-br);
@@ -163,7 +160,6 @@
       box-shadow: var(--shadow);
     }
 
-    /* Page Head */
     .page-head{
       display:flex;
       justify-content:space-between;
@@ -187,7 +183,6 @@
       line-height: 1.35;
     }
 
-    /* Summary */
     .summary-grid{
       display:grid;
       grid-template-columns: repeat(4, minmax(0,1fr));
@@ -230,7 +225,6 @@
       flex: 0 0 auto;
     }
 
-    /* Controls */
     .controls{
       background:#fff;
       border:1px solid var(--border);
@@ -293,7 +287,6 @@
       max-width: 100%;
     }
 
-    /* Tabs */
     .tabs{
       display:flex;
       gap: 8px;
@@ -333,7 +326,6 @@
     }
     .tab.active .count{ background: rgba(255,255,255,.18); }
 
-    /* Main grid */
     .dashboard-grid{
       display:grid;
       grid-template-columns: minmax(0,1fr) 320px;
@@ -365,7 +357,6 @@
       font-size: 12px;
     }
 
-    /* Ticket item (button-like) */
     .ticket-item{
       width: 100%;
       text-align: left;
@@ -562,30 +553,27 @@
   font-weight: 900;
 }
 
-    /* Filters collapse on mobile */
-    .filters-toggle{
+.filters-toggle{
       display:none;
       width: 100%;
     }
 
-    /* ====== Responsive ====== */
-    @media (max-width: 1092px){
+@media (max-width: 1092px){
       .summary-grid{ grid-template-columns: repeat(2, minmax(0,1fr)); }
       .dashboard-grid{ grid-template-columns: 1fr; }
       .side{ position: static; }
       .tabs{ justify-content: flex-start; }
     }
 
-    @media (max-width: 580px){
+@media (max-width: 580px){
   main.container{ padding-left: 12px; padding-right: 12px; }
 
   .app-header-inner{
-    position: relative;           /* IMPORTANT: anchor for absolute logout */
+    position: relative;          
     flex-direction: column;
-    align-items: stretch;       /* space para di matamaan yung logout */
+    align-items: stretch; 
   }
 
-  /* Logout button stays top-right */
   .logout-fab-2{
     position: absolute;
     top: 12px;
@@ -615,8 +603,6 @@
   .user-pill{ width: 100%; max-width: 100%; }
   .btn-black{ width: 100%; }
 
-  /* REMOVE this in mobile: .btn-ghost { width:100% } */
-  /* .btn-ghost { width: 100%; max-width: 100%; }  <-- delete */
 
   .summary-grid{ grid-template-columns: 1fr; }
 
@@ -663,14 +649,8 @@
   color: #78350f;
   border: 1px solid #f59e0b;
   letter-spacing: 0.3px;
-
-  /* 🔥 MAS GLOW */
   box-shadow: 0 0 0 rgba(250, 204, 21, 0.6);
-
-  /* 🔥 MAS MALAKAS NA ANIMATION */
   animation: pulseReview 1.2s infinite;
-
-  /* 🔥 konting scale para buhay */
   transform: scale(1);
 }
 
@@ -717,14 +697,14 @@
   display:flex;
   flex-direction:column;
   gap:6px;
-  align-items:center; /* 🔥 CENTER */
+  align-items:center; 
 }
 
 /* container */
 .chat-dept-container{
   width:100%;
   display:flex;
-  justify-content:center; /* 🔥 CENTER */
+  justify-content:center; 
   position: relative;
 }
 
@@ -733,18 +713,17 @@
   width:100%;
   border-radius:20px;
   border:1px solid rgba(15,23,42,.18);
-  padding:8px 34px 8px 12px; /* 🔥 extra space for arrow */
+  padding:8px 34px 8px 12px;
   font-weight:600;
   font-size:14px;
   background:#fff;
   transition:0.2s;
 
-  appearance: none; /* 🔥 remove default arrow */
+  appearance: none;
   -webkit-appearance: none;
   -moz-appearance: none;
 }
 
-/* 🔥 CUSTOM ARROW */
 .chat-dept-container::after{
   content:"▼";
   position:absolute;
@@ -762,7 +741,6 @@
   box-shadow:0 0 0 2px rgba(0,0,0,0.05);
 }
 
-/* ===== Mobile ===== */
 @media (max-width:1030px){
   .chat-dept-wrapper{
     width:30%;
@@ -774,7 +752,6 @@
   }
 }
 
-/* ===== Mobile ===== */
 @media (max-width:740px){
   .chat-dept-wrapper{
     width:40%;
@@ -797,7 +774,6 @@
   }
 }
 
-/* ===== Mobile ===== */
 @media (max-width:580px){
   .chat-dept-wrapper{
     width:100%;
@@ -832,7 +808,7 @@
   transform: translateY(10px);
   transition: all .25s ease;
 
-  z-index: 2147483647; /* 🔥 FIX */
+  z-index: 2147483647;
 
   word-break: break-word;
 }

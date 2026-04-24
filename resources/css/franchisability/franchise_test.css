@@ -35,7 +35,6 @@ body {
     object-fit: contain;
 }
 
-/* Franchiseable Section */
 .franchiseable {
     text-align: center;
     padding: 80px 20px;
@@ -47,10 +46,9 @@ body {
     font-weight: 700;
     color: #ffffff;
     margin-bottom: 15px;
-    font-family: Georgia, serif; /* adjust if you're using Lovelo */
+    font-family: Georgia, serif; 
 }
 
-/* Subtitle */
 .franchiseable p {
     font-size: 20px;
     color: #dbe8f2;
@@ -58,7 +56,6 @@ body {
     
 }
 
-/* Button */
 .franchiseable a {
     display: inline-block;
     width: 40%;
@@ -73,16 +70,10 @@ body {
     transition: 0.3s ease;
 }
 
-/* Hover */
 .franchiseable a:hover {
     background: #b8b8b8;
 }
 
-/* =========================
-   RESPONSIVE
-========================= */
-
-/* Tablets */
 @media (max-width: 768px) {
     .franchiseable h2 {
         font-size: 32px;
@@ -99,7 +90,6 @@ body {
     }
 }
 
-/* Mobile */
 @media (max-width: 576px) {
     .franchiseable {
         padding: 60px 15px;
@@ -121,10 +111,6 @@ body {
 }
 
 
-/* =========================
-   FRANCHISE SECTION
-=========================*/
-
 .franchise-title, .inquire-title{
   font-size: clamp(18px, 2.6vw, 25px);
   font-weight: 800;
@@ -138,13 +124,12 @@ body {
     margin: 20px auto;
 }
 
-/* Circular Boxes */
 .circle-box {
     width: 95%;
     height: auto;
     background: #ffffff;
     border-radius: 50%;
-    aspect-ratio: 1 / 1; /* perfect circle */
+    aspect-ratio: 1 / 1; 
     display: flex;
     justify-content: center;
     align-items: center;
@@ -153,14 +138,12 @@ body {
     margin: 0 auto;
 }
 
-/* IMAGE FIX (Perfect Fit in Circle) */
 .circle-box img {
     width: 100%;
     height: auto;
     object-fit: contain;
 }
 
-/* Brand Text */
 .brand-name {
     font-size: 30px;
     font-weight: 600;
@@ -171,9 +154,6 @@ body {
     opacity: 0.9;
 }
 
-
-
-/* RESPONSIVE FIXES */
 @media (max-width: 1200px) {
     .image {
         flex-wrap: wrap;

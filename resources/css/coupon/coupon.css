@@ -1,0 +1,392 @@
+:root{
+    --bg:#f6f8fc;
+    --card:#ffffff;
+    --line:#e7ebf3;
+    --text:#0f172a;
+    --muted:#64748b;
+    --primary:#0d6efd;
+    --primary-dark:#084ec2;
+    --success:#198754;
+    --warning:#f59e0b;
+    --danger:#dc3545;
+    --soft-blue:#eef5ff;
+    --soft-green:#eaf8f0;
+    --soft-yellow:#fff7df;
+    --soft-red:#ffe9ec;
+    --shadow:0 18px 45px rgba(15,23,42,.08);
+    --radius:20px;
+}
+
+*{ box-sizing:border-box; }
+
+html,body{
+    margin:0;
+    padding:0;
+    width:100%;
+    overflow-x:hidden;
+}
+
+body{
+    font-family:'Inter',sans-serif;
+    background:
+        radial-gradient(circle at top right, rgba(13,110,253,.08), transparent 30%),
+        linear-gradient(180deg,#f8fbff 0%, #f4f7fb 100%);
+    color:var(--text);
+}
+
+.app-wrapper{
+    display:flex;
+    width:100%;
+    min-height:100vh;
+}
+
+.main-content{
+    flex:1;
+    width:100%;
+    min-width:0;
+    max-width:100%;
+}
+
+.page-wrap{
+    width:100%;
+    max-width:100%;
+    padding:20px;
+}
+
+.coupon-card{
+    width:100%;
+    max-width:100%;
+    margin:0;
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:20px;
+    box-shadow:var(--shadow);
+    overflow:hidden;
+}
+
+.coupon-body{
+    padding:24px;
+}
+
+.section-block + .section-block{
+    margin-top:22px;
+}
+
+.section-head{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:12px;
+    margin-bottom:14px;
+    flex-wrap:wrap;
+}
+
+.section-title{
+    margin:0;
+    font-size:18px;
+    font-weight:800;
+    display:flex;
+    align-items:center;
+    gap:10px;
+}
+
+.section-sub{
+    font-size:13px;
+    color:var(--muted);
+}
+
+.soft-panel{
+    background:#fff;
+    border:1px solid var(--line);
+    border-radius:18px;
+    padding:18px;
+}
+
+.soft-panel.blue{
+    background:var(--soft-blue);
+    border-color:#dce8ff;
+}
+
+.form-grid{
+    display:grid;
+    grid-template-columns:repeat(12,minmax(0,1fr));
+    gap:16px;
+}
+
+.col-12{grid-column:span 12;}
+.col-6{grid-column:span 6;}
+.col-4{grid-column:span 4;}
+.col-3{grid-column:span 3;}
+
+.form-group label{
+    display:block;
+    font-size:12px;
+    font-weight:700;
+    margin-bottom:8px;
+    color:#475569;
+    text-transform:uppercase;
+}
+
+.form-group input,
+.form-group select{
+    width:100%;
+    height:50px;
+    border:1px solid #d9e1ec;
+    border-radius:14px;
+    padding:0 15px;
+    font-size:14px;
+    background:#fff;
+    outline:none;
+}
+
+.form-group input:focus,
+.form-group select:focus{
+    border-color:var(--primary);
+    box-shadow:0 0 0 4px rgba(13,110,253,.08);
+}
+
+.status-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:14px;
+    margin-bottom:18px;
+}
+
+.mini-stat{
+    background:#fff;
+    border:1px solid #dce8ff;
+    border-radius:16px;
+    padding:16px;
+}
+
+.mini-stat-label{
+    font-size:12px;
+    color:var(--muted);
+    font-weight:700;
+    margin-bottom:8px;
+    text-transform:uppercase;
+}
+
+.mini-stat-value{
+    font-size:18px;
+    font-weight:800;
+}
+
+.action-wrap{
+    margin-top:20px;
+    display:flex;
+    gap:12px;
+    flex-wrap:wrap;
+}
+
+.btn-modern{
+    border:none;
+    min-height:48px;
+    padding:0 18px;
+    border-radius:14px;
+    font-weight:700;
+    cursor:pointer;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    gap:8px;
+}
+
+.btn-primary-modern{
+    background:linear-gradient(135deg,#2563eb,#1d4ed8);
+    color:#fff;
+    border:none;
+    box-shadow:0 8px 20px rgba(37,99,235,.25);
+}
+.btn-success-modern{
+    background:var(--success);
+    color:#fff;
+}
+
+.btn-light-modern{
+    background:#fff;
+    border:1px solid var(--line);
+    color:var(--text);
+}
+.btn-modern:disabled{
+    opacity: .65;
+    cursor: not-allowed;
+}
+.table-shell{
+    width:100%;
+    overflow-x:auto;
+    border:1px solid var(--line);
+    border-radius:18px;
+    background:#fff;
+}
+
+.table-modern{
+    width:100%;
+    min-width:700px;
+    border-collapse:collapse;
+}
+
+.table-modern th{
+    background:#f8fafc;
+    padding:15px;
+    text-align:left;
+    font-size:13px;
+}
+
+.table-modern td{
+    padding:15px;
+    border-top:1px solid #eef2f7;
+    font-size:14px;
+}
+
+.badge-modern{
+    padding:7px 12px;
+    border-radius:50px;
+    font-size:12px;
+    font-weight:700;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+}
+
+.badge-paid{
+    background:#eaf8f0;
+    color:#198754;
+}
+
+.badge-claimed{
+    background:#fff7df;
+    color:#9a6700;
+}
+
+.badge-danger{
+    background:#ffe9ec;
+    color:#b42318;
+}
+
+.alert-custom{
+    border:none;
+    border-radius:14px;
+    padding:14px 16px;
+    margin-bottom:16px;
+    font-weight:600;
+    transition:all .6s ease;
+}
+
+.alert-success-custom{
+    background:#eaf8f0;
+    color:#146c43;
+}
+
+.alert-danger-custom{
+    background:#ffe9ec;
+    color:#b42318;
+}
+
+.alert-hide{
+    opacity:0;
+    transition:opacity .5s ease;
+}
+@keyframes fadeOutAlert{
+    0%{
+        opacity:1;
+        transform:translateY(0);
+    }
+    70%{
+        opacity:1;
+        transform:translateY(0);
+    }
+    100%{
+        opacity:0;
+        transform:translateY(-10px);
+        visibility:hidden;
+    }
+}
+
+.alert-success-custom{
+    background:#eaf8f0;
+    color:#146c43;
+}
+
+.alert-danger-custom{
+    background:#ffe9ec;
+    color:#b42318;
+}
+
+.code-box{
+    font-family:monospace;
+    font-size:16px;
+    font-weight:800;
+    letter-spacing:2px;
+    padding:12px 14px;
+    border:1px dashed #c9d4e5;
+    border-radius:14px;
+    background:#fff;
+}
+
+.readonly-input{
+    background:#f8fafc !important;
+}
+
+@media (max-width:991px){
+    .col-6, .col-4, .col-3{
+        grid-column:span 12;
+    }
+
+    .status-grid{
+        grid-template-columns:1fr;
+    }
+
+    .coupon-body{
+        padding:20px;
+    }
+}
+
+@media (max-width:768px){
+    .page-wrap{
+        padding:12px;
+    }
+
+    .coupon-card{
+        border-radius:16px;
+    }
+
+    .coupon-body{
+        padding:14px;
+    }
+
+    .soft-panel{
+        padding:14px;
+        border-radius:14px;
+    }
+
+    .section-title{
+        font-size:16px;
+    }
+
+    .section-sub{
+        width:100%;
+        font-size:12px;
+    }
+
+    .btn-modern{
+        width:100%;
+    }
+
+    .table-modern{
+        min-width:620px;
+    }
+}
+.table-modern th:last-child,
+.table-modern td:last-child{
+    white-space: nowrap;
+    width: 190px;
+}
+.spin-icon{
+    animation:spinIcon .8s linear infinite;
+}
+
+@keyframes spinIcon{
+    from{ transform:rotate(0deg); }
+    to{ transform:rotate(360deg); }
+}

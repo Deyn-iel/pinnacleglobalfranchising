@@ -31,7 +31,7 @@ public $justification;
                 ->view('emails.ticket_approval')
                 ->with([
                     'ticket' => $this->ticket,
-                    'justification' => $this->justification, // ✅ ADD THIS
+                    'justification' => $this->justification, 
                 ]);
 }
 }

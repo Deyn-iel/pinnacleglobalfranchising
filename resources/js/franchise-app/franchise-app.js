@@ -8,7 +8,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
 form.addEventListener("submit", function (e) {
 
-    // 🔥 check muna required fields (reuse mo logic mo)
     const invalidField = checkRequiredFields(form);
     if (invalidField) {
         e.preventDefault(); // STOP submit
@@ -18,7 +17,6 @@ form.addEventListener("submit", function (e) {
         return;
     }
 
-    // ✅ LOADING STATE
     submitBtn.disabled = true;
 
     submitBtn.querySelector(".btn-text").classList.add("d-none");
@@ -28,13 +26,8 @@ form.addEventListener("submit", function (e) {
     const previewModal = new bootstrap.Modal(
         document.getElementById("previewModal")
     );
-
-    // ============================
-    // PREVIEW BUTTON
-    // ============================
     previewBtn.addEventListener("click", () => {
 
-        // 1️⃣ CHECK REQUIRED FIELDS
         const invalidField = checkRequiredFields(form);
         if (invalidField) {
             alert("⚠ Please complete all required fields before previewing.");
@@ -43,10 +36,8 @@ form.addEventListener("submit", function (e) {
             return;
         }
 
-        // 2️⃣ COLLECT DATA
         const data = collectFormData(form);
 
-        // 3️⃣ BUILD PREVIEW HTML (SECTIONED)
         let html = "";
 
         Object.entries(data).forEach(([section, fields]) => {
@@ -82,13 +73,9 @@ form.addEventListener("submit", function (e) {
 
         previewContent.innerHTML = html;
 
-        // 4️⃣ SHOW MODAL
         previewModal.show();
     });
 
-    // ============================
-    // CHECK REQUIRED FIELDS
-    // ============================
     function checkRequiredFields(form) {
         const requiredFields = form.querySelectorAll("[required]");
 
@@ -104,9 +91,6 @@ form.addEventListener("submit", function (e) {
         return null;
     }
 
-    // ============================
-    // COLLECT FORM DATA (GROUPED)
-    // ============================
     function collectFormData(form) {
 
         const elements = Array.from(form.elements);
@@ -131,7 +115,6 @@ form.addEventListener("submit", function (e) {
 
             let value = "";
 
-            // CHECKBOX
             if (el.type === "checkbox") {
                 value = el.checked ? "Yes" : "No";
             }
@@ -157,9 +140,6 @@ form.addEventListener("submit", function (e) {
         return previewData;
     }
 
-    // ============================
-    // HELPERS
-    // ============================
     function formatLabel(name) {
         return name
             .replace(/_/g, " ")

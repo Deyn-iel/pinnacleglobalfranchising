@@ -88,7 +88,6 @@ class FranchiseController extends Controller
             'government_id' => 'nullable|file|mimes:jpg,jpeg,png,webp,pdf',
         ]);
 
-        // Convert checkboxes from "on" → 1
     $validated['consent_intro'] = $request->has('consent_intro') ? 1 : 0;
     $validated['consent_final'] = $request->has('consent_final') ? 1 : 0;
 
@@ -101,9 +100,10 @@ class FranchiseController extends Controller
         $validated['government_id'] = $request->file('government_id')->store('ids', 'public');
     }
 
-    FranchiseApplication::create($validated);
+    $validated['status'] = 'Submitted';
 
-// 📩 SEND EMAIL TO USER
+FranchiseApplication::create($validated);
+
 Mail::to($validated['email'])->send(
     new FranchiseSubmitted($validated)
 );
@@ -113,10 +113,8 @@ $mainEmails = explode(',', env('SUPPORT_NOTIFY_EMAILS'));
 $opsDirector = env('OPERATIONS_DIRECTOR_SUPPORT_EMAIL');
 $adminSec = env('ADMIN_SUPPORT_EMAIL');
 
-// 🔥 combine all emails (main + ops + admin sec)
 $allEmails = array_merge($mainEmails, [$opsDirector, $adminSec]);
 
-// remove empty values (safety)
 $allEmails = array_filter($allEmails);
 
 Mail::to($allEmails)->send(

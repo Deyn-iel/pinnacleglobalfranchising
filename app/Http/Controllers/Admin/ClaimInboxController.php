@@ -47,10 +47,9 @@ class ClaimInboxController extends Controller
             return $c;
         });
 
-        // KPI counts (based on filtered base, not just current page)
         $all = (clone $base)->get();
         $kpi = [
-            'open'      => $all->count(), // you can change to "non-closed only" if you add closed statuses
+            'open'      => $all->count(), 
             'submitted' => $all->where('status', 'Submitted')->count(),
             'reviewing' => $all->where('status', 'Reviewing')->count(),
             'checking'  => $all->where('status', 'For Checking')->count(),

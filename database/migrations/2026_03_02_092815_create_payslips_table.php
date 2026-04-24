@@ -10,15 +10,12 @@ return new class extends Migration {
         Schema::create('payslips', function (Blueprint $table) {
             $table->id();
 
-            // Folder reference (YYYY-MM)
             $table->string('folder_key', 7);
             $table->unsignedSmallInteger('year');
             $table->unsignedTinyInteger('month');
 
-            // Optional batch name
             $table->string('batch_name')->nullable();
 
-            // File details
             $table->string('original_name');
             $table->string('stored_name');
             $table->string('file_path');
@@ -30,7 +27,6 @@ return new class extends Migration {
 
             $table->timestamps();
 
-            // Indexes
             $table->index(['folder_key', 'created_at']);
             $table->index(['year', 'month']);
         });

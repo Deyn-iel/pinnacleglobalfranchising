@@ -1,10 +1,10 @@
 
-        AOS.init({
-            once: false,   // animation plays every scroll
-            offset: 100,   // trigger earlier
+AOS.init({
+            once: false,   
+            offset: 100,  
             easing: 'ease-out-back',
         });
-        document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", () => {
     const elements = document.querySelectorAll(
         ".image, .franchise-section, .circle-box, .franchise-now-container, .franchise-steps, .step, .franchise-now-button-wrapper, .brand-name, .brand-desc"
     );
@@ -36,11 +36,11 @@ document.addEventListener("DOMContentLoaded", () => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
                 entry.target.classList.add("animate-show");
-                obs.unobserve(entry.target); // animate once only
+                obs.unobserve(entry.target); 
             }
         });
     }, {
-        threshold: 0.15,           // show when 15% visible
+        threshold: 0.15,           
         rootMargin: "0px 0px -50px 0px"
     });
 

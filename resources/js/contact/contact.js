@@ -1,6 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
 
-    /* ===== CONTACT FORM ===== */
     const form = document.getElementById("contactForm");
     const successMsg = document.getElementById("successMsg");
 

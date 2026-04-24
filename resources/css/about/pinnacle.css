@@ -9,9 +9,6 @@ body {
     padding: 0;
     scroll-behavior: smooth;
 }
-/* ===============================
-   ABOUT US SECTION
-================================*/
 .about-section {
     background: #0a3553; /* Dark blue background */
     padding: 70px 20px;
@@ -72,23 +69,19 @@ body {
     color: #bdbdbd;
 }
 
-/* ===============================
-   RESPONSIVE — Mobile
-================================*/
 @media (max-width: 900px) {
 
     .about-row,
     .about-row.reverse {
         flex-direction: column;
-        text-align: left;          /* ⬅ keep text LEFT aligned */
-        align-items: flex-start;   /* ⬅ align content to left */
+        text-align: left; 
+        align-items: flex-start; 
     }
 
-    /* Images centered in mobile for better UI */
     .about-img {
         width: 100%;
         display: flex;
-        justify-content: center;   /* center only the image */
+        justify-content: center;  
     }
 
     .about-img img {
@@ -98,12 +91,12 @@ body {
 
     .about-text {
         max-width: 100%;
-        text-align: left;          /* ensure text stays LEFT */
+        text-align: left;
     }
 
     .about-text h3,
     .about-text p {
-        text-align: left;          /* enforce left alignment */
+        text-align: left;
     }
 }
 

@@ -29,7 +29,6 @@ class CoffeeRegistration extends Model
         ];
 
 
-    // ✅ ADD THIS
     protected $appends = ['full_name'];
 
     public function getFullNameAttribute(): string

@@ -6,7 +6,6 @@ body {
     padding: 0;
     scroll-behavior: smooth;
 }
-/* IMAGE SECTION */
 .image {
     display: flex;
     justify-content: center;
@@ -32,10 +31,6 @@ body {
     object-fit: contain;
 }
 
-
-
-
-/* RESPONSIVE FIXES */
 @media (max-width: 1200px) {
     .image {
         flex-wrap: wrap;

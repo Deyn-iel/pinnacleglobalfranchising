@@ -1,4 +1,4 @@
-/* ================= NOTIFICATION CONTENT ONLY ================= */
+
 
 :root{
   --n-bg:#ffffff;
@@ -23,7 +23,6 @@
   --n-gap: clamp(10px, 1.5vw, 16px);
 }
 
-/* container */
 .notification-container{
   width: 100%;
   margin: 0 auto;
@@ -35,7 +34,6 @@
   animation: fadeUp .45s ease;
 }
 
-/* header */
 .notification-header{
   padding: calc(var(--n-pad) + 4px) calc(var(--n-pad) + 6px);
   border-bottom: 1px solid var(--n-border);
@@ -61,7 +59,6 @@
   font-weight: 600;
 }
 
-/* list */
 .notification-list{
   padding: var(--n-pad);
   display:flex;
@@ -69,7 +66,6 @@
   gap: 12px;
 }
 
-/* item */
 .notification-item{
   display:flex;
   gap: 14px;
@@ -80,8 +76,6 @@
   transition: transform .18s ease, box-shadow .18s ease, background .18s ease, border-color .18s ease;
 }
 
-
-/* unread */
 .notification-item.unread{
   background: rgba(37,99,235,.06);
   border-color: rgba(37,99,235,.25);
@@ -99,7 +93,6 @@
   box-shadow: 0 0 0 6px rgba(37,99,235,.12);
 }
 
-/* icon */
 .notification-icon{
   width: 46px;
   height: 46px;
@@ -118,7 +111,6 @@
 .icon-warning{ background: linear-gradient(135deg, #f59e0b, #fbbf24); }
 .icon-danger{ background: linear-gradient(135deg, #ef4444, #fb7185); }
 
-/* content */
 .notification-content{
   flex: 1;
   min-width: 0;
@@ -146,16 +138,12 @@
   font-weight: 800;
 }
 
-/* ================= ATTACHMENTS (buttons + previews) ================= */
-
-/* ✅ BUTTON ROW (your blade uses inline style flex-wrap; we override) */
 .notification-content div[style*="display:flex"][style*="flex-wrap"]{
   align-items: center;
-  justify-content: flex-start;          /* ✅ not centered */
+  justify-content: flex-start;    
   gap: 10px !important;
 }
 
-/* ✅ Make buttons look like premium chips */
 .notification-content .btn{
   font-weight: 900;
   border-radius: 999px !important;
@@ -176,25 +164,21 @@
   background: #f8fafc;
 }
 
-/* ✅ icons inside buttons (fontawesome) */
 .notification-content .btn i{
   font-size: 14px;
 }
 
-/* ✅ PREVIEW ROW (your blade uses another inline flex wrap too) */
 .notification-content div[style*="margin-top:10px"][style*="display:flex"]{
   width: 100%;
   justify-content: flex-start;
 }
 
-/* ✅ Turn previews into a grid (desktop) */
 .notification-content div[style*="margin-top:10px"][style*="display:flex"]{
   display: grid !important;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 12px !important;
 }
 
-/* ✅ preview anchor behaves like a card */
 .notification-content div[style*="margin-top:10px"][style*="display:flex"] a{
   display:block;
   border-radius: 14px;
@@ -209,18 +193,16 @@
   box-shadow: 0 16px 34px rgba(15,23,42,.10);
 }
 
-/* ✅ image inside preview: consistent height + crop nicely */
 .notification-content div[style*="margin-top:10px"][style*="display:flex"] img{
   width: 100% !important;
-  height: 110px !important;            /* ✅ fixed height */
+  height: 110px !important;
   object-fit: cover !important;
   display:block;
-  border-radius: 0 !important;         /* card already rounded */
+  border-radius: 0 !important;
   border: none !important;
   background:#f3f4f6;
 }
 
-/* ================= RESPONSIVE ================= */
 
 /* tablet */
 @media (max-width: 900px){
@@ -251,7 +233,6 @@
     border-radius: 14px;
   }
 
-  /* ✅ buttons become full width stacked */
   .notification-content div[style*="margin-top:8px"][style*="display:flex"]{
     display: grid !important;
     grid-template-columns: 1fr;
@@ -264,7 +245,6 @@
     padding: 12px 14px;
   }
 
-  /* ✅ previews become 2-column grid on mobile */
   .notification-content div[style*="margin-top:10px"][style*="display:flex"]{
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 10px !important;
@@ -284,7 +264,7 @@
 /* tiny phones */
 @media (max-width: 380px){
   .notification-content div[style*="margin-top:10px"][style*="display:flex"]{
-    grid-template-columns: 1fr; /* ✅ 1 column if sobrang liit */
+    grid-template-columns: 1fr; 
   }
   .notification-content div[style*="margin-top:10px"][style*="display:flex"] img{
     height: 160px !important;

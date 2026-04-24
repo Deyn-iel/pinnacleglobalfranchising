@@ -38,49 +38,6 @@ color:var(--text);
 overflow-x:hidden;
 }
 
-/* ================= SIDEBAR UPGRADE ================= */
-.sidebar{
-position:fixed;
-top:0;
-left:0;
-width:var(--sidebar);
-height:100vh;
-background:linear-gradient(145deg,#0f172a,#020617);
-color:white;
-padding:22px 18px;
-transition:.3s;
-z-index:1000;
-box-shadow:8px 0 25px rgba(0,0,0,0.08);
-}
-
-.sidebar h4{
-font-weight:700;
-margin-bottom:30px;
-}
-
-.sidebar a{
-display:flex;
-align-items:center;
-gap:12px;
-padding:12px 14px;
-border-radius:14px;
-text-decoration:none;
-color:#cbd5f5;
-font-weight:500;
-margin-bottom:6px;
-transition:var(--transition);
-}
-
-.sidebar a:hover{
-background:rgba(59,130,246,0.2);
-color:white;
-}
-
-.sidebar a.active{
-background:#3b82f6;
-color:white;
-box-shadow:0 6px 14px rgba(59,130,246,0.3);
-}
 
 /* ================= MAIN ================= */
 main{

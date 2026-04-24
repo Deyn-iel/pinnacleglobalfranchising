@@ -8,6 +8,15 @@ class FranchiseApplication extends Model
 {
     protected $fillable = [
 
+        'status',
+        'appointment_date',
+        'appointment_time',
+        'meeting_type',
+        'meeting_link',
+        'meeting_remarks',
+        'discovery_done_at',
+        'assigned_to',
+
         // Intro
         'consent_intro',
         'email',

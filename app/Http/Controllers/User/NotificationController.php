@@ -12,7 +12,6 @@ class NotificationController extends Controller
 {
     $user = $request->user();
 
-    // ✅ get unread count first
     $unreadCount = UserNotification::where('user_id', $user->id)
         ->whereNull('read_at')
         ->count();
@@ -21,7 +20,6 @@ class NotificationController extends Controller
         ->latest()
         ->paginate(10);
 
-    // ✅ mark all as read when opening page
     UserNotification::where('user_id', $user->id)
         ->whereNull('read_at')
         ->update(['read_at' => now()]);

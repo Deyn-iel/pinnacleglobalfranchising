@@ -43,13 +43,11 @@ class AdminSuppliesController extends Controller
         return back()->with('success', 'Supply added successfully.');
     }
 
-    // ✏️ EDIT
     public function edit(Supply $supply)
     {
         return view('admin.supplies-edit', compact('supply'));
     }
 
-    // 🔄 UPDATE
     public function update(Request $request, Supply $supply)
     {
         $request->validate([
@@ -76,7 +74,6 @@ class AdminSuppliesController extends Controller
             ->with('success', 'Supply updated successfully.');
     }
 
-    // 🗑 DELETE
     public function destroy(Supply $supply)
     {
         if ($supply->image) {

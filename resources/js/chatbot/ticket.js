@@ -6,7 +6,6 @@ if(msg){
   showSuccess(msg);
   localStorage.removeItem('success');
 
-  // 🔥 scroll sa taas pag load
   window.scrollTo(0, 0);
 }
 
@@ -111,9 +110,7 @@ window.openTicketDetails = function openTicketDetails(el){
   const badge = el.querySelector('.badge-status');
 const st = badge ? badge.innerText.trim().replace(' ', '_').toLowerCase() : 'pending';
 
-// ==========================
-// ✅ APPROVAL UI SWITCH
-// ==========================
+
 const approvalRequested = el.dataset.approvalRequested == "1";
 
 const normalWrap = document.getElementById('normalStatusWrap');
@@ -146,7 +143,6 @@ if(st === 'in_progress' && approvalRequested){
 document.getElementById('d_statusText').innerText = statusText;
   document.getElementById('d_time').innerText = el.dataset.time || '';
 
-  // ✅ set dropdown
 const statusSelect = document.getElementById('d_statusSelect');
 const resolveWrap = document.getElementById('resolveJustificationWrap');
 
@@ -155,10 +151,8 @@ if(statusSelect){
 
   if(this.value === 'resolved'){
 
-    // 🔥 HIDE DROPDOWN
     document.getElementById('normalStatusWrap').classList.add('d-none');
 
-    // 🔥 SHOW ACCEPT / DECLINE
     document.getElementById('approvalActionsWrap').classList.remove('d-none');
 
   } else {
@@ -194,17 +188,15 @@ else{
 
 }
 
-  // ✅ set form action route (Vite-safe)
   const form = document.getElementById('statusForm');
   form.onsubmit = function(e){
 
   const status = document.getElementById('d_statusSelect')?.value;
   const justification = document.getElementById('resolveJustification')?.value.trim();
 
-  // 🔥 PAG RESOLVED → wag mag normal submit
   if(status === 'resolved'){
 
-    e.preventDefault(); // STOP normal submit
+    e.preventDefault(); 
 
     if(!justification){
       alert('⚠️ Justification is required before resolving this ticket.');
@@ -217,7 +209,6 @@ else{
 
     const baseUrl = document.querySelector('meta[name="base-url"]').content;
 
-    // 🔥 CALL REQUEST APPROVAL
     fetch(`${baseUrl}/tickets/${ticketId}/request-approval`, {
       method: 'POST',
       headers: {
@@ -232,11 +223,9 @@ else{
     .then(() => {
       alert('⏳ Waiting for user approval...');
 
-      // 🔥 SWITCH UI AGAD
       document.getElementById('normalStatusWrap').classList.add('d-none');
       document.getElementById('approvalActionsWrap').classList.remove('d-none');
 
-      // OPTIONAL reload
       location.reload();
     });
 
@@ -260,7 +249,6 @@ if(saveBtn){
   }
 }
 
-// 🔥 FIX ACCEPT BUTTON CLICK
 const acceptBtn = document.getElementById('acceptTicket');
 
 if(acceptBtn){
@@ -271,7 +259,6 @@ if(acceptBtn){
 }
 
 }
-
 
 
   function cap(s){
@@ -305,16 +292,10 @@ document.getElementById('cancelJustification')?.addEventListener('keydown', func
 
   if(e.key === 'Enter' && !e.shiftKey){
     e.preventDefault();
-    submitDecline(); // 🔥 reuse function
+    submitDecline(); 
   }
 
 });
-
-
-
-
-
-
 
 
 function submitDecline(){
@@ -325,7 +306,6 @@ function submitDecline(){
 
   const btn = document.getElementById('submitDeclineBtn');
 
-  // 🔥 LOADING STATE
   if(btn){
     btn.disabled = true;
     btn.innerHTML = '<i class="fa-solid fa-arrows-rotate fa-spin"></i> Declining...';
@@ -357,7 +337,6 @@ location.reload();
   })
   .catch(() => {
 
-    // ❌ restore button if error
     if(btn){
       btn.disabled = false;
       btn.innerHTML = 'Save';
@@ -376,7 +355,6 @@ function refreshTickets(){
 
   const baseUrl = document.querySelector('meta[name="base-url"]').content;
 
-  // 🔥 STOP if modal is open
   const modal = document.getElementById('ticketDetailsModal');
   const isOpen = modal?.classList.contains('show');
   if(isOpen) return;
@@ -390,21 +368,18 @@ function refreshTickets(){
         const el = document.querySelector(`.ticket-item[data-id="${ticket.id}"]`);
         if(!el) return;
 
-        // ✅ UPDATE STATUS
         el.dataset.status = ticket.status;
 
         const badge = el.querySelector('.badge-status');
         if(badge){
 
-  // 🔥 REMOVE OLD STATUS CLASSES
 badge.classList.remove('st-pending', 'st-progress', 'st-resolved', 'st-review');
 
-// 🔥 ADD NEW CLASS BASED SA STATUS
 if(ticket.status === 'pending'){
   badge.classList.add('st-pending');
 }
 else if(ticket.status === 'in_progress' && ticket.approval_requested){
-  badge.classList.add('st-review'); // ✅ NEW (FOR REVIEW)
+  badge.classList.add('st-review'); 
 }
 else if(ticket.status === 'in_progress'){
   badge.classList.add('st-progress');
@@ -413,18 +388,14 @@ else if(ticket.status === 'resolved'){
   badge.classList.add('st-resolved');
 }
 
-  // 🔥 UPDATE TEXT
   let statusText = ticket.status.replace('_',' ');
 
-// 🔥 CUSTOM LABEL
 if(ticket.status === 'in_progress' && ticket.approval_requested){
     statusText = 'for review'; // or 'requesting approval'
 }
 
 badge.innerText = statusText;
 }
-
-        // ✅ UPDATE APPROVAL FLAG
         el.dataset.approvalRequested = ticket.approval_requested ? "1" : "0";
 
       });
@@ -442,7 +413,7 @@ let approving = false;
 
 function approveTicket(){
 
-  if(approving) return; // 🔥 prevent double click
+  if(approving) return;
   approving = true;
 
   const confirmApprove = confirm("Are you sure you want to approve this ticket?");

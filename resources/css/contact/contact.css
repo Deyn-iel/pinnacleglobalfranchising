@@ -6,7 +6,6 @@ body {
     padding: 0;
     scroll-behavior: smooth;
 }
-/* IMAGE SECTION */
 .image {
     display: flex;
     justify-content: center;
@@ -44,21 +43,19 @@ body {
 }
 
 .text .hr {
-    width: 120px;           /* adjust this to match your text width */
-    height: 2px;            /* thickness */
+    width: 120px;           
+    height: 2px;          
     background-color: #ffffff;
     border: none;
     margin: 5px auto 0 auto;
 }
 
-/* Section Title (desktop default) */
 .section-title {
     font-size: 22px;
     font-weight: 600;
     margin-bottom: 18px;
 }
 
-/* Paragraph default */
 p {
     font-size: 16px;
     line-height: 1.6;
@@ -89,9 +86,8 @@ p {
         padding 0.3s ease;
 }
 
-/* SHOW STATE */
 .hours-menu.show {
-    max-height: 500px; /* enough for all days */
+    max-height: 500px; 
     opacity: 1;
     padding: 12px;
 }
@@ -99,7 +95,6 @@ p {
 .open-hours.show .hours-menu {
     display: block;
 }
-/* Mobile */
 @media (max-width: 776px) {
     .open-hours {
         max-width: 100%;
@@ -131,7 +126,6 @@ p {
     transform: rotate(180deg);
 } */
 
-/* Tablets */
 @media (max-width: 768px) {
     .section-title {
         font-size: 20px;
@@ -144,7 +138,6 @@ p {
     }
 }
 
-/* Mobile phones */
 @media (max-width: 576px) {
     .section-title {
         font-size: 18px;
@@ -160,16 +153,12 @@ p {
     }
 }
 
-
-
-/* Wrapper */
 .field-group {
     position: relative;
     width: 100%;
     margin-bottom: 18px;
 }
 
-/* Inputs & textarea */
 .form-field {
     width: 100%;
     padding: 14px 15px;
@@ -183,12 +172,10 @@ p {
 .field-group .label-message {
     top: 20%;
 }
-/* Make textarea match */
 .form-field.textarea {
     resize: none;
 }
 
-/* Floating label */
 .field-group label {
     position: absolute;
     left: 15px;
@@ -200,7 +187,6 @@ p {
     font-size: 16px;
 }
 
-/* Move label up when typing or focused */
 .form-field:focus + label,
 .form-field:not(:placeholder-shown) + label {
     top: -10px;
@@ -218,15 +204,12 @@ p {
     box-shadow: 0 0 8px rgba(0, 199, 255, 0.5);
 }
 
-/* Responsive */
 @media (max-width: 576px) {
     .section-title {
         font-size: 20px;
     }
 }
 
-
-/* Submit Button */
 .btn-submit {
     background: #ffffff;
     color: #0d3553;
@@ -241,7 +224,6 @@ p {
     font-size: 14px;
     opacity: 0.7;
 }
-/* Divider under text */
 .hr {
     width: 120px;
     height: 2px;
@@ -249,14 +231,12 @@ p {
     margin: 15px auto;
 }
 
-/* Section Layout */
 .contact-section {
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
-/* Responsive Fix */
 @media (max-width: 768px) {
     .contact-section {
         text-align: center;
@@ -267,13 +247,12 @@ p {
 }
 
 .map-container {
-    width: 100%;      /* limit width for big screens */
-    height: 600px;         /* default height */
-    margin: 40px auto;     /* center + add top/bottom spacing */
-    overflow: hidden;      /* clean edges */
+    width: 100%;      
+    height: 600px;        
+    margin: 40px auto;     
+    overflow: hidden;     
 }
 
-/* Map iframe/embed responsiveness */
 .map-container iframe,
 .map-container embed {
     width: 100%;
@@ -281,7 +260,6 @@ p {
     border: 0;
 }
 
-/* Tablets */
 @media (max-width: 768px) {
     .map-container {
         height: 300px;
@@ -289,7 +267,6 @@ p {
     }
 }
 
-/* Mobile */
 @media (max-width: 576px) {
     .map-container {
         height: 250px;
@@ -309,7 +286,6 @@ p {
     }
 }
 
-/* RESPONSIVE FIXES */
 @media (max-width: 1200px) {
 
     

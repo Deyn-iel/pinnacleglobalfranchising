@@ -116,6 +116,12 @@ class="nav-link {{ request()->routeIs('admin.portals.smm') ? 'active' : '' }}">
 
 </a>
 
+<a href="{{ route('portal.company-files', 'smm') }}"
+class="nav-link {{ request()->routeIs('portal.company-files') ? 'active' : '' }}">
+<i class="fas fa-file-lines"></i>
+Company Files
+</a>
+
 
 <a href="#">
 <i class="fa-solid fa-bell"></i>

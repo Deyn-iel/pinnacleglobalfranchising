@@ -12,7 +12,7 @@ class FranchiseSubmitted extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public $data; // 👈 para ma-pass sa blade
+    public $data;
 
     /**
      * Create a new message instance.
@@ -38,7 +38,7 @@ class FranchiseSubmitted extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'emails.franchise-submitted', // 👈 IMPORTANT (create mo to)
+            view: 'emails.franchise-submitted', 
             with: [
                 'data' => $this->data
             ]

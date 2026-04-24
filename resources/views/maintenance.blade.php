@@ -1,330 +1,549 @@
-<!doctype html>
-<html lang="tl">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Under Maintenance — Pinnacle Global Franchising</title>
-  <link rel="icon" type="image/png" href="{{ asset('img/logo1-removebg-preview.png') }}">
-  <meta name="description" content="Pinnacle Global Franchising is currently under maintenance. We'll be back soon." />
-  <meta name="theme-color" content="#0d3553" />
+    <!DOCTYPE html>
+    <html lang="tl">
+    <head>
+      <meta charset="utf-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+      <title>Under Maintenance — Pinnacle Global Franchising</title>
+      <link rel="icon" type="image/png" href="{{ asset('img/logo1-removebg-preview.png') }}">
+      <meta name="description" content="Pinnacle Global Franchising is currently under maintenance. We'll be back soon with a refreshed experience." />
+      <meta name="theme-color" content="#0d3553" />
 
-  <style>
-    :root{
-      --bg:#0d3553;          /* requested solid theme */
-      --card: rgba(255,255,255,.10);
-      --stroke: rgba(255,255,255,.18);
-      --text: rgba(255,255,255,.92);
-      --muted: rgba(255,255,255,.72);
-      --shadow: 0 28px 90px rgba(0,0,0,.45);
-      --radius: 22px;
-      --accent: rgba(255,255,255,.16);
-    }
+      <style>
+        * {
+          margin: 0;
+          padding: 0;
+          box-sizing: border-box;
+        }
 
-    *{ box-sizing:border-box; }
-    html,body{ height:100%; }
-    body{
-      margin:0;
-      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
-      color: var(--text);
-      background: var(--bg);
-      overflow-x:hidden;
-    }
+        :root {
+          --bg-deep: #0d3553;
+          --card-bg: rgba(255, 255, 255, 0.08);
+          --border-light: rgba(255, 255, 255, 0.12);
+          --border-glow: rgba(255, 255, 255, 0.2);
+          --text-primary: rgba(255, 255, 255, 0.94);
+          --text-secondary: rgba(255, 255, 255, 0.72);
+          --text-muted: rgba(255, 255, 255, 0.55);
+          --accent-gold: #e9c46a;
+          --accent-gold-soft: rgba(233, 196, 106, 0.2);
+          --shadow-xl: 0 30px 50px -20px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.02) inset;
+          --radius-2xl: 2rem;
+          --radius-xl: 1.25rem;
+          --radius-lg: 1rem;
+          --transition-smooth: all 0.2s ease-out;
+        }
 
-    /* Subtle texture (keeps #0d3553 visible) */
-    .bg-glow{
-      position:fixed;
-      inset:0;
-      pointer-events:none;
-      z-index:-3;
-      background:
-        radial-gradient(900px 650px at 25% 20%, rgba(255,255,255,.10), transparent 55%),
-        radial-gradient(900px 650px at 80% 75%, rgba(0,0,0,.18), transparent 60%);
-      mix-blend-mode: soft-light;
-    }
+        body {
+          background: var(--bg-deep);
+          font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, 'Apple Color Emoji', sans-serif;
+          color: var(--text-primary);
+          min-height: 100vh;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          position: relative;
+          overflow-x: hidden;
+        }
 
-    /* Layout */
-    .shell{
-      min-height:100%;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      padding: clamp(18px, 4vw, 52px);
-    }
+        body::before {
+          content: "";
+          position: fixed;
+          inset: 0;
+          background: radial-gradient(circle at 20% 30%, rgba(255, 248, 225, 0.05) 0%, rgba(0, 0, 0, 0.1) 90%);
+          pointer-events: none;
+          z-index: -2;
+        }
 
-    .card{
-      width:min(1040px, 100%);
-      border-radius: var(--radius);
-      background: linear-gradient(180deg, rgba(255,255,255,.12), rgba(255,255,255,.07));
-      border:1px solid var(--stroke);
-      box-shadow: var(--shadow);
-      overflow:hidden;
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-    }
+        body::after {
+          content: "";
+          position: fixed;
+          inset: 0;
+          background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.045'/%3E%3C/svg%3E");
+          opacity: 0.4;
+          pointer-events: none;
+          z-index: -1;
+        }
 
-    .top{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:14px;
-      padding: 18px clamp(18px, 3vw, 30px);
-      border-bottom:1px solid rgba(255,255,255,.10);
-    }
+        .maintenance-container {
+          width: 100%;
+          max-width: 1300px;
+          margin: 2rem 1.5rem;
+          backdrop-filter: blur(2px);
+        }
 
-    /* Brand row (logo + name side-by-side) */
-    .brand{
-      display:flex;
-      align-items:center;
-      gap:12px;
-      min-width:0;
-    }
+        .glass-card {
+          background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.02) 100%);
+          backdrop-filter: blur(14px);
+          border-radius: var(--radius-2xl);
+          border: 1px solid var(--border-light);
+          box-shadow: var(--shadow-xl);
+          overflow: hidden;
+          transition: transform 0.25s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+        }
 
-    .logo{
-      width:44px;
-      height:44px;
-      border-radius:14px;
-      background: rgba(255,255,255,.12);
-      border:1px solid rgba(255,255,255,.18);
-      display:grid;
-      place-items:center;
-      overflow:hidden;
-      flex: 0 0 auto;
-    }
-    .logo img{
-      width:100%;
-      height:100%;
-      object-fit:contain;
-      padding:7px;
-    }
+        .card-header {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          flex-wrap: wrap;
+          gap: 1rem;
+          padding: 1.25rem 2rem;
+          border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
 
-    .brand-text{
-      min-width:0;
-      line-height:1.15;
-    }
-    .brand-text strong{
-      display:block;
-      font-weight:750;
-      letter-spacing:.2px;
-      font-size: 14.5px;
-      white-space:nowrap;
-      overflow:hidden;
-      text-overflow:ellipsis;
-    }
-    .brand-text span{
-      display:block;
-      font-size: 12.5px;
-      color: var(--muted);
-      white-space:nowrap;
-      overflow:hidden;
-      text-overflow:ellipsis;
-    }
+        .brand-group {
+          display: flex;
+          align-items: center;
+          gap: 1rem;
+        }
 
-    .badge{
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-      padding:8px 12px;
-      border-radius:999px;
-      border:1px solid rgba(255,255,255,.18);
-      background: rgba(255,255,255,.10);
-      font-size:12.5px;
-      color: rgba(255,255,255,.90);
-      white-space:nowrap;
-    }
-    .dot{
-      width:8px;height:8px;border-radius:99px;
-      background: #c2c2c2;
-      box-shadow: 0 0 0 6px rgba(255,211,106,.14);
-    }
+        .logo-wrapper {
+          width: 52px;
+          height: 52px;
+          background: rgba(255, 255, 255, 0.1);
+          border-radius: 18px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          border: 1px solid rgba(255, 255, 255, 0.2);
+          transition: var(--transition-smooth);
+          box-shadow: 0 6px 12px -8px rgba(0,0,0,0.3);
+        }
 
-    .content{
-      display:grid;
-      grid-template-columns: 1.05fr .95fr;
-      gap: clamp(16px, 3vw, 28px);
-      padding: clamp(18px, 3.5vw, 34px);
-      align-items:start;
-    }
+        .logo-wrapper img {
+          width: 70%;
+          height: 70%;
+          object-fit: contain;
+        }
 
-    .headline{
-      font-size: clamp(30px, 4.6vw, 52px);
-      margin:0 0 10px 0;
-      letter-spacing:-.7px;
-      line-height:1.05;
-    }
-    .subhead{
-      margin:0 0 18px 0;
-      color: var(--muted);
-      font-size: clamp(14.5px, 1.7vw, 16.5px);
-      line-height:1.6;
-      max-width: 60ch;
-    }
+        .brand-text h2 {
+          font-size: 1.3rem;
+          font-weight: 600;
+          letter-spacing: -0.2px;
+          line-height: 1.2;
+        }
 
-    .panel{
-      border-radius: 18px;
-      border:1px solid rgba(255,255,255,.16);
-      background: rgba(0,0,0,.12);
-      padding: 16px;
-    }
-    .panel h3{
-      margin:0 0 10px 0;
-      font-size:14px;
-      color: rgba(255,255,255,.90);
-      letter-spacing:.2px;
-    }
+        .brand-text p {
+          font-size: 0.75rem;
+          color: var(--text-secondary);
+          letter-spacing: 0.3px;
+        }
 
-    /* Vimeo embed (NOT background) */
-    .video{
-      position:relative;
-      width:100%;
-      aspect-ratio: 16 / 9;
-      border-radius: 16px;
-      overflow:hidden;
-      border: 1px solid rgba(255,255,255,.18);
-      background: rgba(0,0,0,.20);
-    }
-    .video iframe{
-      position:absolute;
-      inset:0;
-      width:100%;
-      height:100%;
-      border:0;
-    }
+        .status-badge {
+          display: inline-flex;
+          align-items: center;
+          gap: 8px;
+          background: rgba(233, 196, 106, 0.12);
+          backdrop-filter: blur(4px);
+          padding: 0.5rem 1.2rem;
+          border-radius: 100px;
+          border: 1px solid rgba(233, 196, 106, 0.35);
+        }
 
-    .list{
-      margin:0;
-      padding-left: 18px;
-      color: var(--muted);
-      font-size: 13.5px;
-      line-height:1.65;
-    }
+        .pulse-dot {
+          width: 9px;
+          height: 9px;
+          background: #e9c46a;
+          border-radius: 50%;
+          box-shadow: 0 0 0 0 rgba(233, 196, 106, 0.7);
+          animation: pulse 1.8s infinite;
+        }
 
-    .actions{
-      display:flex;
-      flex-wrap:wrap;
-      gap:10px;
-      margin-top: 14px;
-    }
-    .btn{
-      appearance:none;
-      border:1px solid rgba(255,255,255,.20);
-      background: rgba(255,255,255,.10);
-      color: rgba(255,255,255,.92);
-      border-radius: 999px;
-      padding: 10px 14px;
-      font-size: 13px;
-      text-decoration:none;
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-      cursor:pointer;
-      transition: transform .12s ease, background .12s ease;
-    }
-    .btn:hover{ transform: translateY(-1px); background: rgba(255,255,255,.14); }
-    .btn:active{ transform: translateY(0px); }
+        @keyframes pulse {
+          0% { box-shadow: 0 0 0 0 rgba(233, 196, 106, 0.5); }
+          70% { box-shadow: 0 0 0 6px rgba(233, 196, 106, 0); }
+          100% { box-shadow: 0 0 0 0 rgba(233, 196, 106, 0); }
+        }
 
-    .footer{
-      display:flex;
-      flex-wrap:wrap;
-      align-items:center;
-      justify-content:space-between;
-      gap:10px;
-      padding: 14px clamp(18px, 3vw, 30px) 18px;
-      border-top:1px solid rgba(255,255,255,.10);
-      color: rgba(255,255,255,.68);
-      font-size:12.5px;
-    }
+        .badge-text {
+          font-size: 0.8rem;
+          font-weight: 500;
+          letter-spacing: 0.3px;
+          color: #f5e3b6;
+        }
 
-    .contact a{
-      color: rgba(255,255,255,.88);
-      text-decoration:none;
-      border-bottom: 1px dashed rgba(255,255,255,.40);
-    }
-    .contact a:hover{ border-bottom-style: solid; }
+        /* main grid */
+        .main-grid {
+          display: grid;
+          grid-template-columns: 1fr 0.9fr;
+          gap: 1.8rem;
+          padding: 2rem;
+        }
 
-    @media (max-width: 900px){
-      .content{ grid-template-columns: 1fr; }
-    }
-    @media (max-width: 520px){
-      .badge{ display:none; }
-      .logo{ width:40px; height:40px; border-radius:12px; }
-    }
-  </style>
-</head>
+        .headline-section h1 {
+          font-size: clamp(2.2rem, 5vw, 3.6rem);
+          font-weight: 700;
+          letter-spacing: -0.02em;
+          line-height: 1.2;
+          background: linear-gradient(135deg, #ffffff 0%, #e0e9f0 100%);
+          background-clip: text;
+          -webkit-background-clip: text;
+          color: transparent;
+          margin-bottom: 0.9rem;
+        }
 
-<body>
-  <div class="bg-glow" aria-hidden="true"></div>
+        .description-text {
+          font-size: 1rem;
+          line-height: 1.5;
+          color: var(--text-secondary);
+          margin-bottom: 1.8rem;
+          max-width: 90%;
+        }
 
-  <main class="shell">
-    <section class="card" role="region" aria-label="Maintenance notice">
-      <header class="top">
-        <div class="brand">
-          <div class="logo" aria-label="Pinnacle Global Franchising logo">
-            <!-- ✅ Palitan ito ng actual logo path/link -->
-            <img
-              src="{{ asset('img/logo1-removebg-preview.png') }}"
-              alt="Pinnacle Global Franchising"
-              onerror="this.style.display='none'; this.parentElement.textContent='PGF'; this.parentElement.style.fontWeight='800'; this.parentElement.style.letterSpacing='.5px';"
-            />
+        .info-panel {
+          background: rgba(0, 0, 0, 0.25);
+          border-radius: var(--radius-xl);
+          padding: 1.25rem 1.5rem;
+          border: 1px solid rgba(255, 255, 255, 0.08);
+          transition: var(--transition-smooth);
+        }
+
+        .info-panel:hover {
+          border-color: rgba(255, 255, 255, 0.18);
+          background: rgba(0, 0, 0, 0.3);
+        }
+
+        .info-panel h3 {
+          font-size: 0.9rem;
+          text-transform: uppercase;
+          letter-spacing: 1px;
+          font-weight: 600;
+          color: var(--accent-gold);
+          margin-bottom: 1rem;
+        }
+
+        .task-list {
+          list-style: none;
+          display: flex;
+          flex-direction: column;
+          gap: 0.7rem;
+        }
+
+        .task-list li {
+          display: flex;
+          align-items: center;
+          gap: 0.7rem;
+          font-size: 0.9rem;
+          color: var(--text-secondary);
+        }
+
+        .task-list li::before {
+          content: "▹";
+          color: var(--accent-gold);
+          font-size: 0.9rem;
+          opacity: 0.9;
+        }
+
+        .video-wrapper {
+          border-radius: var(--radius-xl);
+          overflow: hidden;
+          background: #00000022;
+          border: 1px solid var(--border-light);
+          transition: var(--transition-smooth);
+          box-shadow: 0 12px 20px -12px rgba(0, 0, 0, 0.4);
+        }
+
+        .video-wrapper iframe {
+          width: 100%;
+          aspect-ratio: 16 / 9;
+          display: block;
+          border: none;
+        }
+
+        .contact-card {
+          margin-top: 1rem;
+          background: rgba(255, 255, 255, 0.04);
+          border-radius: var(--radius-lg);
+          padding: 1rem 1.2rem;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          flex-wrap: wrap;
+          gap: 0.6rem;
+          border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .contact-email {
+          display: flex;
+          align-items: center;
+          gap: 0.6rem;
+          font-size: 0.85rem;
+          color: var(--text-secondary);
+        }
+
+        .contact-email a {
+          color: var(--accent-gold);
+          text-decoration: none;
+          font-weight: 500;
+          border-bottom: 1px dashed rgba(233, 196, 106, 0.4);
+          transition: all 0.2s;
+        }
+
+        .contact-email a:hover {
+          color: #f4d58c;
+          border-bottom-style: solid;
+        }
+
+        .support-btn {
+          background: rgba(255, 255, 255, 0.08);
+          border: 1px solid rgba(255, 255, 255, 0.2);
+          padding: 0.5rem 1rem;
+          border-radius: 40px;
+          font-size: 0.75rem;
+          font-weight: 500;
+          display: inline-flex;
+          align-items: center;
+          gap: 6px;
+          color: white;
+          text-decoration: none;
+          transition: var(--transition-smooth);
+        }
+
+        .support-btn:hover {
+          background: rgba(233, 196, 106, 0.2);
+          border-color: rgba(233, 196, 106, 0.5);
+          transform: translateY(-1px);
+        }
+
+        .card-footer {
+          padding: 1rem 2rem 1.4rem;
+          border-top: 1px solid rgba(255, 255, 255, 0.06);
+          display: flex;
+          flex-wrap: wrap;
+          justify-content: space-between;
+          align-items: center;
+          gap: 0.8rem;
+          font-size: 0.75rem;
+          color: var(--text-muted);
+        }
+
+        .footer-links {
+          display: flex;
+          gap: 1.5rem;
+        }
+
+        .footer-links a {
+          color: var(--text-muted);
+          text-decoration: none;
+          transition: color 0.2s;
+          font-size: 0.75rem;
+        }
+
+        .footer-links a:hover {
+          color: var(--accent-gold);
+        }
+
+        .floating-accent {
+          position: fixed;
+          width: 260px;
+          height: 260px;
+          background: radial-gradient(circle, rgba(233,196,106,0.12) 0%, rgba(233,196,106,0) 70%);
+          border-radius: 50%;
+          bottom: -100px;
+          right: -80px;
+          pointer-events: none;
+          z-index: -2;
+        }
+
+        .floating-accent-left {
+          position: fixed;
+          width: 320px;
+          height: 320px;
+          background: radial-gradient(circle, rgba(100, 150, 200, 0.08) 0%, rgba(0,0,0,0) 70%);
+          top: -120px;
+          left: -100px;
+          pointer-events: none;
+          z-index: -2;
+        }
+
+        @media (max-width: 880px) {
+          .main-grid {
+            grid-template-columns: 1fr;
+            gap: 2rem;
+            padding: 1.5rem;
+          }
+          .description-text {
+            max-width: 100%;
+          }
+          .card-header {
+            padding: 1rem 1.5rem;
+          }
+        }
+
+        @media (max-width: 520px) {
+          .maintenance-container {
+            margin: 1rem;
+          }
+          .status-badge .badge-text {
+            font-size: 0.7rem;
+          }
+          .logo-wrapper {
+            width: 44px;
+            height: 44px;
+          }
+          .brand-text h2 {
+            font-size: 1rem;
+          }
+          .contact-card {
+            flex-direction: column;
+            align-items: flex-start;
+          }
+          .card-footer {
+            flex-direction: column;
+            text-align: center;
+          }
+        }
+
+        ::-webkit-scrollbar {
+          width: 5px;
+        }
+        ::-webkit-scrollbar-track {
+          background: #0a2a42;
+        }
+        ::-webkit-scrollbar-thumb {
+          background: #e9c46a80;
+          border-radius: 20px;
+        }
+      </style>
+    </head>
+    <body>
+      <div class="floating-accent" aria-hidden="true"></div>
+      <div class="floating-accent-left" aria-hidden="true"></div>
+
+      <div class="maintenance-container">
+        <div class="glass-card">
+          <!-- header -->
+          <div class="card-header">
+            <div class="brand-group">
+              <div class="logo-wrapper">
+                <img 
+                  src="{{ asset('img/logo1-removebg-preview.png') }}" 
+                  alt="Pinnacle Global Franchising Logo"
+                  onerror="this.onerror=null; this.parentElement.innerHTML='<span style=\'font-size:26px;font-weight:800;\'>PGF</span>';"
+                />
+              </div>
+              <div class="brand-text">
+                <h2>Pinnacle Global Franchising</h2>
+                <p>Excellence in franchising solutions</p>
+              </div>
+            </div>
+            <div class="status-badge">
+              <span class="pulse-dot"></span>
+              <span class="badge-text">Scheduled maintenance</span>
+            </div>
           </div>
 
-          <div class="brand-text">
-            <strong>Pinnacle Global Franchising</strong>
-            <span>Maintenance mode</span>
+          <div class="main-grid">
+            <div class="headline-section">
+              <h1>Under<br>Maintenance</h1>
+              <p class="description-text">
+                We're refining our platform to deliver a faster, smarter experience. 
+                Our team is working hard to bring you an improved interface and enhanced backend stability. 
+                Thank you for your patience — we'll be back online shortly.
+              </p>
+              <div class="info-panel">
+                <h3>⚡ current improvements</h3>
+                <ul class="task-list">
+                  <li>Next-generation performance tuning</li>
+                  <li>Refined user interface & accessibility</li>
+                  <li>Database optimization & security patches</li>
+                  <li>Enhanced franchise management tools</li>
+                  <li>Zero-downtime architecture upgrade</li>
+                </ul>
+              </div>
+            </div>
+            <aside>
+              <div class="video-wrapper">
+                <iframe 
+                  src="https://player.vimeo.com/video/1101086567?h=fada1a13bc&autoplay=1&loop=1&autopause=0&muted=1&title=0&byline=0&portrait=0&controls=0&background=0" 
+                  allow="autoplay; fullscreen; picture-in-picture" 
+                  allowfullscreen 
+                  title="Pinnacle Global Franchising - maintenance preview video"
+                  loading="lazy"
+                ></iframe>
+              </div>
+              <div class="contact-card">
+                <div class="contact-email">
+                  <span>📧</span> 
+                  <a href="mailto:support@pinnacleglobalfranchising.com">support@pinnacleglobalfranchising.com</a>
+                </div>
+              </div>
+            </aside>
+          </div>
+          <div class="card-footer">
+            <span>© <span id="year"></span> Pinnacle Global Franchising — All rights reserved</span>
+            <div class="footer-links">
+              <a href="#" aria-label="Contact support (simulated)">Support Center</a>
+              <a href="#" aria-label="Status page (simulated)">System Status</a>
+              <a href="#" aria-label="Updates log (simulated)">Release Notes</a>
+            </div>
           </div>
         </div>
-
-        <div class="badge" aria-label="status">
-          <span class="dot" aria-hidden="true"></span>
-          Under Maintenance
-        </div>
-      </header>
-
-      <div class="content">
-        <!-- Left -->
-        <div>
-          <h1 class="headline">Under Maintenance</h1>
-          <p class="subhead">
-            We’re currently making updates to improve the design and performance of our website. Please check back again soon.
-          </p>
-
-          <div class="panel">
-            <h3>Updates in progress</h3>
-            <ul class="list">
-              <li>Performance improvements</li>
-              <li>Design & content updates</li>
-              <li>Stability checks</li>
-              <li>Fixing Database</li>
-            </ul>
-          </div>
-        </div>
-
-        <!-- Right -->
-        <aside class="panel">
-
-          <!-- ✅ Vimeo embed is NOT background -->
-          <div class="video">
-            <iframe
-              src="https://player.vimeo.com/video/1101086567?h=fada1a13bc&autoplay=1&loop=1&autopause=0&muted=1&title=0&byline=0&portrait=0&controls=0"
-              allow="autoplay; fullscreen; picture-in-picture"
-              allowfullscreen
-              title="Maintenance Video"
-            ></iframe>
-          </div>
-
-          <p class="contact" style="margin:12px 0 0 0; color: rgba(255,255,255,.80); font-size:13px; line-height:1.6;">
-            Email: <a href="mailto:info@pinnacleglobalfranchising.com">support@pinnacleglobalfranchising.com</a>   
-          </p>
-        </aside>
       </div>
 
-      <footer class="footer">
-        <span>© <span id="year"></span> Pinnacle Global Franchising</span>
-      </footer>
-    </section>
-  </main>
+      <script>
+        (function() {
+          const yearSpan = document.getElementById('year');
+          if (yearSpan) yearSpan.textContent = new Date().getFullYear();
+          const notifyBtn = document.getElementById('notifyBtn');
+          if (notifyBtn) {
+            notifyBtn.addEventListener('click', (e) => {
+              e.preventDefault();
+              const toast = document.createElement('div');
+              toast.textContent = '✨ We’ll notify you once maintenance is complete. Stay tuned!';
+              toast.style.position = 'fixed';
+              toast.style.bottom = '24px';
+              toast.style.left = '50%';
+              toast.style.transform = 'translateX(-50%)';
+              toast.style.backgroundColor = '#1e2f3e';
+              toast.style.backdropFilter = 'blur(12px)';
+              toast.style.color = '#f5e3b6';
+              toast.style.padding = '10px 20px';
+              toast.style.borderRadius = '60px';
+              toast.style.fontSize = '0.8rem';
+              toast.style.border = '1px solid rgba(233,196,106,0.5)';
+              toast.style.zIndex = '999';
+              toast.style.fontWeight = '500';
+              toast.style.boxShadow = '0 10px 20px rgba(0,0,0,0.2)';
+              toast.style.pointerEvents = 'none';
+              toast.style.opacity = '0';
+              toast.style.transition = 'opacity 0.2s';
+              document.body.appendChild(toast);
+              setTimeout(() => { toast.style.opacity = '1'; }, 10);
+              setTimeout(() => {
+                toast.style.opacity = '0';
+                setTimeout(() => toast.remove(), 500);
+              }, 2800);
+            });
+          }
 
-  <script>
-    document.getElementById("year").textContent = new Date().getFullYear();
-  </script>
-</body>
-</html>
+          const fakeLinks = document.querySelectorAll('.footer-links a');
+          fakeLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+              e.preventDefault();
+              const msg = document.createElement('div');
+              msg.textContent = '🔧 Full site features will resume after maintenance.';
+              msg.style.position = 'fixed';
+              msg.style.bottom = '20px';
+              msg.style.left = '20px';
+              msg.style.background = 'rgba(0,0,0,0.6)';
+              msg.style.backdropFilter = 'blur(8px)';
+              msg.style.color = '#e9c46a';
+              msg.style.fontSize = '0.7rem';
+              msg.style.padding = '6px 12px';
+              msg.style.borderRadius = '40px';
+              msg.style.border = '1px solid rgba(255,215,0,0.3)';
+              msg.style.zIndex = '999';
+              msg.style.opacity = '0';
+              msg.style.transition = 'opacity 0.2s';
+              document.body.appendChild(msg);
+              setTimeout(() => { msg.style.opacity = '1'; }, 10);
+              setTimeout(() => {
+                msg.style.opacity = '0';
+                setTimeout(() => msg.remove(), 400);
+              }, 1800);
+            });
+          });
+        })();
+      </script>
+    </body>
+    </html>

@@ -35,11 +35,6 @@ body {
     object-fit: contain;
 }
 
-
-/* =========================
-   FRANCHISE SECTION
-=========================*/
-
 .franchise-title {
     margin-top: 40px;
     font-size: 35px;
@@ -69,7 +64,6 @@ body {
     line-height: 1.6;
 }
 
-/* ✅ Tablets */
 @media (max-width: 768px) {
     .keys {
         width: 70%;
@@ -85,7 +79,6 @@ body {
     }
 }
 
-/* ✅ Mobile phones */
 @media (max-width: 576px) {
     .keys {
         width: 90%;
@@ -100,7 +93,6 @@ body {
         line-height: 1.5;
     }
 }
-/* RESPONSIVE FIXES */
 @media (max-width: 1200px) {
     .image {
         flex-wrap: wrap;

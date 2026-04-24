@@ -7,9 +7,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (!toggle || !navMenu) return;
 
-    /* ===============================
-       TOGGLE NAV (MOBILE + TABLET)
-    =============================== */
     toggle.addEventListener("click", (e) => {
         e.stopPropagation();
 
@@ -21,9 +18,6 @@ document.addEventListener("DOMContentLoaded", () => {
         document.body.classList.toggle("nav-open");
     });
 
-    /* ===============================
-       DROPDOWN SECTIONS
-    =============================== */
     sections.forEach(section => {
         const title = section.querySelector(".nav-section-title");
         if (!title) return;
@@ -39,9 +33,6 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
-    /* ===============================
-       AUTO CLOSE ON LINK CLICK
-    =============================== */
     links.forEach(link => {
         link.addEventListener("click", () => {
             if (window.innerWidth <= 1024) {
@@ -56,9 +47,6 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
-    /* ===============================
-       CLOSE WHEN CLICKING OUTSIDE
-    =============================== */
     document.addEventListener("click", () => {
         sections.forEach(section => section.classList.remove("open"));
     });

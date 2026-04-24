@@ -8,7 +8,6 @@
     --border: #d1d5db;
 }
 
-/* GLOBAL */
 * {
     box-sizing: border-box;
 }
@@ -28,7 +27,6 @@ body {
     padding: 20px;
 }
 
-/* TITLES */
 h1 {
     font-size: 30px;
     margin-bottom: 10px;
@@ -41,7 +39,6 @@ h1 {
     margin-bottom: 20px;
 }
 
-/* CARD */
 .card {
     background: var(--card-bg);
     border-radius: 16px;
@@ -55,7 +52,6 @@ h1 {
     box-shadow: 0 16px 34px rgba(0, 0, 0, 0.1);
 }
 
-/* SECTION TITLE */
 .section-title {
     font-size: 20px;
     font-weight: 700;
@@ -66,7 +62,6 @@ h1 {
     padding-left: 12px;
 }
 
-/* INPUTS */
 label {
     display: block;
     margin-top: 15px;
@@ -102,12 +97,10 @@ textarea {
     resize: vertical;
 }
 
-/* SECTION WRAPPER */
 .checkbox-section {
     margin-top: 20px;
 }
 
-/* BLOCK TEXT */
 .text-block {
     font-size: 14px;
     line-height: 1.6;
@@ -116,14 +109,12 @@ textarea {
     text-align: justify;
 }
 
-/* TITLE */
 .tick-title {
     font-size: 14px;
     font-weight: 600;
     margin-bottom: 10px;
 }
 
-/* CHECKBOX + LABEL */
 .checkbox-row {
     display: flex;
     align-items: flex-start;
@@ -137,10 +128,9 @@ textarea {
 .checkbox-row input[type="checkbox"] {
     width: 18px;
     height: 18px;
-    margin-top: 2px; /* aligns with text */
+    margin-top: 2px;
 }
 
-/* RESPONSIVE */
 @media (max-width: 600px) {
     .text-block {
         font-size: 13px;
@@ -158,7 +148,6 @@ textarea {
 }
 
 
-/* BUTTON */
 .btn {
     background: var(--accent);
     color: white;
@@ -180,7 +169,6 @@ textarea {
     box-shadow: 0 6px 16px rgba(2, 66, 95, 0.35);
 }
 
-/* DIVIDER */
 hr {
     margin: 30px 0;
     border: 0;
@@ -209,9 +197,6 @@ hr {
         width: 100%;
     }
 }
-/* ============================
-   Reference Row Styling
-============================ */
 .ref-row {
     display: grid;
     grid-template-columns: 1fr 1fr auto;
@@ -239,9 +224,6 @@ hr {
     box-shadow: 0 0 6px rgba(14,165,233,0.25);
 }
 
-/* ============================
-   Buttons
-============================ */
 .btn.ghost {
     background: #ffffff;
     border: 1px solid var(--border);
@@ -266,11 +248,7 @@ hr {
     max-width: 250px;
 }
 
-/* ============================
-   PREVIEW MODAL (BOOTSTRAP SAFE)
-============================ */
 
-/* Modal content wrapper */
 .preview-modal {
     border-radius: 14px;
     overflow: hidden;
@@ -278,7 +256,6 @@ hr {
     
 }
 
-/* Header */
 .preview-modal .modal-header {
     background: linear-gradient(135deg, #0d3553, #165c80);
     color: #ffffff;
@@ -286,7 +263,6 @@ hr {
     border-bottom: none;
 }
 
-/* Body */
 .preview-modal .modal-body {
     padding: 22px;
     background: #f9fafb;
@@ -295,16 +271,12 @@ hr {
     color: #374151;
 }
 
-/* Footer */
 .preview-modal .modal-footer {
     background: #ffffff;
     border-top: 1px solid #e5e7eb;
     padding: 14px 20px;
 }
 
-/* ============================
-   PREVIEW CONTENT STYLES
-============================ */
 #previewContent strong {
     font-size: 16px;
     color: #0f172a;
@@ -325,7 +297,6 @@ hr {
     color: #111827;
 }
 
-/* Smooth appearance */
 .modal.fade .modal-dialog {
     transform: translateY(20px);
     transition: transform 0.3s ease-out;
@@ -335,9 +306,6 @@ hr {
     transform: translateY(0);
 }
 
-/* ============================
-   RESPONSIVE
-============================ */
 @media (max-width: 576px) {
     .preview-modal .modal-body {
         padding: 16px;
@@ -354,9 +322,6 @@ hr {
     }
 }
 
-
-
-/* ANIMATIONS */
 @keyframes slideUp {
     from { transform: translateY(20px); opacity: 0; }
     to { transform: translateY(0); opacity: 1; }
@@ -369,14 +334,13 @@ hr {
 }
 .header-flex {
     display: flex;
-    justify-content: space-between;   /* H1 left | Link right */
+    justify-content: space-between;  
     align-items: center;
     padding: 15px 0;
-    gap: 15px;                        /* space for safety */
-    flex-wrap: wrap;                  /* allows wrapping on small screens */
+    gap: 15px;                       
+    flex-wrap: wrap;                  
 }
 
-/* Style the heading */
 .header-flex h1 {
     font-size: 1.8rem;
     font-weight: 700;
@@ -384,7 +348,6 @@ hr {
     margin: 0;
 }
 
-/* Style the back link */
 .header-flex .link-small {
     font-size: 1rem;
     color: #000000;
@@ -397,13 +360,10 @@ hr {
     color: #0056b3;
 }
 
-/* ===============================
-   Responsive — Mobile
-================================ */
 @media (max-width: 600px) {
     .header-flex {
         flex-direction: column;   
-        align-items: flex-start;       /* align left */
+        align-items: flex-start;      
         padding: 10px 0 15px;
     }
 
@@ -417,7 +377,6 @@ hr {
     }
 }
 
-/* BASE ALERT */
 .alert {
     display: flex;
     align-items: flex-start;
@@ -433,7 +392,6 @@ hr {
     max-height: 200px;
 }
 
-/* SUCCESS STYLE */
 .custom-alert-success {
     background: #00a352;
     color: #f7f7f7;
@@ -447,8 +405,6 @@ hr {
     line-height: 1.2;
 }
 
-/* AUTO HIDE TRANSITION */
-/* ================= SMOOTH AUTO HIDE ================= */
 .alert.auto-hide {
     opacity: 1;
     transform: translateY(0);
@@ -458,7 +414,6 @@ hr {
         transform 0.4s ease;
 }
 
-/* HIDE STATE */
 .alert.auto-hide.hide {
     opacity: 0;
     transform: translateY(-8px);

@@ -46,6 +46,9 @@ use App\Http\Controllers\Portal\HrDashboardController;
 
 use App\Http\Controllers\Admin\HeadOfficeTicketController;
 use App\Http\Controllers\AnnouncementController;
+use App\Http\Controllers\Admin\AdminCouponController;
+use App\Http\Controllers\CouponClaimController;
+
 
 Route::middleware(['web','auth','role:portal'])->group(function () {
 
@@ -85,63 +88,61 @@ Route::middleware(['web','auth','role:portal'])->group(function () {
 
 Route::middleware(['auth'])->group(function () {
 
-  Route::post('/hr/claims', [HRClaimController::class, 'store'])->name('hr.claims.store');
+Route::get('/company-files/{department}', [RequirementController::class, 'portalIndex'])
+        ->name('portal.company-files');
+
+Route::get('/company-files/{department}/{folder}', [RequirementController::class, 'portalFolder'])
+        ->where('folder', '.*')
+        ->name('portal.company-files.folder');
+
+Route::post('/hr/claims', [HRClaimController::class, 'store'])->name('hr.claims.store');
 
   
 
-  // ✅ ADD THIS HERE (REALTIME FETCH)
-    Route::get('/tickets/user', function () {
+Route::get('/tickets/user', function () {
         return \App\Models\Ticket::where('user_id', Auth::id())
             ->latest()
             ->get();
     });
 
     
-  Route::get('/user/coffee-registration', [UserCoffeeReg::class, 'create'])
+Route::get('/user/coffee-registration', [UserCoffeeReg::class, 'create'])
         ->name('user.coffee-registration.create');
 
-    Route::post('/user/coffee-registration', [UserCoffeeReg::class, 'store'])
+Route::post('/user/coffee-registration', [UserCoffeeReg::class, 'store'])
         ->name('user.coffee-registration.store');
 
 Route::post('/support/chat/upload', [SupportChatController::class, 'upload']);
 Route::get('/support/chat',  [SupportChatController::class, 'fetch']);
-  Route::post('/support/chat', [SupportChatController::class, 'send']);
-  Route::delete('/support/chat', [SupportChatController::class, 'destroy']);
-
-  Route::get('/support/unread-count', [SupportChatController::class, 'unreadCount']);
-  
-
-  Route::post('/support/presence/ping', [SupportPresenceController::class, 'ping']);
-  Route::get('/support/presence/status', [SupportPresenceController::class, 'status']); 
-
+Route::post('/support/chat', [SupportChatController::class, 'send']);
+Route::delete('/support/chat', [SupportChatController::class, 'destroy']);
+Route::get('/support/unread-count', [SupportChatController::class, 'unreadCount']);
+Route::post('/support/presence/ping', [SupportPresenceController::class, 'ping']);
+Route::get('/support/presence/status', [SupportPresenceController::class, 'status']); 
 
 Route::patch('/tickets/{ticket}/status', [TicketController::class, 'updateStatus'])
     ->name('tickets.updateStatus');
-
-
-    Route::get('/tickets', [TicketController::class, 'index'])
+Route::get('/tickets', [TicketController::class, 'index'])
         ->name('tickets.dashboard');
+Route::get('/coupon', [CouponClaimController::class, 'index'])
+    ->name('tickets.coupon');
+Route::post('/coupon/verify', [CouponClaimController::class, 'verify'])
+    ->name('tickets.coupon.verify');
+Route::post('/coupon/claim', [CouponClaimController::class, 'claim'])
+    ->name('tickets.coupon.claim');
 
-        Route::get('/my-tickets', [TicketController::class, 'myTickets'])
+Route::get('/my-tickets', [TicketController::class, 'myTickets'])
     ->name('tickets.myTickets');
-
-    Route::get('/announcements', [AnnouncementController::class, 'index'])
+Route::get('/announcements', [AnnouncementController::class, 'index'])
     ->name('tickets.announcements');
-
-    
-
-    Route::get('/tickets/create', [TicketController::class, 'create'])
+Route::get('/tickets/create', [TicketController::class, 'create'])
         ->name('tickets.create');
-
-    Route::post('/tickets', [TicketController::class, 'store'])
+Route::post('/tickets', [TicketController::class, 'store'])
         ->name('tickets.store');
-
-        Route::post('/tickets/{id}/decline', [TicketController::class, 'decline']);
-
-        Route::post('/tickets/{id}/approve', [TicketController::class, 'approve']);
+Route::post('/tickets/{id}/decline', [TicketController::class, 'decline']);
+Route::post('/tickets/{id}/approve', [TicketController::class, 'approve']);
 
 });
-
 
 Route::view('/', 'welcome')->name('home');
 Route::view('/maintenance', 'maintenance')->name('maintenance');
@@ -163,7 +164,6 @@ if ($user->usertype === 'ticket') {
 
 return redirect()->route('dashboard');
 })->middleware('auth');
-
 
 
 Route::middleware(['auth', 'role:supplies'])->group(function () {
@@ -200,22 +200,21 @@ Route::post('/exam/save-progress', [ExamController::class, 'saveProgress'])
 
 Route::middleware(['auth', 'verified'])->group(function () {
 
-    Route::get('/dashboard', [UserDashboardController::class, 'index'])
+Route::get('/dashboard', [UserDashboardController::class, 'index'])
     ->middleware(['auth', 'verified', 'redirect.dashboard.role', 'noback'])
     ->name('dashboard');
 
-     Route::get(
+Route::get(
   '/=jf8IGL03-kaodoj7UJjfnUJnkla8afeef8909JIKkfa=aefeaj90-83registrationikjfe9fasej=aojf8IGL03-kaodoj7UJjfnUJnkla8afeef8909JIKkfa=aefeaj90-83registrationikjfe9fasej',
   [UserCoffeeReg::class, 'create']
 )->name('registration');
 
-    
-    Route::view(
+Route::view(
         '/user-dashboard/uploading-requirements',
         'user-dashboard.uploading-requirements.uploading-requirements'
     )->name('uploading.requirements');
     
-    Route::get('/I%2jdawh=adwIpkadLHiadw0476jhJI%2jdawh=adwIpkadLHiadw0476jhJI%2jdawh=adwIpkadLHiadw0476jhJ/{exam}', [ExamController::class, 'start'])
+Route::get('/I%2jdawh=adwIpkadLHiadw0476jhJI%2jdawh=adwIpkadLHiadw0476jhJI%2jdawh=adwIpkadLHiadw0476jhJ/{exam}', [ExamController::class, 'start'])
     ->name('exam.start');
 
     // Route::view(
@@ -223,27 +222,22 @@ Route::middleware(['auth', 'verified'])->group(function () {
     //     'user-dashboard.notification.notification'
     // )->name('notification');
 
-
-     Route::get('/notification', [NotificationController::class, 'index'])
+Route::get('/notification', [NotificationController::class, 'index'])
         ->name('notification');
 
-
-    Route::view(
+Route::view(
         '/Pjaefiu=8yhbPFUaehu89fsaehui-jieafawdawd90daiuPjaefiu=8yhbPFUaehu89fsaehui-jieafawdawd90daiuPjaefiu=8yhbPFUaehu89fsaehui-jieafawdawd90daiu',
         'user-dashboard.attendance.attendance'
     )->name('attendance');
-
-    Route::view(
+Route::view(
         '/adw6daid7ad97w8ydawd3acr3rarvavr53a3adw6daid7ad97w8ydawd3acr3rarvavr53a3adw6daid7ad97w8ydawd3acr3rarvavr53a3',
         'user-dashboard.exam.proceed'
     )->name('proceed');
-
-    Route::view(
+Route::view(
         '/hauwdh9839j9ed9oIEJ8eh=videoefuj)jawd-iiadwjmo0PDJdhauwdh9839j9ed9oIEJ8eh=videoefuj)jawd-iiadwjmo0PDJdhauwdh9839j9ed9oIEJ8eh=videoefuj)jawd-iiadwjmo0PDJd',
         'user-dashboard.exam.video'
     )->name('video');
-
-    Route::view(
+Route::view(
         '/adw6daid7ad97w8ydawd3acr3rarvavr5dawda1=adw6daid7ad97w8ydawd3acr3rarvavr5dawda1=adw6daid7ad97w8ydawd3acr3rarvavr5dawda1=e',
         'user-dashboard.exam.exam-done'
     )->name('exam-done');
@@ -252,7 +246,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 Route::view('/franchise-application-process', 'franchise-application-process.franchise-application-process')
     ->name('franchise.process');
 
-    Route::view('/franchise-patatas-process', 'franchise-application-process.franchise-patatas-process')
+Route::view('/franchise-patatas-process', 'franchise-application-process.franchise-patatas-process')
     ->name('patatas.process');
 
 Route::get('/franchise/application', fn() =>
@@ -296,10 +290,21 @@ Route::middleware(['auth', 'admin.desktop'])
     ->name('admin.')
     ->group(function () {
 
+Route::get('/coupon', [AdminCouponController::class, 'index'])
+    ->name('coupon');
 
-    Route::post('/tickets/{id}/transfer', [TicketController::class, 'transfer']);
+Route::get('/coupons', [AdminCouponController::class, 'index'])
+    ->name('coupons.index');
 
-    Route::get('/tickets/status-list', function () {
+Route::post('/coupons', [AdminCouponController::class, 'store'])
+    ->name('coupons.store');
+
+Route::post('/coupons/{id}/tag-sold', [AdminCouponController::class, 'tagSold'])
+    ->name('coupons.tagSold');
+
+Route::post('/tickets/{id}/transfer', [TicketController::class, 'transfer']);
+
+Route::get('/tickets/status-list', function () {
     return \App\Models\Ticket::select('id','status','approval_requested')->get();
 });
 
@@ -307,114 +312,104 @@ Route::middleware(['auth', 'admin.desktop'])
 Route::prefix('headoffice-portals')->name('portals.')->group(function () {
 
     // HR
-    Route::view('/hr', 'admin.headoffice-portals.hr.dashboard')->name('hr');
+Route::view('/hr', 'admin.headoffice-portals.hr.dashboard')->name('hr');
 
-    Route::get('/hr/tickets', [HeadOfficeTicketController::class, 'index'])
+Route::get('/hr/tickets', [HeadOfficeTicketController::class, 'index'])
         ->defaults('department', 'hr')
         ->name('hr.tickets');
-
     // HR PAYSLIP
-    Route::get('/hr/payslip', [PayslipController::class,'index'])
+Route::get('/hr/payslip', [PayslipController::class,'index'])
         ->name('hr.payslip');
 
-    Route::post('/hr/payslip/upload', [PayslipController::class,'store'])
+Route::post('/hr/payslip/upload', [PayslipController::class,'store'])
         ->name('hr.payslip.upload');
 
-    Route::get('/hr/payslip/{payslip}/download', [PayslipController::class,'download'])
+Route::get('/hr/payslip/{payslip}/download', [PayslipController::class,'download'])
         ->name('hr.payslip.download');
 
-    Route::delete('/hr/payslip/{payslip}', [PayslipController::class,'destroy'])
+Route::delete('/hr/payslip/{payslip}', [PayslipController::class,'destroy'])
         ->name('hr.payslip.delete');
         
-
         // HR REGISTRATION
-    Route::get('/hr/registration', [AdminCoffeeReg::class, 'index'])
+Route::get('/hr/registration', [AdminCoffeeReg::class, 'index'])
         ->name('hr.registration');
 
-        
-
     // IT
-    Route::view('/it', 'admin.headoffice-portals.it.dashboard')->name('it');
-    Route::get('/it/tickets', [HeadOfficeTicketController::class, 'index'])
+Route::view('/it', 'admin.headoffice-portals.it.dashboard')->name('it');
+Route::get('/it/tickets', [HeadOfficeTicketController::class, 'index'])
         ->defaults('department', 'it')
         ->name('it.tickets');
     
-        Route::post('/tickets/{ticket}/request-approval', 
+Route::post('/tickets/{ticket}/request-approval', 
     [TicketController::class, 'requestApproval'])
     ->name('admin.tickets.requestApproval');
 
     // OM
-    Route::view('/om', 'admin.headoffice-portals.om.dashboard')->name('om');
-    Route::get('/om/tickets', [HeadOfficeTicketController::class, 'index'])
+Route::view('/om', 'admin.headoffice-portals.om.dashboard')->name('om');
+Route::get('/om/tickets', [HeadOfficeTicketController::class, 'index'])
         ->defaults('department', 'om')
         ->name('om.tickets');
 
     // OD
-    Route::view('/od', 'admin.headoffice-portals.od.dashboard')->name('od');
-    Route::get('/od/tickets', [HeadOfficeTicketController::class, 'index'])
+Route::view('/od', 'admin.headoffice-portals.od.dashboard')->name('od');
+Route::get('/od/tickets', [HeadOfficeTicketController::class, 'index'])
         ->defaults('department', 'od')
         ->name('od.tickets');
 
     // SMM
-    Route::view('/smm', 'admin.headoffice-portals.smm.dashboard')->name('smm');
-    Route::get('/smm/tickets', [HeadOfficeTicketController::class, 'index'])
+Route::view('/smm', 'admin.headoffice-portals.smm.dashboard')->name('smm');
+Route::get('/smm/tickets', [HeadOfficeTicketController::class, 'index'])
         ->defaults('department', 'smm')
         ->name('smm.tickets');
 
-    Route::view('/admin-secretary', 'admin.headoffice-portals.admin-secretary.dashboard')->name('admin-secretary');
-    Route::get('/admin-secretary/tickets', [HeadOfficeTicketController::class, 'index'])
+Route::view('/admin-secretary', 'admin.headoffice-portals.admin-secretary.dashboard')->name('admin-secretary');
+Route::get('/admin-secretary/tickets', [HeadOfficeTicketController::class, 'index'])
         ->defaults('department', 'admin-secretary')
         ->name('admin-secretary.tickets');
 
 
 });
 
-    Route::patch('/tickets/{ticket}/view', [AdminTicketController::class, 'markViewed'])
+Route::patch('/tickets/{ticket}/view', [AdminTicketController::class, 'markViewed'])
     ->name('tickets.viewed');
     
-    Route::get('/inbox', [ClaimInboxController::class, 'index'])
+Route::get('/inbox', [ClaimInboxController::class, 'index'])
             ->name('inbox');
 
-        Route::get('/claims/{claim}', [ClaimInboxController::class, 'show'])
+Route::get('/claims/{claim}', [ClaimInboxController::class, 'show'])
             ->name('claims.show');
 
-        Route::get('/admin-universal-portal/admin-portal', function () {
+Route::get('/admin-universal-portal/admin-portal', function () {
             return redirect()->route('admin.inbox');
         })->name('admin-portal');
 
-     Route::get('/users-account-email', [UserEmailController::class, 'create'])
+Route::get('/users-account-email', [UserEmailController::class, 'create'])
         ->name('users.email');
 
-    Route::post('/users-account-email', [UserEmailController::class, 'send'])
+Route::post('/users-account-email', [UserEmailController::class, 'send'])
         ->name('users.email.send');
         
-    Route::post('/coffee-registrations/{reg}/documents', [AdminCoffeeReg::class, 'uploadDocuments'])
+Route::post('/coffee-registrations/{reg}/documents', [AdminCoffeeReg::class, 'uploadDocuments'])
     ->name('coffee-registrations.documents');
 
-        Route::get('/coffee-registrations', [AdminCoffeeReg::class, 'index'])
+Route::get('/coffee-registrations', [AdminCoffeeReg::class, 'index'])
         ->middleware('hr.access')
             ->name('coffee-registrations.index');
 
-        Route::patch('/coffee-registrations/{reg}', [AdminCoffeeReg::class, 'update'])
+Route::patch('/coffee-registrations/{reg}', [AdminCoffeeReg::class, 'update'])
             ->name('coffee-registrations.update');
-
         
 Route::delete('/coffee-registrations/{registration}', [AdminCoffeeReg::class, 'destroy'])
     ->name('coffee-registrations.destroy');
 
-
-    Route::get('/user-registration', [AdminCoffeeReg::class, 'index'])
+Route::get('/user-registration', [AdminCoffeeReg::class, 'index'])
     ->name('registration'); 
 
-
-
-     Route::get('/tickets', [AdminTicketController::class, 'index'])
+Route::get('/tickets', [AdminTicketController::class, 'index'])
             ->name('tickets.index');
-
         // Route::patch('/tickets/{ticket}', [AdminTicketController::class, 'update'])
         //     ->name('tickets.update');
-
-        Route::delete('/tickets/{ticket}', [AdminTicketController::class, 'destroy'])
+Route::delete('/tickets/{ticket}', [AdminTicketController::class, 'destroy'])
             ->name('tickets.destroy');
     
 // SUPPLIES MANAGEMENT 
@@ -423,7 +418,6 @@ Route::get('/supplies', [AdminSuppliesController::class, 'index'])
 
 Route::post('/supplies', [AdminSuppliesController::class, 'store'])
             ->name('supplies.store');
-
 
 Route::get('/supplies/{supply}/edit', [AdminSuppliesController::class, 'edit'])
     ->name('supplies.edit');
@@ -443,9 +437,9 @@ Route::patch(
 )->name('exams.toggle');
 
 Route::get('/dashboard', [AdminDashboardController::class, 'index'])
-    ->name('admin.dashboard');
+    ->name('dashboard');
 
-    Route::put(
+Route::put(
     '/attendance/{attendance}',
     [AdminAttendanceController::class, 'update']
 )->name('attendance.update');
@@ -483,36 +477,41 @@ Route::post('/users/register', [AdminUserController::class, 'store'])
 
 Route::view('/', 'admin.admin')->name('dashboard');
 
-Route::view('/application', 'admin.application')->name('application');
+Route::get('/application', [FranchiseAdminController::class, 'index'])
+    ->name('application');
 
-
-
-// ================= FOLDER SYSTEM =================
-
-// DELETE FOLDER
-Route::delete('/folder/{folder}', [RequirementController::class, 'deleteFolder'])
-    ->name('folder.delete');
-
-// MAIN PAGE (list of folders)
+// MAIN PAGE / ROOT FOLDERS
 Route::get('/requirements', [RequirementController::class, 'index'])
     ->name('requirements');
 
-// CREATE FOLDER
+// CREATE FOLDER SA ROOT
 Route::post('/folder', [RequirementController::class, 'store'])
     ->name('folder.create');
 
-// VIEW FOLDER (click folder)
+// CREATE SUBFOLDER SA CURRENT FOLDER
+Route::post('/folder/{folder}/create', [RequirementController::class, 'storeInsideFolder'])
+    ->where('folder', '.*')
+    ->name('folder.create.inside');
+
+// VIEW ANY FOLDER / SUBFOLDER
 Route::get('/folder/{folder}', [RequirementController::class, 'viewFolder'])
+    ->where('folder', '.*')
     ->name('folder.view');
 
-// UPLOAD FILE INSIDE FOLDER
+// UPLOAD FILE INSIDE ANY FOLDER / SUBFOLDER
 Route::post('/folder/{folder}/upload', [RequirementController::class, 'uploadToFolder'])
+    ->where('folder', '.*')
     ->name('folder.upload');
 
+// DELETE ANY FOLDER / SUBFOLDER
+Route::delete('/folder/{folder}', [RequirementController::class, 'deleteFolder'])
+    ->where('folder', '.*')
+    ->name('folder.delete');
+
 // DELETE FILE
-Route::delete('/requirements/{id}', 
-    [RequirementController::class, 'destroy']
-)->name('requirements.delete');
+Route::delete('/requirements/{id}', [RequirementController::class, 'destroy'])
+    ->name('requirements.delete');
+
 
 Route::get('/uploading-exams', [AdminExamController::class, 'index'])
             ->name('uploading-exams');
@@ -526,20 +525,41 @@ Route::delete('/exams/delete/{id}', [AdminExamController::class, 'delete'])
 Route::get('/applications', [FranchiseAdminController::class, 'index'])
             ->name('applications');
 
+Route::post('/application/{id}/accept', [FranchiseAdminController::class, 'accept'])
+    ->name('application.accept');
+
 Route::get('/applications/{id}/pdf', [FranchiseAdminController::class, 'downloadPdf'])
     ->name('applications.pdf');
 
 // Route::get('/applications/{id}/print', [FranchiseAdminController::class, 'print'])
 //     ->name('applications.print');
+Route::post('/application/{id}/reschedule',
+[FranchiseAdminController::class,'reschedule'])
+->name('application.reschedule');
 
 Route::get('/applications/{id}', [FranchiseAdminController::class, 'show'])
             ->name('applications.show');
 
-            Route::get('/applications/{id}/modal', [FranchiseAdminController::class, 'modal'])
+Route::get('/applications/{id}/modal', [FranchiseAdminController::class, 'modal'])
   ->name('applications.modal');
 
 Route::delete('/applications/{id}', [FranchiseAdminController::class, 'destroy'])
             ->name('applications.destroy');
+
+Route::post('/application/{id}/schedule', [FranchiseAdminController::class, 'schedule'])
+->name('application.schedule');
+
+Route::post('/application/{id}/start-discovery', [FranchiseAdminController::class, 'startDiscovery'])
+->name('application.startDiscovery');
+
+Route::post('/application/{id}/done-discovery', [FranchiseAdminController::class, 'doneDiscovery'])
+->name('application.doneDiscovery');
+
+Route::post('/application/{id}/close-deal', [FranchiseAdminController::class, 'closeDeal'])
+->name('application.closeDeal');
+
+Route::post('/application/{id}/decline', [FranchiseAdminController::class, 'decline'])
+->name('application.decline');
 
 Route::get('/users-account', [UserManagementController::class, 'index'])
             ->name('users-account');
@@ -577,16 +597,16 @@ Route::post('/user/logout', function (Request $request) {
 
 Route::middleware('auth')->group(function () {
 
-    Route::get('/profile', [ProfileController::class, 'edit'])
+Route::get('/profile', [ProfileController::class, 'edit'])
         ->name('admin.profile.edit');
 
-    Route::patch('/profile', [ProfileController::class, 'updateAll'])
+Route::patch('/profile', [ProfileController::class, 'updateAll'])
         ->name('admin.profile.update');
 
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-    Route::patch('/profile/update-all', 
+Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+Route::patch('/profile/update-all', 
     [\App\Http\Controllers\ProfileController::class, 'updateAll']
     )->name('profile.update.all');
 
