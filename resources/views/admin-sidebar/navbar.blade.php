@@ -15,7 +15,7 @@
             </span>
         </div>
 
-        <form method="POST" action="{{ route('custom.logout') }}">
+        <form method="POST" action="{{ route('logout') }}">
             @csrf
             <button class="logout-btn">
                 <i class="fas fa-right-from-bracket"></i>

@@ -39,7 +39,6 @@
     z-index: 999;
   }
 
-  /* ================= MAIN ================= */
   main{
     margin-left: var(--sidebar-w);
     padding: clamp(16px, 2.2vw, 34px);
@@ -55,7 +54,6 @@
     }
   }
 
-  /* ================= HEADER ================= */
   .page-header{
     background: var(--card);
     border: 1px solid var(--border);
@@ -101,7 +99,6 @@
     white-space: nowrap;
   }
 
-  /* ================= SUCCESS MSG ================= */
   .success-msg{
     background: rgba(34,197,94,.12);
     color: #166534;
@@ -114,7 +111,6 @@
     transition: opacity .5s ease, transform .5s ease;
   }
 
-  /* ================= TABLE WRAPPER ================= */
   .table-wrapper{
     background: var(--card);
     border: 1px solid var(--border);
@@ -133,7 +129,7 @@
     width: 100%;
     font-size: 14px;
     margin-bottom: 0;
-    min-width: 920px; /* scroll on small screens */
+    min-width: 920px;
   }
 
   th, td{
@@ -155,7 +151,6 @@
     background: rgba(13,110,253,.05);
   }
 
-  /* Message cell: clamp lines to keep table tidy */
   .msg-cell{
     max-width: 520px;
   }
@@ -168,7 +163,6 @@
     white-space: normal;
   }
 
-  /* ================= BUTTONS ================= */
   .btn{
     font-weight: 800;
     border-radius: 999px;
@@ -187,7 +181,6 @@
     font-weight: 800;
   }
 
-  /* ================= EMPTY ROW ================= */
   .no-hover{
     pointer-events: none;
     background: transparent !important;

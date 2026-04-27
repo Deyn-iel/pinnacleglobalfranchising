@@ -44,7 +44,6 @@
     z-index: 999;
   }
 
-  /* ================= MAIN ================= */
   main{
     margin-left: var(--sidebar-w);
     padding: clamp(16px, 2.2vw, 34px);
@@ -60,7 +59,6 @@
     }
   }
 
-  /* ================= HEADER ================= */
   .page-header{
     background: var(--card);
     border: 1px solid var(--border);
@@ -91,7 +89,6 @@
     margin: 0;
   }
 
-  /* ================= FORM CARD ================= */
   .form-card{
     max-width: 860px;
     margin: 0 auto;
@@ -108,7 +105,6 @@
     letter-spacing: -.01em;
   }
 
-  /* ================= FORM ================= */
   label{
     font-weight: 800;
     font-size: 12.5px;
@@ -134,7 +130,6 @@
     margin-top: 6px;
   }
 
-  /* ================= IMAGE ================= */
   .current-wrap{
     display:flex;
     align-items:center;
@@ -154,7 +149,6 @@
     background: #fff;
   }
 
-  /* ================= BUTTONS ================= */
   .btn{
     font-weight: 900;
     border-radius: 999px;

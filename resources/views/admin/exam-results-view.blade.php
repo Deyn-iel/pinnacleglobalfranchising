@@ -20,7 +20,6 @@
             max-width: calc(100vw - 260px);
         }
 
-        /* ===== PAGE HEADER ===== */
         .page-header {
             background: #ffffff;
             padding: 16px 22px;
@@ -29,7 +28,6 @@
             margin-bottom: 24px;
         }
 
-        /* ===== SUMMARY ===== */
         .summary-card {
             background: #ffffff;
             border-radius: 12px;
@@ -54,7 +52,6 @@
             font-size: 15px;
         }
 
-        /* ===== QUESTION CARD ===== */
         .question-card {
             background: #ffffff;
             border-radius: 12px;
@@ -86,7 +83,6 @@
             margin-top: 10px;
         }
 
-        /* ===== DESKTOP SAFETY ===== */
         @media (max-width: 1200px) {
             .summary-grid {
                 grid-template-columns: repeat(2, 1fr);

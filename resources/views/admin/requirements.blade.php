@@ -61,7 +61,6 @@
       text-decoration: none;
     }
 
-    /* ================= MAIN LAYOUT ================= */
 
     main {
       margin-left: var(--sidebar-w);
@@ -123,8 +122,6 @@
       }
     }
 
-    /* ================= HEADER ================= */
-
     .page-header {
       background: var(--card);
       border: 1px solid var(--border);
@@ -149,8 +146,6 @@
       margin: 0;
     }
 
-    /* ================= CARDS ================= */
-
     .content-card {
       background: var(--card);
       border: 1px solid var(--border);
@@ -171,8 +166,6 @@
       color: var(--muted);
       font-size: 13px;
     }
-
-    /* ================= FORM ================= */
 
     .form-label {
       font-weight: 700;
@@ -227,8 +220,6 @@
       }
     }
 
-    /* ================= SUCCESS MESSAGE ================= */
-
     .success-msg {
       background: var(--success-bg);
       color: var(--success-text);
@@ -239,8 +230,6 @@
       font-weight: 600;
       transition: opacity .35s ease, transform .35s ease;
     }
-
-    /* ================= FOLDER GRID ================= */
 
     .folder-grid {
       display: grid;
@@ -314,8 +303,6 @@
       overflow-wrap: anywhere;
     }
 
-    /* ================= DELETE BUTTON ================= */
-
     .delete-folder-form {
       position: absolute;
       top: 10px;
@@ -353,15 +340,12 @@
       transform: scale(1.08);
     }
 
-    /* Always show delete button on touch/smaller screens */
     @media (max-width: 991px) {
       .delete-folder-btn {
         opacity: 1;
         transform: scale(1);
       }
     }
-
-    /* ================= EMPTY STATE ================= */
 
     .empty-state {
       grid-column: 1 / -1;
@@ -379,8 +363,6 @@
       color: #94a3b8;
       margin-bottom: 8px;
     }
-
-    /* ================= SMALL UTILITIES ================= */
 
     .text-muted {
       color: var(--muted) !important;
@@ -424,7 +406,6 @@
   <main>
     <div class="admin-container">
 
-      <!-- HEADER -->
       <div class="page-header">
         <h4 class="fw-bold mb-1">
           <i class="fas fa-file-lines me-2"></i>
@@ -436,7 +417,6 @@
         </p>
       </div>
 
-      <!-- SUCCESS -->
       @if(session('success'))
         <div id="successMsg" class="success-msg">
           <i class="fa-solid fa-circle-check me-1"></i>
@@ -444,7 +424,6 @@
         </div>
       @endif
 
-      <!-- CREATE FOLDER FORM -->
       <div class="content-card">
         <div class="content-card-header d-flex align-items-center justify-content-between flex-wrap gap-2 mb-3">
           <h5 class="section-title mb-0">

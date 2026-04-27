@@ -12,7 +12,6 @@
 @vite(['resources/css/admin/app.css'])
 
 <style>
-/* ================= BASE ================= */
 body {
     background: #f5f6fa;
     overflow-x: hidden;
@@ -25,7 +24,6 @@ aside {
     transition: all .3s ease;
 }
 
-/* ================= MAIN ================= */
 main {
     margin-left: 260px;
     padding: clamp(16px, 2.5vw, 34px);
@@ -33,7 +31,6 @@ main {
     transition: all .3s ease;
 }
 
-/* ================= HEADER ================= */
 .page-header {
     background: #ffffff;
     border-radius: 14px;
@@ -42,7 +39,6 @@ main {
     margin-bottom: 22px;
 }
 
-/* ================= TABLE ================= */
 .table-wrapper {
     background: #ffffff;
     border-radius: 14px;
@@ -50,19 +46,17 @@ main {
     overflow: hidden;
 }
 
-/* scroll support sa mobile */
 .table-responsive {
     width: 100%;
     overflow-x: auto;
 }
 
-/* table base */
 table {
     width: 100%;
     table-layout: fixed;
     font-size: clamp(12px, 0.9vw, 14px);
     margin-bottom: 0;
-    min-width: 700px; /* para di mag-collapse */
+    min-width: 700px; 
 }
 
 th, td {
@@ -71,7 +65,6 @@ th, td {
     white-space: normal;
 }
 
-/* ================= COLUMN WIDTHS ================= */
 th:nth-child(1) { width: 140px; }
 th:nth-child(2) { width: 300px; }
 th:nth-child(3) { width: 140px; }
@@ -79,7 +72,6 @@ th:nth-child(4) { width: 140px; }
 th:nth-child(5) { width: 200px; }
 th:nth-child(6) { width: 80px; }
 
-/* ================= BADGES ================= */
 .badge {
     font-size: clamp(10px, 0.7vw, 12px);
     padding: clamp(4px, 0.5vw, 6px) clamp(8px, 0.8vw, 10px);
@@ -96,7 +88,6 @@ td .badge {
     text-overflow: ellipsis;
 }
 
-/* ================= BUTTONS ================= */
 .btn-primary {
     background: #000;
     border: none;
@@ -108,7 +99,6 @@ td .badge {
     background: #333;
 }
 
-/* ================= ALERT ================= */
 .alert.hide {
     opacity: 0;
     max-height: 0;
@@ -117,7 +107,6 @@ td .badge {
     transition: all .4s ease;
 }
 
-/* ================= GROUP HEADER ================= */
 tbody tr:first-child td {
     border-top: 2px solid #000;
 }
@@ -129,7 +118,6 @@ tbody tr:first-child td {
     letter-spacing: 1px;
 }
 
-/* ================= TABLET ================= */
 @media (max-width: 1024px) {
 
     aside {
@@ -146,7 +134,6 @@ tbody tr:first-child td {
     }
 }
 
-/* ================= MOBILE ================= */
 @media (max-width: 768px) {
 
     aside {
@@ -177,7 +164,6 @@ tbody tr:first-child td {
     }
 }
 
-/* ================= EXTRA SMALL ================= */
 @media (max-width: 480px) {
 
     table {
@@ -215,7 +201,6 @@ tbody tr:first-child td {
         </p>
     </div>
 
-    <!-- ALERTS -->
     @if(session('success'))
         <div class="alert alert-success auto-hide">
             ✅ {{ session('success') }}

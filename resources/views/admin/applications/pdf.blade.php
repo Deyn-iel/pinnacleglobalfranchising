@@ -1,594 +1,723 @@
 <!doctype html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+
 <head>
     <meta charset="UTF-8">
     <title>Franchise Application #{{ $application->id }}</title>
 
     <style>
         @page {
-            margin: 18mm 14mm 18mm 14mm;
-        }
-
-        body {
-            font-family: DejaVu Sans, sans-serif;
-            font-size: 10.5px;
-            line-height: 1.45;
-            color: #1f2937;
-            margin: 0;
-            padding: 0;
-            background: #ffffff;
+            size: A4 portrait;
+            margin: 8mm;
         }
 
         * {
             box-sizing: border-box;
         }
 
-        .page {
-            width: 100%;
-        }
-
-        .header {
-            border: 1px solid #cfd8e3;
-            padding: 14px 16px 12px 16px;
-            margin-bottom: 14px;
-            background: #ffffff;
-        }
-
-        .header-table {
-            width: 100%;
-            border-collapse: collapse;
-            table-layout: fixed;
-        }
-
-        .header-table td {
-            border: none;
-            vertical-align: top;
-            padding: 0;
-        }
-
-        .logo-cell {
-            width: 90px;
-        }
-
-        .logo {
-            width: 72px;
-            height: auto;
-            display: block;
-        }
-
-        .brand-name {
-            font-size: 9px;
-            color: #6b7280;
-            margin-top: 6px;
-            letter-spacing: 0.3px;
-        }
-
-        .title-cell {
-            text-align: right;
-        }
-
-        .document-title {
+        html,
+        body {
             margin: 0;
-            font-size: 20px;
-            font-weight: bold;
-            color: #111827;
-            letter-spacing: 0.4px;
-            text-transform: uppercase;
-        }
-
-        .document-subtitle {
-            margin: 3px 0 0 0;
-            font-size: 10px;
-            color: #6b7280;
-        }
-
-        .meta-box {
-            margin-top: 10px;
-            border-top: 1px solid #dbe3ec;
-            padding-top: 8px;
-        }
-
-        .meta-table {
-            width: 100%;
-            border-collapse: collapse;
-            table-layout: fixed;
-        }
-
-        .meta-table td {
-            border: none;
-            padding: 2px 0;
-            font-size: 10px;
-            color: #374151;
-            vertical-align: top;
-        }
-
-        .meta-label {
-            font-weight: bold;
-            color: #111827;
-            width: 110px;
-        }
-
-        .summary {
-            width: 100%;
-            border-collapse: separate;
-            border-spacing: 8px 0;
-            margin: 0 0 14px 0;
-            table-layout: fixed;
-        }
-
-        .summary td {
-            border: 1px solid #d7dee8;
-            background: #f8fafc;
-            padding: 10px 12px;
-            vertical-align: top;
-        }
-
-        .summary-label {
-            font-size: 9px;
-            text-transform: uppercase;
-            letter-spacing: 0.4px;
-            color: #6b7280;
-            margin-bottom: 4px;
-        }
-
-        .summary-value {
-            font-size: 12px;
-            font-weight: bold;
-            color: #111827;
-        }
-
-        .section {
-            margin-bottom: 14px;
-            page-break-inside: avoid;
-        }
-
-        .section-header {
-            background: #eaf0f7;
-            border: 1px solid #cfd8e3;
-            padding: 8px 10px;
-            margin-bottom: 0;
-        }
-
-        .section-title {
-            margin: 0;
-            font-size: 11.5px;
-            font-weight: bold;
-            color: #0f172a;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .section-body {
-            border: 1px solid #cfd8e3;
-            border-top: none;
             padding: 0;
-            background: #ffffff;
-        }
-
-        table.data-table {
-            width: 100%;
-            border-collapse: collapse;
-            table-layout: fixed;
-        }
-
-        table.data-table th,
-        table.data-table td {
-            border: 1px solid #dde5ee;
-            padding: 7px 9px;
-            vertical-align: top;
-            word-wrap: break-word;
-        }
-
-        table.data-table th {
-            width: 28%;
-            background: #f6f8fb;
-            font-weight: bold;
+            font-family: DejaVu Sans, sans-serif;
             color: #111827;
-            text-align: left;
+            font-size: 8.8px;
+            line-height: 1.35;
         }
 
-        table.data-table td {
+        body.web-mode {
+            background: #e5e7eb;
+        }
+
+        body.pdf-mode {
             background: #ffffff;
-            color: #1f2937;
         }
 
-        .status-badge {
-            display: inline-block;
-            padding: 3px 9px;
-            font-size: 9px;
-            font-weight: bold;
-            text-transform: uppercase;
-            letter-spacing: 0.3px;
-            border-radius: 2px;
-            border: 1px solid #cbd5e1;
-            background: #f8fafc;
-            color: #0f172a;
+        .toolbar {
+            max-width: 210mm;
+            margin: 12px auto;
+            display: flex;
+            justify-content: flex-end;
+            gap: 8px;
         }
 
-        .status-yes {
-            background: #eef6ff;
-            border-color: #bfd4f2;
-            color: #1d4f91;
+        .toolbar a,
+        .toolbar button {
+            border: none;
+            border-radius: 6px;
+            padding: 8px 14px;
+            font-size: 13px;
+            cursor: pointer;
+            text-decoration: none;
+            color: #ffffff;
+            background: #2563eb;
         }
 
-        .status-no {
-            background: #f9fafb;
-            border-color: #d1d5db;
-            color: #4b5563;
+        .toolbar .back {
+            background: #6b7280;
         }
 
-        .textbox {
-            padding: 10px 12px;
-            border: 1px solid #dde5ee;
+        .paper {
             background: #ffffff;
-            min-height: 44px;
-            word-wrap: break-word;
-            white-space: normal;
         }
 
-        .note-box {
-            border: 1px solid #dde5ee;
-            background: #f9fbfd;
-            padding: 10px 12px;
-            color: #374151;
+        body.web-mode .paper {
+            width: 210mm;
+            min-height: 297mm;
+            margin: 0 auto;
+            padding: 9mm 10mm;
         }
 
-        .photo-block {
-            padding: 12px;
-            border-bottom: 1px solid #dde5ee;
+        body.pdf-mode .paper {
+            width: auto;
+            min-height: 0;
+            margin: 0;
+            padding: 20px;
+            overflow: visible;
         }
 
-        .photo-label {
-            font-size: 9px;
+        .title {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            text-align: center;
+            font-size: 14px;
             font-weight: bold;
             text-transform: uppercase;
             letter-spacing: 0.4px;
-            color: #6b7280;
+            padding: 20px 10mm 10px;
             margin-bottom: 8px;
         }
 
-        .photo {
-            width: 110px;
+        .logo {
+            width: 130px;
             height: auto;
-            border: 1px solid #cfd8e3;
-            padding: 3px;
-            background: #ffffff;
+            position: absolute;
+            left: 10mm;
         }
 
-        .id-photo {
-            width: 180px;
-            height: auto;
-            border: 1px solid #cfd8e3;
-            padding: 3px;
-            background: #ffffff;
-        }
-
-        .muted {
-            color: #6b7280;
-            font-size: 9.5px;
-        }
-
-        .footer {
-            margin-top: 18px;
-            border-top: 1px solid #cfd8e3;
-            padding-top: 8px;
+        .subtitle {
             text-align: center;
-            font-size: 9px;
-            color: #6b7280;
+            font-size: 9.5px;
+            margin-bottom: 8px;
+            color: #374151;
         }
 
-        .two-col {
+        .date-row {
+            text-align: right;
+            margin-bottom: 9px;
+            font-size: 10.5px;
+        }
+
+        .section-title {
+            font-weight: bold;
+            font-size: 10.8px;
+            margin-top: 9px;
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            border-bottom: 1px solid #111827;
+            padding-bottom: 3px;
+        }
+
+        .line-row {
+            font-size: 10.5px;
+            margin-bottom: 7px;
+        }
+
+        .label {
+            font-weight: bold;
+            margin-bottom: 2px;
+        }
+
+        .line {
+            border-bottom: 1px solid #111827;
+            min-height: 15px;
+            padding: 1px 4px 2px;
+            word-wrap: break-word;
+        }
+
+        .small-line {
+            display: inline-block;
+            min-width: 60px;
+            border-bottom: 1px solid #111827;
+            text-align: center;
+            min-height: 12px;
+            padding: 0 3px;
+        }
+
+        .two-col,
+        .three-col {
             width: 100%;
             border-collapse: collapse;
             table-layout: fixed;
+            font-size: 10.5px;
+            margin-bottom: 4px;
         }
 
         .two-col td {
-            border: none;
+            width: 50%;
             vertical-align: top;
-            padding: 0;
+            padding-right: 10px;
         }
 
-        .col-left {
-            width: 56%;
+        .three-col td {
+            width: 33.333%;
+            vertical-align: top;
             padding-right: 8px;
         }
 
-        .col-right {
-            width: 44%;
-            padding-left: 8px;
+        .info-table {
+            width: 100%;
+            border-collapse: collapse;
+            table-layout: fixed;
+            font-size: 10.2px;
+            margin-bottom: 4px;
         }
 
-        .spacer-8 {
-            height: 8px;
+        .info-table th,
+        .info-table td {
+            border: 1px solid #111827;
+            padding: 4px 5px;
+            vertical-align: top;
+            word-wrap: break-word;
+        }
+
+        .info-table th {
+            width: 30%;
+            text-align: left;
+            font-weight: bold;
+            background: #f3f4f6;
+        }
+
+        .box {
+            display: inline-block;
+            width: 9px;
+            height: 9px;
+            border: 1px solid #111827;
+            text-align: center;
+            line-height: 8px;
+            font-size: 7px;
+            margin-right: 5px;
+            vertical-align: middle;
+        }
+
+        .photo-table {
+            width: 100%;
+            border-collapse: collapse;
+            table-layout: fixed;
+            margin-bottom: 6px;
+        }
+
+        .photo-table td {
+            vertical-align: top;
+            padding-right: 10px;
+        }
+
+        .photo-box {
+            border: 1px solid #111827;
+            min-height: 80px;
+            padding: 5px;
+            text-align: center;
+        }
+
+        .photo {
+            width: 100px;
+            height: auto;
+        }
+
+        .id-photo {
+            width: 170px;
+            height: auto;
+        }
+
+        .muted {
+            color: #374151;
+            font-weight: normal;
+        }
+
+        .textarea-line {
+            border: 1px solid #111827;
+            min-height: 34px;
+            padding: 4px 5px;
+            word-wrap: break-word;
+        }
+
+        .signature-table {
+            width: 100%;
+            font-size: 10.8px;
+            margin-top: 16px;
+            border-collapse: collapse;
+            table-layout: fixed;
+            page-break-inside: avoid;
+        }
+
+        .signature-table td {
+            text-align: center;
+            vertical-align: bottom;
+            padding: 0 10px;
+        }
+
+        .sig-line {
+            border-bottom: 1px solid #111827;
+            min-height: 16px;
+            margin: 0 auto 3px;
+            width: 90%;
+            padding: 0 3px;
+        }
+
+        .footer {
+            border-top: 1px solid #111827;
+            margin-top: 14px;
+            padding-top: 5px;
+            text-align: center;
+            font-size: 8.5px;
+            color: #374151;
+        }
+
+        .no-break {
+            page-break-inside: avoid;
+        }
+
+        @media print {
+            @page {
+                size: A4 portrait;
+                margin: 8mm;
+            }
+
+            body {
+                background: #ffffff !important;
+            }
+
+            .toolbar {
+                display: none;
+            }
+
+            .paper {
+                width: auto !important;
+                min-height: 0 !important;
+                margin: 0 !important;
+                padding: 0 !important;
+                box-shadow: none !important;
+                overflow: visible !important;
+            }
         }
     </style>
 </head>
-<body>
-@php
-    $photoPath = $application->personal_photo
-        ? public_path('storage/' . $application->personal_photo)
-        : null;
 
-    $govPath = $application->government_id
-        ? public_path('storage/' . $application->government_id)
-        : null;
+<body class="{{ $pdfMode ?? false ? 'pdf-mode' : 'web-mode' }}">
 
-    $govExt = $application->government_id
-        ? strtolower(pathinfo($application->government_id, PATHINFO_EXTENSION))
-        : null;
+    @php
+        $photoPath = $application->personal_photo ? public_path('storage/' . $application->personal_photo) : null;
 
-    $govIsImage = in_array($govExt, ['jpg', 'jpeg', 'png', 'webp']);
+        $govPath = $application->government_id ? public_path('storage/' . $application->government_id) : null;
 
-    // Palitan mo ito sa actual logo path mo
-    $logoPath = public_path('images/logo.png');
-@endphp
+        $govExt = $application->government_id
+            ? strtolower(pathinfo($application->government_id, PATHINFO_EXTENSION))
+            : null;
 
-<div class="page">
+        $govIsImage = in_array($govExt, ['jpg', 'jpeg', 'png', 'webp']);
 
-    <div class="header">
-        <table class="header-table">
+        $check = function ($value) {
+            return $value ? 'X' : '';
+        };
+    @endphp
+
+    <div class="paper">
+
+        <div class="title">
+            <img class="logo" src="{{ asset('img/logo.webp') }}" alt="Kape Ilokano">
+            Franchise Application Form
+        </div>
+
+        <div class="subtitle">
+            Official Applicant Record · Kape Ilokano Franchise Department
+        </div>
+
+        <div class="date-row">
+            <strong>Application No.:</strong>
+            <span class="small-line">{{ $application->id }}</span>
+            &nbsp;&nbsp;
+            <strong>Date:</strong>
+            <span class="small-line" style="min-width: 75px;">
+                {{ $application->created_at ? $application->created_at->format('m/d/Y') : '' }}
+            </span>
+            &nbsp;&nbsp;
+            <strong>Time:</strong>
+            <span class="small-line" style="min-width: 60px;">
+                {{ $application->created_at ? $application->created_at->format('h:i A') : '' }}
+            </span>
+        </div>
+
+        <div class="section-title">I. Initial Consent</div>
+
+        <table class="info-table">
             <tr>
-                <td class="logo-cell">
-                        <img style="width: 150px;" src="{{ public_path('img/logo.webp') }}" class="logo">
-
-                    <div class="brand-name">Kape Ilokano Franchise Department</div>
+                <th>Consent Status</th>
+                <td>
+                    <span class="box">{{ $check($application->consent_intro) }}</span>
+                    Agreed / Confirmed
                 </td>
-                <td class="title-cell">
-                    <h1 class="document-title">Franchise Application</h1>
-                    <p class="document-subtitle">
-                        Official Applicant Record
-                    </p>
+            </tr>
+            <tr>
+                <th>Email Address</th>
+                <td>{{ $application->email ?? '—' }}</td>
+            </tr>
+            <tr>
+                <th>Lead Source</th>
+                <td>{{ $application->lead_source ?? '—' }}</td>
+            </tr>
+        </table>
 
-                    <div class="meta-box">
-                        <table class="meta-table">
-                            <tr>
-                                <td class="meta-label">Application No.</td>
-                                <td>{{ $application->id }}</td>
-                            </tr>
-                            <tr>
-                                <td class="meta-label">Submission Date</td>
-                                <td>{{ $application->created_at->format('M d, Y') }}</td>
-                            </tr>
-                            <tr>
-                                <td class="meta-label">Submission Time</td>
-                                <td>{{ $application->created_at->format('h:i A') }}</td>
-                            </tr>
-                            <tr>
-                                <td class="meta-label">Applicant Email</td>
-                                <td>{{ $application->email ?? '—' }}</td>
-                            </tr>
-                        </table>
+        <div class="section-title">II. Personal Details</div>
+
+        <table class="photo-table">
+            <tr>
+                <td style="width: 72%;">
+                    <table class="info-table">
+                        <tr>
+                            <th>Complete Name</th>
+                            <td>{{ $application->personal_full_name ?? '—' }}</td>
+                        </tr>
+                        <tr>
+                            <th>Primary Address</th>
+                            <td>{{ $application->personal_address ?? '—' }}</td>
+                        </tr>
+                        <tr>
+                            <th>Contact Number</th>
+                            <td>{{ $application->personal_contact ?? '—' }}</td>
+                        </tr>
+                    </table>
+                </td>
+
+                <td style="width: 28%;">
+                    <div class="label">Applicant Photo</div>
+                    <div class="photo-box">
+                        @if ($photoPath && file_exists($photoPath))
+                            <img src="{{ $photoPath }}" class="photo" alt="Personal Photo">
+                        @else
+                            <span class="muted">No photo attached</span>
+                        @endif
                     </div>
                 </td>
             </tr>
         </table>
-    </div>
 
-    <table class="summary">
-        <tr>
-            <td>
-                <div class="summary-label">Applicant Name</div>
-                <div class="summary-value">{{ $application->personal_full_name ?? '—' }}</div>
-            </td>
-            <td>
-                <div class="summary-label">Lead Source</div>
-                <div class="summary-value">{{ $application->lead_source ?? '—' }}</div>
-            </td>
-            <td>
-                <div class="summary-label">Initial Consent</div>
-                <div class="summary-value">
-                    {{ $application->consent_intro ? 'Confirmed' : 'Not Confirmed' }}
-                </div>
-            </td>
-            <td>
-                <div class="summary-label">Final Consent</div>
-                <div class="summary-value">
-                    {{ $application->consent_final ? 'Confirmed' : 'Not Confirmed' }}
-                </div>
-            </td>
-        </tr>
-    </table>
+        <table class="three-col">
+            <tr>
+                <td>
+                    <div class="label">Gender:</div>
+                    <div class="line">{{ $application->personal_gender ?? '—' }}</div>
+                </td>
+                <td>
+                    <div class="label">Civil Status:</div>
+                    <div class="line">{{ $application->personal_civil_status ?? '—' }}</div>
+                </td>
+                <td>
+                    <div class="label">Age:</div>
+                    <div class="line">{{ $application->personal_age ?? '—' }}</div>
+                </td>
+            </tr>
+        </table>
 
-    <div class="section">
-        <div class="section-header">
-            <p class="section-title">Initial Consent</p>
-        </div>
-        <div class="section-body">
-            <table class="data-table">
-                <tr>
-                    <th>Consent Status</th>
-                    <td>
-                        <span class="status-badge {{ $application->consent_intro ? 'status-yes' : 'status-no' }}">
-                            {{ $application->consent_intro ? 'Agreed' : 'Not Agreed' }}
-                        </span>
-                    </td>
-                </tr>
-                <tr>
-                    <th>Email Address</th>
-                    <td>{{ $application->email ?? '—' }}</td>
-                </tr>
-                <tr>
-                    <th>Lead Source</th>
-                    <td>{{ $application->lead_source ?? '—' }}</td>
-                </tr>
-            </table>
-        </div>
-    </div>
+        <table class="two-col">
+            <tr>
+                <td>
+                    <div class="label">Country of Birth:</div>
+                    <div class="line">{{ $application->personal_country_birth ?? '—' }}</div>
+                </td>
+                <td>
+                    <div class="label">Nationality:</div>
+                    <div class="line">{{ $application->personal_nationality ?? '—' }}</div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="label">Country of Residence:</div>
+                    <div class="line">{{ $application->personal_residence ?? '—' }}</div>
+                </td>
+                <td>
+                    <div class="label">TIN:</div>
+                    <div class="line">{{ $application->personal_tin ?? '—' }}</div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="label">Religion:</div>
+                    <div class="line">{{ $application->personal_religion ?? '—' }}</div>
+                </td>
+                <td>
+                    <div class="label">Spouse:</div>
+                    <div class="line">{{ $application->personal_spouse ?? '—' }}</div>
+                </td>
+            </tr>
+        </table>
 
-    <div class="section">
-        <div class="section-header">
-            <p class="section-title">Personal Details</p>
+        <div class="line-row">
+            <div class="label">Hobbies:</div>
+            <div class="line">{{ $application->personal_hobbies ?? '—' }}</div>
         </div>
-        <div class="section-body">
-            @if($photoPath && file_exists($photoPath))
-                <div class="photo-block">
-                    <div class="photo-label">Applicant Photo</div>
-                    <img src="{{ $photoPath }}" class="photo" alt="Personal Photo">
-                </div>
-            @endif
 
-            <table class="data-table">
-                <tr><th>Complete Name</th><td>{{ $application->personal_full_name ?? '—' }}</td></tr>
-                <tr><th>Gender</th><td>{{ $application->personal_gender ?? '—' }}</td></tr>
-                <tr><th>Civil Status</th><td>{{ $application->personal_civil_status ?? '—' }}</td></tr>
-                <tr><th>Age</th><td>{{ $application->personal_age ?? '—' }}</td></tr>
-                <tr><th>Country of Birth</th><td>{{ $application->personal_country_birth ?? '—' }}</td></tr>
-                <tr><th>Nationality</th><td>{{ $application->personal_nationality ?? '—' }}</td></tr>
-                <tr><th>Country of Residence</th><td>{{ $application->personal_residence ?? '—' }}</td></tr>
-                <tr><th>Primary Address</th><td>{{ $application->personal_address ?? '—' }}</td></tr>
-                <tr><th>Contact Number</th><td>{{ $application->personal_contact ?? '—' }}</td></tr>
-                <tr><th>TIN</th><td>{{ $application->personal_tin ?? '—' }}</td></tr>
-                <tr><th>Religion</th><td>{{ $application->personal_religion ?? '—' }}</td></tr>
-                <tr><th>Hobbies</th><td>{{ $application->personal_hobbies ?? '—' }}</td></tr>
-                <tr><th>Spouse</th><td>{{ $application->personal_spouse ?? '—' }}</td></tr>
-                <tr><th>Dependents</th><td>{!! nl2br(e($application->personal_dependents ?? '—')) !!}</td></tr>
-            </table>
+        <div class="line-row">
+            <div class="label">Dependents:</div>
+            <div class="textarea-line">{!! nl2br(e($application->personal_dependents ?? '—')) !!}</div>
         </div>
-    </div>
 
-    <div class="section">
-        <div class="section-header">
-            <p class="section-title">Professional Background</p>
-        </div>
-        <div class="section-body">
-            <table class="data-table">
-                <tr><th>Educational Attainment</th><td>{{ $application->professional_education ?? '—' }}</td></tr>
-                <tr><th>School & Year</th><td>{{ $application->professional_school ?? '—' }}</td></tr>
-                <tr><th>Employment Status</th><td>{{ $application->professional_employment ?? '—' }}</td></tr>
-                <tr><th>Occupation</th><td>{{ $application->professional_occupation ?? '—' }}</td></tr>
-                <tr><th>Job Title</th><td>{{ $application->professional_job_title ?? '—' }}</td></tr>
-                <tr><th>Company</th><td>{{ $application->professional_company ?? '—' }}</td></tr>
-                <tr><th>Years in Service</th><td>{{ $application->professional_years ?? '—' }}</td></tr>
-                <tr><th>Company Address</th><td>{{ $application->professional_company_address ?? '—' }}</td></tr>
-                <tr><th>Primary Responsibilities</th><td>{!! nl2br(e($application->professional_responsibilities ?? '—')) !!}</td></tr>
-                <tr><th>Nature of Business</th><td>{{ $application->professional_business_nature ?? '—' }}</td></tr>
-                <tr><th>Company Contact</th><td>{{ $application->professional_company_contact ?? '—' }}</td></tr>
-            </table>
-        </div>
-    </div>
+        <div class="section-title">III. Professional Background</div>
 
-    <div class="section">
-        <div class="section-header">
-            <p class="section-title">Business Background</p>
-        </div>
-        <div class="section-body">
-            <table class="data-table">
-                <tr><th>Business Experience</th><td>{{ $application->business_experience ?? '—' }}</td></tr>
-                <tr><th>Business Name</th><td>{{ $application->business_name ?? '—' }}</td></tr>
-                <tr><th>Years of Experience</th><td>{{ $application->business_years ?? '—' }}</td></tr>
-                <tr><th>Industry</th><td>{{ $application->business_industry ?? '—' }}</td></tr>
-                <tr><th>Previously Closed Business</th><td>{{ $application->business_closed ?? '—' }}</td></tr>
-                <tr><th>Reason for Closure</th><td>{!! nl2br(e($application->business_closure_reason ?? '—')) !!}</td></tr>
-                <tr><th>Venture Description</th><td>{!! nl2br(e($application->business_venture_description ?? '—')) !!}</td></tr>
-            </table>
-        </div>
-    </div>
+        <table class="two-col">
+            <tr>
+                <td>
+                    <div class="label">Educational Attainment:</div>
+                    <div class="line">{{ $application->professional_education ?? '—' }}</div>
+                </td>
+                <td>
+                    <div class="label">School & Year:</div>
+                    <div class="line">{{ $application->professional_school ?? '—' }}</div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="label">Employment Status:</div>
+                    <div class="line">{{ $application->professional_employment ?? '—' }}</div>
+                </td>
+                <td>
+                    <div class="label">Occupation:</div>
+                    <div class="line">{{ $application->professional_occupation ?? '—' }}</div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="label">Job Title:</div>
+                    <div class="line">{{ $application->professional_job_title ?? '—' }}</div>
+                </td>
+                <td>
+                    <div class="label">Years in Service:</div>
+                    <div class="line">{{ $application->professional_years ?? '—' }}</div>
+                </td>
+            </tr>
+        </table>
 
-    <div class="section">
-        <div class="section-header">
-            <p class="section-title">Kape Ilokano Background</p>
+        <div class="line-row">
+            <div class="label">Company:</div>
+            <div class="line">{{ $application->professional_company ?? '—' }}</div>
         </div>
-        <div class="section-body">
-            <table class="data-table">
-                <tr><th>Existing Customer</th><td>{{ $application->ki_customer ?? '—' }}</td></tr>
-                <tr><th>Affiliated with Any Branch</th><td>{{ $application->ki_affiliated ?? '—' }}</td></tr>
-                <tr><th>Affiliation Details</th><td>{{ $application->ki_affiliated_details ?? '—' }}</td></tr>
-                <tr><th>Has Existing Coffee Shop</th><td>{{ $application->ki_has_coffee_shop ?? '—' }}</td></tr>
-                <tr><th>Knowledge in Coffee Industry</th><td>{{ $application->ki_industry_knowledge ?? '—' }}</td></tr>
-                <tr><th>Passion for Coffee</th><td>{{ $application->ki_passion ?? '—' }}</td></tr>
-                <tr><th>Eagerness Level</th><td>{{ $application->ki_eagerness ?? '—' }}</td></tr>
-            </table>
-        </div>
-    </div>
 
-    <div class="section">
-        <div class="section-header">
-            <p class="section-title">Business Proposal</p>
+        <div class="line-row">
+            <div class="label">Company Address:</div>
+            <div class="line">{{ $application->professional_company_address ?? '—' }}</div>
         </div>
-        <div class="section-body">
-            <table class="data-table">
-                <tr><th>Preferred Location</th><td>{{ $application->proposal_location ?? '—' }}</td></tr>
-                <tr><th>Reason for Location</th><td>{!! nl2br(e($application->proposal_reason ?? '—')) !!}</td></tr>
-                <tr><th>Business Expectations</th><td>{!! nl2br(e($application->proposal_expectations ?? '—')) !!}</td></tr>
-                <tr><th>Level of Involvement</th><td>{!! nl2br(e($application->proposal_involvement ?? '—')) !!}</td></tr>
-                <tr><th>Management Philosophy</th><td>{!! nl2br(e($application->proposal_philosophy ?? '—')) !!}</td></tr>
-                <tr><th>Other Business Interests</th><td>{!! nl2br(e($application->proposal_interests ?? '—')) !!}</td></tr>
-                <tr><th>Socio-civic Affiliations</th><td>{!! nl2br(e($application->proposal_affiliations ?? '—')) !!}</td></tr>
-            </table>
-        </div>
-    </div>
 
-    <div class="section">
-        <div class="section-header">
-            <p class="section-title">Financial Information</p>
-        </div>
-        <div class="section-body">
-            <table class="data-table">
-                <tr><th>Planned Investment</th><td>{{ $application->financial_investment ?? '—' }}</td></tr>
-                <tr><th>Expected Monthly Sales</th><td>{{ $application->financial_expected_sales ?? '—' }}</td></tr>
-                <tr><th>Expected ROI</th><td>{{ $application->financial_roi ?? '—' }}</td></tr>
-            </table>
-        </div>
-    </div>
+        <table class="two-col">
+            <tr>
+                <td>
+                    <div class="label">Nature of Business:</div>
+                    <div class="line">{{ $application->professional_business_nature ?? '—' }}</div>
+                </td>
+                <td>
+                    <div class="label">Company Contact:</div>
+                    <div class="line">{{ $application->professional_company_contact ?? '—' }}</div>
+                </td>
+            </tr>
+        </table>
 
-    <table class="two-col">
-        <tr>
-            <td class="col-left">
-                <div class="section">
-                    <div class="section-header">
-                        <p class="section-title">Character References</p>
+        <div class="line-row">
+            <div class="label">Primary Responsibilities:</div>
+            <div class="textarea-line">{!! nl2br(e($application->professional_responsibilities ?? '—')) !!}</div>
+        </div>
+
+        <div class="section-title">IV. Business Background</div>
+
+        <table class="two-col">
+            <tr>
+                <td>
+                    <div class="label">Business Experience:</div>
+                    <div class="line">{{ $application->business_experience ?? '—' }}</div>
+                </td>
+                <td>
+                    <div class="label">Business Name:</div>
+                    <div class="line">{{ $application->business_name ?? '—' }}</div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="label">Years of Experience:</div>
+                    <div class="line">{{ $application->business_years ?? '—' }}</div>
+                </td>
+                <td>
+                    <div class="label">Industry:</div>
+                    <div class="line">{{ $application->business_industry ?? '—' }}</div>
+                </td>
+            </tr>
+        </table>
+
+        <div class="line-row">
+            <div class="label">Previously Closed Business:</div>
+            <div class="line">{{ $application->business_closed ?? '—' }}</div>
+        </div>
+
+        <div class="line-row">
+            <div class="label">Reason for Closure:</div>
+            <div class="textarea-line">{!! nl2br(e($application->business_closure_reason ?? '—')) !!}</div>
+        </div>
+
+        <div class="line-row">
+            <div class="label">Venture Description:</div>
+            <div class="textarea-line">{!! nl2br(e($application->business_venture_description ?? '—')) !!}</div>
+        </div>
+
+        <div class="section-title">V. Kape Ilokano Background</div>
+
+        <table class="info-table">
+            <tr>
+                <th>Existing Customer</th>
+                <td>{{ $application->ki_customer ?? '—' }}</td>
+            </tr>
+            <tr>
+                <th>Affiliated with Any Branch</th>
+                <td>{{ $application->ki_affiliated ?? '—' }}</td>
+            </tr>
+            <tr>
+                <th>Affiliation Details</th>
+                <td>{{ $application->ki_affiliated_details ?? '—' }}</td>
+            </tr>
+            <tr>
+                <th>Has Existing Coffee Shop</th>
+                <td>{{ $application->ki_has_coffee_shop ?? '—' }}</td>
+            </tr>
+            <tr>
+                <th>Knowledge in Coffee Industry</th>
+                <td>{{ $application->ki_industry_knowledge ?? '—' }}</td>
+            </tr>
+            <tr>
+                <th>Passion for Coffee</th>
+                <td>{{ $application->ki_passion ?? '—' }}</td>
+            </tr>
+            <tr>
+                <th>Eagerness Level</th>
+                <td>{{ $application->ki_eagerness ?? '—' }}</td>
+            </tr>
+        </table>
+
+        <div class="section-title">VI. Business Proposal</div>
+
+        <div class="line-row">
+            <div class="label">Preferred Location:</div>
+            <div class="line">{{ $application->proposal_location ?? '—' }}</div>
+        </div>
+
+        <div class="line-row">
+            <div class="label">Reason for Location:</div>
+            <div class="textarea-line">{!! nl2br(e($application->proposal_reason ?? '—')) !!}</div>
+        </div>
+
+        <div class="line-row">
+            <div class="label">Business Expectations:</div>
+            <div class="textarea-line">{!! nl2br(e($application->proposal_expectations ?? '—')) !!}</div>
+        </div>
+
+        <div class="line-row">
+            <div class="label">Level of Involvement:</div>
+            <div class="textarea-line">{!! nl2br(e($application->proposal_involvement ?? '—')) !!}</div>
+        </div>
+
+        <div class="line-row">
+            <div class="label">Management Philosophy:</div>
+            <div class="textarea-line">{!! nl2br(e($application->proposal_philosophy ?? '—')) !!}</div>
+        </div>
+
+        <div class="line-row">
+            <div class="label">Other Business Interests:</div>
+            <div class="textarea-line">{!! nl2br(e($application->proposal_interests ?? '—')) !!}</div>
+        </div>
+
+        <div class="line-row">
+            <div class="label">Socio-civic Affiliations:</div>
+            <div class="textarea-line">{!! nl2br(e($application->proposal_affiliations ?? '—')) !!}</div>
+        </div>
+
+        <div class="section-title">VII. Financial Information</div>
+
+        <table class="three-col">
+            <tr>
+                <td>
+                    <div class="label">Planned Investment:</div>
+                    <div class="line">{{ $application->financial_investment ?? '—' }}</div>
+                </td>
+                <td>
+                    <div class="label">Expected Monthly Sales:</div>
+                    <div class="line">{{ $application->financial_expected_sales ?? '—' }}</div>
+                </td>
+                <td>
+                    <div class="label">Expected ROI:</div>
+                    <div class="line">{{ $application->financial_roi ?? '—' }}</div>
+                </td>
+            </tr>
+        </table>
+
+        <div class="section-title">VIII. Character References</div>
+
+        <div class="textarea-line">
+            {!! nl2br(e($application->references ?? '—')) !!}
+        </div>
+
+        <div class="section-title">IX. Final Consent & Government ID</div>
+
+        <table class="photo-table no-break">
+            <tr>
+                <td style="width: 45%;">
+                    <div class="label">Final Consent Status:</div>
+                    <div class="line">
+                        <span class="box">{{ $check($application->consent_final) }}</span>
+                        Agreed / Confirmed
                     </div>
-                    <div class="section-body">
-                        <div class="textbox">
-                            {!! nl2br(e($application->references ?? '—')) !!}
-                        </div>
-                    </div>
-                </div>
-            </td>
-            <td class="col-right">
-                <div class="section">
-                    <div class="section-header">
-                        <p class="section-title">Final Consent</p>
-                    </div>
-                    <div class="section-body">
-                        <table class="data-table">
-                            <tr>
-                                <th>Consent Status</th>
-                                <td>
-                                    <span class="status-badge {{ $application->consent_final ? 'status-yes' : 'status-no' }}">
-                                        {{ $application->consent_final ? 'Agreed' : 'Not Agreed' }}
-                                    </span>
-                                </td>
-                            </tr>
-                        </table>
+                </td>
 
-                        <div class="spacer-8"></div>
-
-                        @if($govPath && file_exists($govPath) && $govIsImage)
-                            <div class="photo-block" style="border-bottom:none;">
-                                <div class="photo-label">Government ID</div>
-                                <img src="{{ $govPath }}" class="id-photo" alt="Government ID">
-                            </div>
+                <td style="width: 55%;">
+                    <div class="label">Government ID:</div>
+                    <div class="photo-box">
+                        @if ($govPath && file_exists($govPath) && $govIsImage)
+                            <img src="{{ $govPath }}" class="id-photo" alt="Government ID">
                         @elseif($application->government_id)
-                            <div class="note-box muted">
-                                Uploaded file: {{ basename($application->government_id) }}
-                            </div>
+                            Uploaded file: {{ basename($application->government_id) }}
                         @else
-                            <div class="note-box muted">
-                                No government ID file attached.
-                            </div>
+                            <span class="muted">No government ID file attached</span>
                         @endif
                     </div>
-                </div>
-            </td>
-        </tr>
-    </table>
+                </td>
+            </tr>
+        </table>
 
-    <div class="footer">
-        Kape Ilokano Franchise Application Record · Generated on {{ now()->format('M d, Y h:i A') }}
+        <div class="section-title">X. Declaration</div>
+
+        <p style="font-size: 10.5px; margin: 0 0 10px;">
+            I hereby certify that the information provided in this franchise application is true and correct to the
+            best of my knowledge. I understand that Kape Ilokano may verify the submitted details as part of the
+            franchise evaluation process.
+        </p>
+
+        <table class="signature-table">
+            <tr>
+                <td style="width: 70%;">
+                    <div class="sig-line">{{ $application->personal_full_name ?? '' }}</div>
+                    <strong>Applicant’s Complete Name & Signature</strong>
+                </td>
+
+                <td style="width: 30%;">
+                    <div class="sig-line">
+                        {{ $application->created_at ? $application->created_at->format('m/d/Y') : '' }}
+                    </div>
+                    <strong>Date</strong>
+                </td>
+            </tr>
+        </table>
+
+        <div class="footer">
+            Kape Ilokano Franchise Application Record · Generated on {{ now()->format('M d, Y h:i A') }}
+        </div>
+
     </div>
 
-</div>
 </body>
+
 </html>

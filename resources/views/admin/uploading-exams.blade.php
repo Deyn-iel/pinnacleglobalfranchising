@@ -23,7 +23,6 @@
         max-width: calc(100vw - 260px);
     }
 
-    /* ===== HEADER ===== */
     .page-header {
         background: #ffffff;
         padding: 18px 22px;
@@ -37,7 +36,6 @@
         gap: 12px;
     }
 
-    /* ===== CARD ===== */
     .exam-card {
         background: #ffffff;
         border-radius: 16px;
@@ -61,7 +59,6 @@
         border-color: #2563eb;
     }
 
-    /* ===== QUESTION BLOCK ===== */
     .question-block {
         background: #fafafa;
         border: 1px solid #e5e7eb;
@@ -95,7 +92,6 @@
         background: #fecaca;
     }
 
-    /* ===== BUTTONS ===== */
     .btn-dark {
         background: #000000;
         border: none;
@@ -114,7 +110,6 @@
         opacity: .85;
     }
 
-    /* ===== EXAM LIST ===== */
     .exam-list {
         margin-top: 48px;
         background: #ffffff;
@@ -145,7 +140,6 @@
         flex-wrap: wrap;
     }
 
-    /* ===== DESKTOP SAFETY ===== */
     @media (max-width: 1200px) {
         main {
             padding: 20px;
@@ -161,7 +155,6 @@
 
 <main>
 
-    <!-- HEADER -->
     <div class="page-header">
         <div>
             <h4 class="fw-bold mb-1">
@@ -188,7 +181,6 @@
 </div>
 @endif
 
-        <!-- CREATE FORM -->
         <form action="{{ route('admin.exams.store') }}" method="POST">
             @csrf
 
@@ -373,7 +365,6 @@ function removeQuestion(id) {
 const saveBtn = document.getElementById("saveExamBtn");
 const questionsArea = document.getElementById("questions-area");
 
-/* ================= CHECK QUESTIONS ================= */
 function checkQuestions() {
     const count = document.querySelectorAll(".question-block").length;
 
@@ -388,17 +379,14 @@ function checkQuestions() {
     }
 }
 
-/* ================= CALL ON LOAD ================= */
 document.addEventListener("DOMContentLoaded", checkQuestions);
 
-/* ================= OVERRIDE ADD ================= */
 const originalAddQuestion = addQuestion;
 addQuestion = function () {
     originalAddQuestion();
     checkQuestions();
 };
 
-/* ================= OVERRIDE REMOVE ================= */
 const originalRemoveQuestion = removeQuestion;
 removeQuestion = function (id) {
     originalRemoveQuestion(id);

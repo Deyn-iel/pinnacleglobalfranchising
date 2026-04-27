@@ -13,7 +13,7 @@
 
         <li class="nav-item">
             <a href="{{ route('admin.dashboard') }}"
-               class="nav-link {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
+                class="nav-link {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
                 <i class="fas fa-gauge-high"></i>
                 <span>Dashboard</span>
             </a>
@@ -21,13 +21,13 @@
 
         <li class="nav-item">
             <a href="{{ route('admin.requirements') }}"
-               class="nav-link {{ request()->routeIs('admin.requirements') ? 'active' : '' }}">
+                class="nav-link {{ request()->routeIs('admin.requirements') ? 'active' : '' }}">
                 <i class="fas fa-file-lines"></i>
                 <span>Company Files</span>
             </a>
         </li>
 
-        
+
 
         {{-- <li class="nav-item">
             <a href="{{ route('admin.admin-portal') }}"
@@ -37,13 +37,13 @@
             </a>
         </li> --}}
 
-        <li class="nav-item disabled">
+        {{-- <li class="nav-item disabled">
             <a href="javascript:void(0)" class="nav-link">
                 <i class="fas fa-building"></i>
                 <span>Third Party Admin</span>
                 <small>soon</small>
             </a>
-        </li>
+        </li> --}}
 
         {{-- <li class="nav-item disabled">
             <a href="javascript:void(0)" class="nav-link">
@@ -58,7 +58,7 @@
 @endphp
 
 <li class="nav-item" x-data="{ open: true }">
-@if($hrAccess)
+@if ($hrAccess)
 
   <!-- TOGGLE -->
   <a href="#"
@@ -113,7 +113,7 @@
 
         <li class="nav-item">
             <a href="{{ route('admin.admin-profile.edit') }}"
-               class="nav-link {{ request()->routeIs('admin.admin-profile.edit') ? 'active' : '' }}">
+                class="nav-link {{ request()->routeIs('admin.admin-profile.edit') ? 'active' : '' }}">
                 <i class="fas fa-user-gear"></i>
                 <span>My Profile</span>
             </a>
@@ -123,7 +123,7 @@
 
         <li class="nav-item">
             <a href="{{ route('admin.attendance') }}"
-               class="nav-link {{ request()->routeIs('admin.attendance') ? 'active' : '' }}">
+                class="nav-link {{ request()->routeIs('admin.attendance') ? 'active' : '' }}">
                 <i class="fas fa-calendar-check"></i>
                 <span>Attendance</span>
             </a>
@@ -131,7 +131,7 @@
 
         <li class="nav-item">
             <a href="{{ route('admin.application') }}"
-               class="nav-link {{ request()->routeIs('admin.application') ? 'active' : '' }}">
+                class="nav-link {{ request()->routeIs('admin.application') ? 'active' : '' }}">
                 <i class="fas fa-folder-open"></i>
                 <span>Applications</span>
             </a>
@@ -139,7 +139,7 @@
 
         <li class="nav-item">
             <a href="{{ route('admin.coupon') }}"
-               class="nav-link {{ request()->routeIs('admin.coupon') ? 'active' : '' }}">
+                class="nav-link {{ request()->routeIs('admin.coupon') ? 'active' : '' }}">
                 <i class="fas fa-tags"></i>
                 <span>Coupon's</span>
             </a>
@@ -154,7 +154,7 @@
 
         <li class="nav-item">
             <a href="{{ route('admin.supplies') }}"
-               class="nav-link {{ request()->routeIs('admin.supplies') ? 'active' : '' }}">
+                class="nav-link {{ request()->routeIs('admin.supplies') ? 'active' : '' }}">
                 <i class="fas fa-boxes-stacked"></i>
                 <span>Supplies</span>
             </a>
@@ -168,11 +168,11 @@
             </a>
         </li> --}}
 
-        
-        
+
+
         <li class="nav-item">
             <a href="{{ route('admin.contacts') }}"
-               class="nav-link {{ request()->routeIs('admin.contacts') ? 'active' : '' }}">
+                class="nav-link {{ request()->routeIs('admin.contacts') ? 'active' : '' }}">
                 <i class="fas fa-address-book"></i>
                 <span>Contacts</span>
             </a>
@@ -180,7 +180,7 @@
 
         <li class="nav-item">
             <a href="{{ route('admin.tickets.index') }}"
-            class="nav-link {{ request()->routeIs('admin.tickets.*') ? 'active' : '' }}">
+                class="nav-link {{ request()->routeIs('admin.tickets.*') ? 'active' : '' }}">
                 <i class="fas fa-ticket"></i>
                 <span>Tickets</span>
             </a>
@@ -190,7 +190,7 @@
 
         <li class="nav-item">
             <a href="{{ route('admin.users-account') }}"
-               class="nav-link {{ request()->routeIs('admin.users-account') ? 'active' : '' }}">
+                class="nav-link {{ request()->routeIs('admin.users-account') ? 'active' : '' }}">
                 <i class="fas fa-users"></i>
                 <span>User Accounts</span>
             </a>
@@ -198,7 +198,7 @@
 
         <li class="nav-item">
             <a href="{{ route('admin.uploading-exams') }}"
-               class="nav-link {{ request()->routeIs('admin.uploading-exams') ? 'active' : '' }}">
+                class="nav-link {{ request()->routeIs('admin.uploading-exams') ? 'active' : '' }}">
                 <i class="fas fa-file-pen"></i>
                 <span>Upload Exams</span>
             </a>
@@ -209,11 +209,8 @@
     <!-- FOOTER -->
     <div class="sidebar-bottom">
         <div class="sidebar-footer">
-            Pinnacle Global Franchising  
+            Pinnacle Global Franchising
             <small>© {{ date('Y') }}</small>
         </div>
     </div>
 </aside>
-
-
-

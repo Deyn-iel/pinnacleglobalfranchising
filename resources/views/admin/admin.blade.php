@@ -35,13 +35,11 @@
     overflow-x: hidden;
   }
 
-  /* Sidebar base (keep includes unchanged) */
   aside {
     width: var(--sidebar-w);
     z-index: 999;
   }
 
-  /* ================= MAIN LAYOUT ================= */
   main {
     margin-left: var(--sidebar-w);
     padding: clamp(16px, 2vw, 34px);
@@ -50,13 +48,10 @@
     min-width: 0;
   }
 
-  /* If your topbar is sticky and overlays content, add room.
-     (safe kahit di sticky—minimal effect) */
   main{
     padding-top: clamp(18px, 2vw, 30px);
   }
 
-  /* ================= HEADER ================= */
   .dashboard-header {
     background: var(--card);
     border: 1px solid var(--border);
@@ -88,7 +83,6 @@
     color: var(--muted);
   }
 
-  /* ================= DASHBOARD CARDS ================= */
   a.dash-link {
     text-decoration: none;
     color: inherit;
@@ -197,7 +191,6 @@
       padding: 16px;
     }
 
-    /* Push sidebar offscreen by default (works with your include) */
     aside{
       transform: translateX(-110%);
       transition: transform .25s ease;
@@ -206,7 +199,6 @@
 
   }
 
-  /* Small laptops: reduce spacing a bit */
   @media (max-width: 1200px) {
     .dash-card{ padding: 18px; }
     .dash-icon{ width: 50px; height: 50px; }
@@ -226,21 +218,17 @@
   });
 </script>
 
-<!-- set attribute so CSS can react -->
 <div x-init="$watch('open', v => document.body.setAttribute('data-sidebar-open', v ? 'true' : 'false'))"></div>
 
 @include('admin-sidebar.sidebar')
 
-<!-- MOBILE OVERLAY -->
 <div class="position-fixed top-0 start-0 w-100 h-100 bg-black bg-opacity-50 d-md-none mobile-overlay"
      x-show="open"
      x-transition.opacity
      @click="open = false"></div>
 
-<!-- MAIN CONTENT -->
 <main>
 
-  <!-- HEADER -->
   <div class="dashboard-header">
     <h2>
       Welcome, {{ Auth::user()->name }}
@@ -251,10 +239,8 @@
     </p>
   </div>
 
-  <!-- DASHBOARD MODULES -->
   <div class="row g-4">
 
-    <!-- Attendance -->
     <div class="col-12 col-sm-6 col-xl-4">
       <a href="{{ route('admin.attendance') }}" class="dash-link">
         <div class="dash-card">
@@ -273,7 +259,6 @@
       </a>
     </div>
 
-    <!-- Applications -->
     <div class="col-12 col-sm-6 col-xl-4">
       <a href="{{ route('admin.application') }}" class="dash-link">
         <div class="dash-card">
@@ -293,7 +278,6 @@
       </a>
     </div>
 
-    <!-- Supplies -->
     <div class="col-12 col-sm-6 col-xl-4">
       <a href="{{ route('admin.supplies') }}" class="dash-link">
         <div class="dash-card">
@@ -312,7 +296,6 @@
       </a>
     </div>
 
-    <!-- Users -->
     <div class="col-12 col-sm-6 col-xl-4">
       <a href="{{ route('admin.users-account') }}" class="dash-link">
         <div class="dash-card">
@@ -331,7 +314,6 @@
       </a>
     </div>
 
-    <!-- Exams -->
     <div class="col-12 col-sm-6 col-xl-4">
       <a href="{{ route('admin.uploading-exams') }}" class="dash-link">
         <div class="dash-card">

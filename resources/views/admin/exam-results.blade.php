@@ -20,7 +20,6 @@
             max-width: calc(100vw - 260px);
         }
 
-        /* ===== PAGE HEADER ===== */
         .page-header {
             background: #ffffff;
             padding: 16px 22px;
@@ -29,7 +28,6 @@
             margin-bottom: 24px;
         }
 
-        /* ===== USER CARD ===== */
         .user-card {
             background: #ffffff;
             border-radius: 12px;
@@ -57,7 +55,6 @@
             color: #6b7280;
         }
 
-        /* ===== EXAM ROW ===== */
         .exam-row {
             display: grid;
             grid-template-columns: 1fr 160px 120px;
@@ -117,7 +114,6 @@
             box-shadow: 0 8px 26px rgba(15, 23, 42, 0.08);
         }
 
-        /* ===== DESKTOP SAFETY ===== */
         @media (max-width: 1200px) {
             .exam-row {
                 grid-template-columns: 1fr 140px 110px;

@@ -7,9 +7,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
-/* =========================
-   RESET
-========================= */
 * {
     margin: 0;
     padding: 0;
@@ -17,9 +14,6 @@
     font-family: "Inter", system-ui, -apple-system, sans-serif;
 }
 
-/* =========================
-   BODY
-========================= */
 body {
     min-height: 100vh;
     background: #f3f4f6;
@@ -29,9 +23,6 @@ body {
     padding: 24px;
 }
 
-/* =========================
-   ADMIN CARD
-========================= */
 .admin-card {
     width: 100%;
     max-width: 460px;
@@ -42,9 +33,6 @@ body {
     animation: fadeUp 0.5s ease;
 }
 
-/* =========================
-   HEADER BAR
-========================= */
 .admin-card-header {
     background: linear-gradient(135deg, #0d3553, #102f4a);
     padding: 20px 22px;
@@ -62,16 +50,10 @@ body {
     opacity: 0.9;
 }
 
-/* =========================
-   BODY
-========================= */
 .admin-card-body {
     padding: 26px 24px 30px;
 }
 
-/* =========================
-   ALERT
-========================= */
 .alert {
     padding: 14px 16px;
     border-radius: 10px;
@@ -103,9 +85,6 @@ body {
     padding-bottom: 0;
 }
 
-/* =========================
-   FORM
-========================= */
 .form-group {
     margin-bottom: 16px;
 }
@@ -133,9 +112,6 @@ input:focus {
     box-shadow: 0 0 0 3px rgba(37,99,235,0.25);
 }
 
-/* =========================
-   NOTE
-========================= */
 .admin-note {
     background: #f9fafb;
     border: 1px dashed #d1d5db;
@@ -146,9 +122,6 @@ input:focus {
     margin-bottom: 18px;
 }
 
-/* =========================
-   ACTIONS
-========================= */
 .actions {
     display: flex;
     justify-content: space-between;
@@ -168,9 +141,6 @@ input:focus {
     color: #0d3553
 }
 
-/* =========================
-   BUTTON
-========================= */
 button {
     background: linear-gradient(135deg, #2563eb, #1e40af);
     color: #ffffff;
@@ -189,9 +159,6 @@ button:hover {
     box-shadow: 0 14px 30px rgba(37,99,235,0.55);
 }
 
-/* =========================
-   ANIMATION
-========================= */
 @keyframes fadeUp {
     from {
         opacity: 0;
@@ -203,9 +170,6 @@ button:hover {
     }
 }
 
-/* =========================
-   RESPONSIVE
-========================= */
 @media (max-width: 480px) {
     .actions {
         flex-direction: column;
@@ -246,10 +210,8 @@ select:focus {
         <p>Create an account for system access</p>
     </div>
 
-    <!-- BODY -->
     <div class="admin-card-body">
 
-        {{-- ERROR ALERT --}}
         @if ($errors->any())
             <div class="alert alert-warning auto-hide">
                 <strong>⚠ Warning:</strong> {{ $errors->first() }}

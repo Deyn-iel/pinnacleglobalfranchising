@@ -90,7 +90,7 @@ if ($user->usertype === 'admin-secretary') {
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return redirect('/');
+        return redirect('/login');
     }
 }
 // <?php

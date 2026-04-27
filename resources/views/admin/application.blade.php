@@ -43,7 +43,6 @@
     z-index: 999;
   }
 
-  /* ================= MAIN ================= */
   main {
     margin-left: var(--sidebar-w);
     padding: clamp(16px, 2.2vw, 34px);
@@ -66,7 +65,6 @@
     }
   }
 
-  /* ================= HEADER ================= */
   .page-header {
     background: var(--card);
     border: 1px solid var(--border);
@@ -92,7 +90,6 @@
     letter-spacing: -.02em;
   }
 
-  /* ================= STATS ================= */
   .stat-card {
     background: var(--card);
     border: 1px solid var(--border);
@@ -166,7 +163,6 @@
     margin: 0;
   }
 
-  /* ================= TABLE ================= */
   .table-wrapper {
     background: var(--card);
     border: 1px solid var(--border);
@@ -204,7 +200,6 @@
     transition: background .15s ease;
   }
 
-  /* ================= BUTTONS ================= */
   .btn-primary {
     background: #0f172a;
     border: none;
@@ -266,7 +261,6 @@
     pointer-events:none;
 }
 
-  /* ================= ALERT ================= */
   .alert {
     border-radius: 14px;
     box-shadow: 0 12px 30px rgba(15,23,42,.10);
@@ -279,8 +273,6 @@
     transform: translateY(-10px);
   }
 
-  /* ================= MODAL FIX ================= */
-/* NORMALIZE ALL MODALS */
 .modal{
     z-index: 1060 !important;
 }
@@ -289,7 +281,6 @@
     z-index: 1055 !important;
 }
 
-/* application details only slightly higher */
 .app-details-modal{
     z-index: 1070 !important;
 }

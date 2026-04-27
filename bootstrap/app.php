@@ -23,6 +23,11 @@ return Application::configure(basePath: dirname(__DIR__))
         'redirect.dashboard.role' => \App\Http\Middleware\RedirectDashboardByRole::class,
         'noback' => \App\Http\Middleware\NoBackButton::class,
     ]);
+
+    $middleware->validateCsrfTokens(except: [
+        'logout',
+        'user/logout',
+    ]);
 })
     ->withExceptions(function (Exceptions $exceptions): void {
         //

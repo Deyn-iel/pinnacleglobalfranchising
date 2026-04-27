@@ -35,10 +35,8 @@
     color: var(--text);
   }
 
-  /* sidebar fixed but lower than modal */
   aside{ width: var(--sidebar-w); z-index: 1000; }
 
-  /* ================= MAIN LAYOUT ================= */
   main{
     margin-left: var(--sidebar-w);
     padding: clamp(16px, 2.2vw, 34px);
@@ -54,7 +52,6 @@
     }
   }
 
-  /* ================= HEADER ================= */
   .page-header{
     background: var(--card);
     border: 1px solid var(--border);
@@ -78,7 +75,6 @@
     font-size: 13px;
   }
 
-  /* ================= CARDS ================= */
   .card{
     border-radius: 20px;
     background: var(--card);
@@ -95,7 +91,6 @@
     letter-spacing: -.01em;
   }
 
-  /* ================= FORM LABEL ================= */
   .form-label{
     font-weight: 700;
     font-size: 12.5px;
@@ -103,12 +98,10 @@
     margin-bottom: 6px;
   }
 
-  /* ================= BUTTONS ================= */
   .btn{ font-weight: 700; border-radius: 999px; }
   .btn-primary{ background: #0f172a; border: none; }
   .btn-primary:hover{ background:#111827; }
 
-  /* ================= TABLE ================= */
   .table-wrap{
     border-radius: 16px;
     overflow: hidden;
@@ -130,7 +123,6 @@
   tbody tr{ transition: background .15s ease; }
   tbody tr:hover{ background: rgba(13,110,253,.05); }
 
-  /* ================= SELFIE BUTTONS ================= */
   .btn-selfie{
     font-size: 12px;
     padding: 6px 12px;
@@ -152,7 +144,6 @@
     background: rgba(0,0,0,.03);
   }
 
-  /* ================= ALERT ================= */
   .alert{
     border-radius: 14px;
     border: 1px solid rgba(34,197,94,.25);
@@ -170,7 +161,6 @@
     font-weight: 700;
   }
 
-  /* ✅ FIX MODAL LAYERING */
   .modal-backdrop{ z-index: 2000 !important; }
   .modal{ z-index: 2005 !important; }
 </style>
@@ -411,7 +401,6 @@
 
 </main>
 
-<!-- ✅ ONE REUSABLE MODAL -->
 <div class="modal fade" id="selfieModal" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered modal-xl">
     <div class="modal-content">
@@ -431,7 +420,6 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
 <script>
-  // ✅ Single modal handler
   document.addEventListener('click', function(e){
     const btn = e.target.closest('.js-open-selfie');
     if(!btn) return;
