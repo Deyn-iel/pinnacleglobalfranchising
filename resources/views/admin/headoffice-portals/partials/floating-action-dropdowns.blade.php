@@ -1,33 +1,59 @@
-<!-- ================= TOP NAVBAR ================= -->
-<nav class="admin-topbar">
-    <div class="topbar-left">
-        <i class="fas fa-shield-halved"></i>
-        <span><a href="{{ route('admin.dashboard') }}" style="text-decoration: none; color:#ffffffff;">Admin Panel</a></span>
-    </div>
+<style>
+    .dropdown-menu.action-menu,
+    .dropdown-menu.actions-menu,
+    .dropdown-menu.file-actions-menu,
+    .dropdown-menu.table-action-menu {
+        z-index: 1080 !important;
+    }
 
-    <div class="topbar-right">
-        <div class="admin-user">
-            <div class="avatar">
-                {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
-            </div>
-            <span class="name">
-                {{ ucwords(strtolower(Auth::user()->name)) }}
-            </span>
-        </div>
+    @media (min-width: 769px) and (max-width: 1399.98px) {
+        .table-responsive {
+            overflow-x: visible !important;
+        }
 
-        <form method="POST" action="{{ route('logout') }}">
-            @csrf
-            <button class="logout-btn">
-                <i class="fas fa-right-from-bracket"></i>
-                Logout
-            </button>
-        </form>
-    </div>
-</nav>
+        .table-responsive table,
+        table.table,
+        .files-table {
+            min-width: 0 !important;
+            table-layout: fixed !important;
+            width: 100% !important;
+        }
+
+        .table-responsive th,
+        .table-responsive td,
+        .files-table th,
+        .files-table td {
+            width: auto !important;
+            min-width: 0 !important;
+            max-width: none !important;
+            padding: 10px 8px !important;
+            font-size: 12px !important;
+            white-space: normal !important;
+            overflow-wrap: anywhere !important;
+            word-break: normal !important;
+        }
+
+        .concern-cell,
+        .description-box,
+        .file-name,
+        .file-info {
+            min-width: 0 !important;
+            max-width: none !important;
+        }
+
+        .badge,
+        .badge-pill,
+        .inline-code {
+            max-width: 100%;
+            white-space: normal !important;
+            overflow-wrap: anywhere !important;
+        }
+    }
+</style>
 
 <script>
     (() => {
-        const initResponsiveTableLabels = () => {
+        const initResponsivePortalTableLabels = () => {
             document.querySelectorAll('table').forEach(table => {
                 if (table.dataset.responsiveLabels === 'true') return;
 
@@ -48,18 +74,18 @@
             });
         };
 
-        const initFloatingActionDropdowns = () => {
+        const initFloatingPortalActionDropdowns = () => {
             if (!window.bootstrap) return;
 
-            const actionDropdowns = document.querySelectorAll([
-                '.action-group.dropdown',
+            const dropdowns = document.querySelectorAll([
+                '.action-wrap.dropdown',
                 '.action-menu-wrap.dropdown',
                 '.actions.dropdown',
                 '.file-actions.dropdown',
                 '.table-action.dropdown',
             ].join(','));
 
-            actionDropdowns.forEach(dropdown => {
+            dropdowns.forEach(dropdown => {
                 if (dropdown.dataset.floatingActionDropdown === 'true') return;
 
                 const toggle = dropdown.querySelector('[data-bs-toggle="dropdown"]');
@@ -114,12 +140,12 @@
 
         if (document.readyState === 'loading') {
             document.addEventListener('DOMContentLoaded', () => {
-                initResponsiveTableLabels();
-                initFloatingActionDropdowns();
+                initResponsivePortalTableLabels();
+                initFloatingPortalActionDropdowns();
             });
         } else {
-            initResponsiveTableLabels();
-            initFloatingActionDropdowns();
+            initResponsivePortalTableLabels();
+            initFloatingPortalActionDropdowns();
         }
     })();
 </script>

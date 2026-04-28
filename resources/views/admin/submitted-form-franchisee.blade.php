@@ -8,6 +8,7 @@
     <link rel="icon" type="image/png" href="{{ asset('img/logo1-removebg-preview.png') }}">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+    @vite(['resources/css/admin/shadcn-tables.css'])
 
     <style>
         body {
@@ -95,6 +96,55 @@
         .detail-value {
             font-weight: 600;
             color: #111827;
+        }
+
+        .action-menu-wrap {
+            display: inline-flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .action-menu-toggle {
+            width: 38px;
+            height: 38px;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            background: #fff;
+            color: #111827;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 8px 18px rgba(15, 23, 42, .08);
+        }
+
+        .action-menu-toggle:hover,
+        .action-menu-toggle.show {
+            background: #111827;
+            border-color: #111827;
+            color: #fff;
+        }
+
+        .action-menu {
+            min-width: 145px;
+            padding: 8px;
+            border: 1px solid #e5e7eb;
+            border-radius: 14px;
+            box-shadow: 0 18px 42px rgba(15, 23, 42, .14);
+        }
+
+        .action-menu.show {
+            margin-top: 8px !important;
+        }
+
+        .action-menu .btn {
+            width: 100%;
+            min-height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            gap: 8px;
+            border-radius: 10px;
+            font-weight: 800;
         }
 
         @media(max-width: 768px) {
@@ -196,15 +246,23 @@
                                 </td>
 
                                 <td>
-                                    <button 
-                                        type="button" 
-                                        class="btn btn-sm btn-primary"
-                                        data-bs-toggle="modal"
-                                        data-bs-target="#reservationModal{{ $reservation->id }}"
-                                    >
-                                        <i class="fa-solid fa-eye"></i>
-                                        View
-                                    </button>
+                                    <div class="dropdown action-menu-wrap">
+                                        <button class="action-menu-toggle" type="button" data-bs-toggle="dropdown"
+                                            aria-expanded="false" aria-label="Open actions">
+                                            <i class="fa-solid fa-ellipsis"></i>
+                                        </button>
+                                        <div class="dropdown-menu dropdown-menu-end action-menu">
+                                            <button
+                                                type="button"
+                                                class="btn btn-sm btn-primary"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#reservationModal{{ $reservation->id }}"
+                                            >
+                                                <i class="fa-solid fa-eye"></i>
+                                                View
+                                            </button>
+                                        </div>
+                                    </div>
                                 </td>
                             </tr>
                         @empty
@@ -447,3 +505,4 @@
 
 </body>
 </html>
+

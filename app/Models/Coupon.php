@@ -10,6 +10,7 @@ class Coupon extends Model
         'booklet_serial_number',
         'unique_code',
         'claimable_item',
+        'amount',
         'coupon_status',
         'claim_status',
         'selling_status',

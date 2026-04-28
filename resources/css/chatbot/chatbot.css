@@ -229,6 +229,8 @@
   line-height:1.45;
   font-weight:650;
   white-space:pre-wrap;
+  overflow-wrap:break-word;
+  word-break:normal;
 }
 
 .msg-time{
@@ -284,9 +286,6 @@
 .ticket-send:disabled{
   opacity:.45;
   cursor:not-allowed;
-}
-.ticket-text {
-  word-break: break-all;   
 }
 .file-send {
   font-size: 20px;

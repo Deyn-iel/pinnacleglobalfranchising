@@ -12,6 +12,37 @@ use App\Mail\FranchiseStatusUpdate;
 
 class FranchiseAdminController extends Controller
 {
+    private function discoveryPresentationManifestPath(): string
+    {
+        return 'discovery-presentation/manifest.json';
+    }
+
+    private function discoveryPresentation(): ?array
+    {
+        $disk = Storage::disk('public');
+        $manifestPath = $this->discoveryPresentationManifestPath();
+
+        if (!$disk->exists($manifestPath)) {
+            return null;
+        }
+
+        $manifest = json_decode($disk->get($manifestPath), true);
+
+        if (!is_array($manifest) || !isset($manifest['path']) || !$disk->exists($manifest['path'])) {
+            return null;
+        }
+
+        $url = $disk->url($manifest['path']);
+
+        return [
+            'name' => $manifest['name'] ?? basename($manifest['path']),
+            'path' => $manifest['path'],
+            'url' => $url,
+            'viewer_url' => 'https://view.officeapps.live.com/op/embed.aspx?src=' . urlencode(url($url)),
+            'updated_at' => $manifest['updated_at'] ?? null,
+        ];
+    }
+
     public function index(Request $request)
 {
     $query = FranchiseApplication::query();
@@ -41,8 +72,9 @@ class FranchiseAdminController extends Controller
     }
 
     $applications = $query->paginate(10)->withQueryString();
+    $discoveryPresentation = $this->discoveryPresentation();
 
-    return view('admin.application', compact('applications'));
+    return view('admin.application', compact('applications', 'discoveryPresentation'));
 }
 
     public function show($id)
@@ -153,7 +185,7 @@ public function schedule(Request $request, $id)
 return back()->with('success', 'Appointment Scheduled Successfully.');
 }
 
-public function startDiscovery($id)
+public function startDiscovery(Request $request, $id)
 {
     $app = FranchiseApplication::findOrFail($id);
 
@@ -169,10 +201,18 @@ public function startDiscovery($id)
     )
 );
 
+    if ($request->expectsJson()) {
+        return response()->json([
+            'success' => true,
+            'message' => 'Discovery Meeting Started.',
+            'status' => $app->status,
+        ]);
+    }
+
     return back()->with('success', 'Discovery Meeting Started.');
 }
 
-public function doneDiscovery($id)
+public function doneDiscovery(Request $request, $id)
 {
     $app = FranchiseApplication::findOrFail($id);
 
@@ -189,7 +229,50 @@ public function doneDiscovery($id)
     )
 );
 
+    if ($request->expectsJson()) {
+        return response()->json([
+            'success' => true,
+            'message' => 'Discovery Session Completed.',
+            'status' => $app->status,
+        ]);
+    }
+
     return back()->with('success', 'Discovery Session Completed.');
+}
+
+public function uploadDiscoverySlides(Request $request)
+{
+    $request->validate([
+        'presentation' => 'required|file|mimes:ppt,pptx|max:51200',
+    ], [
+        'presentation.required' => 'Please choose a PowerPoint file.',
+        'presentation.mimes' => 'The discovery presentation must be a PPT or PPTX file.',
+    ]);
+
+    $disk = Storage::disk('public');
+
+    $currentPresentation = $this->discoveryPresentation();
+    if ($currentPresentation) {
+        $disk->delete($currentPresentation['path']);
+    }
+
+    $file = $request->file('presentation');
+    $path = $file->store('discovery-presentation', 'public');
+
+    $disk->put($this->discoveryPresentationManifestPath(), json_encode([
+        'name' => $file->getClientOriginalName(),
+        'path' => $path,
+        'updated_at' => now()->toIso8601String(),
+    ], JSON_PRETTY_PRINT));
+
+    return back()->with('success', 'Discovery presentation uploaded successfully.');
+}
+
+public function discoverySlidesJson()
+{
+    return response()->json([
+        'presentation' => $this->discoveryPresentation(),
+    ]);
 }
 
 public function closeDeal($id)

@@ -204,6 +204,19 @@ class RequirementController extends Controller
         return back()->with('success', 'File deleted successfully!');
     }
 
+    public function download(Requirement $requirement)
+    {
+        if (!$requirement->file_path || !Storage::disk('public')->exists($requirement->file_path)) {
+            abort(404);
+        }
+
+        $downloadName = $requirement->file_original_name
+            ?: $requirement->document_name
+            ?: basename($requirement->file_path);
+
+        return response()->download(Storage::disk('public')->path($requirement->file_path), $downloadName);
+    }
+
     public function deleteFolder($folder)
     {
         $folder = $this->normalizePath($folder);

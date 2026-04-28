@@ -1,0 +1,317 @@
+/* Shared admin table/action treatment inspired by shadcn/ui. */
+.table-wrap,
+.table-wrapper,
+.table-responsive {
+  border: 1px solid #e5e7eb !important;
+  border-radius: 12px !important;
+  background: #fff !important;
+  box-shadow: none !important;
+}
+
+.table-wrap,
+.table-wrapper {
+  overflow: hidden !important;
+}
+
+.table-responsive {
+  overflow-x: auto !important;
+}
+
+.table,
+table:not(.header-table):not(.summary):not(.photo-row):not(.data-table):not(.signature-table):not(.two-col):not(.package-table):not(.location-table):not(.office-table):not(.confirmation-table) {
+  width: 100%;
+  margin: 0 !important;
+  border-collapse: collapse !important;
+  background: #fff !important;
+  color: #09090b !important;
+}
+
+.table thead,
+table:not(.header-table):not(.summary):not(.photo-row):not(.data-table):not(.signature-table):not(.two-col):not(.package-table):not(.location-table):not(.office-table):not(.confirmation-table) thead,
+.table-dark {
+  background: #fff !important;
+  color: #09090b !important;
+}
+
+.table th,
+.table td,
+table:not(.header-table):not(.summary):not(.photo-row):not(.data-table):not(.signature-table):not(.two-col):not(.package-table):not(.location-table):not(.office-table):not(.confirmation-table) th,
+table:not(.header-table):not(.summary):not(.photo-row):not(.data-table):not(.signature-table):not(.two-col):not(.package-table):not(.location-table):not(.office-table):not(.confirmation-table) td {
+  border-color: #e5e7eb !important;
+  border-left: 0 !important;
+  border-right: 0 !important;
+  padding: 14px 16px !important;
+  vertical-align: middle !important;
+  font-size: 14px !important;
+}
+
+.table th,
+table:not(.header-table):not(.summary):not(.photo-row):not(.data-table):not(.signature-table):not(.two-col):not(.package-table):not(.location-table):not(.office-table):not(.confirmation-table) th {
+  font-weight: 600 !important;
+  color: #09090b !important;
+  text-transform: none !important;
+  letter-spacing: 0 !important;
+  background: #fff !important;
+}
+
+.table tbody tr,
+table:not(.header-table):not(.summary):not(.photo-row):not(.data-table):not(.signature-table):not(.two-col):not(.package-table):not(.location-table):not(.office-table):not(.confirmation-table) tbody tr {
+  background: #fff !important;
+  transition: background-color .16s ease !important;
+}
+
+.table-hover tbody tr:hover,
+.table tbody tr:hover,
+table:not(.header-table):not(.summary):not(.photo-row):not(.data-table):not(.signature-table):not(.two-col):not(.package-table):not(.location-table):not(.office-table):not(.confirmation-table) tbody tr:hover {
+  background: #f7f7f8 !important;
+}
+
+.action-menu-wrap,
+.action-group,
+.actions,
+.file-actions,
+.table-action {
+  position: relative !important;
+  display: inline-flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.action-menu-toggle,
+.action-toggle,
+.actions-toggle,
+.file-actions-toggle,
+.table-action-toggle {
+  width: 32px !important;
+  height: 32px !important;
+  min-width: 32px !important;
+  border: 0 !important;
+  border-radius: 8px !important;
+  background: transparent !important;
+  color: #18181b !important;
+  box-shadow: none !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 0 !important;
+  transition: background-color .15s ease, color .15s ease !important;
+}
+
+.action-menu-toggle:hover,
+.action-menu-toggle.show,
+.action-toggle:hover,
+.action-toggle.show,
+.actions-toggle:hover,
+.actions-toggle.show,
+.file-actions-toggle:hover,
+.file-actions-toggle.show,
+.table-action-toggle:hover,
+.table-action-toggle.show {
+  background: #f4f4f5 !important;
+  color: #09090b !important;
+}
+
+.action-menu-toggle i,
+.action-toggle i,
+.actions-toggle i,
+.file-actions-toggle i,
+.table-action-toggle i {
+  font-size: 14px !important;
+}
+
+.action-menu,
+.actions-menu,
+.file-actions-menu,
+.table-action-menu,
+.dropdown-menu.action-menu,
+.dropdown-menu.actions-menu,
+.dropdown-menu.file-actions-menu,
+.dropdown-menu.table-action-menu {
+  min-width: 128px !important;
+  padding: 4px !important;
+  border: 1px solid #e4e4e7 !important;
+  border-radius: 10px !important;
+  background: #fff !important;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, .12) !important;
+  z-index: 1080 !important;
+}
+
+.action-menu.show,
+.actions-menu.show,
+.file-actions-menu.show,
+.table-action-menu.show {
+  margin-top: 6px !important;
+}
+
+.action-menu .btn,
+.action-menu button,
+.action-menu a,
+.actions-menu .action-btn,
+.file-actions-menu .btn,
+.file-actions-menu button,
+.table-action-menu .btn-custom,
+.table-action-menu .badge-pill {
+  width: 100% !important;
+  min-height: 32px !important;
+  border: 0 !important;
+  border-radius: 6px !important;
+  background: transparent !important;
+  color: #27272a !important;
+  box-shadow: none !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  gap: 8px !important;
+  padding: 7px 9px !important;
+  margin: 0 !important;
+  font-size: 14px !important;
+  font-weight: 400 !important;
+  text-decoration: none !important;
+}
+
+.action-menu .btn:hover,
+.action-menu button:hover,
+.action-menu a:hover,
+.actions-menu .action-btn:hover,
+.file-actions-menu .btn:hover,
+.file-actions-menu button:hover,
+.table-action-menu .btn-custom:hover,
+.table-action-menu .badge-pill:hover {
+  background: #f4f4f5 !important;
+  color: #09090b !important;
+}
+
+.action-menu .btn-danger,
+.action-menu .btn-outline-danger,
+.action-menu button.btn-danger,
+.action-menu button.btn-outline-danger,
+.actions-menu .action-delete,
+.file-actions-menu .btn-danger,
+.file-actions-menu .btn-outline-danger,
+.file-actions-menu button.btn-danger,
+.file-actions-menu button.btn-outline-danger,
+.table-action-menu .btn-danger-custom {
+  color: #ef4444 !important;
+}
+
+.action-menu .btn-danger:hover,
+.action-menu .btn-outline-danger:hover,
+.action-menu button.btn-danger:hover,
+.action-menu button.btn-outline-danger:hover,
+.actions-menu .action-delete:hover,
+.file-actions-menu .btn-danger:hover,
+.file-actions-menu .btn-outline-danger:hover,
+.file-actions-menu button.btn-danger:hover,
+.file-actions-menu button.btn-outline-danger:hover,
+.table-action-menu .btn-danger-custom:hover {
+  background: #fef2f2 !important;
+  color: #dc2626 !important;
+}
+
+@media (min-width: 769px) and (max-width: 1399.98px) {
+  .table-responsive {
+    overflow-x: visible !important;
+  }
+
+  .table,
+  table:not(.header-table):not(.summary):not(.photo-row):not(.data-table):not(.signature-table):not(.two-col):not(.package-table):not(.location-table):not(.office-table):not(.confirmation-table) {
+    min-width: 0 !important;
+    table-layout: fixed !important;
+  }
+
+  .table th,
+  .table td,
+  table:not(.header-table):not(.summary):not(.photo-row):not(.data-table):not(.signature-table):not(.two-col):not(.package-table):not(.location-table):not(.office-table):not(.confirmation-table) th,
+  table:not(.header-table):not(.summary):not(.photo-row):not(.data-table):not(.signature-table):not(.two-col):not(.package-table):not(.location-table):not(.office-table):not(.confirmation-table) td {
+    width: auto !important;
+    min-width: 0 !important;
+    max-width: none !important;
+    padding: 10px 8px !important;
+    font-size: 12px !important;
+    white-space: normal !important;
+    overflow-wrap: anywhere !important;
+    word-break: normal !important;
+  }
+
+  .badge,
+  .badge-pill,
+  .inline-code {
+    max-width: 100%;
+    white-space: normal !important;
+    overflow-wrap: anywhere !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .table-wrap,
+  .table-wrapper,
+  .table-responsive {
+    overflow-x: visible !important;
+    border: 0 !important;
+    background: transparent !important;
+  }
+
+  .table,
+  table:not(.header-table):not(.summary):not(.photo-row):not(.data-table):not(.signature-table):not(.two-col):not(.package-table):not(.location-table):not(.office-table):not(.confirmation-table) {
+    min-width: 0 !important;
+    border-collapse: separate !important;
+    border-spacing: 0 12px !important;
+    background: transparent !important;
+  }
+
+  .table thead,
+  table:not(.header-table):not(.summary):not(.photo-row):not(.data-table):not(.signature-table):not(.two-col):not(.package-table):not(.location-table):not(.office-table):not(.confirmation-table) thead {
+    display: none !important;
+  }
+
+  .table tbody,
+  .table tr,
+  .table td,
+  table:not(.header-table):not(.summary):not(.photo-row):not(.data-table):not(.signature-table):not(.two-col):not(.package-table):not(.location-table):not(.office-table):not(.confirmation-table) tbody,
+  table:not(.header-table):not(.summary):not(.photo-row):not(.data-table):not(.signature-table):not(.two-col):not(.package-table):not(.location-table):not(.office-table):not(.confirmation-table) tr,
+  table:not(.header-table):not(.summary):not(.photo-row):not(.data-table):not(.signature-table):not(.two-col):not(.package-table):not(.location-table):not(.office-table):not(.confirmation-table) td {
+    display: block !important;
+    width: 100% !important;
+  }
+
+  .table tbody tr,
+  table:not(.header-table):not(.summary):not(.photo-row):not(.data-table):not(.signature-table):not(.two-col):not(.package-table):not(.location-table):not(.office-table):not(.confirmation-table) tbody tr {
+    border: 1px solid #e5e7eb !important;
+    border-radius: 12px !important;
+    overflow: hidden !important;
+    box-shadow: none !important;
+  }
+
+  .table td,
+  table:not(.header-table):not(.summary):not(.photo-row):not(.data-table):not(.signature-table):not(.two-col):not(.package-table):not(.location-table):not(.office-table):not(.confirmation-table) td {
+    min-height: 48px !important;
+    padding: 11px 14px !important;
+    border-bottom: 1px solid #f0f0f1 !important;
+    text-align: left !important;
+    white-space: normal !important;
+    overflow-wrap: anywhere !important;
+  }
+
+  .table td:last-child,
+  table:not(.header-table):not(.summary):not(.photo-row):not(.data-table):not(.signature-table):not(.two-col):not(.package-table):not(.location-table):not(.office-table):not(.confirmation-table) td:last-child {
+    border-bottom: 0 !important;
+  }
+
+  .table td::before,
+  table:not(.header-table):not(.summary):not(.photo-row):not(.data-table):not(.signature-table):not(.two-col):not(.package-table):not(.location-table):not(.office-table):not(.confirmation-table) td::before {
+    content: attr(data-label);
+    display: block;
+    margin-bottom: 4px;
+    color: #71717a;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0;
+    text-transform: uppercase;
+  }
+
+  .table td[colspan]::before,
+  table:not(.header-table):not(.summary):not(.photo-row):not(.data-table):not(.signature-table):not(.two-col):not(.package-table):not(.location-table):not(.office-table):not(.confirmation-table) td[colspan]::before {
+    display: none;
+  }
+}

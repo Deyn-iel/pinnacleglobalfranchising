@@ -85,10 +85,6 @@ class CouponClaimController extends Controller
     {
         $request->validate([
             'coupon_id' => 'required|exists:coupons,id',
-            'customer_name' => 'required|string|max:255',
-            'customer_email' => 'required|email|max:255',
-            'customer_contact' => 'required|string|max:255',
-            'customer_address' => 'required|string|max:255',
         ]);
 
         $coupon = Coupon::findOrFail($request->coupon_id);
@@ -117,18 +113,20 @@ class CouponClaimController extends Controller
             ]);
         }
 
-        $coupon->update([
-    'claim_status' => 'Claimed',
-    'claimed_at' => now(),
-    'buyer_name' => $request->customer_name,
-    'buyer_email' => $request->customer_email,
-    'buyer_contact' => $request->customer_contact,
-    'buyer_address' => $request->customer_address,
-]);
+        if (!$coupon->buyer_name || !$coupon->buyer_email || !$coupon->buyer_contact || !$coupon->buyer_address) {
+            return back()->withErrors([
+                'unique_code' => 'This coupon has no registered buyer details yet.',
+            ]);
+        }
 
-Mail::to($request->customer_email)->send(
-    new CouponClaimedMail($coupon->fresh(), $request->customer_name)
-);
+        $coupon->update([
+            'claim_status' => 'Claimed',
+            'claimed_at' => now(),
+        ]);
+
+        Mail::to($coupon->buyer_email)->send(
+            new CouponClaimedMail($coupon->fresh(), $coupon->buyer_name)
+        );
 
         return redirect()
             ->route('tickets.coupon')

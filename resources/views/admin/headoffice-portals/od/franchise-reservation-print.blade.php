@@ -335,6 +335,63 @@
                 overflow: visible !important;
             }
         }
+
+        .paper {
+            background: #fff;
+            page-break-after: always;
+        }
+
+        .paper:last-child {
+            page-break-after: auto;
+        }
+
+        .letter-page {
+            font-size: 11px;
+            line-height: 1.55;
+        }
+
+        .letter-page p {
+            margin: 0 0 10px;
+        }
+
+        .letter-title {
+            text-align: center;
+            font-weight: bold;
+            font-size: 14px;
+            margin-bottom: 18px;
+            text-transform: uppercase;
+        }
+
+        .indent {
+            text-indent: 35px;
+        }
+
+        .signature-block {
+            margin-top: 35px;
+        }
+
+        .confirmation-table {
+            width: 100%;
+            margin-top: 35px;
+            border-collapse: collapse;
+        }
+
+        .confirmation-table td {
+            width: 50%;
+            text-align: center;
+            vertical-align: top;
+            padding: 0 15px;
+        }
+
+        @media print {
+            .paper {
+                page-break-after: always;
+            }
+
+            .paper:last-child {
+                page-break-after: auto;
+            }
+        }
     </style>
 </head>
 
@@ -361,17 +418,17 @@
 
     @if (!($pdfMode ?? false))
         <div class="toolbar">
-            <a class="back" href="{{ route('admin.portals.od.register-franchise') }}">
+            {{-- <a class="back" href="{{ route('admin.portals.od.register-franchise') }}">
                 Back
-            </a>
+            </a> --}}
 
             <button type="button" onclick="window.print()">
                 Print A4
             </button>
 
-            <a href="{{ route('admin.portals.od.register-franchise.pdf', $reservation->id) }}">
+            {{-- <a href="{{ route('admin.portals.od.register-franchise.pdf', $reservation->id) }}">
                 Download PDF
-            </a>
+            </a> --}}
         </div>
     @endif
 
@@ -552,7 +609,6 @@
                     <li>Executed Lease Contract</li>
                     <li>Government IDs and Business Name Registration</li>
                     <li>Duly Signed and Executed Franchise Package Confirmation</li>
-                    <li>Duly Signed and Executed Franchise Agreement</li>
                 </ul>
             </li>
         </ol>
@@ -671,6 +727,171 @@
 
     </div>
 
+    <div class="paper letter-page">
+        <div class="title">
+            <img class="logo" src="{{ asset('img/PNG.png') }}" alt="Kape Ilokano">
+            LETTER OF INTENT
+        </div>
+        <br><br><br>
+        <p>
+            Date<span class="small-line" style="min-width: 120px;"></span><br>
+
+        </p>
+
+        <p>
+            <strong>KAPE-ILOKANO CAFE CORPORATION</strong><br>
+            BY PINNACLE GLOBAL FRANCHISING GROUP INC.<br>
+            Unit 2, G-Building,<br>
+            Maharlika Highway,<br>
+            Cauayan City, Isabela (3305),<br>
+            Philippines
+        </p>
+
+        <p>
+            <strong>Subject:</strong> Application for Kape-Ilokano Franchise
+        </p>
+
+        <p>Dear Ma’am/Sir,</p>
+
+        <p class="indent">
+            I am writing to formally express my interest in acquiring a franchise of Kape-Ilokano with Pinnacle Global
+            Franchising Group Inc. I have carefully reviewed your business concept and am excited about the opportunity
+            to partner with you in offering a unique combination of local food and drinks to customers.
+        </p>
+
+        <p class="indent">
+            I have completed an application form with all necessary details regarding the outlet location, my business
+            background, and references for background checks. I am committed to ensuring the success of the franchise
+            and
+            am confident that I can uphold the high standards of Kape-Ilokano.
+        </p>
+
+        <p class="indent">
+            Thank you for considering my application. I look forward to the possibility of joining your growing
+            franchise
+            network and contributing to the continued success of Kape-Ilokano Cafe.
+        </p>
+
+        <p>
+            Should you require any further information or clarification, please do not hesitate to contact me.
+        </p>
+
+        <div class="signature-block">
+            <p>Sincerely,</p>
+
+            <p>
+                <strong>{{ $reservation->name ?? 'ERIC MICHAEL CHAN UY' }}</strong><br>
+                {{ $reservation->address ?? '1408 ALVARADO EXTENSION TONDO, MANILA' }}
+            </p>
+        </div>
+
+    </div>
+
+    <div class="paper letter-page">
+
+        <div class="title">
+            <img class="logo" src="{{ asset('img/PNG.png') }}" alt="Kape Ilokano">
+            FRANCHISE PACKAGE CONFIRMATION
+        </div>
+        <br><br><br>
+        <p>Dear <span class="small-line" style="min-width: 180px;"></span>,</p>
+
+        <p class="indent">
+            Thank you for your great interest in franchising “Kape-Ilokano Cafe” by Pinnacle Global Franchising Group
+            Inc. For your reference, indicated below is our best offer:
+        </p>
+
+        <p>
+            <strong>Discounted Start-Up Franchise Package:</strong>
+            Php <span class="small-line" style="min-width: 120px;"></span>
+            (<span class="small-line" style="min-width: 220px;"></span> Pesos)
+            exclusive of VAT and/or net of any applicable national or local taxes or fees, if any.
+        </p>
+
+        <p><strong>Package Inclusions:</strong></p>
+
+        <ul class="doc-list">
+            <li>Trade Name Rights for 3 Years</li>
+            <li>Franchisee Training</li>
+            <li>Operations Manual</li>
+            <li>Opening Marketing Assistance</li>
+            <li>Food Delivery Application Assistance</li>
+            <li>POS First 6 Months Subscription</li>
+            <li>Php 20,000 worth of initial stocks</li>
+            <li>Free orientation on business and government permits</li>
+        </ul>
+
+        <p><strong>Terms and Conditions:</strong></p>
+
+        <ol class="terms">
+            <li>
+                Upon signing, the franchisee agrees to the terms and conditions outlined and commits to comply with
+                Kape-Ilokano Café standards and operation guidelines.
+            </li>
+            <li>
+                The franchisee is given a 90-day period from the date of franchise reservation to secure a lease
+                contract
+                from the proposed area for Kape-Ilokano Cafe. Failure to submit within 90 days shall result in the
+                forfeiture of the initial fee of Php <span class="small-line"></span>
+                (<span class="small-line" style="min-width: 140px;"></span> Pesos).
+            </li>
+            <li>
+                The undersigned shall secure all necessary permits, including but not limited to municipal permit,
+                occupancy permit, BIR permit, DTI permit, and sanitary permit within 30 days from the date of signing of
+                the lease contract.
+            </li>
+            <li>
+                The undersigned understands that the initial payment or paid reservation fee is non-refundable and
+                non-cancellable.
+            </li>
+            <li>
+                The franchisee shall pay an amount equivalent to 50% of the total franchise package, or Php
+                <span class="small-line" style="min-width: 100px;"></span>
+                (<span class="small-line" style="min-width: 160px;"></span> Pesos), for the Franchisor to conduct
+                ocular
+                visits necessary in approving the proposed space.
+            </li>
+            <li>
+                The franchisee agrees to issue a post-dated cheque dated 30 days from the date of franchise contract
+                signing, representing full payment of the total franchise package.
+            </li>
+            <li>
+                The Franchisee shall remit to the Franchisor a Security Deposit amounting to Php 100,000 in post-dated
+                cheque, 30 days from the date of signing of the Franchise Agreement.
+            </li>
+            <li>
+                The Franchisee shall process full payment of all balances due, including stocks, local budget marketing
+                fund, balances to third-party suppliers, and other related obligations, 15 days before the scheduled
+                grand opening date.
+            </li>
+        </ol>
+
+        <p>
+            I hereby accept the proposal and attach herein my signature as a sign of our agreement this
+            <span class="small-line"></span> day of
+            <span class="small-line" style="min-width: 100px;"></span> 20<span class="small-line"></span>.
+        </p>
+
+        <table class="confirmation-table">
+            <tr>
+                <td>
+                    Conforme:<br><br><br>
+                    <div class="sig-line"></div>
+                    Franchisee's Name & Signature
+                </td>
+
+                <td>
+                    Conforme:<br><br>
+                    <strong>Kape-Ilokano Café Corporation</strong>
+                    By:
+                    <div class="sig-line"></div>
+                    <strong>JOHN CEDRICK BABARAN TAN</strong><br>
+                    President
+                </td>
+            </tr>
+        </table>
+
+    </div>
 </body>
 
 </html>

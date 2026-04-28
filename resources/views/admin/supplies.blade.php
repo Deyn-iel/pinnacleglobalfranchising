@@ -285,7 +285,12 @@
             <td class="text-muted">{{ $supply->created_at->format('M d, Y') }}</td>
 
             <td class="text-center">
-              <div class="d-inline-flex justify-content-center gap-2">
+              <div class="dropdown action-menu-wrap">
+                <button class="action-menu-toggle" type="button" data-bs-toggle="dropdown"
+                  aria-expanded="false" aria-label="Open actions">
+                  <i class="fas fa-ellipsis"></i>
+                </button>
+                <div class="dropdown-menu dropdown-menu-end action-menu">
 
                 <!-- ✅ EDIT = MODAL -->
                 <button
@@ -303,6 +308,7 @@
                   aria-label="Edit"
                 >
                   <i class="fas fa-pen"></i>
+                  Edit
                 </button>
 
                 <form action="{{ route('admin.supplies.destroy', $supply) }}"
@@ -313,9 +319,11 @@
                   @method('DELETE')
                   <button class="btn btn-sm btn-danger" aria-label="Delete">
                     <i class="fas fa-trash"></i>
+                    Delete
                   </button>
                 </form>
 
+                </div>
               </div>
             </td>
           </tr>
@@ -468,3 +476,4 @@
 
 </body>
 </html>
+

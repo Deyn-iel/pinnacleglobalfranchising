@@ -10,6 +10,7 @@
     <link rel="icon" type="image/png" href="{{ asset('img/logo1-removebg-preview.png') }}">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+    @vite(['resources/css/admin/shadcn-tables.css'])
 
     <style>
         :root {
@@ -375,26 +376,64 @@
 
         /* ================= ACTION BUTTONS ================= */
         .actions {
-            display: flex;
-            align-items: center;
-            justify-content: flex-start;
-            gap: 8px;
-            flex-wrap: wrap;
-        }
-
-        .action-btn {
-            min-height: 36px;
+            position: relative;
             display: inline-flex;
             align-items: center;
             justify-content: center;
+        }
+
+        .actions-toggle {
+            width: 36px;
+            height: 36px;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            background: #fff;
+            color: var(--text);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: var(--shadow-sm);
+            transition: 0.2s ease;
+        }
+
+        .actions-toggle:hover,
+        .actions-toggle.show {
+            background: var(--text);
+            border-color: var(--text);
+            color: #fff;
+        }
+
+        .actions-menu {
+            min-width: 170px;
+            padding: 8px;
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            box-shadow: var(--shadow-md);
+        }
+
+        .actions-menu.show {
+            margin-top: 8px !important;
+        }
+
+        .action-btn {
+            width: 100%;
+            min-height: 38px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
             gap: 7px;
-            border-radius: var(--radius);
+            border-radius: 10px;
             padding: 8px 12px;
             font-size: 12px;
             font-weight: 900;
             transition: 0.2s ease;
             border: 1px solid transparent;
             white-space: nowrap;
+            margin-bottom: 6px;
+        }
+
+        .actions-menu .action-btn:last-child {
+            margin-bottom: 0;
         }
 
         .view {
@@ -970,18 +1009,25 @@
                                             </td>
 
                                             <td data-label="Action">
-                                                <div class="actions">
-                                                    <a href="{{ asset('storage/' . $file->file_path) }}" target="_blank"
-                                                        class="action-btn view">
-                                                        <i class="fa-solid fa-eye"></i>
-                                                        View
-                                                    </a>
+                                                <div class="actions dropdown">
+                                                    <button class="actions-toggle" type="button" data-bs-toggle="dropdown"
+                                                        aria-expanded="false" aria-label="Open actions">
+                                                        <i class="fa-solid fa-ellipsis"></i>
+                                                    </button>
 
-                                                    <a href="{{ asset('storage/' . $file->file_path) }}" download
-                                                        class="action-btn download">
-                                                        <i class="fa-solid fa-download"></i>
-                                                        Download
-                                                    </a>
+                                                    <div class="dropdown-menu dropdown-menu-end actions-menu">
+                                                        <a href="{{ asset('storage/' . $file->file_path) }}" target="_blank"
+                                                            class="action-btn view">
+                                                            <i class="fa-solid fa-eye"></i>
+                                                            View
+                                                        </a>
+
+                                                        <a href="{{ route('portal.company-files.download', [$department, $file]) }}"
+                                                            class="action-btn download">
+                                                            <i class="fa-solid fa-download"></i>
+                                                            Download
+                                                        </a>
+                                                    </div>
                                                 </div>
                                             </td>
                                         </tr>
@@ -1012,3 +1058,5 @@
 </body>
 
 </html>
+
+

@@ -135,9 +135,13 @@
     }
 
     .exam-actions {
-        display: flex;
-        gap: 8px;
-        flex-wrap: wrap;
+        display: inline-flex;
+        flex-direction: column;
+        align-items: flex-end;
+    }
+
+    .exam-actions .action-menu {
+        min-width: 160px;
     }
 
     @media (max-width: 1200px) {
@@ -221,7 +225,12 @@
                         <span class="text-muted">{{ $exam->questions->count() }} questions</span>
                     </div>
 
-                    <div class="exam-actions">
+                    <div class="exam-actions dropdown">
+                        <button class="action-menu-toggle" type="button" data-bs-toggle="dropdown"
+                            aria-expanded="false" aria-label="Open actions">
+                            <i class="fas fa-ellipsis"></i>
+                        </button>
+                        <div class="dropdown-menu dropdown-menu-end action-menu">
                         <form action="{{ route('admin.exams.toggle', $exam->id) }}" method="POST">
                             @csrf
                             @method('PATCH')
@@ -242,9 +251,11 @@
                             @csrf
                             @method('DELETE')
                             <button class="btn btn-sm btn-danger fw-semibold">
+                                <i class="fas fa-trash"></i>
                                 Delete
                             </button>
                         </form>
+                        </div>
                     </div>
                 </div>
             @empty
@@ -255,6 +266,7 @@
     </div>
 </main>
 
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script>
     document.addEventListener("DOMContentLoaded", () => {
     const alertBox = document.getElementById("uploadSuccessAlert");
@@ -396,3 +408,4 @@ removeQuestion = function (id) {
 
 </body>
 </html>
+

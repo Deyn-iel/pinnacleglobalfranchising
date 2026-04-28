@@ -372,6 +372,53 @@
   .adm-fade-leave-start{ opacity: 1; transform: translateY(0); filter: blur(0); }
   .adm-fade-leave-end{ opacity: 0; transform: translateY(-8px); filter: blur(2px); }
 
+  .action-menu-wrap{
+    display:inline-flex;
+    flex-direction:column;
+    align-items:flex-end;
+  }
+  .action-menu-toggle{
+    width:38px;
+    height:38px;
+    border:1px solid rgba(15,23,42,.12);
+    border-radius:12px;
+    background:#fff;
+    color:#0f172a;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    box-shadow:0 8px 18px rgba(15,23,42,.08);
+  }
+  .action-menu-toggle:hover,
+  .action-menu-toggle.show{
+    background:#0f172a;
+    border-color:#0f172a;
+    color:#fff;
+  }
+  .action-menu{
+    min-width:160px;
+    padding:8px;
+    border:1px solid rgba(15,23,42,.10);
+    border-radius:14px;
+    box-shadow:0 18px 42px rgba(15,23,42,.14);
+  }
+  .action-menu.show{
+    margin-top:8px !important;
+  }
+  .action-menu form{ margin:0; }
+  .action-menu .btn{
+    width:100%;
+    min-height:36px;
+    display:flex;
+    align-items:center;
+    justify-content:flex-start;
+    gap:8px;
+    font-weight:800;
+    margin-bottom:6px;
+  }
+  .action-menu form:last-child .btn,
+  .action-menu .btn:last-child{ margin-bottom:0; }
+
   /* responsive */
   @media (min-width: 1600px){
     :root{ --container-max: 1480px; --right-col: 520px; }
@@ -517,24 +564,31 @@
 </td>
 
                       <td class="text-end">
-                        <div class="d-inline-flex gap-2 flex-wrap justify-content-end">
-                          <a class="btn btn-sm btn-outline-secondary rounded-pill"
-                             href="{{ route('admin.coffee-registrations.index', array_merge(request()->query(), ['selected'=>$r->id])) }}">
-                            View
-                          </a>
+                        <div class="dropdown action-menu-wrap">
+                          <button class="action-menu-toggle" type="button" data-bs-toggle="dropdown"
+                                  aria-expanded="false" aria-label="Open actions">
+                            <i class="fa-solid fa-ellipsis"></i>
+                          </button>
+                          <div class="dropdown-menu dropdown-menu-end action-menu">
+                            <a class="btn btn-sm btn-outline-secondary rounded-pill"
+                               href="{{ route('admin.coffee-registrations.index', array_merge(request()->query(), ['selected'=>$r->id])) }}">
+                              <i class="fa-solid fa-eye"></i>
+                              View
+                            </a>
 
-                          <form
-                            method="POST"
-                            action="{{ route('admin.coffee-registrations.destroy', $r->id) }}"
-                            onsubmit="return confirm('Delete this registration? This cannot be undone.')"
-                            class="d-inline"
-                          >
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="btn btn-sm btn-outline-danger rounded-pill">
-                              <i class="fa-solid fa-trash me-1"></i> Delete
-                            </button>
-                          </form>
+                            <form
+                              method="POST"
+                              action="{{ route('admin.coffee-registrations.destroy', $r->id) }}"
+                              onsubmit="return confirm('Delete this registration? This cannot be undone.')"
+                            >
+                              @csrf
+                              @method('DELETE')
+                              <button type="submit" class="btn btn-sm btn-outline-danger rounded-pill">
+                                <i class="fa-solid fa-trash"></i>
+                                Delete
+                              </button>
+                            </form>
+                          </div>
                         </div>
                       </td>
                     </tr>
@@ -693,3 +747,5 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
+
+

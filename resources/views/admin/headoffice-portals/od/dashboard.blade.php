@@ -165,6 +165,7 @@
         .panel {
             background: var(--card);
             border-radius: 22px;
+            margin-top: 25px;
             padding: 20px;
             border: 1px solid var(--border);
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
@@ -353,7 +354,7 @@
 
             <div class="table-responsive">
 
-                <table class="table table-hover align-middle">
+                <table class="table align-middle">
 
                     <thead>
                         <tr>

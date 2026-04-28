@@ -518,24 +518,31 @@
 </td>
 
                       <td class="text-end">
-                        <div class="d-inline-flex gap-2 flex-wrap justify-content-end">
-                          <a class="btn btn-sm btn-outline-secondary rounded-pill"
-                             href="{{ route('admin.coffee-registrations.index', array_merge(request()->query(), ['selected'=>$r->id])) }}">
-                            View
-                          </a>
+                        <div class="dropdown action-menu-wrap">
+                          <button class="action-menu-toggle" type="button" data-bs-toggle="dropdown"
+                                  aria-expanded="false" aria-label="Open actions">
+                            <i class="fa-solid fa-ellipsis"></i>
+                          </button>
+                          <div class="dropdown-menu dropdown-menu-end action-menu">
+                            <a class="btn btn-sm btn-outline-secondary rounded-pill"
+                               href="{{ route('admin.coffee-registrations.index', array_merge(request()->query(), ['selected'=>$r->id])) }}">
+                              <i class="fa-solid fa-eye"></i>
+                              View
+                            </a>
 
-                          <form
-                            method="POST"
-                            action="{{ route('admin.coffee-registrations.destroy', $r->id) }}"
-                            onsubmit="return confirm('Delete this registration? This cannot be undone.')"
-                            class="d-inline"
-                          >
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="btn btn-sm btn-outline-danger rounded-pill">
-                              <i class="fa-solid fa-trash me-1"></i> Delete
-                            </button>
-                          </form>
+                            <form
+                              method="POST"
+                              action="{{ route('admin.coffee-registrations.destroy', $r->id) }}"
+                              onsubmit="return confirm('Delete this registration? This cannot be undone.')"
+                            >
+                              @csrf
+                              @method('DELETE')
+                              <button type="submit" class="btn btn-sm btn-outline-danger rounded-pill">
+                                <i class="fa-solid fa-trash"></i>
+                                Delete
+                              </button>
+                            </form>
+                          </div>
                         </div>
                       </td>
                     </tr>
@@ -694,3 +701,4 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
+

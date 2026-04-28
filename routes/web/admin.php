@@ -281,6 +281,10 @@ Route::delete('/folder/{folder}', [RequirementController::class, 'deleteFolder']
 Route::delete('/requirements/{id}', [RequirementController::class, 'destroy'])
     ->name('requirements.delete');
 
+// DOWNLOAD FILE WITH ORIGINAL NAME
+Route::get('/requirements/{requirement}/download', [RequirementController::class, 'download'])
+    ->name('requirements.download');
+
 
 Route::get('/uploading-exams', [AdminExamController::class, 'index'])
             ->name('uploading-exams');
@@ -323,6 +327,12 @@ Route::post('/application/{id}/start-discovery', [FranchiseAdminController::clas
 
 Route::post('/application/{id}/done-discovery', [FranchiseAdminController::class, 'doneDiscovery'])
 ->name('application.doneDiscovery');
+
+Route::post('/application/discovery-slides', [FranchiseAdminController::class, 'uploadDiscoverySlides'])
+->name('application.discoverySlides.upload');
+
+Route::get('/application/discovery-slides', [FranchiseAdminController::class, 'discoverySlidesJson'])
+->name('application.discoverySlides.json');
 
 Route::post('/application/{id}/close-deal', [FranchiseAdminController::class, 'closeDeal'])
 ->name('application.closeDeal');

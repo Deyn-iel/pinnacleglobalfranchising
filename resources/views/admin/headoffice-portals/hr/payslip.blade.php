@@ -8,6 +8,7 @@
 <link rel="icon" href="{{ asset('img/logo1-removebg-preview.png') }}">
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+@vite(['resources/css/admin/shadcn-tables.css'])
 
 <style>
 :root{
@@ -119,6 +120,60 @@ td{
 .btn{
   border-radius:10px;
 }
+
+.action-menu-wrap{
+  display:inline-flex;
+  flex-direction:column;
+  align-items:flex-end;
+}
+
+.action-menu-toggle{
+  width:38px;
+  height:38px;
+  border:1px solid var(--border);
+  border-radius:12px;
+  background:#fff;
+  color:var(--text);
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  box-shadow:0 8px 18px rgba(15,23,42,.08);
+}
+
+.action-menu-toggle:hover,
+.action-menu-toggle.show{
+  background:var(--text);
+  border-color:var(--text);
+  color:#fff;
+}
+
+.action-menu{
+  min-width:160px;
+  padding:8px;
+  border:1px solid var(--border);
+  border-radius:14px;
+  box-shadow:0 18px 42px rgba(15,23,42,.14);
+}
+
+.action-menu.show{
+  margin-top:8px !important;
+}
+
+.action-menu form{ margin:0; }
+
+.action-menu .btn{
+  width:100%;
+  min-height:36px;
+  display:flex;
+  align-items:center;
+  justify-content:flex-start;
+  gap:8px;
+  font-weight:800;
+  margin-bottom:6px;
+}
+
+.action-menu form:last-child .btn,
+.action-menu .btn:last-child{ margin-bottom:0; }
 
 /* MOBILE */
 @media(max-width:768px){
@@ -293,25 +348,31 @@ class="text-decoration-none text-dark">
 <td>{{ $p->created_at->format('M d Y') }}</td>
 
 <td class="text-end">
-
+<div class="dropdown action-menu-wrap">
+<button class="action-menu-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Open actions">
+<i class="fa fa-ellipsis"></i>
+</button>
+<div class="dropdown-menu dropdown-menu-end action-menu">
 <a href="{{ route('admin.portals.hr.payslip.download',$p->id) }}"
 class="btn btn-sm btn-outline-primary">
 <i class="fa fa-download"></i>
+Download
 </a>
 
 <form method="POST"
-action="{{ route('admin.portals.hr.payslip.delete',$p->id) }}"
-class="d-inline">
+action="{{ route('admin.portals.hr.payslip.delete',$p->id) }}">
 
 @csrf
 @method('DELETE')
 
 <button class="btn btn-sm btn-outline-danger">
 <i class="fa fa-trash"></i>
+Delete
 </button>
 
 </form>
-
+</div>
+</div>
 </td>
 
 </tr>
@@ -346,6 +407,7 @@ No payslips uploaded
 
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 <script>
 document.addEventListener("DOMContentLoaded", function(){
 
@@ -366,3 +428,5 @@ document.addEventListener("DOMContentLoaded", function(){
 
 </body>
 </html>
+
+

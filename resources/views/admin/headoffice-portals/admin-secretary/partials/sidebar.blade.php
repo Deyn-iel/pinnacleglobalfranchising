@@ -117,7 +117,7 @@ class="nav-link {{ request()->routeIs('admin.portals.admin-secretary') ? 'active
 </a>
 
 <a href="{{ route('portal.company-files', 'admin-secretary') }}"
-class="nav-link {{ request()->routeIs('portal.company-files') ? 'active' : '' }}">
+class="nav-link {{ request()->routeIs('portal.company-files', 'portal.company-files.*') ? 'active' : '' }}">
 <i class="fas fa-file-lines"></i>
 Company Files
 </a>
@@ -154,3 +154,5 @@ Logout
 </form>
 
 </div>
+
+@include('admin.headoffice-portals.partials.floating-action-dropdowns')

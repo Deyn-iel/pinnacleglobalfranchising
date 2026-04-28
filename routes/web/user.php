@@ -20,6 +20,9 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/company-files/{department}', [RequirementController::class, 'portalIndex'])
         ->name('portal.company-files');
 
+    Route::get('/company-files/{department}/download/{requirement}', [RequirementController::class, 'download'])
+        ->name('portal.company-files.download');
+
     Route::get('/company-files/{department}/{folder}', [RequirementController::class, 'portalFolder'])
         ->where('folder', '.*')
         ->name('portal.company-files.folder');

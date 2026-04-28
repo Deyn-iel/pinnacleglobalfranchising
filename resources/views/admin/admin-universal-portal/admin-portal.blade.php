@@ -25,6 +25,7 @@
     .scrollbar-premium::-webkit-scrollbar{ height: 10px; width: 10px; }
     .scrollbar-premium::-webkit-scrollbar-thumb{ background: rgba(100,116,139,.35); border-radius: 999px; }
     .scrollbar-premium::-webkit-scrollbar-track{ background: transparent; }
+    [x-cloak]{ display: none !important; }
 
     @keyframes fadeIn{ from{opacity:0; transform: translateY(6px);} to{opacity:1; transform: translateY(0);} }
     .animate-toast{ animation: fadeIn .18s ease-out; }
@@ -263,13 +264,30 @@
                   </td>
 
                   <td class="px-4 py-3">
-                    <button
-                      type="button"
-                      class="inline-flex items-center justify-center rounded-xl border border-slate-200 bg-white px-3 py-2 text-xs font-semibold hover:bg-slate-50"
-                      onclick="openDrawer({{ $c->id }})"
-                    >
-                      Open
-                    </button>
+                    <div class="relative inline-flex flex-col items-start" x-data="{ open: false }" @click.outside="open = false">
+                      <button
+                        type="button"
+                        class="inline-flex h-9 w-9 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-900 shadow-sm transition hover:bg-slate-900 hover:text-white"
+                        @click="open = !open"
+                        aria-label="Open actions"
+                      >
+                        <i class="fa-solid fa-ellipsis"></i>
+                      </button>
+                      <div
+                        x-cloak
+                        x-show="open"
+                        class="mt-2 min-w-[150px] rounded-2xl border border-slate-200 bg-white p-2 shadow-xl"
+                      >
+                        <button
+                          type="button"
+                          class="flex w-full items-center gap-2 rounded-xl px-3 py-2 text-left text-xs font-semibold text-slate-800 hover:bg-slate-50"
+                          @click="open = false; openDrawer({{ $c->id }})"
+                        >
+                          <i class="fa-solid fa-eye"></i>
+                          Open
+                        </button>
+                      </div>
+                    </div>
                   </td>
                 </tr>
               @empty
@@ -505,3 +523,4 @@
   </script>
 </body>
 </html>
+

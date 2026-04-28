@@ -528,22 +528,29 @@ tbody td{
                   {{ optional($p->created_at)->format('M d, Y · h:i A') ?? '—' }}
                 </td>
                 <td class="text-center">
-                  <div class="d-inline-flex gap-2">
+                  <div class="dropdown action-menu-wrap">
+                    <button class="action-menu-toggle" type="button" data-bs-toggle="dropdown"
+                            aria-expanded="false" aria-label="Open actions">
+                      <i class="fa-solid fa-ellipsis"></i>
+                    </button>
+                    <div class="dropdown-menu dropdown-menu-end action-menu">
                     <a href="{{ $hasDownload ? route('hr.payslips.download', $p->id) : '#' }}"
                        class="btn btn-sm btn-outline-primary {{ $hasDownload ? '' : 'disabled' }}">
                       <i class="fa-solid fa-download"></i>
+                      Download
                     </a>
 
                     <form method="POST"
                           action="{{ $hasDestroy ? route('hr.payslips.destroy', $p->id) : '#' }}"
-                          class="m-0"
                           onsubmit="return {{ $hasDestroy ? 'confirm(\'Delete this payslip file?\')' : 'false' }};">
                       @csrf
                       @method('DELETE')
                       <button class="btn btn-sm btn-outline-danger" {{ $hasDestroy ? '' : 'disabled' }}>
                         <i class="fa-solid fa-trash"></i>
+                        Delete
                       </button>
                     </form>
+                    </div>
                   </div>
                 </td>
               </tr>
@@ -691,11 +698,16 @@ document.addEventListener("DOMContentLoaded", function () {
           <td>${file.uploader?.name ?? '—'}</td>
           <td>${new Date(file.created_at).toLocaleString()}</td>
           <td class="text-center">
-            <div class="d-inline-flex gap-2">
+            <div class="dropdown action-menu-wrap">
+              <button class="action-menu-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Open actions">
+                <i class="fa-solid fa-ellipsis"></i>
+              </button>
+              <div class="dropdown-menu dropdown-menu-end action-menu">
 
               <a href="/hr/payslips/${file.id}/download"
                  class="btn btn-sm btn-outline-primary">
                  <i class="fa-solid fa-download"></i>
+                 Download
               </a>
 
               <form method="POST"
@@ -705,9 +717,11 @@ document.addEventListener("DOMContentLoaded", function () {
                 <input type="hidden" name="_method" value="DELETE">
                 <button type="submit" class="btn btn-sm btn-outline-danger">
                   <i class="fa-solid fa-trash"></i>
+                  Delete
                 </button>
               </form>
 
+              </div>
             </div>
           </td>
         </tr>
@@ -720,3 +734,4 @@ document.addEventListener("DOMContentLoaded", function () {
 </script>
 </body>
 </html>
+

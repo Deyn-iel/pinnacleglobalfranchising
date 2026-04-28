@@ -96,7 +96,7 @@
                                         <i class="fas fa-circle-check"></i>
                                         Coupon Status
                                     </h3>
-                                    <div class="section-sub">Review coupon details before claiming</div>
+                                    <div class="section-sub">Review the registered buyer details before claiming</div>
                                 </div>
 
                                 <div class="soft-panel blue">
@@ -134,29 +134,28 @@
                                             </div>
 
                                             <div class="form-group col-4">
-                                                <label>Complete Name</label>
-                                                <input type="text" name="customer_name"
-                                                    value="{{ old('customer_name', $coupon->buyer_name) }}" required>
+                                                <label>Registered Buyer</label>
+                                                <input type="text"
+                                                    value="{{ $coupon->buyer_name }}" class="readonly-input" readonly>
                                             </div>
 
                                             <div class="form-group col-4">
                                                 <label>Email</label>
-                                                <input type="email" name="customer_email"
-                                                    value="{{ old('customer_email', $coupon->buyer_email) }}" required>
+                                                <input type="email"
+                                                    value="{{ $coupon->buyer_email }}" class="readonly-input" readonly>
                                             </div>
 
                                             <div class="form-group col-4">
                                                 <label>Contact Number</label>
-                                                <input type="text" name="customer_contact"
-                                                    value="{{ old('customer_contact', $coupon->buyer_contact) }}"
-                                                    required>
+                                                <input type="text"
+                                                    value="{{ $coupon->buyer_contact }}" class="readonly-input" readonly>
                                             </div>
 
                                             <div class="form-group col-12">
                                                 <label>Address</label>
-                                                <input type="text" name="customer_address"
-                                                    value="{{ old('customer_address', $coupon->buyer_address) }}"
-                                                    placeholder="Enter full address" required>
+                                                <input type="text"
+                                                    value="{{ $coupon->buyer_address }}"
+                                                    placeholder="No registered address" class="readonly-input" readonly>
                                             </div>
                                         </div>
 
@@ -168,6 +167,10 @@
                                             @elseif($coupon->selling_status !== 'Sold')
                                                 <button type="button" class="btn-modern btn-light-modern" disabled>
                                                     <i class="fas fa-ban"></i> Not Yet Sold
+                                                </button>
+                                            @elseif(!$coupon->buyer_name || !$coupon->buyer_email || !$coupon->buyer_contact || !$coupon->buyer_address)
+                                                <button type="button" class="btn-modern btn-light-modern" disabled>
+                                                    <i class="fas fa-user-slash"></i> No Registered Buyer
                                                 </button>
                                             @else
                                                 <button type="submit" class="btn-modern btn-success-modern">
@@ -202,15 +205,15 @@
                                     <tbody>
                                         @forelse($claimedCoupons as $claimed)
                                             <tr>
-                                                <td>{{ $claimed->buyer_name ?? '—' }}</td>
-                                                <td>{{ $claimed->claimable_item }}</td>
+                                                <td data-label="Name">{{ $claimed->buyer_name ?? '—' }}</td>
+                                                <td data-label="Reward">{{ $claimed->claimable_item }}</td>
 
-                                                <td>
+                                                <td data-label="Status">
                                                     <span class="badge-modern badge-claimed">
                                                         {{ $claimed->claim_status }}
                                                     </span>
                                                 </td>
-                                                <td>{{ $claimed->claimed_at?->format('M d, Y • h:i A') }}</td>
+                                                <td data-label="Claimed At">{{ $claimed->claimed_at?->format('M d, Y • h:i A') }}</td>
                                             </tr>
                                         @empty
                                             <tr>

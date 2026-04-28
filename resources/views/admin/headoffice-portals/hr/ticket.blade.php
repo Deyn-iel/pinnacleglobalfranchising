@@ -162,7 +162,6 @@ th:nth-child(8), td:nth-child(8){ width: 90px; }  /* Actions */
   }
 
   .table tbody tr{ transition: background .15s ease; }
-  .table-hover tbody tr:hover{ background: rgba(13,110,253,.05); }
 
 .concern-cell{
   min-width: 280px;
@@ -221,22 +220,66 @@ th:nth-child(8), td:nth-child(8){ width: 90px; }  /* Actions */
   }
 
   .action-wrap{
-    display:flex;
-    gap: 8px;
+    display:inline-flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
+  }
+
+  .action-menu-toggle{
+    width: 38px;
+    height: 38px;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    background: #fff;
+    color: var(--text);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 8px 18px rgba(15,23,42,.08);
+  }
+
+  .action-menu-toggle:hover,
+  .action-menu-toggle.show{
+    background: var(--text);
+    border-color: var(--text);
+    color: #fff;
+  }
+
+  .action-menu{
+    min-width: 190px;
+    padding: 8px;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    box-shadow: 0 18px 42px rgba(15,23,42,.14);
+  }
+
+  .action-menu.show{
+    margin-top: 8px !important;
+  }
+
+  .action-menu .btn{
+    width: 100%;
+    min-height: 38px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 8px;
+    border-radius: 10px;
+    font-weight: 900;
+    margin-bottom: 6px;
+  }
+
+  .action-menu .btn:last-child{
+    margin-bottom: 0;
   }
 
   .btn{ font-weight: 900; border-radius: 999px; }
   .btn-danger{ padding: 6px 12px; }
 
   @media (max-width: 768px){
-    .action-wrap{
-      flex-direction: column;
-      align-items: stretch;
-    }
-    .action-wrap form,
-    .action-wrap button{ width: 100%; }
+    .action-wrap{ align-items: center; }
+    .action-menu .btn{ width: 100%; }
   }
 
   /* ===== EMPTY ===== */
@@ -428,7 +471,7 @@ th:nth-child(8), td:nth-child(8){ width: 90px; }  /* Actions */
 
       <!-- TABLE -->
       <div class="table-responsive">
-        <table class="table table-hover align-middle">
+        <table class="table align-middle">
           <thead>
             <tr>
               <th>Ticket #</th>
@@ -523,7 +566,11 @@ data-status="{{ $isReview ? 'Requesting' : ucwords(str_replace('_',' ', $ticket-
 </td>
 
               <td class="text-center">
-  <div class="action-wrap">
+  <div class="action-wrap dropdown">
+    <button class="action-menu-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Open actions">
+      <i class="fa-solid fa-ellipsis"></i>
+    </button>
+    <div class="dropdown-menu dropdown-menu-end action-menu">
 
     @php
   $isReview = $ticket->status === 'in_progress' && $ticket->approval_requested;
@@ -537,6 +584,7 @@ data-status="{{ $isReview ? 'Requesting' : ucwords(str_replace('_',' ', $ticket-
   {{ $isReview ? 'disabled' : '' }}
 >
   <i class="fa-solid {{ $isReview ? 'fa-hourglass-half' : 'fa-paper-plane' }}"></i>
+  {{ $isReview ? 'Requesting' : 'Request' }}
 </button>
 
 @php
@@ -552,6 +600,7 @@ data-status="{{ $isReview ? 'Requesting' : ucwords(str_replace('_',' ', $ticket-
   {{ $isLocked ? 'disabled' : '' }}
 >
   <i class="fa-solid {{ $isLocked ? 'fa-lock' : 'fa-share' }}"></i>
+  {{ $isLocked ? 'Transfer Locked' : 'Transfer' }}
 </button>
 
     {{-- <!-- DELETE -->
@@ -575,6 +624,7 @@ data-status="{{ $isReview ? 'Requesting' : ucwords(str_replace('_',' ', $ticket-
 </button>
     </form> --}}
 
+    </div>
   </div>
 </td>
             </tr>
@@ -1047,21 +1097,21 @@ if(approvalBtn){
 
   if(ticket.approval_requested){
     approvalBtn.disabled = true;
-    approvalBtn.innerHTML = `<i class="fa-solid fa-hourglass-half"></i>`;
+    approvalBtn.innerHTML = `<i class="fa-solid fa-hourglass-half"></i> Requesting`;
   }
 
   else if(ticket.status === "pending"){
   approvalBtn.disabled = true;
-  approvalBtn.innerHTML = `<i class="fa-solid fa-paper-plane"></i>`;
+  approvalBtn.innerHTML = `<i class="fa-solid fa-paper-plane"></i> Request`;
 }
   else if(ticket.status === "in_progress"){
     approvalBtn.disabled = false;
-    approvalBtn.innerHTML = `<i class="fa-solid fa-paper-plane"></i>`;
+    approvalBtn.innerHTML = `<i class="fa-solid fa-paper-plane"></i> Request`;
   }
 
   else if(ticket.status === "resolved"){
     approvalBtn.disabled = true;
-    approvalBtn.innerHTML = `<i class="fa-solid fa-check"></i>`;
+    approvalBtn.innerHTML = `<i class="fa-solid fa-check"></i> Resolved`;
   }
 
 }
@@ -1070,10 +1120,10 @@ if(transferBtn){
 
   if(ticket.status === "resolved" || ticket.approval_requested){
     transferBtn.disabled = true;
-    transferBtn.innerHTML = `<i class="fa-solid fa-lock"></i>`;
+    transferBtn.innerHTML = `<i class="fa-solid fa-lock"></i> Transfer Locked`;
   }else{
     transferBtn.disabled = false;
-    transferBtn.innerHTML = `<i class="fa-solid fa-share"></i>`;
+    transferBtn.innerHTML = `<i class="fa-solid fa-share"></i> Transfer`;
   }
 
 }
@@ -1177,3 +1227,5 @@ Object.entries(allDepts).forEach(([key, label]) => {
   @include('partials.chatbot', ['isAdmin' => true])
 </body>
 </html>
+
+

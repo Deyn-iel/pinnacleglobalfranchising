@@ -11,66 +11,86 @@ class AdminCouponController extends Controller
 {
     public function index()
     {
-        $coupons = Coupon::latest()->get();
+        $coupons = Coupon::whereNotNull('unique_code')
+            ->latest()
+            ->paginate(15)
+            ->withQueryString();
 
-        $rewardTypes = [
-            ['name' => 'Franchise Discount Voucher - Flat Rate', 'amount' => 0, 'requires_code' => true],
-            ['name' => '1 Free Ambaristo Drink', 'amount' => 0, 'requires_code' => true],
-            ['name' => '1 Bangus Sardines Ricebowl', 'amount' => 0, 'requires_code' => true],
-            ['name' => 'Free Shuttle to Nearest Store', 'amount' => 0, 'requires_code' => false],
-            ['name' => 'Free Kit', 'amount' => 0, 'requires_code' => false],
-            ['name' => 'Isabela Coffee', 'amount' => 0, 'requires_code' => false],
+        $couponStats = [
+            'total' => Coupon::count(),
+            'sold' => Coupon::where('selling_status', 'Sold')->count(),
+            'claimed' => Coupon::where('claim_status', 'Claimed')->count(),
+            'active' => Coupon::where('coupon_status', 'Active')->count(),
         ];
 
-        return view('admin.coupon.index', compact('coupons', 'rewardTypes'));
+        $rewardTypes = $this->rewardTypes();
+
+        return view('admin.coupon.index', compact('coupons', 'couponStats', 'rewardTypes'));
     }
 
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'claimable_item' => 'required|string|max:255',
+            'quantity' => 'required|integer|min:1|max:500',
             'coupon_status' => 'required|string|in:Active,Inactive',
-            'requires_code' => 'required|boolean',
         ]);
 
-        $validated['booklet_serial_number'] = $this->generateBookletSerialNumber();
+        $codedRewards = collect($this->rewardTypes())
+            ->where('requires_code', true)
+            ->values();
 
-        $validated['unique_code'] = $validated['requires_code']
-            ? $this->generateUniqueCouponCode()
-            : null;
+        for ($i = 0; $i < $validated['quantity']; $i++) {
+            $reward = $codedRewards->random();
 
-        $validated['selling_status'] = 'For Selling';
-        $validated['claim_status'] = 'Unclaimed';
+            Coupon::create([
+                'booklet_serial_number' => $this->generateBookletSerialNumber(),
+                'unique_code' => $this->generateUniqueCouponCode(),
+                'claimable_item' => $reward['name'],
+                'amount' => $reward['amount'] ?? 0,
+                'coupon_status' => $validated['coupon_status'],
+                'requires_code' => true,
+                'selling_status' => 'For Selling',
+                'claim_status' => 'Unclaimed',
+                'buyer_name' => null,
+                'buyer_address' => null,
+                'buyer_email' => null,
+                'buyer_contact' => null,
+                'mode_of_payment' => null,
+                'payment_reference' => null,
+                'sold_at' => null,
+                'claimed_at' => null,
+            ]);
+        }
 
-        $validated['buyer_name'] = null;
-        $validated['buyer_address'] = null;
-        $validated['buyer_email'] = null;
-        $validated['buyer_contact'] = null;
-        $validated['mode_of_payment'] = null;
-        $validated['payment_reference'] = null;
-
-        $validated['sold_at'] = null;
-        $validated['claimed_at'] = null;
-
-        Coupon::create($validated);
-
-        return back()->with('success', 'Coupon generated successfully.');
+        return back()->with('success', $validated['quantity'] . ' coupon code(s) generated successfully with random rewards.');
     }
 
-    public function tagSold($id)
+    public function tagSold(Request $request, $id)
     {
+        $validated = $request->validate([
+            'buyer_name' => 'required|string|max:255',
+            'amount' => 'nullable|numeric|min:0|max:99999999.99',
+            'buyer_address' => 'required|string|max:1000',
+            'buyer_email' => 'required|email|max:255',
+            'buyer_contact' => 'required|string|max:255',
+            'mode_of_payment' => 'nullable|string|max:255',
+            'payment_reference' => 'nullable|string|max:255',
+        ]);
+
         $coupon = Coupon::findOrFail($id);
 
         if ($coupon->selling_status === 'Sold') {
             return back()->with('success', 'Coupon is already tagged as sold.');
         }
 
-        $coupon->update([
+        $validated['amount'] = $validated['amount'] ?? 0;
+
+        $coupon->update($validated + [
             'selling_status' => 'Sold',
             'sold_at' => now(),
         ]);
 
-        return back()->with('success', 'Coupon tagged as sold.');
+        return back()->with('success', 'Coupon assigned to buyer and tagged as sold.');
     }
 
     private function generateBookletSerialNumber(): string
@@ -102,5 +122,17 @@ class AdminCouponController extends Controller
         } while (Coupon::where('unique_code', $code)->exists());
 
         return $code;
+    }
+
+    private function rewardTypes(): array
+    {
+        return [
+            ['name' => 'Franchise Discount Voucher - Flat Rate', 'amount' => 0, 'requires_code' => true],
+            ['name' => '1 Free Ambaristo Drink', 'amount' => 0, 'requires_code' => true],
+            ['name' => '1 Bangus Sardines Ricebowl', 'amount' => 0, 'requires_code' => true],
+            ['name' => 'Free Shuttle to Nearest Store', 'amount' => 0, 'requires_code' => false],
+            ['name' => 'Free Kit', 'amount' => 0, 'requires_code' => false],
+            ['name' => 'Isabela Coffee', 'amount' => 0, 'requires_code' => false],
+        ];
     }
 }

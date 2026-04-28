@@ -165,6 +165,12 @@ th:nth-child(8), td:nth-child(8){ width: 90px; }  /* Actions */
 
   .table tbody tr{ transition: background .15s ease; }
 
+  .user-card .table tbody tr:hover,
+  .user-card .table tbody tr:hover > * {
+    background: transparent !important;
+    --bs-table-bg-state: transparent !important;
+  }
+
   /* ===== CONCERN + VIEW (SIDE BY SIDE) ===== */
   .concern-cell{
     min-width: 220px;
@@ -429,7 +435,7 @@ th:nth-child(8), td:nth-child(8){ width: 90px; }  /* Actions */
 
       <!-- TABLE -->
       <div class="table-responsive">
-        <table class="table table-hover align-middle">
+        <table class="table align-middle">
           <thead>
             <tr>
               <th>Ticket #</th>
