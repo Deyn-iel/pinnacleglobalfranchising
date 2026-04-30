@@ -3,7 +3,6 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
   <link rel="icon" type="image/png" href="{{ asset('img/logo1-removebg-preview.png') }}">
   <title>Franchise Application</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -37,7 +36,7 @@
     <img src="{{ asset('img/PATATASPROJECT.jpg') }}" alt="">
 </div>
   <p class="lead">
-    Thank you for your interest in franchising Kape-Ilokano Cafe! 
+    Thank you for your interest in franchising Patatas Project!
     This form is the complete official franchise application.
   </p>
 
@@ -47,18 +46,18 @@
     enctype="multipart/form-data"
 >
 @csrf
+<input type="hidden" name="brand" value="Patatas Project">
     <!-- INTRO -->
     <div class="card">
       <p>
-        At Kape-Ilokano, we take pride in sharing the rich flavors of Ilokano coffee culture. With over <b>18 partners nationwide</b>, we continue to grow,  bringing the authentic taste of locally sourced coffee to more communities. <br><br>
+        At Patatas Project, we take pride in serving crave-worthy potato snacks made for everyday merienda moments. With growing partners nationwide, we continue to bring flavorful, accessible, and easy-to-love potato products to more communities. <br><br>
        Submitting a franchise application is simply the first step in our process and does not create 
       any obligations for either party. Once received, we will carefully review your application and 
       evaluate your proposal. <br><br>
-       Our franchise packages range from <b>P250,000 to P1,500,000</b>, depending on the store model 
-      and location. Upon approval, we’ll discuss the investment details, potential returns, and 
+       Our franchise package and investment details depend on the store model, target location, and approved setup. Upon approval, we’ll discuss the investment details, potential returns, and
       everything you need to know to start your journey with us. <br><br>
-       We’re excited about the possibility of welcoming you to the Kape-Ilokano family. <b>Let’s brew 
-      success, Ilokano-style!</b>
+       We’re excited about the possibility of welcoming you to the Patatas Project family. <b>Let’s build
+      success, one serving at a time!</b>
       </p>
 
      
@@ -68,7 +67,7 @@
         I tender the following information as my complete and true personal & financial
         condition as the date shown below. I expressly authorize Pinnacle Global
         Franchising Group Inc. to conduct verification and investigation as part of the
-        procedure for processing my application with Kape-Ilokano Cafe. I understand that
+        procedure for processing my application with Patatas Project. I understand that
         the investigative report may be made whereby information is obtained through
         personal interviews with third parties, such as business associates, financial
         sources, friends, neighbors, or others with whom I am acquainted. This inquiry
@@ -113,7 +112,7 @@
       <input type="text" name="personal_full_name" required>
 
       <label> Please Attach Latest 2x2 Colored Picture or Selfie in White Background *</label>
-      <input type="file" name="personal_photo" multiple>
+      <input type="file" name="personal_photo" accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp">
 
 
       <label>Gender *</label>
@@ -171,7 +170,7 @@
       <p> As part of our franchise application process, we would like to get to know you better. Please 
       provide details about your <b>personal background, professional experience, and business 
       interests.</b> This will help us understand your qualifications, entrepreneurial mindset, and 
-      alignment with <b>Kape-Ilokano Cafe’s</b> vision of promoting Ilokano coffee culture.</p>
+      alignment with <b>Patatas Project’s</b> vision of serving quality potato snacks and building strong local franchise partners.</p>
 
 
       <label>Educational Attainment *</label>
@@ -226,7 +225,7 @@
       <p> We would also like to know if you have any <b>prior experience in running a business,</b> 
       particularly in the food and beverage industry or related fields. <br><br>
      Understanding your background will help us assess how we can best support and guide you 
-      in building a thriving business with <b>Kape-Ilokano Cafe Corporation.</b></p>
+      in building a thriving business with <b>Patatas Project.</b></p>
 
       <label>Do you have business experience in the Philippines *</label>
       <select name="business_experience" required>
@@ -251,33 +250,33 @@
 
       <label>If yes, we’d appreciate it if you could share the reasons behind the closure. This
       helps us understand your entrepreneurial journey and how we can better support
-      you in your Kape-Ilokano Cafe franchise. *</label>
+      you in your Patatas Project franchise. *</label>
       <textarea name="business_closure_reason" required></textarea>
 
 
       <label> Kindly share details about your past or current ventures, your role in managing
-      them, and how your experience can contribute to the success of your Kape
-      Ilokano Cafe franchise. *</label>
+      them, and how your experience can contribute to the success of your Patatas
+      Project franchise. *</label>
       <textarea name="business_venture_description" required></textarea>
 
     </div>
 
-    <!-- KAPE-ILOKANO BACKGROUND -->
+    <!-- PATATAS PROJECT BACKGROUND -->
     <div class="card">
-      <div class="section-title">Kape-Ilokano Background</div>
+      <div class="section-title">Patatas Project Background</div>
 
-      <p> We’d like to understand your background and experience with Kape-Ilokano—whether as a 
-      coffee enthusiast, a business owner, or someone who shares our passion for promoting 
-      Ilokano culture. This helps us assess how we can best support you in your franchising 
+      <p> We’d like to understand your background and experience with Patatas Project—whether as a
+      customer, a business owner, or someone who shares our passion for quality potato snacks and
+      accessible food concepts. This helps us assess how we can best support you in your franchising
       journey.</p>
 
-      <label>Have you been a customer of Kape-Ilokano Cafe? *</label>
+      <label>Have you been a customer of Patatas Project? *</label>
       <select name="ki_customer">
         <option>yes</option>
         <option>no</option>
       </select>
 
-      <label>Are you affiliated with any Kape-Ilokano Cafe Branch?  *</label>
+      <label>Are you affiliated with any Patatas Project branch?  *</label>
       <select name="ki_affiliated">
         <option>yes</option>
         <option>no</option>
@@ -286,16 +285,16 @@
       <label> If Yes, kindly state which Branch or Person you are connected to. *</label>
       <input type="text" name="ki_affiliated_details">
 
-      <label>Do you have an existing coffee shop business?</label>
+      <label>Do you have an existing food or snack business?</label>
       <select name="ki_has_coffee_shop"><option>yes</option><option>no</option></select>
 
-      <label>Do you have knowledge in Coffee Industry?</label>
+      <label>Do you have knowledge in the food and beverage industry?</label>
       <select name="ki_industry_knowledge"><option>yes</option><option>no</option></select>
 
-      <label>Do you have passion for Coffee?</label>
+      <label>Do you have passion for food service and potato snack products?</label>
       <select name="ki_passion"><option>yes</option><option>no</option></select>
 
-      <label>How eager are you to have your own cafe business? (Rate it from 1 to 10. 10 is
+      <label>How eager are you to have your own Patatas Project business? (Rate it from 1 to 10. 10 is
       the highest, 1 is the lowest.)</label>
       <input type="number" name="ki_eagerness" min="1" max="10">
     </div>
@@ -304,18 +303,18 @@
     <div class="card">
       <div class="section-title">Business Partnership Proposal</div>
 
-      <p> We’d like to understand your Business plan for Kape-Ilokano—your vision, target market, and 
+      <p> We’d like to understand your business plan for Patatas Project—your vision, target market, and
       location preferences. This helps us evaluate alignment with our brand values and determine 
       how we can best support you in building a successful franchise</p>
 
       <label>Target Location (Please indicate the complete address) *</label>
       <input type="text" name="proposal_location" required>
 
-      <label>What is your main reason for considering a Kape-Ilokano Cafe Franchise? *</label>
+      <label>What is your main reason for considering a Patatas Project franchise? *</label>
       <textarea name="proposal_reason" required></textarea>
 
 
-      <label> What are your expectations in having a Kape-Ilokano Cafe Franchise? *</label>
+      <label> What are your expectations in having a Patatas Project franchise? *</label>
       <textarea name="proposal_expectations" required></textarea>
 
 
@@ -338,7 +337,7 @@
     <div class="card">
       <div class="section-title">Financial Aspect</div>
 
-      <p> We’d like to understand your <b>business plan for Kape-Ilokano, including your financial 
+      <p> We’d like to understand your <b>business plan for Patatas Project, including your financial
       capacity and strategy.</b> This helps us assess your preparedness and ensure that we can guide 
       you effectively in launching a successful franchise. We may ask about your available capital, 
       funding sources, and financial projections to align expectations and provide the best support 
@@ -373,7 +372,7 @@
     <div class="card">
       <div class="section-title">Consent Form</div>
 
-      <p> By submitting your application, you <b>consent</b> to Kape-Ilokano Cafe Corporation collecting and 
+      <p> By submitting your application, you <b>consent</b> to Patatas Project collecting and
       evaluating the provided information solely for the purpose of franchise assessment. Rest 
       assured, all details will be kept confidential and used only within the scope of our franchise 
       application process.</p>
@@ -381,7 +380,7 @@
       <p><b> I hereby represent that all the information provided in this application is true
       and correct to the best of my knowledge and belief.</b>
     <br><br>  I acknowledge that <b>Pinnacle Global Franchising Group Inc.</b>, as the franchisor
-              of <b>Kape-Ilokano Cafe</b>, is not obligated to offer a franchise to me solely based on
+              of <b>Patatas Project</b>, is not obligated to offer a franchise to me solely based on
               the submission of this application. I understand that providing <b>false or
               misleading information</b> may result in the denial of my application or the
               termination of any potential agreement. <br><br>
@@ -398,14 +397,13 @@
       </div>
 
       <label>Picture of Government Issued Valid ID with 3 Specimen Signature *</label>
-      <input type="file" name="government_id" multiple>
+      <input type="file" name="government_id" accept=".jpg,.jpeg,.png,.webp,.pdf,image/jpeg,image/png,image/webp,application/pdf">
 
       <p><b>I consent to the processing of my personal and sensitive information
         provided in this application form and in any supporting documents
         submitted for my franchise application.</b> <br><br>
         
-        I understand that <b>Pinnacle Global Franchising Group Inc., Kape-Ilokano Cafe
-        Corporation</b> and its authorized representatives may collect, verify, and process
+        I understand that <b>Pinnacle Global Franchising Group Inc. and Patatas Project</b> and their authorized representatives may collect, verify, and process
         this information for the purpose of <b>assessing my qualifications as a potential
         franchisee, verifying my identity, and evaluating my application.</b> <br><br>
 
@@ -420,7 +418,13 @@
 
         <div style="display:flex; gap:10px; justify-content:flex-end; margin-top:20px;">
         <button type="button" id="previewBtn" class="btn ghost">Preview Application</button>
-        <button type="submit" class="btn">Submit</button>
+        <button type="submit" id="submitBtn" class="btn">
+          <span class="btn-text">Submit</span>
+          <span class="btn-loading d-none">
+            <i class="fa-solid fa-arrows-rotate fa-spin me-2"></i>
+            Submitting...
+          </span>
+        </button>
     </div>
 
 

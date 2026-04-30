@@ -15,12 +15,13 @@ class FranchiseController extends Controller
         $validated = $request->validate([
             // Intro
             'consent_intro' => 'required',
+            'brand' => 'required|string|in:Kape-Ilokano,Patatas Project',
             'email' => 'required|email',
             'lead_source' => 'required|string',
 
             // Personal Details
             'personal_full_name' => 'required|string',
-            'personal_photo' => 'nullable|file|mimes:jpg,jpeg,png,webp',
+            'personal_photo' => 'nullable|file|mimes:jpg,jpeg,png,webp|max:10240',
             'personal_gender' => 'required|string',
             'personal_civil_status' => 'required|string',
             'personal_age' => 'required|integer|between:1,120',
@@ -85,7 +86,7 @@ class FranchiseController extends Controller
 
             // Final consent
             'consent_final' => 'required',
-            'government_id' => 'nullable|file|mimes:jpg,jpeg,png,webp,pdf',
+            'government_id' => 'nullable|file|mimes:jpg,jpeg,png,webp,pdf|max:10240',
         ]);
 
     $validated['consent_intro'] = $request->has('consent_intro') ? 1 : 0;

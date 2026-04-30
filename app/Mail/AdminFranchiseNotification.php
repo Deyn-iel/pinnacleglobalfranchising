@@ -21,8 +21,10 @@ class AdminFranchiseNotification extends Mailable
 
     public function envelope(): Envelope
     {
+        $brand = $this->data['brand'] ?? 'Franchise';
+
         return new Envelope(
-            subject: '📩 New Franchise Application Submitted',
+                subject: "New {$brand} Franchise Application Submitted",
         );
     }
 
@@ -31,7 +33,7 @@ class AdminFranchiseNotification extends Mailable
         return new Content(
             view: 'emails.admin-franchise-notification',
             with: [
-                'data' => $this->data
+                'data' => $this->data,
             ]
         );
     }

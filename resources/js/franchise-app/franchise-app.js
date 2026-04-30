@@ -6,6 +6,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const submitBtn = document.getElementById("submitBtn");
 
+    if (!form || !previewBtn || !previewContent) {
+        return;
+    }
+
 form.addEventListener("submit", function (e) {
 
     const invalidField = checkRequiredFields(form);
@@ -17,10 +21,13 @@ form.addEventListener("submit", function (e) {
         return;
     }
 
-    submitBtn.disabled = true;
+    if (!submitBtn) {
+        return;
+    }
 
-    submitBtn.querySelector(".btn-text").classList.add("d-none");
-    submitBtn.querySelector(".btn-loading").classList.remove("d-none");
+    submitBtn.disabled = true;
+    submitBtn.querySelector(".btn-text")?.classList.add("d-none");
+    submitBtn.querySelector(".btn-loading")?.classList.remove("d-none");
 });
 
     const previewModal = new bootstrap.Modal(

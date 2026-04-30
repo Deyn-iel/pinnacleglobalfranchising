@@ -8,7 +8,7 @@
     <style>
         @page {
             size: A4 portrait;
-            margin: 14mm 12mm 16mm;
+            margin: 12mm;
         }
 
         * {
@@ -21,293 +21,344 @@
             background: #ffffff;
             color: #111827;
             font-family: DejaVu Sans, sans-serif;
-            font-size: 10px;
-            line-height: 1.45;
-        }
-
-        .toolbar {
-            max-width: 210mm;
-            margin: 12px auto;
-            display: flex;
-            justify-content: flex-end;
-            gap: 8px;
-        }
-
-        .toolbar a,
-        .toolbar button {
-            border: 0;
-            border-radius: 6px;
-            padding: 8px 14px;
-            font-size: 13px;
-            cursor: pointer;
-            text-decoration: none;
-            color: #ffffff;
-            background: #0f172a;
-        }
-
-        .paper {
-            width: 100%;
+            font-size: 10.5px;
+            line-height: 1.55;
         }
 
         body.web-mode {
-            background: #e5e7eb;
+            background: #eef2f7;
+            padding: 18px 0 32px;
         }
 
-        body.web-mode .paper {
+        .paper {
             width: 210mm;
             min-height: 297mm;
             margin: 0 auto;
-            padding: 14mm 12mm 16mm;
+            padding: 14mm;
             background: #ffffff;
-            box-shadow: 0 18px 55px rgba(15, 23, 42, .18);
+            text-align: center;
         }
 
         .header {
-            width: 100%;
-            border-bottom: 2px solid #0f172a;
-            padding-bottom: 12px;
-            margin-bottom: 14px;
-        }
-
-        .header-table {
-            width: 100%;
-            border-collapse: collapse;
+            text-align: center;
+            margin-bottom: 18px;
+            padding-bottom: 14px;
+            border-bottom: 2px solid #111827;
         }
 
         .header-logo {
-            width: 98px;
+            display: block;
+            width: 150px;
             height: auto;
+            margin: 0 auto 10px;
+            object-fit: contain;
         }
 
         .brand {
-            font-size: 10px;
-            color: #475569;
+            font-size: 9px;
             text-transform: uppercase;
-            letter-spacing: .8px;
+            letter-spacing: 1.2px;
+            color: #6b7280;
             font-weight: bold;
         }
 
         .title {
             margin-top: 4px;
-            font-size: 20px;
-            line-height: 1.1;
+            font-size: 18px;
+            line-height: 1.25;
             font-weight: bold;
-            color: #0f172a;
             text-transform: uppercase;
-            letter-spacing: .6px;
+            letter-spacing: .7px;
+            color: #111827;
         }
 
-        .subtitle {
+        .subtitle,
+        .meta {
             margin-top: 5px;
-            font-size: 10px;
-            color: #475569;
-        }
-
-        .meta-box {
-            border: 1px solid #cbd5e1;
-            border-radius: 8px;
-            padding: 9px 10px;
             font-size: 9.5px;
-            text-align: right;
-        }
-
-        .meta-box strong {
-            color: #0f172a;
+            color: #6b7280;
         }
 
         .summary {
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 13px;
-            table-layout: fixed;
+            text-align: center;
+            margin: 0 auto 18px;
+            padding: 10px 12px;
+            max-width: 168mm;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            background: #f8fafc;
+            font-size: 10px;
+            line-height: 1.7;
         }
 
-        .summary td {
-            border: 1px solid #cbd5e1;
-            padding: 8px 10px;
-            vertical-align: top;
-        }
-
-        .summary .k {
-            display: block;
-            margin-bottom: 3px;
-            font-size: 8px;
-            color: #64748b;
-            text-transform: uppercase;
-            letter-spacing: .5px;
-            font-weight: bold;
-        }
-
-        .summary .v {
-            font-size: 11px;
+        .summary strong {
             color: #111827;
-            font-weight: bold;
-            word-wrap: break-word;
         }
 
         .section {
-            margin-top: 12px;
+            width: 100%;
+            max-width: 168mm;
+            margin: 14px auto;
+            text-align: center;
             page-break-inside: avoid;
         }
 
         .section-title {
-            background: #0f172a;
-            color: #ffffff;
-            padding: 6px 8px;
-            font-size: 10px;
-            text-transform: uppercase;
-            letter-spacing: .5px;
+            text-align: center;
+            font-size: 11px;
             font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: .8px;
+            color: #ffffff;
+            margin-bottom: 8px;
+            padding: 7px 9px;
+            background: #111827;
+            border-radius: 6px;
         }
 
         .data-table {
             width: 100%;
+            max-width: 168mm;
+            margin: 0 auto;
             border-collapse: collapse;
             table-layout: fixed;
-            margin-bottom: 7px;
         }
 
         .data-table th,
         .data-table td {
-            border: 1px solid #d7dee8;
-            padding: 6px 7px;
+            border: 1px solid #d1d5db;
+            padding: 6px 8px;
             vertical-align: top;
             word-wrap: break-word;
         }
 
         .data-table th {
-            width: 30%;
-            background: #f8fafc;
-            color: #334155;
+            width: 34%;
             text-align: left;
-            font-size: 8.5px;
+            font-size: 9px;
+            color: #374151;
+            background: #f8fafc;
             text-transform: uppercase;
-            letter-spacing: .35px;
+            letter-spacing: .03em;
         }
 
         .data-table td {
+            width: 66%;
+            text-align: left;
             color: #111827;
-        }
-
-        .two-col {
-            width: 100%;
-            border-collapse: collapse;
-            table-layout: fixed;
-        }
-
-        .two-col>tbody>tr>td {
-            width: 50%;
-            vertical-align: top;
-            padding: 0 4px 0 0;
-        }
-
-        .two-col>tbody>tr>td+td {
-            padding: 0 0 0 4px;
-        }
-
-        .note {
-            border: 1px solid #d7dee8;
-            padding: 7px;
-            min-height: 34px;
-            word-wrap: break-word;
         }
 
         .photo-row {
             width: 100%;
+            max-width: 168mm;
+            margin: 0 auto;
             border-collapse: collapse;
-            table-layout: fixed;
         }
 
         .photo-row td {
             vertical-align: top;
+            border: none;
         }
 
         .photo-box {
-            border: 1px solid #d7dee8;
-            background: #f8fafc;
-            padding: 7px;
             text-align: center;
-            min-height: 112px;
+            padding-top: 4px;
+            color: #6b7280;
+        }
+
+        .photo-box strong {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 9px;
+            text-transform: uppercase;
+            letter-spacing: .35px;
+            color: #6b7280;
         }
 
         .photo {
-            max-width: 105px;
-            max-height: 125px;
+            max-width: 95px;
+            max-height: 115px;
         }
 
         .id-photo {
-            max-width: 245px;
-            max-height: 150px;
+            max-width: 230px;
+            max-height: 145px;
         }
 
         .muted {
-            color: #64748b;
+            color: #9ca3af;
         }
 
-        .check {
-            display: inline-block;
-            width: 11px;
-            height: 11px;
-            border: 1px solid #0f172a;
-            text-align: center;
-            line-height: 10px;
-            font-size: 8px;
-            margin-right: 5px;
-            font-weight: bold;
-        }
-
+        .note,
         .declaration {
-            border: 1px solid #cbd5e1;
-            padding: 9px 10px;
-            page-break-inside: avoid;
+            max-width: 168mm;
+            margin: 0 auto;
+            text-align: left;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            padding: 10px;
+            background: #ffffff;
         }
 
         .signature-table {
             width: 100%;
             border-collapse: collapse;
             table-layout: fixed;
-            margin-top: 18px;
-            page-break-inside: avoid;
+            margin-top: 26px;
         }
 
         .signature-table td {
             text-align: center;
-            padding: 0 16px;
+            padding: 0 18px;
             vertical-align: bottom;
         }
 
         .sig-line {
+            border: none;
             border-bottom: 1px solid #111827;
-            min-height: 20px;
+            min-height: 22px;
             margin-bottom: 5px;
             padding-bottom: 2px;
             font-weight: bold;
         }
 
         .footer {
-            margin-top: 16px;
-            padding-top: 7px;
-            border-top: 1px solid #cbd5e1;
-            color: #64748b;
+            margin-top: 28px;
             text-align: center;
+            color: #9ca3af;
             font-size: 8.5px;
         }
 
+        .toolbar {
+            width: 210mm;
+            max-width: calc(100vw - 24px);
+            margin: 0 auto 14px;
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+        }
+
+        .toolbar a,
+        .toolbar button {
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            padding: 9px 14px;
+            background: #ffffff;
+            color: #111827;
+            font-size: 13px;
+            font-weight: 700;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .toolbar button {
+            background: #111827;
+            border-color: #111827;
+            color: #ffffff;
+        }
+
         @media print {
-            .toolbar {
-                display: none;
+            @page {
+                size: A4 portrait;
+                margin: 12mm;
             }
 
             body.web-mode {
                 background: #ffffff;
+                padding: 0;
             }
 
-            body.web-mode .paper {
+            .toolbar {
+                display: none !important;
+            }
+
+            .paper {
                 width: auto;
                 min-height: 0;
                 margin: 0;
                 padding: 0;
+                border: 0;
                 box-shadow: none;
+            }
+        }
+
+        body.web-mode .paper {
+            border: 1px solid #e5e7eb;
+            box-shadow: 0 18px 50px rgba(15, 23, 42, .12);
+        }
+
+        body.pdf-mode .toolbar {
+            display: none;
+        }
+
+        body.pdf-mode .paper {
+            width: auto;
+            min-height: 0;
+            padding: 0;
+        }
+
+        .download-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(255, 255, 255, 0.92);
+            z-index: 9999;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            font-family: DejaVu Sans, sans-serif;
+        }
+
+        .download-box {
+            width: 260px;
+            text-align: center;
+        }
+
+        .download-title {
+            font-size: 13px;
+            font-weight: bold;
+            color: #111827;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: .7px;
+        }
+
+        .download-bar {
+            width: 100%;
+            height: 6px;
+            background: #e5e7eb;
+            border-radius: 999px;
+            overflow: hidden;
+        }
+
+        .download-progress {
+            width: 0%;
+            height: 100%;
+            background: #111827;
+            border-radius: 999px;
+            animation: downloading 1.6s ease-in-out forwards;
+        }
+
+        .download-text {
+            margin-top: 10px;
+            font-size: 10px;
+            color: #6b7280;
+        }
+
+        @keyframes downloading {
+            0% {
+                width: 0%;
+            }
+
+            35% {
+                width: 45%;
+            }
+
+            70% {
+                width: 78%;
+            }
+
+            100% {
+                width: 100%;
             }
         }
     </style>
@@ -316,15 +367,17 @@
 <body class="{{ $pdfMode ?? false ? 'pdf-mode' : 'web-mode' }}">
     @php
         $dash = '—';
-        $value = fn ($v) => filled($v) ? $v : $dash;
+        $value = fn($v) => filled($v) ? $v : $dash;
 
-        $logoPath = public_path('img/logo1-removebg-preview.png');
-        $fallbackLogoPath = public_path('img/logo.webp');
-        $logo = file_exists($logoPath) ? $logoPath : $fallbackLogoPath;
+        $logoFile = public_path('img/PNG.png');
+
+        $logo = file_exists($logoFile) ? 'data:image/png;base64,' . base64_encode(file_get_contents($logoFile)) : null;
 
         $photoPath = $application->personal_photo ? public_path('storage/' . $application->personal_photo) : null;
         $govPath = $application->government_id ? public_path('storage/' . $application->government_id) : null;
-        $govExt = $application->government_id ? strtolower(pathinfo($application->government_id, PATHINFO_EXTENSION)) : null;
+        $govExt = $application->government_id
+            ? strtolower(pathinfo($application->government_id, PATHINFO_EXTENSION))
+            : null;
         $govIsImage = in_array($govExt, ['jpg', 'jpeg', 'png', 'webp']);
 
         $sections = [
@@ -355,13 +408,13 @@
                 'Reason for Closure' => $application->business_closure_reason,
                 'Venture Description' => $application->business_venture_description,
             ],
-            'Kape Ilokano Background' => [
+            'Brand Background' => [
                 'Existing Customer' => $application->ki_customer,
                 'Affiliated with Any Branch' => $application->ki_affiliated,
                 'Affiliation Details' => $application->ki_affiliated_details,
-                'Has Existing Coffee Shop' => $application->ki_has_coffee_shop,
-                'Knowledge in Coffee Industry' => $application->ki_industry_knowledge,
-                'Passion for Coffee' => $application->ki_passion,
+                'Has Existing Food or Beverage Business' => $application->ki_has_coffee_shop,
+                'Knowledge in Food and Beverage Industry' => $application->ki_industry_knowledge,
+                'Passion for Brand Products' => $application->ki_passion,
                 'Eagerness Level' => $application->ki_eagerness,
             ],
             'Business Proposal' => [
@@ -381,51 +434,43 @@
         ];
     @endphp
 
+    @if (!($pdfMode ?? false))
+        <div class="toolbar">
+            <a href="{{ route('admin.application') }}">Back</a>
+            <button type="button" onclick="window.print()">Print A4</button>
+        </div>
+    @endif
+
     <div class="paper">
         <div class="header">
-            <table class="header-table">
-                <tr>
-                    <td style="width: 18%;">
-                        @if ($logo && file_exists($logo))
-                            <img class="header-logo" src="{{ $logo }}" alt="Logo">
-                        @endif
-                    </td>
-                    <td style="width: 52%;">
-                        <div class="brand">Pinnacle Global Franchising Group Inc.</div>
-                        <div class="title">Franchise Application Form</div>
-                        <div class="subtitle">Official applicant record for franchise evaluation</div>
-                    </td>
-                    <td style="width: 30%;">
-                        <div class="meta-box">
-                            <div><strong>Application No.</strong> #{{ $application->id }}</div>
-                            <div><strong>Date Applied</strong> {{ optional($application->created_at)->format('M d, Y') ?? $dash }}</div>
-                            <div><strong>Generated</strong> {{ now()->format('M d, Y h:i A') }}</div>
-                        </div>
-                    </td>
-                </tr>
-            </table>
+            @if ($logo)
+                <img class="header-logo" src="{{ $logo }}" alt="Logo">
+            @endif
+
+            <div class="brand">Pinnacle Global Franchising Group Inc.</div>
+
+            <div class="title">
+                {{ $value($application->brand ?? 'Franchise') }} Franchise Application Form
+            </div>
+
+            <div class="subtitle">
+                Official applicant record for franchise evaluation
+            </div>
+
+            <div class="meta">
+                Application No. #{{ $application->id }} &nbsp; | &nbsp;
+                Date Applied: {{ optional($application->created_at)->format('M d, Y') ?? $dash }} &nbsp; | &nbsp;
+                Generated: {{ now()->format('M d, Y h:i A') }}
+            </div>
         </div>
 
-        <table class="summary">
-            <tr>
-                <td>
-                    <span class="k">Applicant</span>
-                    <span class="v">{{ $value($application->personal_full_name) }}</span>
-                </td>
-                <td>
-                    <span class="k">Email</span>
-                    <span class="v">{{ $value($application->email) }}</span>
-                </td>
-                <td>
-                    <span class="k">Contact</span>
-                    <span class="v">{{ $value($application->personal_contact) }}</span>
-                </td>
-                <td>
-                    <span class="k">Status</span>
-                    <span class="v">{{ $value($application->status ?? 'Review in Progress') }}</span>
-                </td>
-            </tr>
-        </table>
+        <div class="summary">
+            <strong>Applicant:</strong> {{ $value($application->personal_full_name) }}<br>
+            <strong>Email:</strong> {{ $value($application->email) }} &nbsp; | &nbsp;
+            <strong>Contact:</strong> {{ $value($application->personal_contact) }}<br>
+            <strong>Brand:</strong> {{ $value($application->brand ?? 'Kape-Ilokano') }} &nbsp; | &nbsp;
+            <strong>Status:</strong> {{ $value($application->status ?? 'Review in Progress') }}
+        </div>
 
         <div class="section">
             <div class="section-title">Personal Details</div>
@@ -433,20 +478,62 @@
                 <tr>
                     <td style="width: 74%; padding-right: 8px;">
                         <table class="data-table">
-                            <tr><th>Complete Name</th><td>{{ $value($application->personal_full_name) }}</td></tr>
-                            <tr><th>Primary Address</th><td>{{ $value($application->personal_address) }}</td></tr>
-                            <tr><th>Contact Number</th><td>{{ $value($application->personal_contact) }}</td></tr>
-                            <tr><th>Gender</th><td>{{ $value($application->personal_gender) }}</td></tr>
-                            <tr><th>Civil Status</th><td>{{ $value($application->personal_civil_status) }}</td></tr>
-                            <tr><th>Age</th><td>{{ $value($application->personal_age) }}</td></tr>
-                            <tr><th>Country of Birth</th><td>{{ $value($application->personal_country_birth) }}</td></tr>
-                            <tr><th>Nationality</th><td>{{ $value($application->personal_nationality) }}</td></tr>
-                            <tr><th>Country of Residence</th><td>{{ $value($application->personal_residence) }}</td></tr>
-                            <tr><th>TIN</th><td>{{ $value($application->personal_tin) }}</td></tr>
-                            <tr><th>Religion</th><td>{{ $value($application->personal_religion) }}</td></tr>
-                            <tr><th>Spouse</th><td>{{ $value($application->personal_spouse) }}</td></tr>
-                            <tr><th>Hobbies</th><td>{{ $value($application->personal_hobbies) }}</td></tr>
-                            <tr><th>Dependents</th><td>{!! nl2br(e($value($application->personal_dependents))) !!}</td></tr>
+                            <tr>
+                                <th>Complete Name</th>
+                                <td>{{ $value($application->personal_full_name) }}</td>
+                            </tr>
+                            <tr>
+                                <th>Primary Address</th>
+                                <td>{{ $value($application->personal_address) }}</td>
+                            </tr>
+                            <tr>
+                                <th>Contact Number</th>
+                                <td>{{ $value($application->personal_contact) }}</td>
+                            </tr>
+                            <tr>
+                                <th>Gender</th>
+                                <td>{{ $value($application->personal_gender) }}</td>
+                            </tr>
+                            <tr>
+                                <th>Civil Status</th>
+                                <td>{{ $value($application->personal_civil_status) }}</td>
+                            </tr>
+                            <tr>
+                                <th>Age</th>
+                                <td>{{ $value($application->personal_age) }}</td>
+                            </tr>
+                            <tr>
+                                <th>Country of Birth</th>
+                                <td>{{ $value($application->personal_country_birth) }}</td>
+                            </tr>
+                            <tr>
+                                <th>Nationality</th>
+                                <td>{{ $value($application->personal_nationality) }}</td>
+                            </tr>
+                            <tr>
+                                <th>Country of Residence</th>
+                                <td>{{ $value($application->personal_residence) }}</td>
+                            </tr>
+                            <tr>
+                                <th>TIN</th>
+                                <td>{{ $value($application->personal_tin) }}</td>
+                            </tr>
+                            <tr>
+                                <th>Religion</th>
+                                <td>{{ $value($application->personal_religion) }}</td>
+                            </tr>
+                            <tr>
+                                <th>Spouse</th>
+                                <td>{{ $value($application->personal_spouse) }}</td>
+                            </tr>
+                            <tr>
+                                <th>Hobbies</th>
+                                <td>{{ $value($application->personal_hobbies) }}</td>
+                            </tr>
+                            <tr>
+                                <th>Dependents</th>
+                                <td>{!! nl2br(e($value($application->personal_dependents))) !!}</td>
+                            </tr>
                         </table>
                     </td>
                     <td style="width: 26%;">
@@ -491,7 +578,6 @@
                             <tr>
                                 <th>Final Consent</th>
                                 <td>
-                                    <span class="check">{{ $application->consent_final ? 'X' : '' }}</span>
                                     {{ $application->consent_final ? 'Agreed / Confirmed' : $dash }}
                                 </td>
                             </tr>
@@ -527,7 +613,8 @@
                             Applicant's Complete Name and Signature
                         </td>
                         <td style="width: 32%;">
-                            <div class="sig-line">{{ optional($application->created_at)->format('M d, Y') ?? '' }}</div>
+                            <div class="sig-line">{{ optional($application->created_at)->format('M d, Y') ?? '' }}
+                            </div>
                             Date
                         </td>
                     </tr>
@@ -536,9 +623,46 @@
         </div>
 
         <div class="footer">
-            Franchise Application Record · Pinnacle Global Franchising Group Inc. · Generated {{ now()->format('M d, Y h:i A') }}
+            Franchise Application Record · Pinnacle Global Franchising Group Inc. · Generated
+            {{ now()->format('M d, Y h:i A') }}
         </div>
     </div>
+    <div id="downloadOverlay" class="download-overlay">
+        <div class="download-box">
+            <div class="download-title">Preparing Download</div>
+
+            <div class="download-bar">
+                <div class="download-progress"></div>
+            </div>
+
+            <div class="download-text">Please wait while your PDF is being generated...</div>
+        </div>
+    </div>
+    <script>
+        function showDownloadEffect() {
+            const overlay = document.getElementById('downloadOverlay');
+
+            if (!overlay) return;
+
+            overlay.style.display = 'flex';
+
+            setTimeout(function() {
+                overlay.style.display = 'none';
+            }, 1800);
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const downloadButtons = document.querySelectorAll(
+                'a[href*="download"], a[href*="pdf"], button[type="submit"], .download-btn'
+            );
+
+            downloadButtons.forEach(function(button) {
+                button.addEventListener('click', function() {
+                    showDownloadEffect();
+                });
+            });
+        });
+    </script>
 </body>
 
 </html>

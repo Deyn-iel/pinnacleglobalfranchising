@@ -8,7 +8,6 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
-use Jenssegers\Agent\Agent;
 
 class AuthenticatedSessionController extends Controller
 {
@@ -24,62 +23,31 @@ class AuthenticatedSessionController extends Controller
      * Handle an incoming authentication request.
      */
     public function store(LoginRequest $request): RedirectResponse
-{
-    $request->authenticate();
-    $request->session()->regenerate();
+    {
+        $request->authenticate();
+        $request->session()->regenerate();
 
-    /** @var \App\Models\User $user */
-    $user = Auth::user();
+        /** @var \App\Models\User $user */
+        $user = Auth::user();
 
-    // Clear temp password after first login
-    if ($user && $user->temp_password) {
-        $user->update(['temp_password' => null]);
+        if ($user && $user->temp_password) {
+            $user->update(['temp_password' => null]);
+        }
+
+        return match ($user?->usertype) {
+            'admin' => redirect()->route('admin.dashboard'),
+            'supplies' => redirect()->route('supplies.supplies-dashboard'),
+            'ticket' => redirect()->route('tickets.dashboard'),
+            'portal' => redirect()->route('portal.dashboard'),
+            'smm' => redirect()->route('admin.portals.smm'),
+            'hr' => redirect()->route('admin.portals.hr'),
+            'om' => redirect()->route('admin.portals.om'),
+            'od' => redirect()->route('admin.portals.od'),
+            'it' => redirect()->route('admin.portals.it'),
+            'admin-secretary' => redirect()->route('admin.portals.admin-secretary'),
+            default => redirect()->route('dashboard'),
+        };
     }
-
-    if ($user->usertype === 'admin') {
-        return redirect()->route('admin.dashboard');
-    }
-
-    if ($user->usertype === 'supplies') {
-        return redirect()->route('supplies.supplies-dashboard');
-    }
-
-    if ($user->usertype === 'ticket') {
-        return redirect()->route('tickets.dashboard');
-    }
-
-    if ($user->usertype === 'portal') {
-        return redirect()->route('portal.dashboard');
-    }
-
-    if ($user->usertype === 'smm') {
-    return redirect()->route('admin.portals.smm');
-}
-
-if ($user->usertype === 'hr') {
-    return redirect()->route('admin.portals.hr');
-}
-
-if ($user->usertype === 'om') {
-    return redirect()->route('admin.portals.om');
-}
-
-if ($user->usertype === 'od') {
-    return redirect()->route('admin.portals.od');
-}
-
-if ($user->usertype === 'it') {
-    return redirect()->route('admin.portals.it');
-}
-
-if ($user->usertype === 'admin-secretary') {
-    return redirect()->route('admin.portals.admin-secretary');
-}
-
-
-    return redirect()->route('dashboard'); // normal user
-}
-
 
     /**
      * Destroy an authenticated session.
@@ -93,76 +61,3 @@ if ($user->usertype === 'admin-secretary') {
         return redirect('/login');
     }
 }
-// <?php
-
-// namespace App\Http\Controllers\Auth;
-
-// use App\Http\Controllers\Controller;
-// use App\Http\Requests\Auth\LoginRequest;
-// use Illuminate\Http\RedirectResponse;
-// use Illuminate\Http\Request;
-// use Illuminate\Support\Facades\Auth;
-// use Illuminate\View\View;
-// use Jenssegers\Agent\Agent;
-
-// class AuthenticatedSessionController extends Controller
-// {
-//     /**
-//      * Display the login view.
-//      */
-//     public function create(): View
-//     {
-//         return view('auth.login');
-//     }
-
-//     /**
-//      * Handle an incoming authentication request.
-//      */
-//     public function store(LoginRequest $request): RedirectResponse
-//     {
-//         // 🔐 Authenticate user
-//         $request->authenticate();
-//         $request->session()->regenerate();
-
-//         /** @var \App\Models\User $user */
-//         $user = Auth::user();
-//         $agent = new Agent();
-
-//         // 🔒 BLOCK ADMIN LOGIN ON MOBILE / TABLET
-//         if ($user->is_admin && ($agent->isMobile() || $agent->isTablet())) {
-
-//             Auth::logout();
-//             $request->session()->invalidate();
-//             $request->session()->regenerateToken();
-
-//             return redirect('/login')->withErrors([
-//                 'email' => 'Admin login is allowed on desktop or laptop only.',
-//             ]);
-//         }
-
-//         // 🧹 Clear temp password after first login
-//         if ($user->temp_password) {
-//             $user->update(['temp_password' => null]);
-//         }
-
-//         // 🔀 REDIRECT BASED ON ROLE
-//         if ($user->is_admin) {
-//             return redirect()->route('admin.dashboard');
-//         }
-
-//         return redirect()->route('dashboard');
-//     }
-
-//     /**
-//      * Destroy an authenticated session.
-//      */
-//     public function destroy(Request $request): RedirectResponse
-//     {
-//         Auth::guard('web')->logout();
-
-//         $request->session()->invalidate();
-//         $request->session()->regenerateToken();
-
-//         return redirect('/');
-//     }
-// }

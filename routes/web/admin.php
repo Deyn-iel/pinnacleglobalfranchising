@@ -41,7 +41,7 @@ Route::put('/admin/exams/{id}', [AdminExamController::class, 'update'])
 Route::get('/admin/exam-results/{id}/export-doc', [AdminExamController::class, 'exportDoc'])
     ->name('admin.exam-results.export-doc');
 
-Route::middleware(['auth', 'admin.desktop'])
+Route::middleware(['auth'])
     ->prefix('admin')
     ->name('admin.')
     ->group(function () {
@@ -54,6 +54,9 @@ Route::get('/coupons', [AdminCouponController::class, 'index'])
 
 Route::post('/coupons', [AdminCouponController::class, 'store'])
     ->name('coupons.store');
+
+Route::get('/coupons/booklets/{booklet}/pdf', [AdminCouponController::class, 'bookletPdf'])
+    ->name('coupons.bookletPdf');
 
 Route::post('/coupons/{id}/tag-sold', [AdminCouponController::class, 'tagSold'])
     ->name('coupons.tagSold');
@@ -304,8 +307,8 @@ Route::post('/application/{id}/accept', [FranchiseAdminController::class, 'accep
 Route::get('/applications/{id}/pdf', [FranchiseAdminController::class, 'downloadPdf'])
     ->name('applications.pdf');
 
-// Route::get('/applications/{id}/print', [FranchiseAdminController::class, 'print'])
-//     ->name('applications.print');
+Route::get('/applications/{id}/print', [FranchiseAdminController::class, 'print'])
+    ->name('applications.print');
 Route::post('/application/{id}/reschedule',
 [FranchiseAdminController::class,'reschedule'])
 ->name('application.reschedule');
@@ -334,8 +337,26 @@ Route::post('/application/discovery-slides', [FranchiseAdminController::class, '
 Route::get('/application/discovery-slides', [FranchiseAdminController::class, 'discoverySlidesJson'])
 ->name('application.discoverySlides.json');
 
-Route::post('/application/{id}/close-deal', [FranchiseAdminController::class, 'closeDeal'])
-->name('application.closeDeal');
+Route::post('/application/{id}/voucher-option', [FranchiseAdminController::class, 'chooseVoucherOption'])
+->name('application.voucherOption');
+
+Route::post('/application/{id}/coupon-registration', [FranchiseAdminController::class, 'registerCoupon'])
+->name('application.registerCoupon');
+
+Route::post('/application/{id}/franchisee-registration', [FranchiseAdminController::class, 'registerFranchisee'])
+->name('application.registerFranchisee');
+
+Route::get('/application/{id}/client-acknowledgement', [FranchiseAdminController::class, 'printAcknowledgement'])
+->name('application.acknowledgement.print');
+
+Route::post('/application/{id}/proceed-to-payment', [FranchiseAdminController::class, 'proceedToPayment'])
+->name('application.proceedToPayment');
+
+Route::post('/application/{id}/record-payment', [FranchiseAdminController::class, 'recordPayment'])
+->name('application.recordPayment');
+
+Route::post('/application/{id}/franchise-reservation', [FranchiseAdminController::class, 'storeReservation'])
+->name('application.reservation.store');
 
 Route::post('/application/{id}/decline', [FranchiseAdminController::class, 'decline'])
 ->name('application.decline');

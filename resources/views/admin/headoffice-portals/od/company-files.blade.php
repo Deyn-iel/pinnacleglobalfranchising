@@ -10,7 +10,7 @@
     <link rel="icon" type="image/png" href="{{ asset('img/logo1-removebg-preview.png') }}">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
-    @vite(['resources/css/admin/shadcn-tables.css'])
+
 
     <style>
         :root {
@@ -1010,19 +1010,23 @@
 
                                             <td data-label="Action">
                                                 <div class="actions dropdown">
-                                                    <button class="actions-toggle" type="button" data-bs-toggle="dropdown"
-                                                        aria-expanded="false" aria-label="Open actions">
+                                                    <button class="actions-toggle" type="button"
+                                                        data-bs-toggle="dropdown" aria-expanded="false"
+                                                        aria-label="Open actions">
                                                         <i class="fa-solid fa-ellipsis"></i>
                                                     </button>
 
                                                     <div class="dropdown-menu dropdown-menu-end actions-menu">
-                                                        <a href="{{ asset('storage/' . $file->file_path) }}" target="_blank"
-                                                            class="action-btn view">
+                                                        <a href="{{ asset('storage/' . $file->file_path) }}"
+                                                            target="_blank" class="action-btn view">
                                                             <i class="fa-solid fa-eye"></i>
                                                             View
                                                         </a>
 
-                                                        <a href="{{ route('portal.company-files.download', [$department, $file]) }}"
+                                                        <a href="{{ route('portal.company-files.download', [
+                                                            'department' => $department,
+                                                            'requirement' => $file->id,
+                                                        ]) }}"
                                                             class="action-btn download">
                                                             <i class="fa-solid fa-download"></i>
                                                             Download
@@ -1058,5 +1062,3 @@
 </body>
 
 </html>
-
-

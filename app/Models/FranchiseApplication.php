@@ -6,15 +6,34 @@ use Illuminate\Database\Eloquent\Model;
 
 class FranchiseApplication extends Model
 {
+    public function coupon()
+    {
+        return $this->belongsTo(Coupon::class);
+    }
+
+    public function franchiseReservation()
+    {
+        return $this->belongsTo(FranchiseReservation::class);
+    }
+
     protected $fillable = [
 
         'status',
+        'brand',
         'appointment_date',
         'appointment_time',
         'meeting_type',
         'meeting_link',
         'meeting_remarks',
         'discovery_done_at',
+        'voucher_option',
+        'coupon_id',
+        'franchisee_registered_at',
+        'agreement_printed_at',
+        'payment_reference_no',
+        'sales_invoice_no',
+        'payment_confirmed_at',
+        'franchise_reservation_id',
         'assigned_to',
 
         // Intro
@@ -90,5 +109,12 @@ class FranchiseApplication extends Model
         // Final consent
         'consent_final',
         'government_id',
+    ];
+
+    protected $casts = [
+        'discovery_done_at' => 'datetime',
+        'franchisee_registered_at' => 'datetime',
+        'agreement_printed_at' => 'datetime',
+        'payment_confirmed_at' => 'datetime',
     ];
 }

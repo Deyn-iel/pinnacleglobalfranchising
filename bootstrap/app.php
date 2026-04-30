@@ -3,7 +3,7 @@
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
-use App\Http\Middleware\AdminDesktopOnly;
+use Illuminate\Session\TokenMismatchException;
 use App\Http\Middleware\HrAccessMiddleware;
 
 return Application::configure(basePath: dirname(__DIR__))
@@ -15,7 +15,6 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware): void {
     $middleware->alias([
         'admin' => \App\Http\Middleware\AdminMiddleware::class,
-        'admin.desktop' => \App\Http\Middleware\AdminDesktopOnly::class,
         'role' => \App\Http\Middleware\RoleMiddleware::class,
         'hr.access' => HrAccessMiddleware::class,
 
@@ -30,5 +29,15 @@ return Application::configure(basePath: dirname(__DIR__))
     ]);
 })
     ->withExceptions(function (Exceptions $exceptions): void {
-        //
+        $exceptions->render(function (TokenMismatchException $e, $request) {
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'message' => 'Your session expired. Please refresh the page and try again.',
+                ], 419);
+            }
+
+            return redirect()
+                ->route('login')
+                ->with('status', 'Your session expired. Please log in again.');
+        });
     })->create();

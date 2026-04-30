@@ -4,7 +4,6 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
     <link rel="icon" type="image/png" href="{{ asset('img/logo1-removebg-preview.png') }}">
     <title>Franchise Application</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
@@ -44,6 +43,7 @@
 
         <form action="{{ route('franchise.submit') }}" method="POST" enctype="multipart/form-data">
             @csrf
+            <input type="hidden" name="brand" value="Kape-Ilokano">
             <!-- INTRO -->
             <div class="card">
                 <p>
@@ -112,7 +112,7 @@
                 <input type="text" name="personal_full_name" required>
 
                 <label> Please Attach Latest 2x2 Colored Picture or Selfie in White Background *</label>
-                <input type="file" name="personal_photo" multiple>
+                <input type="file" name="personal_photo" accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp">
 
 
                 <label>Gender *</label>
@@ -406,7 +406,7 @@
                 </div>
 
                 <label>Picture of Government Issued Valid ID with 3 Specimen Signature *</label>
-                <input type="file" name="government_id" multiple>
+                <input type="file" name="government_id" accept=".jpg,.jpeg,.png,.webp,.pdf,image/jpeg,image/png,image/webp,application/pdf">
 
                 <p><b>I consent to the processing of my personal and sensitive information
                         provided in this application form and in any supporting documents

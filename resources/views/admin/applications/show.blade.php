@@ -118,6 +118,7 @@
                 </td>
             </tr>
             <tr><th>Email</th><td>{{ $application->email }}</td></tr>
+            <tr><th>Brand</th><td>{{ $application->brand ?? 'Kape-Ilokano' }}</td></tr>
             <tr><th>Lead Source</th><td>{{ $application->lead_source }}</td></tr>
         </table>
     </div>

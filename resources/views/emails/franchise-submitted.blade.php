@@ -12,8 +12,8 @@
         </h2>
 
         <p>
-            Thank you for submitting your franchise application to 
-            <b>KAPE-ILOKANO CAFE CORPORATION</b>.
+            Thank you for submitting your franchise application to
+            <b>{{ strtoupper($data['brand'] ?? 'KAPE-ILOKANO') }}</b>.
         </p>
 
         <p>

@@ -17,6 +17,7 @@
 
         <div style="background:#f4f6f8; padding:15px; border-radius:8px; margin:20px 0;">
             <p style="margin:5px 0;"><strong>Name:</strong> {{ $data['personal_full_name'] }}</p>
+            <p style="margin:5px 0;"><strong>Brand:</strong> {{ $data['brand'] ?? 'Kape-Ilokano' }}</p>
             <p style="margin:5px 0;"><strong>Email:</strong> {{ $data['email'] }}</p>
             <p style="margin:5px 0;"><strong>Contact:</strong> {{ $data['personal_contact'] }}</p>
             <p style="margin:5px 0;"><strong>Location:</strong> {{ $data['proposal_location'] }}</p>

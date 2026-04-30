@@ -78,7 +78,7 @@
     display:inline-flex;
     align-items:center;
     gap:8px;
-    padding: 8px 12px;
+    padding: 7px 10px;
     border-radius: 999px;
     background: rgba(15,23,42,.05);
     border: 1px solid rgba(15,23,42,.06);
@@ -137,20 +137,20 @@
     -webkit-overflow-scrolling: touch;
   }
 
-/* Force same width ng Concern column across rows */
-table{
-  table-layout: fixed; 
+.table{
+  table-layout: fixed;
+  width: 100%;
+  min-width: 720px;
+  margin-bottom: 0;
 }
 
-/* Set fixed width for each column (adjust if you want) */
-th:nth-child(1), td:nth-child(1){ width: 140px; } /* Ticket # */
-th:nth-child(2), td:nth-child(2){ width: 120px; } /* Branch */
-th:nth-child(3), td:nth-child(3){ width: 260px; } 
-th:nth-child(4), td:nth-child(4){ width: 120px; } /* Dept */
-th:nth-child(5), td:nth-child(5){ width: 110px; } /* Priority */
-th:nth-child(6), td:nth-child(6){ width: 110px; } /* Status */
-th:nth-child(7), td:nth-child(7){ width: 160px; } /* Date */
-th:nth-child(8), td:nth-child(8){ width: 90px; }  /* Actions */
+.table th:nth-child(1), .table td:nth-child(1){ width: 14%; } /* Ticket # */
+.table th:nth-child(2), .table td:nth-child(2){ width: 14%; } /* Branch */
+.table th:nth-child(3), .table td:nth-child(3){ width: 18%; } /* Concern */
+.table th:nth-child(4), .table td:nth-child(4){ width: 10%; } /* Dept */
+.table th:nth-child(5), .table td:nth-child(5){ width: 12%; } /* Priority */
+.table th:nth-child(6), .table td:nth-child(6){ width: 14%; } /* Status */
+.table th:nth-child(7), .table td:nth-child(7){ width: 14%; } /* Date */
 
 
   .table thead th{
@@ -173,33 +173,36 @@ th:nth-child(8), td:nth-child(8){ width: 90px; }  /* Actions */
 
   /* ===== CONCERN + VIEW (SIDE BY SIDE) ===== */
   .concern-cell{
-    min-width: 220px;
-    max-width: 360px;
+    min-width: 0;
   }
 
   .concern-row{
     display:flex;
-    align-items:center; /* center button vertically */
-    gap: 10px;
-    min-width: 0; /* IMPORTANT for flex shrink */
+    align-items:center;
+    gap: 8px;
+    min-width: 0;
   }
 
 .description-box{
-  flex: 1 1 auto;
-  min-width: 0;               /* important for ellipsis inside flex */
-  width: 100%;
+  flex: 1 1 44px;
+  min-width: 30px;
+  max-width: 54px;
+  min-height: 36px;
 
-  font-size: 14px;
+  font-size: 13px;
   color: #0f172a;
-  line-height: 1.45;
+  line-height: 1;
   font-weight: 650;
 
-  padding: 10px 12px;
-  border-radius: 14px;
+  padding: 8px 10px;
+  border-radius: 12px;
   border: 1px solid rgba(15,23,42,.10);
-  background: rgba(15,23,42,.03);
+  background: rgba(248,250,252,.96);
 
   /* ✅ ONE-LINE PREVIEW ONLY */
+  display: flex;
+  align-items: center;
+  justify-content: center;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -210,24 +213,26 @@ th:nth-child(8), td:nth-child(8){ width: 90px; }  /* Actions */
     flex: 0 0 auto;
     border-radius: 999px;
     font-weight: 900;
-    padding: 8px 12px;
+    padding: 7px 10px;
     border: 1px solid rgba(15,23,42,.12);
     background: #fff;
     white-space: nowrap;
-    min-width: 86px;
+    min-width: 72px;
+    font-size: 12px;
   }
   .btn-view:hover{ background: rgba(15,23,42,.04); }
 
-  /* Keep clamp consistent (no conflicting overrides) */
   @media (max-width: 1200px){
-    .concern-cell{ min-width: 420px; }
-    .description-box{ -webkit-line-clamp: 2; }
+    .table{ min-width: 680px; }
+    .table th,
+    .table td{ padding-left: 8px; padding-right: 8px; }
+    .concern-row{ gap: 6px; }
+    .description-box{ min-width: 26px; max-width: 38px; padding: 7px 8px; }
+    .btn-view{ min-width: 62px; padding: 7px 8px; }
   }
 
   @media (max-width: 768px){
-    table{ min-width: 980px; }
-    .concern-cell{ min-width: 380px; max-width: 520px; }
-    .description-box{ -webkit-line-clamp: 2; }
+    .table{ min-width: 720px; }
   }
 
   /* ===== ACTIONS ===== */
@@ -294,10 +299,10 @@ th:nth-child(8), td:nth-child(8){ width: 90px; }  /* Actions */
     padding: 14px;
     min-height: 120px;
 
-    /* also handle super long no-space words in modal */
-    overflow-wrap: anywhere;
-    word-break: break-word;
-    word-break: break-all;
+    /* Keep normal words intact; only break long no-space strings when needed. */
+    overflow-wrap: break-word;
+    word-break: normal;
+    hyphens: auto;
   }
 
   @media (max-width: 576px){
@@ -457,9 +462,9 @@ th:nth-child(8), td:nth-child(8){ width: 90px; }  /* Actions */
               <!-- Concern + View (magkatabi + clamped preview) -->
               <td class="concern-cell">
                 <div class="concern-row">
-                  <div class="description-box" title="{{ $ticket->description }}">
-  {{ \Illuminate\Support\Str::limit($ticket->description, 80) }}
-</div>
+                  <div class="description-box" title="Click View to see full concern">
+                    ...........
+                  </div>
 
                   <button
                     type="button"

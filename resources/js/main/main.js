@@ -1,48 +1,66 @@
-
 AOS.init({
-            once: false,   
-            offset: 100,  
-            easing: 'ease-out-back',
-        });
+    once: false,
+    offset: 100,
+    easing: "ease-out-back",
+});
+
 document.addEventListener("DOMContentLoaded", () => {
-    const elements = document.querySelectorAll(
-        ".image, .franchise-section, .circle-box, .franchise-now-container, .franchise-steps, .step, .franchise-now-button-wrapper, .brand-name, .brand-desc"
+    const animatedElements = document.querySelectorAll(
+        ".image, .franchise-brands-section, .franchise-section, .circle-box, .franchise-now-container, .franchise-steps, .step, .franchise-now-button-wrapper, .brand-name, .brand-desc",
     );
 
     const observer = new IntersectionObserver(
-        entries => {
-            entries.forEach(entry => {
+        (entries, obs) => {
+            entries.forEach((entry) => {
                 if (entry.isIntersecting) {
                     entry.target.classList.add("animate-show");
-                    observer.unobserve(entry.target);
+                    obs.unobserve(entry.target);
                 }
             });
         },
         {
             threshold: 0.15,
-            rootMargin: "0px 0px -50px 0px"
-        }
+            rootMargin: "0px 0px -50px 0px",
+        },
     );
 
-    elements.forEach(el => observer.observe(el));
-});
-document.addEventListener("DOMContentLoaded", () => {
+    animatedElements.forEach((element) => observer.observe(element));
 
-    const animatedElements = document.querySelectorAll(
-        ".image, .franchise-section, .circle-box, .franchise-now-container, .franchise-steps, .step, .franchise-now-button-wrapper, .brand-name, .brand-desc"
-    );
+    /**
+     * MOBILE CLICK EFFECT FOR CIRCLE BUTTONS
+     * Button appears only after tapping the circle on mobile/tablet.
+     */
+    const isTouchDevice = window.matchMedia("(hover: none)").matches;
 
-    const observer = new IntersectionObserver((entries, obs) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.classList.add("animate-show");
-                obs.unobserve(entry.target); 
+    if (isTouchDevice) {
+        const circleBoxes = document.querySelectorAll(".circle-box");
+
+        circleBoxes.forEach((box) => {
+            box.addEventListener("click", function (event) {
+                const clickedButton = event.target.closest(".circle-btn");
+
+                if (clickedButton) {
+                    return;
+                }
+
+                circleBoxes.forEach((otherBox) => {
+                    if (otherBox !== box) {
+                        otherBox.classList.remove("mobile-active");
+                    }
+                });
+
+                box.classList.toggle("mobile-active");
+            });
+        });
+
+        document.addEventListener("click", function (event) {
+            const clickedInsideCircle = event.target.closest(".circle-box");
+
+            if (!clickedInsideCircle) {
+                circleBoxes.forEach((box) => {
+                    box.classList.remove("mobile-active");
+                });
             }
         });
-    }, {
-        threshold: 0.15,           
-        rootMargin: "0px 0px -50px 0px"
-    });
-
-    animatedElements.forEach(el => observer.observe(el));
+    }
 });

@@ -137,6 +137,53 @@
             line-height: 1.6;
         }
 
+        .coupon-booklet {
+            border: 1px solid var(--line);
+            border-radius: 14px;
+            overflow: hidden;
+            margin-bottom: 12px;
+            background: #fff;
+        }
+
+        .booklet-toggle {
+            width: 100%;
+            border: 0;
+            background: #f8fafc;
+            color: var(--text);
+            padding: 14px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 14px;
+            text-align: left;
+            font-weight: 800;
+        }
+
+        .booklet-toggle small {
+            display: block;
+            color: var(--muted);
+            font-weight: 600;
+            margin-top: 3px;
+        }
+
+        .booklet-meta {
+            color: var(--muted);
+            font-size: 13px;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
+        .booklet-body {
+            padding: 14px;
+            border-top: 1px solid var(--line);
+        }
+
+        .booklet-actions {
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 12px;
+        }
+
         .form-group {
             min-width: 0;
         }
@@ -508,6 +555,20 @@
             margin-bottom: 18px;
         }
 
+        .assign-buyer-form {
+            display: flex;
+            flex-direction: column;
+            min-height: 0;
+        }
+
+        .assign-buyer-form .modal-body {
+            min-height: 0;
+        }
+
+        .modal-code>div {
+            min-width: 0;
+        }
+
         @keyframes spinIcon {
             from {
                 transform: rotate(0deg);
@@ -646,6 +707,11 @@
                 align-items: flex-start;
                 flex-direction: column;
             }
+
+            .modal-footer .btn-custom {
+                width: 100%;
+                justify-content: center;
+            }
         }
 
         @media (max-width: 480px) {
@@ -743,7 +809,7 @@
                         <div class="grid">
                             <div class="form-group col-4">
                                 <label>Booklet</label>
-                                <input type="text" value="Auto-generated" readonly>
+                                <input type="text" value="Auto-generated per batch" readonly>
                             </div>
 
                             <div class="form-group col-4">
@@ -752,7 +818,19 @@
                                     value="{{ old('quantity', 1) }}" required>
                             </div>
 
-
+                            <div class="form-group col-4">
+                                <label>Claimable Item / Reward</label>
+                                <select name="claimable_item" required>
+                                    <option value="">Select Reward</option>
+                                    @foreach ($rewardTypes as $reward)
+                                        @continue(!($reward['requires_code'] ?? false))
+                                        <option value="{{ $reward['name'] }}"
+                                            {{ old('claimable_item') === $reward['name'] ? 'selected' : '' }}>
+                                            {{ $reward['name'] }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
 
                             <div class="form-group col-4">
                                 <label>Coupon Status</label>
@@ -768,7 +846,7 @@
                             <div class="form-group col-12">
                                 <label>Generated Code Format & Reward</label>
                                 <div class="inline-code">
-                                    AUTO-GENERATED - 8 CHARACTERS - RANDOM REWARD PER COUPON
+                                    ONE BOOKLET PER BATCH - 8 CHARACTERS PER CODE - SELECTED REWARD APPLIES TO ALL
                                 </div>
                             </div>
 
@@ -785,6 +863,82 @@
             </div>
 
 
+
+            <!-- BOOKLET LIST -->
+            <div class="col-12">
+                <div class="card-box">
+                    <div class="card-title">
+                        <i class="fas fa-book"></i>
+                        Coupon Booklets
+                    </div>
+                    <div class="card-subtitle">
+                        Each generated batch is saved as one booklet. Expand a booklet to view all coupon codes or download the booklet PDF.
+                    </div>
+
+                    @forelse ($booklets as $bookletSerial => $bookletCoupons)
+                        @php
+                            $firstCoupon = $bookletCoupons->first();
+                            $bookletId = 'booklet_' . preg_replace('/[^A-Za-z0-9]/', '_', $bookletSerial);
+                            $soldCount = $bookletCoupons->where('selling_status', 'Sold')->count();
+                            $claimedCount = $bookletCoupons->where('claim_status', 'Claimed')->count();
+                        @endphp
+
+                        <div class="coupon-booklet">
+                            <button class="booklet-toggle" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#{{ $bookletId }}" aria-expanded="false"
+                                aria-controls="{{ $bookletId }}">
+                                <span>
+                                    <strong>{{ $bookletSerial }}</strong>
+                                    <small>{{ $firstCoupon?->claimable_item ?? 'Mixed rewards' }}</small>
+                                </span>
+                                <span class="booklet-meta">
+                                    {{ $bookletCoupons->count() }} coupons · {{ $soldCount }} sold · {{ $claimedCount }} claimed
+                                </span>
+                            </button>
+
+                            <div class="collapse" id="{{ $bookletId }}">
+                                <div class="booklet-body">
+                                    <div class="booklet-actions">
+                                        <a href="{{ route('admin.coupons.bookletPdf', $bookletSerial) }}"
+                                            class="btn-custom btn-primary-custom">
+                                            <i class="fas fa-file-pdf"></i> Download Booklet PDF
+                                        </a>
+                                    </div>
+
+                                    <div class="table-wrap">
+                                        <table>
+                                            <thead>
+                                                <tr>
+                                                    <th>#</th>
+                                                    <th>Unique Code</th>
+                                                    <th>Claimable Item</th>
+                                                    <th>Coupon Status</th>
+                                                    <th>Claim Status</th>
+                                                    <th>Selling Status</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @foreach ($bookletCoupons as $bookletCoupon)
+                                                    <tr>
+                                                        <td>{{ $loop->iteration }}</td>
+                                                        <td><span class="inline-code">{{ $bookletCoupon->unique_code }}</span></td>
+                                                        <td>{{ $bookletCoupon->claimable_item }}</td>
+                                                        <td>{{ $bookletCoupon->coupon_status }}</td>
+                                                        <td>{{ $bookletCoupon->claim_status }}</td>
+                                                        <td>{{ $bookletCoupon->selling_status }}</td>
+                                                    </tr>
+                                                @endforeach
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    @empty
+                        <div class="text-center text-muted py-4">No coupon booklets generated yet.</div>
+                    @endforelse
+                </div>
+            </div>
 
             <!-- MASTER LIST -->
             <div class="col-12">
@@ -940,7 +1094,7 @@
     @foreach ($coupons as $coupon)
         @continue($coupon->selling_status === 'Sold')
         <div class="modal fade" id="assignBuyerModal{{ $coupon->id }}" tabindex="-1" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg modal-fullscreen-sm-down">
                 <div class="modal-content">
                     <form action="{{ route('admin.coupons.tagSold', $coupon->id) }}" method="POST"
                         class="assign-buyer-form">

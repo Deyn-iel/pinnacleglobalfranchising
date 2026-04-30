@@ -4,8 +4,10 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Coupon;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Illuminate\Validation\Rule;
 
 class AdminCouponController extends Controller
 {
@@ -16,6 +18,13 @@ class AdminCouponController extends Controller
             ->paginate(15)
             ->withQueryString();
 
+        $booklets = Coupon::whereNotNull('booklet_serial_number')
+            ->whereNotNull('unique_code')
+            ->orderByDesc('booklet_serial_number')
+            ->orderBy('id')
+            ->get()
+            ->groupBy('booklet_serial_number');
+
         $couponStats = [
             'total' => Coupon::count(),
             'sold' => Coupon::where('selling_status', 'Sold')->count(),
@@ -25,25 +34,27 @@ class AdminCouponController extends Controller
 
         $rewardTypes = $this->rewardTypes();
 
-        return view('admin.coupon.index', compact('coupons', 'couponStats', 'rewardTypes'));
+        return view('admin.coupon.index', compact('coupons', 'couponStats', 'rewardTypes', 'booklets'));
     }
 
     public function store(Request $request)
     {
-        $validated = $request->validate([
-            'quantity' => 'required|integer|min:1|max:500',
-            'coupon_status' => 'required|string|in:Active,Inactive',
-        ]);
-
         $codedRewards = collect($this->rewardTypes())
             ->where('requires_code', true)
             ->values();
 
-        for ($i = 0; $i < $validated['quantity']; $i++) {
-            $reward = $codedRewards->random();
+        $validated = $request->validate([
+            'quantity' => 'required|integer|min:1|max:500',
+            'claimable_item' => ['required', 'string', Rule::in($codedRewards->pluck('name')->all())],
+            'coupon_status' => 'required|string|in:Active,Inactive',
+        ]);
 
+        $reward = $codedRewards->firstWhere('name', $validated['claimable_item']);
+        $bookletSerialNumber = $this->generateBookletSerialNumber();
+
+        for ($i = 0; $i < $validated['quantity']; $i++) {
             Coupon::create([
-                'booklet_serial_number' => $this->generateBookletSerialNumber(),
+                'booklet_serial_number' => $bookletSerialNumber,
                 'unique_code' => $this->generateUniqueCouponCode(),
                 'claimable_item' => $reward['name'],
                 'amount' => $reward['amount'] ?? 0,
@@ -62,7 +73,7 @@ class AdminCouponController extends Controller
             ]);
         }
 
-        return back()->with('success', $validated['quantity'] . ' coupon code(s) generated successfully with random rewards.');
+        return back()->with('success', $validated['quantity'] . ' coupon code(s) generated successfully in booklet ' . $bookletSerialNumber . ' for ' . $reward['name'] . '.');
     }
 
     public function tagSold(Request $request, $id)
@@ -91,6 +102,23 @@ class AdminCouponController extends Controller
         ]);
 
         return back()->with('success', 'Coupon assigned to buyer and tagged as sold.');
+    }
+
+    public function bookletPdf(string $booklet)
+    {
+        $coupons = Coupon::where('booklet_serial_number', $booklet)
+            ->whereNotNull('unique_code')
+            ->orderBy('id')
+            ->get();
+
+        abort_if($coupons->isEmpty(), 404);
+
+        $pdf = Pdf::loadView('admin.coupon.booklet-pdf', [
+            'booklet' => $booklet,
+            'coupons' => $coupons,
+        ])->setPaper('a4', 'portrait');
+
+        return $pdf->download('coupon-booklet-' . $booklet . '.pdf');
     }
 
     private function generateBookletSerialNumber(): string

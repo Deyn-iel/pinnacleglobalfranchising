@@ -75,3 +75,281 @@ textarea,
 .action-menu .btn:last-child {
   margin-bottom: 0;
 }
+
+.dashboard-header,
+.dash-card,
+.dash-icon,
+.page-header,
+.stat-card,
+.content-card,
+.table-wrapper,
+.table-wrap,
+.panel,
+.card,
+.alert,
+.modal-content,
+.action-menu,
+.action-menu-toggle {
+  box-shadow: none !important;
+}
+
+.dash-card:hover,
+.stat-card:hover,
+.folder-card:hover {
+  box-shadow: none !important;
+}
+
+.modal-dialog {
+  width: min(900px, calc(100vw - 24px));
+  max-width: calc(100vw - 24px) !important;
+  margin: 12px auto !important;
+  min-height: calc(100dvh - 24px);
+  display: flex;
+  align-items: center;
+}
+
+.modal-dialog.modal-lg {
+  width: min(900px, calc(100vw - 24px));
+}
+
+.modal-dialog.modal-xl {
+  width: min(1140px, calc(100vw - 24px));
+}
+
+.modal-content {
+  max-height: calc(100dvh - 24px);
+  display: flex;
+  flex-direction: column;
+  border-radius: 14px !important;
+  overflow: hidden;
+  width: 100%;
+  min-width: 0;
+}
+
+.modal-header,
+.modal-footer {
+  flex: 0 0 auto;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.modal-body {
+  flex: 1 1 auto;
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+  min-height: 0;
+}
+
+.modal-body img,
+.modal-body table,
+.modal-body iframe {
+  max-width: 100%;
+}
+
+.modal-content form,
+.modal-body form {
+  min-height: 0;
+  min-width: 0;
+}
+
+.modal-content > form {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.modal-content > form > .modal-body {
+  min-height: 0;
+}
+
+.modal .grid,
+.modal .row,
+.modal .form-group,
+.modal .modal-code,
+.modal .card,
+.modal .card-box,
+.modal .content-card {
+  min-width: 0;
+  max-width: 100%;
+}
+
+.modal input,
+.modal select,
+.modal textarea,
+.modal .form-control,
+.modal .form-select {
+  max-width: 100%;
+}
+
+.modal .table-responsive,
+.modal .table-wrap,
+.modal .table-wrapper {
+  max-width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.modal .modal-code,
+.modal .inline-code,
+.modal p,
+.modal small,
+.modal td,
+.modal th,
+.modal label,
+.modal strong {
+  overflow-wrap: break-word;
+}
+
+@media (max-width: 991.98px) {
+  .page-header,
+  .dashboard-header,
+  .content-card,
+  .table-wrapper,
+  .table-wrap,
+  .panel,
+  .card {
+    border-radius: 14px !important;
+  }
+
+  .page-header,
+  .dashboard-header {
+    padding: 16px !important;
+    margin-bottom: 16px !important;
+  }
+
+  .page-header h1,
+  .page-header h2,
+  .page-header h3,
+  .page-header h4,
+  .dashboard-header h1,
+  .dashboard-header h2,
+  .dashboard-header h3 {
+    font-size: clamp(20px, 6vw, 28px) !important;
+    line-height: 1.18 !important;
+  }
+
+  .row {
+    --bs-gutter-x: 14px;
+    --bs-gutter-y: 14px;
+  }
+
+  .dash-card {
+    padding: 16px !important;
+    border-radius: 16px !important;
+  }
+
+  .dash-top {
+    align-items: center !important;
+  }
+
+  .dash-icon {
+    width: 46px !important;
+    height: 46px !important;
+    border-radius: 14px !important;
+  }
+
+  .dash-meta {
+    gap: 8px !important;
+  }
+
+  .dash-pill {
+    max-width: 100%;
+    overflow-wrap: break-word;
+  }
+
+  .btn,
+  button,
+  .form-control,
+  .form-select {
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 575.98px) {
+  .page-header,
+  .dashboard-header,
+  .content-card,
+  .table-wrapper,
+  .table-wrap,
+  .panel,
+  .card {
+    border-radius: 12px !important;
+  }
+
+  .page-header,
+  .dashboard-header {
+    padding: 14px !important;
+  }
+
+  .dash-card {
+    padding: 14px !important;
+  }
+
+  .dash-top {
+    gap: 10px !important;
+  }
+
+  .dash-card h4 {
+    font-size: 15px !important;
+  }
+
+  .dash-card p,
+  .dash-pill {
+    font-size: 12px !important;
+  }
+
+  .modal-dialog {
+    width: calc(100vw - 12px) !important;
+    max-width: calc(100vw - 12px) !important;
+    min-height: auto !important;
+    margin: 6px auto !important;
+    align-items: flex-start;
+  }
+
+  .modal-content {
+    max-height: calc(100dvh - 12px);
+    border-radius: 12px !important;
+  }
+
+  .modal-header,
+  .modal-body,
+  .modal-footer {
+    padding: 14px !important;
+  }
+
+  .modal-title {
+    font-size: 16px !important;
+    line-height: 1.25 !important;
+  }
+
+  .modal .grid {
+    grid-template-columns: 1fr !important;
+    gap: 12px !important;
+  }
+
+  .modal .grid > [class*="col-"] {
+    grid-column: 1 / -1 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  .modal .row > [class*="col-"] {
+    flex: 0 0 100% !important;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  .modal-footer {
+    align-items: stretch !important;
+    flex-direction: column-reverse !important;
+  }
+
+  .modal-footer .btn,
+  .modal-footer .btn-custom,
+  .modal-footer button {
+    width: 100%;
+    justify-content: center;
+  }
+}

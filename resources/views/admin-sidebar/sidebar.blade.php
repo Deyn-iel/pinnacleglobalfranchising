@@ -1,9 +1,12 @@
-<aside class="admin-sidebar position-fixed top-0 start-0 h-100">
+<aside class="admin-sidebar position-fixed top-0 start-0 h-100" id="adminSidebar" aria-label="Admin navigation">
 
     <!-- BRAND -->
     <div class="sidebar-brand">
         <i class="fas fa-shield-halved"></i>
         <span>Admin Panel</span>
+        <button class="admin-sidebar-close" id="adminSidebarClose" type="button" aria-label="Close admin menu">
+            <i class="fas fa-xmark"></i>
+        </button>
     </div>
 
     <!-- NAV -->
@@ -214,3 +217,5 @@
         </div>
     </div>
 </aside>
+
+<div class="admin-sidebar-overlay" id="adminSidebarOverlay" aria-hidden="true"></div>

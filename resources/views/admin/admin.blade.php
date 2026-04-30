@@ -194,7 +194,6 @@
     aside{
       transform: translateX(-110%);
       transition: transform .25s ease;
-      box-shadow: 0 40px 90px rgba(15,23,42,.25);
     }
 
   }
@@ -206,26 +205,12 @@
 </style>
 </head>
 
-<body x-data="{ open:false }">
+<body>
 
 <!-- NAV (unchanged) -->
 @include('admin-sidebar.navbar')
 
-
-<script>
-  document.addEventListener('alpine:init', () => {
-    Alpine.effect(() => {});
-  });
-</script>
-
-<div x-init="$watch('open', v => document.body.setAttribute('data-sidebar-open', v ? 'true' : 'false'))"></div>
-
 @include('admin-sidebar.sidebar')
-
-<div class="position-fixed top-0 start-0 w-100 h-100 bg-black bg-opacity-50 d-md-none mobile-overlay"
-     x-show="open"
-     x-transition.opacity
-     @click="open = false"></div>
 
 <main>
 
@@ -411,15 +396,6 @@
   </div>
 
 </main>
-
-<!-- CSS that reacts to body attribute (no change to includes needed) -->
-<style>
-  @media (max-width: 991.98px){
-    body[data-sidebar-open="true"] aside{
-      transform: translateX(0) !important;
-    }
-  }
-</style>
 
 </body>
 </html>
